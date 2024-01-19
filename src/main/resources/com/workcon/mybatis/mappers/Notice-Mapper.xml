@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mybatis.mapper.NoticeMapper">
+
+	<sql id="search">
+	<if test="searchKeyword != null and searchKeyword != ''">
+        <choose>
+            <when test='searchCondition == "tcm"'>
+				AND	(A.notice_title LIKE '%' || #{searchKeyword} || '%'
+					OR A.notice_content LIKE '%' || #{searchKeyword} || '%'
+					OR B.emp_name LIKE '%' || #{searchKeyword} || '%'
+				)
+			</when>
+            <when test='searchCondition == "t"'>
+				AND	A.notice_title LIKE '%' || #{searchKeyword} || '%'
+			</when>
+            <when test='searchCondition == "c"'>
+				AND	A.notice_content LIKE '%' || #{searchKeyword} || '%'
+			</when>
+            <when test='searchCondition == "m"'>
+				AND	B.emp_name LIKE '%' || #{searchKeyword} || '%'
+			</when>
+		</choose>
+	</if>
+	<if test="searchDt != null and searchDt != ''">
+		AND TO_CHAR(A.NOTICE_CREATE_DT,'yyyyMMdd') = TO_CHAR(to_date(#{searchDt},'MM/DD/YYYY'),'yyyyMMdd')
+	</if>
+    </sql>
+
+
+
+
+    	<select id="noticeList" parameterType="searchNoticeVO" resultType="searchNoticeVO">
+		select D3.*
+		  from(
+				select D2.*
+				from(
+					  select rownum as seq, D1.*
+					  from(
+							SELECT
+								    A.notice_id
+								   ,A.notice_title
+								   ,A.notice_content
+								   ,A.notice_readcnt
+								   ,A.notice_create_dt
+								   ,A.notice_update_dt
+								   ,A.notice_update_id
+								   ,A.emp_writer_id
+								   ,A.notice_end_dt
+								   ,A.notice_important_yn
+								   ,B.emp_name
+								   ,C.CODE_NAME officialName
+								   ,D.attachCount
+								FROM notice A 
+								     ,emp B 
+								     ,CODE C
+								     ,(
+                                        SELECT notice_id,
+                                               COUNT(*) as attachCount
+                                        FROM notice_attach 
+                                        GROUP BY notice_id
+                                       ) D
+																			 <!-- notice_attach 테이블에서 id에  첨부파일의 개수를 count한다. -->
+								WHERE A.emp_writer_id = B.emp_id
+								<!-- 작성자 필터링 -->
+								  AND B.code_id = C.CODE_ID
+									<!-- CODE_ID 필터링 -->
+								  AND A.notice_id = D.notice_id(+)
+									<!--  notice에 첨부파일이 없는 컬럼도 조회하기 위해 아우터조인 사용-->
+								  <include refid="search" />
+									<!-- 
+										<if test="searchKeyword != null and searchKeyword != ''">
+												<choose>
+														<when test='searchCondition == "tcm"'>
+												AND	(A.notice_title LIKE '%' || #{searchKeyword} || '%'
+													OR A.notice_content LIKE '%' || #{searchKeyword} || '%'
+													OR B.emp_name LIKE '%' || #{searchKeyword} || '%'
+												)
+											</when>
+														<when test='searchCondition == "t"'>
+												AND	A.notice_title LIKE '%' || #{searchKeyword} || '%'
+											</when>
+														<when test='searchCondition == "c"'>
+												AND	A.notice_content LIKE '%' || #{searchKeyword} || '%'
+											</when>
+														<when test='searchCondition == "m"'>
+												AND	B.emp_name LIKE '%' || #{searchKeyword} || '%'
+											</when>
+										</choose>
+									</if>
+									 -->
+								ORDER BY A.notice_create_dt DESC
+						) D1
+				) D2
+				where seq <![CDATA[ >= ]]> #{firstIndex}
+			) D3
+		where rownum <![CDATA[ <= ]]> #{recordCountPerPage}
+	</select>
+
+
+    
+
+
+</mapper>
