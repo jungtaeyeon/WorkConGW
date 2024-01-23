@@ -158,7 +158,7 @@
 <body class="theme-blue" style="min-width: 1400px;">
 <a id="viewModal" href="#defaultModal" data-toggle="modal" data-target="#defaultModal" style="display: none;"></a>
 <div id='backLayer' style='z-index: 5'></div>
-<nav class="navbar navbar-fixed-top" style="min-width: 1400px; top:0px;">
+<nav class="navbar navbar-fixed-top" style="min-width: 1400px; top:0px; padding-top:0;">
     <div class="container-fluid" style="background-color:#0a1218;">
     	<!-- 로고 -->
         <div class="navbar-brand">
@@ -168,10 +168,10 @@
         	<!-- 메뉴 -->
        		<ul class="nav navbar-nav menuList">
        			<li id="home" onclick="location.href='${pageContext.request.contextPath }/common/home';">홈</li>
+						<li id="addBookList" onclick="location.href='${pageContext.request.contextPath }/addBook/addBookList';">주소록</li>
              <!-- ========================================================================삭제예정 jqeury로 Ajax 처리 해야함==================================================================================== -->
              <!-- <li id="home" onclick="location.href='${pageContext.request.contextPath }/common/home';">업무관리</li>
              <li id="home" onclick="location.href='${pageContext.request.contextPath }/common/home';">전자결재</li>
-             <li id="home" onclick="location.href='${pageContext.request.contextPath }/common/home';">주소록</li>
              <li id="home" onclick="location.href='${pageContext.request.contextPath }/common/home';">시설예약</li>
              <li id="home" onclick="location.href='${pageContext.request.contextPath }/common/home';">일정관리</li>
              <li id="home" onclick="location.href='${pageContext.request.contextPath }/common/home';">게시판</li>

@@ -14,7 +14,7 @@ public class AddBookController extends BaseController{
     @RequestMapping(value = "addBookList" , method = RequestMethod.GET)
     public String addBookList()
     {
-        String url = "/addbook/list";
+        String url = "addbook/list";
         return url;
     }
 	
