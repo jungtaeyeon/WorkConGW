@@ -11,6 +11,16 @@
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 	<link rel="shortcut icon" href="${pageContext.request.contextPath }/resources/image/logo.ico">
+
+	<!-- jQuery, treeview 로드 -->
+	<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+	<link rel="stylesheet" href="<%=request.getContextPath() %>/js/treeview/jquery.treeview.css" />
+	<link rel="stylesheet" href="<%=request.getContextPath() %>/js/treeview/screen.css" />
+	<script src="<%=request.getContextPath() %>/js/treeview/jquery.treeview.js"></script>
+
+	<!-- Bootstrap 로드 -->
+	<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
 	<title>:: WorkConGW ::</title>
 
 	<style type="text/css">
@@ -168,23 +178,24 @@
         	<!-- 메뉴 -->
        		<ul class="nav navbar-nav menuList">
        			<li id="home" onclick="location.href='${pageContext.request.contextPath }/common/home';">홈</li>
-             <!-- ========================================================================삭제예정 jqeury로 Ajax 처리 해야함==================================================================================== -->
-             <!-- <li id="home" onclick="location.href='${pageContext.request.contextPath }/common/home';">업무관리</li>
-             <li id="home" onclick="location.href='${pageContext.request.contextPath }/common/home';">전자결재</li>
-             <li id="home" onclick="location.href='${pageContext.request.contextPath }/common/home';">주소록</li>
-             <li id="home" onclick="location.href='${pageContext.request.contextPath }/common/home';">시설예약</li>
-             <li id="home" onclick="location.href='${pageContext.request.contextPath }/common/home';">일정관리</li>
-             <li id="home" onclick="location.href='${pageContext.request.contextPath }/common/home';">게시판</li>
-             <li id="home" onclick="location.href='${pageContext.request.contextPath }/common/home';">근태관리</li>
-             <li id="home" onclick="location.href='${pageContext.request.contextPath }/common/home';">문서관리</li>
-             <li id="home" onclick="location.href='${pageContext.request.contextPath }/common/home';">조직도</li> -->
+				<li id="showOrganizationModal" onclick="showOrganizationModal()">조직도</li>
+				<!-- ========================================================================삭제예정 jqeury로 Ajax 처리 해야함==================================================================================== -->
+				<!-- <li id="home" onclick="location.href='${pageContext.request.contextPath }/common/home';">업무관리</li>
+                <li id="home" onclick="location.href='${pageContext.request.contextPath }/common/home';">전자결재</li>
+                <li id="home" onclick="location.href='${pageContext.request.contextPath }/common/home';">주소록</li>
+                <li id="home" onclick="location.href='${pageContext.request.contextPath }/common/home';">시설예약</li>
+                <li id="home" onclick="location.href='${pageContext.request.contextPath }/common/home';">일정관리</li>
+                <li id="home" onclick="location.href='${pageContext.request.contextPath }/common/home';">게시판</li>
+                <li id="home" onclick="location.href='${pageContext.request.contextPath }/common/home';">근태관리</li>
+                <li id="home" onclick="location.href='${pageContext.request.contextPath }/common/home';">문서관리</li>
+                <li id="home" onclick="location.href='${pageContext.request.contextPath }/common/home';">조직도</li> -->
 <!-- ====================================================================================삭제예정 jqeury로 Ajax 처리 해야함=========================================================================================== -->
             </ul>
 
 
 
 
-          
+
             <div id="navbar-menu">
                 <ul class="nav navbar-nav">                        
 
@@ -248,7 +259,7 @@
                     <div class="user-account" style="display:inline-block;margin: 10px 0px 0 15px;vertical-align: middle;height:60px;">
                     	<a href="javascript:void(0);" class="user-name" data-toggle="dropdown" aria-expanded="false">
 		                 	<div id="pictureView" style="width: 55px; height: 55px;" class="rounded-circle avatar" ></div>
-			                <div id="pictureView" style="background-color: #ffffff;" class="rounded-circle user-photo"></div>
+			                <div id="pictureViewPhoto" style="background-color: #ffffff;" class="rounded-circle user-photo"></div>
                     	</a>
 		                <div class="dropdown" id="usernameBox">
 		                	<a href="javascript:void(0);" class="dropdown-toggle user-name" data-toggle="dropdown" style="font-family: InfinitySans-RegularA1"><strong>${loginUser.emp_Name }&nbsp;님</strong></a>                    
@@ -292,7 +303,7 @@
     <div class="modal-dialog" role="document">
         <div class="modal-content" style="font-family: GoyangIlsan">
             <div class="modal-header" style="height:90px;">
-                <h4 class="title" id="defaultModalLabel" style="display:inline-block;">알림 센터</h4>
+                <h4 class="title" id="defaultModalLabelAlarm" style="display:inline-block;">알림 센터</h4>
                 <span id="modalCloseBtn" style="font-size: 3em;line-height: 0.8;cursor: pointer;" data-dismiss="modal">&times;</span>
 	            <div style="position:absolute;top:50px;font-size:20px;">
 		            <span class="deleteAlarmBtn" onclick="removeAlarm('${pageContext.request.contextPath}','${loginUser.emp_Id }','check');event.stopPropagation();">읽은 알림 삭제</span>
@@ -405,6 +416,49 @@ function closeModal(){
 }
 
 
+</script>
+
+
+<!-- 조직도 모달창 -->
+<div class="modal fade" id="organizationModal" tabindex="-1" role="dialog" aria-labelledby="organizationModalLabel" aria-hidden="true">
+	<div class="modal-dialog" role="document">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title" id="organizationModalLabel">WorkConGW 조직도</h5>
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+					<span aria-hidden="true">&times;</span>
+				</button>
+			</div>
+			<div class="modal-body">
+				<!-- treeview/Organization.jsp의 내용 -->
+				<div id="organizationContent"></div>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+			</div>
+		</div>
+	</div>
+</div>
+
+<script>
+	function showOrganizationModal() {
+		// AJAX를 사용하여 조직도 내용을 불러오기
+		$.ajax({
+			url: '/WorkConGW/organization',
+			method: 'GET',
+			success: function(data) {
+				// 불러온 내용을 모달의 내용 영역에 추가
+				$('#organizationContent').html(data);
+
+				// 모달 표시
+				$('#organizationModal').modal('show');
+			},
+			error: function() {
+				// 에러 처리
+				alert('조직도를 불러오는 중 오류가 발생했습니다.');
+			}
+		});
+	}
 </script>
 
 </body>
