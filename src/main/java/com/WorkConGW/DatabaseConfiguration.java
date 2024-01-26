@@ -44,7 +44,7 @@ import com.zaxxer.hikari.HikariConfig;
  		SqlSessionFactoryBean sqlSessionFactoryBean = new SqlSessionFactoryBean();
  		sqlSessionFactoryBean.setDataSource(dataSource);
  		sqlSessionFactoryBean.setMapperLocations(applicationContext.getResources("classpath:/com/workcon/mybatis/mappers/**/*.xml"));
-		sqlSessionFactoryBean.setTypeAliasesPackage("com.WorkConGW.board.notice.dto, com.WorkConGW.emp.dto, com.WorkConGW.common.dto");
+		sqlSessionFactoryBean.setTypeAliasesPackage("com.WorkConGW.board.notice.dto, com.WorkConGW.emp.dto, com.WorkConGW.common.dto, com.WorkConGW.addbook.dto");
 		org.apache.ibatis.session.Configuration configuration = new org.apache.ibatis.session.Configuration();
 		configuration.setCallSettersOnNulls(true);
 		sqlSessionFactoryBean.setConfiguration(configuration);

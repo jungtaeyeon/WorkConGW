@@ -3,5 +3,23 @@
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.mybatis.mapper.AddBookMapper">
-
+        <select id="addBookList" resultType="AddBookVO" parameterType="String">
+                SELECT 
+                manage_id, 
+                manage_display_name, 
+                manage_hp, 
+                manage_email, 
+                manage_remark, 
+                manage_official_name, 
+                manage_dept_name, 
+                manage_picture, 
+                b.add_book_id, 
+                add_book_title, 
+                code_add_id, 
+                emp_id 
+                FROM add_book_manage a, add_book b
+                WHERE emp_id = #{empId}
+        </select>
+        <!-- <insert id="addBookTagInsert" resultType="java.util.Map" parameterType="AddBookVO">
+        </insert> -->
 </mapper>
