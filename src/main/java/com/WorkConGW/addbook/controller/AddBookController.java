@@ -38,5 +38,17 @@ public class AddBookController extends BaseController{
         model.addAttribute("abList", abList);
         return url;
     }
+
+    @GetMapping("addBookSearch")
+    public String addBookSearch(Model model, @RequestParam Map<String,Object> pmap)
+    {
+        logger.info("addBookSearch");
+        List<AddBookVO> abList = null;
+        abList = addBookService.addBookSearch(pmap);
+        logger.info(abList.toString());
+        String url = "addbook/list";
+        model.addAttribute("abList", abList);
+        return url;
+    }
 }
 

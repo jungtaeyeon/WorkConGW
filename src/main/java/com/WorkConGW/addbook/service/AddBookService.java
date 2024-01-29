@@ -25,4 +25,13 @@ public class AddBookService {
     logger.info(list.toString());
     return list;
   }
+
+public List<AddBookVO> addBookSearch(Map<String, Object> pmap) {
+    logger.info("addBookSearch");
+    List<AddBookVO> list = new ArrayList<>();
+    list = AddBookDAO.addBookSearch(pmap);
+    logger.info(list.toString());
+    return list;
+    
+}
 }

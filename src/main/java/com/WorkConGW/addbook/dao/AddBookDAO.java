@@ -25,10 +25,20 @@ public class AddBookDAO {
   public List<AddBookVO> addBookList(String empId) {
     logger.info("addBookList");
     AddBookVO addBookVO = new AddBookVO();
+   
     logger.info(empId);
     List<AddBookVO> list = sqlSessionTemplate.selectList("addBookList", empId);
     logger.info(list.toString());
     return list;
   }
+
+public List<AddBookVO> addBookSearch(Map<String, Object> pmap) {
+    logger.info("addBookSearch");
+    AddBookVO addBookVO = new AddBookVO();
+    logger.info(pmap.toString());
+    List<AddBookVO> list = sqlSessionTemplate.selectList("addBookSearch", pmap);
+    logger.info(list.toString());
+    return list;
+}
 
 }

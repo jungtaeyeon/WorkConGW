@@ -9,16 +9,52 @@
                 manage_display_name, 
                 manage_hp, 
                 manage_email, 
-                manage_remark, 
+                NVL(manage_remark, ' ') AS manage_remark, 
                 manage_official_name, 
                 manage_dept_name, 
-                manage_picture, 
                 b.add_book_id, 
                 add_book_title, 
                 code_add_id, 
                 emp_id 
                 FROM add_book_manage a, add_book b
-                WHERE emp_id = #{empId}
+                WHERE emp_id = #{empId} and a.add_book_id = b.add_book_id
+        </select>
+        <select id="addBookSearch" resultType="AddBookVO" parameterType="map">
+        SELECT 
+                manage_id, 
+                manage_display_name, 
+                manage_hp, 
+                manage_email, 
+                NVL(manage_remark, ' ') AS manage_remark, 
+                manage_official_name, 
+                manage_dept_name, 
+                b.add_book_id, 
+                add_book_title, 
+                code_add_id, 
+                emp_id 
+        FROM 
+                add_book_manage a, 
+                add_book b
+        WHERE 
+                emp_id = #{empId} 
+                AND a.add_book_id = b.add_book_id
+                <if test="selectSearch != null">
+                        <choose>
+                        <when test="selectSearch == 'manage_display_name'">
+                        AND UPPER(manage_display_name) LIKE '%' || UPPER(#{searchText}) || '%'
+                        </when>
+                        <when test="selectSearch == 'manage_hp'">
+                        AND UPPER(manage_hp) LIKE '%' || UPPER(#{searchText}) || '%'
+                        </when>
+                        <when test="selectSearch == 'manage_official_name'">
+                        AND UPPER(manage_official_name) LIKE '%' || UPPER(#{searchText}) || '%'
+                        </when>
+                        <when test="selectSearch == 'manage_dept_name'">
+                        AND UPPER(manage_dept_name) LIKE '%' || UPPER(#{searchText}) || '%'
+                        </when>
+                        </choose>
+                </if>
+                
         </select>
         <!-- <insert id="addBookTagInsert" resultType="java.util.Map" parameterType="AddBookVO">
         </insert> -->

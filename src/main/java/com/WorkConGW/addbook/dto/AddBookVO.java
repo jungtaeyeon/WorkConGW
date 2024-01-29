@@ -24,10 +24,10 @@ public class AddBookVO extends BaseVO{
 	private String manage_remark;// 주소록 비고란
 	private String manage_official_name; //주소록 직급
 	private String manage_dept_name; //부서명
-	private String manage_picture; //프로필사진
 	
 	
 	private String emp_id;
+	private String selectSerch; //주소록 필터
 	private int addBookCount; // 주소록에 속한 주소 개수
 	private String[] manageIdArr; // 체크한 주소록 개수
 	
