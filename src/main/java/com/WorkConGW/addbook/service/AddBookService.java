@@ -26,12 +26,19 @@ public class AddBookService {
     return list;
   }
 
-public List<AddBookVO> addBookSearch(Map<String, Object> pmap) {
+  public List<AddBookVO> addBookSearch(Map<String, Object> pmap) {
     logger.info("addBookSearch");
     List<AddBookVO> list = new ArrayList<>();
     list = AddBookDAO.addBookSearch(pmap);
     logger.info(list.toString());
     return list;
-    
-}
+  }
+
+  public int addBookInsert(Map<String, Object> pmap) {
+    logger.info("addBookInsert");
+    logger.info(pmap.toString());
+    int result = 0;
+    result = AddBookDAO.addBookInsert(pmap);
+    return result;
+  }
 }

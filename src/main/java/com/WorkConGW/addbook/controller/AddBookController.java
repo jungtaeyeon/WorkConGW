@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import com.WorkConGW.addbook.dao.AddBookDAO;
 import com.WorkConGW.addbook.dto.AddBookVO;
 import com.WorkConGW.addbook.service.AddBookService;
 import com.WorkConGW.common.controller.BaseController;
@@ -38,6 +39,12 @@ public class AddBookController extends BaseController{
         model.addAttribute("abList", abList);
         return url;
     }
+    @GetMapping("addBookInsertPage")
+    public String addBookInsertPage(Model model){
+        logger.info("addBookInsertPage");
+        String url = "addbook/insert";
+        return url;
+    }
 
     @GetMapping("addBookSearch")
     public String addBookSearch(Model model, @RequestParam Map<String,Object> pmap)
@@ -50,5 +57,21 @@ public class AddBookController extends BaseController{
         model.addAttribute("abList", abList);
         return url;
     }
+
+    @GetMapping("addBookInsert")
+    public String addBookInsert(@RequestParam Map<String, Object> pmap) {
+        logger.info("addBookInsert");
+        int result = 0;
+        String path = "";
+        logger.info(pmap.toString());
+        result = addBookService.addBookInsert(pmap);
+        if (result == 1) {// 입력이 성공했을때
+            path = "redirect:/addBook/addBookList";
+        } else {// 입력이 실패 했을때
+            path = "/error";
+        }
+        return path;
+    }
+
 }
 

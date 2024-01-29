@@ -26,6 +26,9 @@
 		<%@ include file="../include/sideBar.jsp"%>
 		<!-- 사이드바 -->
 		<div class="contentConteiner">
+			<div class="subTitleText">
+				<h2>주소록</h2>
+			</div>
 			<div class="serchContain" style="display: flex; align-items: flex-start;">
 				<form action="addBookSearch" id="serchForm">
 					<input type="hidden" name="empId" value="rkdrhd98">
@@ -51,7 +54,7 @@
 						<th scope="col">직급</th>
 						<th scope="col">부서명</th>
 						<th scope="col">그룹이름</th>
-						<th scope="col">비고</th>
+						<th scope="col">메모</th>
 					</tr>
 				</thead>
 				<tbody>
