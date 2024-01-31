@@ -45,8 +45,17 @@ public class AddBookController extends BaseController{
     }
     
     @GetMapping("addBookInsertPage")
-    public String addBookInsertPage(Model model, HttpSession session){
+    public String addBookInsertPage(){
         logger.info("addBookInsertPage");
+        String url = "addbook/insert";
+        return url;
+    }
+
+
+    /* restcontroller로 전송 */
+    @GetMapping("addBookGroupSelect")
+    public String addBookGroupSelect(Model model, HttpSession session){
+        logger.info("addBookGroupSelect");
         String empId = (String) session.getAttribute("empId");
         List<AddBookVO> addBookGroupList = null;
         addBookGroupList = addBookService.addBookGroupSelect(empId);
