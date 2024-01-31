@@ -25,26 +25,28 @@ public class AddBookDAO {
   public List<AddBookVO> addBookList(String empId) {
     logger.info("addBookList");
     AddBookVO addBookVO = new AddBookVO();
-   
-    logger.info(empId);
     List<AddBookVO> list = sqlSessionTemplate.selectList("addBookList", empId);
-    logger.info(list.toString());
     return list;
   }
 
   public List<AddBookVO> addBookSearch(Map<String, Object> pmap) {
       logger.info("addBookSearch");
       AddBookVO addBookVO = new AddBookVO();
-      logger.info(pmap.toString());
       List<AddBookVO> list = sqlSessionTemplate.selectList("addBookSearch", pmap);
-      logger.info(list.toString());
       return list;
+  }
+
+  public List<AddBookVO> addBookGroupSelect(String empId) {
+    logger.info("addBookGroupSelect");
+    AddBookVO addBookVO = new AddBookVO();
+    List<AddBookVO> list = sqlSessionTemplate.selectList("addBookGroupSelect", empId);
+    logger.info(list.toString());
+    return list;
   }
 
   public int addBookInsert(Map<String, Object> pmap) {
     logger.info("addBookInsert");
     int result = 0;
-    logger.info(pmap.toString());
     result = sqlSessionTemplate.insert("addBookInsert", pmap);
     return result;
   }

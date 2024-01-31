@@ -19,6 +19,9 @@ import com.WorkConGW.addbook.service.AddBookService;
 import com.WorkConGW.common.controller.BaseController;
 import com.WorkConGW.common.dto.HomeFormVO;
 
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpSession;
+
 
 
 @Controller
@@ -29,19 +32,25 @@ public class AddBookController extends BaseController{
     private AddBookService addBookService;
 
     @GetMapping("addBookList")
-    public String addBookList(Model model, @RequestParam String empId)
+    public String addBookList(Model model, HttpSession session)
     {
         logger.info("addBookList");
+        session.setAttribute("empId", "rkdrhd98");
+        String empId = (String) session.getAttribute("empId");
         List<AddBookVO> abList = null;
         abList = addBookService.addBookList(empId);
-        logger.info(abList.toString());
         String url = "addbook/list";
         model.addAttribute("abList", abList);
         return url;
     }
+    
     @GetMapping("addBookInsertPage")
-    public String addBookInsertPage(Model model){
+    public String addBookInsertPage(Model model, HttpSession session){
         logger.info("addBookInsertPage");
+        String empId = (String) session.getAttribute("empId");
+        List<AddBookVO> addBookGroupList = null;
+        addBookGroupList = addBookService.addBookGroupSelect(empId);
+        model.addAttribute("addBookGroupList", addBookGroupList);
         String url = "addbook/insert";
         return url;
     }

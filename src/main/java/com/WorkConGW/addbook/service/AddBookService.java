@@ -22,7 +22,6 @@ public class AddBookService {
     logger.info("addBookList");
     List<AddBookVO> list = new ArrayList<>();
     list = AddBookDAO.addBookList(empId);
-    logger.info(list.toString());
     return list;
   }
 
@@ -30,15 +29,20 @@ public class AddBookService {
     logger.info("addBookSearch");
     List<AddBookVO> list = new ArrayList<>();
     list = AddBookDAO.addBookSearch(pmap);
-    logger.info(list.toString());
     return list;
   }
 
   public int addBookInsert(Map<String, Object> pmap) {
     logger.info("addBookInsert");
-    logger.info(pmap.toString());
     int result = 0;
     result = AddBookDAO.addBookInsert(pmap);
     return result;
+  }
+
+  public List<AddBookVO> addBookGroupSelect(String empId) {
+    logger.info("addBookGroupSelect");
+    List<AddBookVO> list = new ArrayList<>();
+    list = AddBookDAO.addBookGroupSelect(empId);
+    return list;
   }
 }

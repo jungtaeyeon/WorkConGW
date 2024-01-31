@@ -6,7 +6,7 @@
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
 <% 
-
+List<AddBookVO> addBookGroupList = (List<AddBookVO>)request.getAttribute("addBookGroupList");
 %>	
 <script>
     const addBookInsert =()=>{
@@ -73,11 +73,12 @@
               />
             <label for="manage_official_name">직급</label>
             </div>
-            <div class="form-floating mb-3 mt-3">
+            <div class="mb-3 mt-3">
                 <select name="add_book_id" class="form-select" aria-label="Default select example">
                     <option selected>그룹</option>
-                    <option value="1">테스트A회사</option>
-                    <option value="2">테스트B회사</option>
+                    <% for (AddBookVO abGroupList : addBookGroupList) { %>
+                    <option value="<%= abGroupList.getAdd_book_id() %>"><%= abGroupList.getAdd_book_title() %></option>
+                    <% } %>
                 </select>
             </div>
             <div class="form-floating mb-3 mt-3">
