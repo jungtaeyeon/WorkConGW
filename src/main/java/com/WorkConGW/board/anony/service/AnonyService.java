@@ -60,7 +60,7 @@ public class AnonyService {
     }
 
     public void modify(BoardFormVO boardFormVO) {
-        AnonyVO anonyVO = boardFormVO.getannoyVO();
+        AnonyVO anonyVO = boardFormVO.getAnnoyVO();
         anonyDAO.updateAnony(anonyVO);
     }
 

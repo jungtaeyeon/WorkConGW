@@ -7,9 +7,13 @@ import java.net.URLDecoder;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.*;
 
 import javax.print.attribute.standard.Media;
 
+import com.WorkConGW.common.command.FileUploadCommand;
+import com.WorkConGW.common.dto.AttachVO;
+import jakarta.servlet.http.HttpSession;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,23 +33,55 @@ import jakarta.servlet.ServletOutputStream;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
-/* 
- * 작성자 : 오지환
- * 날짜 : 2024/01/27
- * 목적 : 파일처리 관련 컨트롤러 --> 실질적 사용x
- */
+public class BaseController {
+    Logger logger = LoggerFactory.getLogger(BaseController.class);
 
-public class BaseController { 
-   Logger logger = LoggerFactory.getLogger(BaseController.class);
+    private static final String SAVE_TOKEN = "SAVE_TOKEN";
+    // 로그인중인 유저
+    protected static Map<String, HttpSession> users = new HashMap<>();
 
     @Autowired
-    private YAMLConfig config;
+    protected YAMLConfig config;
     //-> http://localhost:8000/board/fileUpload
     @PostMapping("fileUpload")
     public String fileUpload(@RequestParam(value="b_file", required = false)MultipartFile b_file) throws IOException{
         File upImage = new File(config.getUploadPath(), b_file.getOriginalFilename());
         b_file.transferTo(upImage);
         return b_file.getOriginalFilename();//사용자가 선택한 이미지 이름을 반환한다 avartart21.png
+    }
+
+    protected List<AttachVO> saveFile(FileUploadCommand fileUploadCommand) throws Exception {
+
+        List<AttachVO> attachList = new ArrayList<AttachVO>();
+
+        if(fileUploadCommand.getUploadFile() != null) {
+
+            for(MultipartFile multi : fileUploadCommand.getUploadFile()) {
+                if(multi.isEmpty()) continue;
+                String attachName = UUID.randomUUID().toString().replace("-", "") +
+                        "$$" + multi.getOriginalFilename();
+                File target = new File(fileUploadCommand.getFileUploadPath(), attachName);
+
+                if (!target.exists()) {
+                    target.mkdirs();
+                }
+
+                multi.transferTo(target);
+
+                AttachVO attach = new AttachVO();
+                attach.setAttach_path(fileUploadCommand.getFileUploadPath() + File.separator + attachName);
+                attach.setAttach_name(multi.getOriginalFilename());
+                attach.setAttach_type(attachName.substring(attachName.lastIndexOf(".")+1).toUpperCase());
+
+                File file = new File(attach.getAttach_path());
+                String attachSize = file.length()/1000 + "KB";
+                attach.setAttach_size(attachSize);
+
+                attachList.add(attach);
+            }
+        }
+
+        return attachList;
     }
 
     //목록에서 첨부파일 이름을 클릭하면 호출되는 메소드 구현하기
@@ -61,10 +97,10 @@ public class BaseController {
             Path path = Paths.get(file.getAbsolutePath());
             ByteArrayResource resource = new ByteArrayResource(Files.readAllBytes(path));
             return ResponseEntity.ok()
-                        .headers(header)
-                        .contentLength(file.length())
-                        .contentType(MediaType.parseMediaType("application/octet-stream"))
-                        .body(resource);
+                    .headers(header)
+                    .contentLength(file.length())
+                    .contentType(MediaType.parseMediaType("application/octet-stream"))
+                    .body(resource);
         } catch (IOException e) {
             e.printStackTrace();//메소드를 print에 넣지 말것 - 라인번호, 에러이력까지도 출력
             return null;
@@ -117,7 +153,6 @@ public class BaseController {
         //logger.info(fileArray.length);
         return null;
     }// end of imageGet
-   
 
-    }
-    
+
+}

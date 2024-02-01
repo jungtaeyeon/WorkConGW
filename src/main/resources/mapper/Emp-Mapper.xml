@@ -41,7 +41,7 @@
                 SELECT  F.DEPT_NAME
                 FROM    EMP E, DEPT F
                 WHERE   E.TEAM_ID = F.DEPT_ID
-                AND     E.EMP_ID = #{EMP_ID}
+                AND     E.EMP_ID = #{emp_Id}
               ) AS TEAM_NAME
 							<!-- 부서이름출력 ((개인)팀id=부서(id)) 
 								AND 사원정보까지 같으면(empId)는 객체로 넘겨받아야함
@@ -64,7 +64,7 @@
 			 <!-- AUTH_ID(+)사용 사원에는 해당 컬럼없어도 출력
 			-->
        AND A.EMP_ST IN (1, 4)
-       AND EMP_ID = #{EMP_ID}
+       AND EMP_ID = #{emp_Id}
 </select>
 
 <select id = "findPwCheck" resultType="int">

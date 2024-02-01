@@ -4,72 +4,89 @@ import java.util.Date;
 import java.util.List;
 
 public class AttachVO  {
-	private int attachId;
-	private String attachPath;
-	private String attachName;
-	private String attachType;
-	private Date attachCreateDt;
-	private Date attachEndDt;
-	private String empAttacherId;
-	private String attachSize;
-	private List<? extends AttachVO> attachList;
-	
-	
-	
-	public List<? extends AttachVO> getAttachList() {
-		return attachList;
+
+	private int attach_id;
+	private String attach_path;
+	private String attach_name;
+	private String attach_type;
+	private Date attach_create_dt;
+	private Date attach_end_dt;
+	private String emp_attacher_id;
+	private String attach_size;
+	private List<? extends AttachVO> attach_list;
+
+
+	public int getAttach_id() {
+		return attach_id;
 	}
-	public void setAttachList(List<? extends AttachVO> attachList) {
-		this.attachList = attachList;
+
+	public void setAttach_id(int attach_id) {
+		this.attach_id = attach_id;
 	}
-	public Date getAttachEndDt() {
-		return attachEndDt;
+
+	public String getAttach_path() {
+		return attach_path;
 	}
-	public void setAttachEndDt(Date attachEndDt) {
-		this.attachEndDt = attachEndDt;
+
+	public void setAttach_path(String attach_path) {
+		this.attach_path = attach_path;
 	}
-	public int getAttachId() {
-		return attachId;
+
+	public String getAttach_name() {
+		return attach_name;
 	}
-	public void setAttachId(int attachId) {
-		this.attachId = attachId;
+
+	public void setAttach_name(String attach_name) {
+		this.attach_name = attach_name;
 	}
-	public String getAttachPath() {
-		return attachPath;
+
+	public String getAttach_type() {
+		return attach_type;
 	}
-	public void setAttachPath(String attachPath) {
-		this.attachPath = attachPath;
+
+	public void setAttach_type(String attach_type) {
+		this.attach_type = attach_type;
 	}
-	public String getAttachName() {
-		return attachName;
+
+	public Date getAttach_create_dt() {
+		return attach_create_dt;
 	}
-	public void setAttachName(String attachName) {
-		this.attachName = attachName;
+
+	public void setAttach_create_dt(Date attach_create_dt) {
+		this.attach_create_dt = attach_create_dt;
 	}
-	public String getAttachType() {
-		return attachType;
+
+	public Date getAttach_end_dt() {
+		return attach_end_dt;
 	}
-	public void setAttachType(String attachType) {
-		this.attachType = attachType;
+
+	public void setAttach_end_dt(Date attach_end_dt) {
+		this.attach_end_dt = attach_end_dt;
 	}
-	public Date getAttachCreateDt() {
-		return attachCreateDt;
+
+	public String getEmp_attacher_id() {
+		return emp_attacher_id;
 	}
-	public void setAttachCreateDt(Date attachCreateDt) {
-		this.attachCreateDt = attachCreateDt;
+
+	public void setEmp_attacher_id(String emp_attacher_id) {
+		this.emp_attacher_id = emp_attacher_id;
 	}
-	public String getEmpAttacherId() {
-		return empAttacherId;
+
+	public String getAttach_size() {
+		return attach_size;
 	}
-	public void setEmpAttacherId(String empAttacherId) {
-		this.empAttacherId = empAttacherId;
+
+	public void setAttach_size(String attach_size) {
+		this.attach_size = attach_size;
 	}
-	public String getAttachSize() {
-		return attachSize;
+
+	public List<? extends AttachVO> getAttach_list() {
+		return attach_list;
 	}
-	public void setAttachSize(String attachSize) {
-		this.attachSize = attachSize;
+
+	public void setAttach_list(List<? extends AttachVO> attach_list) {
+		this.attach_list = attach_list;
 	}
-	
-	
+
+
 }

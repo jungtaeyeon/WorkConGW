@@ -264,13 +264,13 @@ public class AnonyController extends CommonController{
     @GetMapping("/detail")
     public ModelAndView detail(@ModelAttribute("boardFormVO")@Valid BoardFormVO boardFormVO, ModelAndView mnv, HttpServletResponse response, HttpServletRequest request)throws Exception
     {
-        logger.info(boardFormVO.getannoyVO().toString());
+        logger.info(boardFormVO.getAnnoyVO().toString());
         logger.info("detail"+"여기들어와수까?");
         String url = "/board/anony/detail";
-        logger.info(String.valueOf(boardFormVO.getannoyVO().getAnony_Board_Id()));
+        logger.info(String.valueOf(boardFormVO.getAnnoyVO().getAnony_Board_Id()));
         //boardForVO.getannoyVO()하면 board_id값을 파라미터로 넘긴다음, 그 테이블을 boardFormVO에 담는다.
-        boardFormVO.setannoyVO(anonyService.getAnony(boardFormVO.getannoyVO())); // 디비에서 게시글을 가져옴
-        AnonyVO anonyVO = boardFormVO.getannoyVO(); //밖 boardFormVO에서 annoyVO를 얻어온다.
+        boardFormVO.setAnnoyVO(anonyService.getAnony(boardFormVO.getAnnoyVO())); // 디비에서 게시글을 가져옴
+        AnonyVO anonyVO = boardFormVO.getAnnoyVO(); //밖 boardFormVO에서 annoyVO를 얻어온다.
         if(!isCookieExist(request,response,"anony_board_id",String.valueOf(anonyVO.getAnony_Board_Id())))
         {
         /* 쿠키가 존재하면 true / 없으면 false */
@@ -296,7 +296,7 @@ public class AnonyController extends CommonController{
         anonyVO.setNext(paginationInfo.getXnext());
         /* ///////////////////페이지네이션//////////////////////////////////////////// */
         AnonyVO detailVO = anonyService.getAnony(anonyVO);
-        boardFormVO.setannoyVO(detailVO);
+        boardFormVO.setAnnoyVO(detailVO);
         logger.info(anonyVO.toString());
         mnv.addObject("anony", anonyVO);
         mnv.addObject("paginationInfo", paginationInfo);
@@ -330,7 +330,7 @@ public class AnonyController extends CommonController{
     @PostMapping("/remove")
     public void remove(BoardFormVO boardFormVO)
     {
-        anonyService.remove(boardFormVO.getannoyVO());
+        anonyService.remove(boardFormVO.getAnnoyVO());
     }
 
 

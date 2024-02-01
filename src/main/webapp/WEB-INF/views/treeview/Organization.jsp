@@ -10,15 +10,10 @@
 
     <script>
         function deptTrees() {
-            const dataset = {
-                url: "<c:url value='/orgList'/>",
-            };
-
             $.ajax({
                 type: "GET",
-                url: dataset.url,
+                url: "<c:url value='/orgList'/>",
                 contentType: "application/json",
-                data: dataset.url,
                 processData: true,
                 success: function (data) {
                     data.forEach(function (e, i) {

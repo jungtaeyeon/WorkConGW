@@ -13,8 +13,12 @@
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 	<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+	<link rel="stylesheet" href="<%=request.getContextPath() %>/js/treeview/jquery.treeview.css" />
+	<link rel="stylesheet" href="<%=request.getContextPath() %>/js/treeview/screen.css" />
+	<script src="<%=request.getContextPath() %>/js/treeview/jquery.treeview.js"></script>
+
 	<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.10.2/dist/umd/popper.min.js"></script>
-	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.min.js"></script>
+<%--	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.min.js"></script>--%>
 	<script src="https://kit.fontawesome.com/3a92c85ff9.js" crossorigin="anonymous"></script>
     <link
       href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css"
@@ -27,7 +31,6 @@
       integrity="sha384-OERcA2EqjJCMA+/3y+gxIOqMEjwtxJY7qPCqsdltbNJuaOe923+mo//f6V8Qbsw3"
       crossorigin="anonymous"
     ></script>
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
 
 
 	<title>:: WorkConGW ::</title>
@@ -163,7 +166,6 @@
 				<!-- 메뉴 -->
 				   <ul class="nav navbar-nav menuList">
 					   <li id="home" onclick="location.href='${pageContext.request.contextPath }/common/home';">홈</li>
-					<li id="showOrganizationModal" onclick="showOrganizationModal()">조직도</li>
 				</ul>
 	
 				<div id="navbar-menu">
@@ -479,7 +481,6 @@ function sample6_execDaumPostcode() {
 
 
 </script>
-	
 
 
 </body>
