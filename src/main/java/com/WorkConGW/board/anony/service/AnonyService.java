@@ -16,7 +16,6 @@ import com.WorkConGW.board.anony.dto.AnonyVO;
 
 
 
-
 @Service
 public class AnonyService {
 
@@ -42,7 +41,7 @@ public class AnonyService {
 
         for(AnonyVO anonyVO : anonyList)
         {
-            List<AnonyReplyVO> anonyReplyList = anonyDAO.selectAnonyReplyList(anonyVO);
+            List<AnonyReplyVO> anonyReplyList = anonyDAO.selectAnonyReplyList(anonyVO.getAnony_Board_Id());
             anonyVO.setAnonyReplyList(anonyReplyList); 
 
             logger.info("anonyReplyList : " + anonyReplyList.toString());
@@ -60,7 +59,7 @@ public class AnonyService {
     }
 
     public void modify(BoardFormVO boardFormVO) {
-        AnonyVO anonyVO = boardFormVO.getAnnoyVO();
+        AnonyVO anonyVO = boardFormVO.getannoyVO();
         anonyDAO.updateAnony(anonyVO);
     }
 
@@ -68,14 +67,13 @@ public class AnonyService {
         anonyDAO.deleteAnony(anonyVO);
     }
 
-    public AnonyVO getAnony(AnonyVO anonyVO) {
+    public AnonyVO getAnony(int queString) {
         /* anonyVO는 사용자로부터 받은 값을 의미. 그 값을 넣음. 
          * anony는 사용자가 파리미터로 넘긴 annoyVO의 결과값을 받음.
          * 댓글도 같이 가져옴(이것도 annoyVO를 넘겨야함(사용자 입력값))
         */
-       AnonyVO anony =  anonyDAO.selectAnonyById(anonyVO);
-       logger.info(anony.toString());
-       List<AnonyReplyVO> anonyReplyVOList = anonyDAO.selectAnonyReplyList(anonyVO);
+       AnonyVO anony =  anonyDAO.selectAnonyById(queString);
+       List<AnonyReplyVO> anonyReplyVOList = anonyDAO.selectAnonyReplyList(queString);
        anony.setAnonyReplyList(anonyReplyVOList);
     
        return anony;

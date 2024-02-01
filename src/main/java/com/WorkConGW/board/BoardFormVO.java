@@ -73,28 +73,39 @@ public class BoardFormVO {
 	public void setSearchEmpVO(EmpVO searchEmpVO) {
 		this.searchEmpVO = searchEmpVO;
 	}
-	public AnonyVO getAnnoyVO() {
-		return annoyVO;
-	}
-
-	public void setAnnoyVO(AnonyVO annoyVO) {
-		this.annoyVO = annoyVO;
-	}
-
 	public AnonyReplyVO getAnnoyReplyVO() {
-		return annoyReplyVO;
+		return this.annoyReplyVO;
 	}
 
 	public void setAnnoyReplyVO(AnonyReplyVO annoyReplyVO) {
 		this.annoyReplyVO = annoyReplyVO;
 	}
 
-	public AnonyVO getSearchAnonyVO() {
+	public int getAnonyBoardId(){
+		return this.annoyVO.getAnony_Board_Id();
+	}
+	public void setAnonyBoardId(int anonyBoardId){
+		this.annoyVO.setAnony_Board_Id(anonyBoardId);
+
+	}
+
+	public AnonyVO getannoyVO() {
+		return annoyVO;
+	}
+
+	public void setannoyVO(AnonyVO annoyVO) {
+		this.annoyVO = annoyVO;
+	}
+
+	public AnonyVO getSearchAnonyVO()
+	{
 		return searchAnonyVO;
 	}
 
-	public void setSearchAnonyVO(AnonyVO searchAnonyVO) {
-		this.searchAnonyVO = searchAnonyVO;
+	public void setSearchAnonyVO(AnonyVO searchAnonyVO)
+	{
+		this.searchAnonyVO=searchAnonyVO;
 	}
+
 }
 

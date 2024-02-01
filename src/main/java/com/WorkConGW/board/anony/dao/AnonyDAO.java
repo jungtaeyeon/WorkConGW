@@ -27,8 +27,8 @@ public class AnonyDAO {
         return anonyList;
     }
 
-    public List<AnonyReplyVO> selectAnonyReplyList(AnonyVO anonyVO) {
-        List<AnonyReplyVO> anonyReplyVO = sqlSessionTemplate.selectList("selectAnonyReplyList",anonyVO);
+    public List<AnonyReplyVO> selectAnonyReplyList(int queString) {
+        List<AnonyReplyVO> anonyReplyVO = sqlSessionTemplate.selectList("selectAnonyReplyList",queString);
         return anonyReplyVO;
     }
 
@@ -48,8 +48,8 @@ public class AnonyDAO {
         sqlSessionTemplate.delete("deleteAnony", anonyVO);
     }
 
-    public AnonyVO selectAnonyById(AnonyVO anonyVO) {
-       AnonyVO anony = sqlSessionTemplate.selectOne("selectAnonyById",anonyVO);
+    public AnonyVO selectAnonyById(int queString) {
+       AnonyVO anony = sqlSessionTemplate.selectOne("selectAnonyById",queString);
        return anony;
     }
 

@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.support.RequestContextUtils;
@@ -262,15 +263,13 @@ public class AnonyController extends CommonController{
      */
 
     @GetMapping("/detail")
-    public ModelAndView detail(@ModelAttribute("boardFormVO")@Valid BoardFormVO boardFormVO, ModelAndView mnv, HttpServletResponse response, HttpServletRequest request)throws Exception
+    public ModelAndView detail(@ModelAttribute("boardFormVO")@Valid BoardFormVO boardFormVO, @RequestParam("anony_board_id") int queString,ModelAndView mnv, HttpServletResponse response, HttpServletRequest request)throws Exception
     {
-        logger.info(boardFormVO.getAnnoyVO().toString());
         logger.info("detail"+"여기들어와수까?");
         String url = "/board/anony/detail";
-        logger.info(String.valueOf(boardFormVO.getAnnoyVO().getAnony_Board_Id()));
         //boardForVO.getannoyVO()하면 board_id값을 파라미터로 넘긴다음, 그 테이블을 boardFormVO에 담는다.
-        boardFormVO.setAnnoyVO(anonyService.getAnony(boardFormVO.getAnnoyVO())); // 디비에서 게시글을 가져옴
-        AnonyVO anonyVO = boardFormVO.getAnnoyVO(); //밖 boardFormVO에서 annoyVO를 얻어온다.
+        boardFormVO.setannoyVO(anonyService.getAnony(queString)); // 디비에서 게시글을 가져옴
+        AnonyVO anonyVO = boardFormVO.getannoyVO(); //밖 boardFormVO에서 annoyVO를 얻어온다.
         if(!isCookieExist(request,response,"anony_board_id",String.valueOf(anonyVO.getAnony_Board_Id())))
         {
         /* 쿠키가 존재하면 true / 없으면 false */
@@ -295,8 +294,8 @@ public class AnonyController extends CommonController{
         anonyVO.setPrev(paginationInfo.getXprev());
         anonyVO.setNext(paginationInfo.getXnext());
         /* ///////////////////페이지네이션//////////////////////////////////////////// */
-        AnonyVO detailVO = anonyService.getAnony(anonyVO);
-        boardFormVO.setAnnoyVO(detailVO);
+        AnonyVO detailVO = anonyService.getAnony(queString);
+        boardFormVO.setannoyVO(detailVO);
         logger.info(anonyVO.toString());
         mnv.addObject("anony", anonyVO);
         mnv.addObject("paginationInfo", paginationInfo);
@@ -330,7 +329,7 @@ public class AnonyController extends CommonController{
     @PostMapping("/remove")
     public void remove(BoardFormVO boardFormVO)
     {
-        anonyService.remove(boardFormVO.getAnnoyVO());
+        anonyService.remove(boardFormVO.getannoyVO());
     }
 
 

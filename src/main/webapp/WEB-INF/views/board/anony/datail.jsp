@@ -3,7 +3,6 @@
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<%@ taglib prefix="ui" uri="http://egovframework.gov/ctl/ui" %>
 
 <head>
 </head>
@@ -58,7 +57,7 @@ th{
 <!-- 메인 content -->
 	<div id="main-content" >
 		<div class="container-fluid">
-			<form:form commandName="boardFormVO" name="detailForm" action="${pageContext.request.contextPath }/board/anony/detail">
+			<form:form modelAttribute="boardFormVO" name="detailForm" action="${pageContext.request.contextPath }/board/anony/detail">
 				<form:hidden path="anonyVO.pageIndex"/>
 		        <form:hidden path="anonyVO.annoy_Board_Id" />
 		        <form:hidden path="anonyVO.annoy_Board_Title"/>

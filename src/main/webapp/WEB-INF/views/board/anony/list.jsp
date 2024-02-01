@@ -110,7 +110,7 @@ tbody{
 											<tbody style="cursor: pointer;">
 												<c:if test="${!empty anonyList }">
 													<c:forEach items="${anonyList}" var="anony">
-														<tr role="row" onclick="OpenWindow('<%=request.getContextPath()%>/board/anony/detail?anony_Board_Id=${anony.anony_Board_Id }', 'WorkConGW', 800, 700);">
+														<tr role="row" onclick="OpenWindow('<%=request.getContextPath()%>/board/anony/detail?anony_board_id=${anony.anony_Board_Id }', 'WorkConGW', 800, 700);">
 															<td id="annoy_Board_Id" style="text-align:center;">${anony.anony_Board_Id}</td>
 															<td id="annoy_Board_Title" style="width: 60%;text-align: left; padding-left: 100px;">
 																<span style="width: 300px;"><c:out value = "${anony.anony_Board_Title}"/></span>
