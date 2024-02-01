@@ -1,0 +1,92 @@
+html, body, div, span, applet, object, iframe,
+h1, h2, h3, h4, h5, h6, p, blockquote, pre,
+a, abbr, acronym, address, big, cite, code,
+del, dfn, em, img, ins, kbd, q, s, samp,
+small, strike, strong, sub, sup, tt, var,
+b, u, i, center,
+dl, dt, dd, ol, ul, li,
+fieldset, form, label, legend,
+table, caption, tbody, tfoot, thead, tr, th, td,
+article, aside, canvas, details, embed, 
+figure, figcaption, footer, header, hgroup, 
+menu, nav, output, ruby, section, summary,
+time, mark, audio, video {
+   margin: 0;
+   padding: 0;
+   border: 0;
+   font-size: 100%;
+   font: inherit;
+   vertical-align: baseline;
+}
+/* HTML5 display-role reset for older browsers */
+article, aside, details, figcaption, figure, 
+footer, header, hgroup, menu, nav, section {
+   display: block;
+}
+body {
+   line-height: 1;
+}
+ol, ul {
+   list-style: none;
+}
+blockquote, q {
+   quotes: none;
+}
+blockquote:before, blockquote:after,
+q:before, q:after {
+   content: '';
+   content: none;
+}
+table {
+   border-collapse: collapse;
+   border-spacing: 0;
+}
+.clearfix:after { content:''; display:block; clear:both;}
+img {vertical-align:top;}
+
+/* TYPOGRAPHY */
+* {
+   -webkit-font-smoothing: antialiased;
+}
+body{
+   font:16px/28px "Montserrat", sans-serif;
+}
+h1,h2,h3,h4,h5,h6 {
+   font-family:"Raleway", sans-serif;
+}
+.content_tt { font-size:30px; font-weight:600; color:#555; text-align:center;}
+.content_desc {font-size:16px; font-weight:300; color:#8c8c8c; width:65%; margin:23px auto 33px; text-align:center; }
+
+/* LAYOUT */
+/*12-18*/
+.container {width:1130px; margin: 0 auto;}
+.my_container { width:1800px; margin: 0 auto;}
+/* COMMON ELEMONTS */
+
+.btn{
+   background:#998675;
+   padding:0 29px;
+   line-height:50px;
+   text-transform:uppercase;
+   font-weight:bold;
+   display:inline-block;
+   border-radius:3px;
+   color:#fff;
+   text-decoration:none;
+   position:relative;
+   box-shadow:inset 0 -3px #736357;
+}
+
+.btn-primary:hover {
+   color: #fff;
+   background-color: #585858;
+   border-color: #204d74
+}
+
+
+
+
+
+
+
+

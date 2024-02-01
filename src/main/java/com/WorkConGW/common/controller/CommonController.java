@@ -50,6 +50,7 @@ public class CommonController extends BaseController {
     @RequestMapping(value="/login",method = RequestMethod.POST)
     public String login(String empId, String empPwd, HttpSession session, RedirectAttributes rttr)throws SQLException
     {
+        logger.info("login컨트롤러 호출");
         logger.info(empId);
         logger.info(empPwd);
         String url = "redirect:./home";

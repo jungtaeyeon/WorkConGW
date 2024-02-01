@@ -8,7 +8,8 @@ import org.apache.logging.log4j.LogManager;
  import org.apache.logging.log4j.Logger;
  import org.mybatis.spring.SqlSessionFactoryBean;
  import org.mybatis.spring.SqlSessionTemplate;
- import org.springframework.beans.factory.annotation.Autowired;
+import org.mybatis.spring.annotation.MapperScan;
+import org.springframework.beans.factory.annotation.Autowired;
  import org.springframework.boot.context.properties.ConfigurationProperties;
  import org.springframework.context.ApplicationContext;
  import org.springframework.context.annotation.Bean;
@@ -20,6 +21,7 @@ import com.zaxxer.hikari.HikariConfig;
 
  @Configuration //spring-data.xml
  @PropertySource("classpath:/application.yml") // 내려쓰기와 들여쓰기로 반복을 피한다.
+ @MapperScan(basePackages = "com.WorkConGW.*")
  public class DatabaseConfiguration {
  	private static final Logger logger = LogManager.getLogger(DatabaseConfiguration.class);
 
@@ -44,7 +46,7 @@ import com.zaxxer.hikari.HikariConfig;
  		SqlSessionFactoryBean sqlSessionFactoryBean = new SqlSessionFactoryBean();
  		sqlSessionFactoryBean.setDataSource(dataSource);
  		sqlSessionFactoryBean.setMapperLocations(applicationContext.getResources("classpath:/com/workcon/mybatis/mappers/**/*.xml"));
-		sqlSessionFactoryBean.setTypeAliasesPackage("com.WorkConGW.board.notice.dto, com.WorkConGW.emp.dto, com.WorkConGW.common.dto");
+		sqlSessionFactoryBean.setTypeAliasesPackage("com.WorkConGW.board.notice.dto, com.WorkConGW.emp.dto, com.WorkConGW.common.dto, com.WorkConGw.scheduler,dto, com.WorkConGw.common.dto");
 		org.apache.ibatis.session.Configuration configuration = new org.apache.ibatis.session.Configuration();
 		configuration.setCallSettersOnNulls(true);
 		sqlSessionFactoryBean.setConfiguration(configuration);

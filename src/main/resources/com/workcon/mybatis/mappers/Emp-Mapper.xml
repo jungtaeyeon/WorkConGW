@@ -11,7 +11,7 @@
 			,A.EMP_SUP_ID				
 			,A.EMP_NAME				
 			,A.EMP_PWD				
-			,A.EMP_REGNO				
+			,A.EMP_REGNO
 			,NVL(A.EMP_HP,'없음') 				
 			,A.EMP_SIGN				
 			,A.EMP_PICTURE			
@@ -39,7 +39,7 @@
                 SELECT  F.DEPT_NAME
                 FROM    EMP E, DEPT F
                 WHERE   E.TEAM_ID = F.DEPT_ID
-                AND     E.EMP_ID = #{emp_Id}
+                AND     E.EMP_ID = #{emp}
               ) AS TEAM_NAME
 							<!-- 부서이름출력 ((개인)팀id=부서(id)) 
 								AND 사원정보까지 같으면(empId)는 객체로 넘겨받아야함
@@ -64,5 +64,52 @@
        AND A.EMP_ST IN (1, 4)
        AND EMP_ID = #{emp}
 </select>
+
+	<select id="selectEmpList" resultType="EmpVO">
+		SELECT
+		EMP.EMP_ID
+		,EMP.EMP_SUP_ID
+		,EMP.EMP_NAME
+		,EMP.EMP_PWD
+		,EMP.AUTH_ID
+		,EMP.EMP_CODE_RESP_ID
+		,EMP.EMP_REGNO
+		,NVL(EMP.EMP_HP,'없음') empHp
+		,EMP.EMP_SIGN
+		,EMP.EMP_PICTURE
+		,EMP.EMP_ST
+		,EMP.EMP_ADD1
+		,EMP.EMP_ADD2
+		,EMP.DEPT_ID
+		,EMP.EMP_CREATE_DT
+		,EMP.EMP_UPDATE_DT
+		,NVL(EMP.EMP_EMAIL,'없음') empEmail
+		,EMP.ATTEND_ST_ID
+		,ATTEND_ST.ATTEND_ST_NAME
+		,CODE.CODE_NAME as officialName
+		,DEPT.DEPT_NAME
+
+		FROM	EMP, ATTEND_ST, CODE, DEPT
+		WHERE   EMP.ATTEND_ST_ID = ATTEND_ST.ATTEND_ST_ID(+)
+		<!-- 사원을 기준으로 출근상태를 모두 출력 대응되는 값이 없어도 NULL값으로 표시 -->
+		AND		EMP.CODE_ID = CODE.CODE_ID
+		AND     EMP.DEPT_ID = DEPT.DEPT_ID
+		AND		EMP.EMP_ST IN (1,4)
+		ORDER BY EMP.EMP_ID DESC
+
+	</select>
+
+	<select id="selectEmpIdListByDeptId" parameterType="EmpVO" resultType="EmpVO">
+		SELECT  emp_id
+		FROM	EMP
+		WHERE	1=1
+		<if test='dept_Id != null and !"".equals(dept_Id) '> <!-- dept_id가 null이 아니고 그 값이 빈 문자열이 아닐경우에 참-->
+			AND		dept_id = #{dept_Id}
+		</if>
+		<if test='team_Id != null and !"".equals(team_Id) '> <!-- dept_id가 null이 아니고 그 값이 빈 문자열이 아닐경우에 참-->
+			AND		team_id = #{team_Id}
+		</if>
+	</select>
+
 
 </mapper>

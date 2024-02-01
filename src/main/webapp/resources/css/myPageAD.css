@@ -1,0 +1,537 @@
+@charset "UTF-8";
+
+.mainpages{
+    margin: 80px 80px 80px 80px; 
+}
+
+a {
+    color: #797979;
+}
+a:link, a:visited {
+    text-decoration: none;
+}
+
+.contents2 {
+    padding: 50px 300px 0 0;
+    min-height: 600px;
+}
+.board_wrap01 {
+    position: relative;
+    border:
+}
+.board_common01.notice {
+    border-top: none;
+    margin-bottom: 19px;
+}
+
+li {
+    text-align: -webkit-match-parent;
+}
+.board_common01.notice li .type {
+    top: 35px;
+    left: 29px;
+    width: 55px;
+    height: 26px;
+    font-size: 16px;
+    color: #676767;
+    line-height: 26px;
+    padding-left: 33px;
+    background: url(http://s.nx.com/s2/game/mabinogi/mabiweb/homepage/images/common/icon_notice.gif) no-repeat left top;
+    text-align: left;
+}
+.board_common01 li .type {
+    position: absolute;
+    top: 0;
+    left: 0;
+    display: table;
+    width: 78px;
+    height: 100%;
+    font-size: 15px;
+    color: #949494;
+    line-height: 20px;
+    text-align: center;
+}
+
+.board_common01.notice li {
+    height: 95px;
+   width: 600px;
+    background: #f2f2f2;
+    border-bottom: none;
+    border-left: 5px solid #d36ba8;
+    margin-bottom: 1px;
+    padding: 0 0 0 123px;
+}
+
+
+.board_common01.notice li p.info_r {
+    position: absolute;
+    top: 0;
+    right: 0;
+    line-height: 95px;
+}
+.board_common01 li p.info_r {
+    position: absolute;
+    top: 0;
+    right: 0;
+    line-height: 97px;
+}
+.board_common01 li p.info_r span.date {
+    display: inline-block;
+    width: 71px;
+    font-size: 13px;
+    color: #949494;
+    padding-right: 20px;
+    text-align: right;
+    letter-spacing: normal;
+}
+
+.board_ty_list ul {
+    position: absolute;
+    left: 4rem;
+    top: 3.4rem;
+    letter-spacing: -1px;
+}
+.board_ty_list li a {
+    display: block;
+    width: 120px;
+    height: 46px;
+    font-size: 16px;
+    color: #665a50;
+    line-height: 46px;
+    background: #e8e8e8;
+    border-bottom: 1px solid #fff;
+    text-align: center;
+    text-decoration: none;
+    transform:translateX(-20%);
+    transition: all 0.3s ease 0s;
+}
+
+.board_ty_list li a:hover {
+  background-color: #ff5722;
+  box-shadow: 0px 15px 20px rgba(119, 29, 0, 0.73);
+  color: #fff;
+  transform: translateX(-0.1px);
+}
+
+/* 테이블 색상 (중요하지 않음) */
+.clupMain {
+    transform: translateX(17%);
+    width: 80%;
+    border-collapse: collapse
+}
+.clupMain th {
+  border: 1px solid #dbdbdb;
+  padding: 5px 5px;
+  background: #3498db;
+  color: #fff;
+}
+.clupMain td  {
+  border: 1px solid #dbdbdb;
+  padding: 5px 5px;
+  font-size:15px;
+}
+tr:nth-of-type(odd) { 
+   background: #eee; 
+}
+
+/* 체크박스의 크기 */
+.check {
+  text-align:;
+  width:12px;
+  height:12px;
+}
+
+/* 컬럼의 너비 */
+.select {width: 3%;}
+.id {width: 20%;}
+.name {width: 15%;}
+.m_name {width: 35%;}
+.k_name {width: 35%;}
+.tel {width: 20%;}
+.kategorie {width: 15%;}
+.email {width:15%;}
+.del_button {width: 10%;}
+
+/* 컬럼의 정렬 */
+tr td:nth-child(1){text-align:center}
+tr td:nth-child(2){text-align:center;}
+tr td:nth-child(3){text-align:center;}
+tr td:nth-child(4){text-align:center;}
+tr td:nth-child(5){text-align:center;}
+tr td:nth-child(6){text-align:center;}
+tr td:nth-child(7){text-align:center;}
+tr td:nth-child(8){text-align:center;}
+
+/* 페이징 버튼 */
+.page-box {
+  width: 80%;
+  margin: 5px auto;
+  height: 30px;
+  text-align: center;
+}
+.page-box a.btn {
+  display:inline-block;
+  padding: 3px 5px;
+  font-size: 10px;
+  border: 1px solid #dbdbdb;
+  color: #333;
+}
+.page-box a.btn.on {
+  background-color: #dbdbdb;
+}
+
+.del_all{
+   position: absolute;
+    right:9.2rem;
+    top: 1rem;
+    line-height: 30px;
+    background-color: #005aab;
+    color: #fff;
+    text-align: center;
+    border: 0;
+    font-size: 14px;
+    cursor: pointer;
+    transition: all 0.3s ease 0s;
+}
+
+.del_one {
+  line-height: 30px;
+  background-color: #005aab;
+  color: #fff;
+  text-align: center;
+  border: 0;
+  font-size: 14px;
+  cursor: pointer;
+  transition: all 0.3s ease 0s;
+}
+
+
+.del_one:hover {
+  background-color: #ff5722;
+  box-shadow: 0px 15px 20px rgba(119, 29, 0, 0.73);
+  color: #fff;
+  transform: translateY(-1px);
+}
+
+.del_all:hover {
+  background-color: #ff5722;
+  box-shadow: 0px 15px 20px rgba(119, 29, 0, 0.73);
+  color: #fff;
+  transform: translateY(-1px);
+}
+
+.maker{
+   position: absolute;
+    right: 14rem;
+    top: 1rem;
+    line-height: 30px;
+    background-color: #005aab;
+    color: #fff;
+    text-align: center;
+    border: 0;
+    font-size: 14px;
+    cursor: pointer;
+    transition: all 0.3s ease 0s;
+}
+
+.maker:hover {
+  background-color: #ff5722;
+  box-shadow: 0px 15px 20px rgba(119, 29, 0, 0.73);
+  color: #fff;
+  transform: translateY(-1px);
+}
+
+
+/* 셀렉트박스 */
+
+fieldset{border:0;}
+
+div.select-cus {
+  position: absolute;
+  font-size: 14px;
+  font-weight: bold;
+  color: #666;
+  top: 11px;
+  letter-spacing: 1px;
+}
+
+
+/* 검색 */
+.sub_sps_sch {
+  text-align: center;
+  margin-top: 30px;
+  
+}
+
+.sub_sps_sch select {
+
+  text-align-last : center;
+  height: 32px;
+  width: 85px;
+  padding-right: 5px;
+  background: none !important;
+  border: 2px solid #d3d3d3;
+}
+
+.sub_sps_sch .search_box {
+  position: relative;
+  margin-bottom:20px; 
+}
+
+.sub_sps_sch .search_box input[type="text"] {
+  height: 26px;
+  padding-right: 5px;
+  background: none !important;
+  border: 2px solid #d3d3d3;
+}
+
+.sub_sps_sch .btn_submit {
+  line-height: 30px;
+  background-color: #005aab;
+  color: #fff;
+  text-align: center;
+  border: 0;
+  font-size: 14px;
+  cursor: pointer;
+  transition: all 0.3s ease 0s;
+}
+
+
+.btn_submit:hover {
+  background-color: #ff5722;
+  box-shadow: 0px 15px 20px rgba(119, 29, 0, 0.73);
+  color: #fff;
+  transform: translateY(-1px);
+}
+
+.page_wrap {
+   text-align:center;
+   font-size:0;
+   margin-top:50px;
+   margin-bottom:50px; 
+ }
+.page_nation {
+   display:inline-block;
+}
+.page_nation .none {
+   display:none;
+}
+.page_nation a {
+   display:block;
+   margin:0 3px;
+   float:left;
+   border:1px solid #e6e6e6;
+   width:28px;
+   height:28px;
+   line-height:28px;
+   text-align:center;
+   background-color:#fff;
+   font-size:13px;
+   color:#999999;
+   text-decoration:none;
+}
+.page_nation .arrow {
+   border:1px solid #ccc;
+}
+.page_nation .pprev {
+   background:#f8f8f8 url('../images/page_pprev.png') no-repeat center center;
+   margin-left:0;
+}
+.page_nation .prev {
+   background:#f8f8f8 url('../images/page_prev.png') no-repeat center center;
+   margin-right:7px;
+}
+.page_nation .next {
+   background:#f8f8f8 url('../images/page_next.png') no-repeat center center;
+   margin-left:7px;
+}
+.page_nation .nnext {
+   background:#f8f8f8 url('../images/page_nnext.png') no-repeat center center;
+   margin-right:0;
+}
+.page_nation a.active {
+   background-color:#42454c;
+   color:#fff;
+   border:1px solid #42454c;
+}
+
+.clupMain2 {
+    margin:auto;
+    width: 50%;
+    border-collapse: collapse;
+    margin-top:50px;  
+}
+
+.clupMain2 th {
+  border: 1px solid #dbdbdb;
+  padding: 5px 5px;
+  background: #3498db;
+  color: #fff;
+}
+.clupMain2 td  {
+  border: 1px solid #dbdbdb;
+  padding: 5px 5px;
+  font-size:15px;
+}
+tr:nth-of-type(odd) { 
+   background: #eee; 
+}
+
+.del_all2{
+   position: absolute;
+    right: 31.5rem;
+    top: 3rem;
+    line-height: 30px;
+    background-color: #005aab;
+    color: #fff;
+    text-align: center;
+    border: 0;
+    font-size: 14px;
+    cursor: pointer;
+    transition: all 0.3s ease 0s;
+}
+    
+.del_all2:hover {
+  background-color: #ff5722;
+  box-shadow: 0px 15px 20px rgba(119, 29, 0, 0.73);
+  color: #fff;
+  transform: translateY(-1px);
+}
+
+/*12-18추가*/
+#chkPW table {
+   margin: 0px auto;
+}
+#chkPW .add_name{
+   width: 100px;
+   border: 1px solid #dbdbdb;
+    padding: 5px 5px;
+    background: #424242;
+    color: #fff;
+}
+#chkPW .add_ps{
+   width: 200px;
+   border: 1px solid #dbdbdb;
+    padding: 5px 5px;
+    background: #424242;
+    color: #fff;
+}
+#chkPW .add_ok{
+   width: 150px;
+   border: 1px solid #dbdbdb;
+    padding: 5px 5px;
+    background: #424242;
+    color: #fff;
+}
+#chkPW .add_x{
+   width: 100px;
+   border: 1px solid #dbdbdb;
+    padding: 5px 5px;
+    background: #424242;
+    color: #fff;
+}
+#chkPW .row{
+   height: 42px;
+}
+#chkPW .no{
+   line-height: 30px;
+    background-color: #585858;
+    color: #fff;
+    text-align: center;
+    border: 0;
+    font-size: 14px;
+    cursor: pointer;
+    transition: all 0.3s ease 0s;   
+    margin-top: 4px;
+}
+#chkPW .no:hover {
+    background-color: #ff5722;
+    box-shadow: 0px 15px 20px rgba(119, 29, 0, 0.73);
+    color: #fff;
+    transform: translateY(-1px);
+}
+#chkPW .agree{
+   line-height: 30px;
+    background-color: #585858;
+    color: #fff;
+    text-align: center;
+    border: 0;
+    font-size: 14px;
+    cursor: pointer;
+    transition: all 0.3s ease 0s;   
+    margin-top: 4px;
+}
+#chkPW .agree:hover {
+    background-color: #ff5722;
+    box-shadow: 0px 15px 20px rgba(119, 29, 0, 0.73);
+    color: #fff;
+    transform: translateY(-1px);
+}
+/*12-18추가*/
+.resultUser{
+	text-align: center;
+    margin: auto;
+    margin-top: 15px;
+}
+
+@media screen and (max-width:768px){
+	.sub_sps_sch {
+    text-align: center;
+    }   
+    .board_ty_list ul {
+    position: absolute;
+    left: -3rem;
+    top: 5.2rem;
+    letter-spacing: -1px;
+    }
+    .clupMain2 {
+    margin-left: 70px;
+    width: 90%;
+    border-collapse: collapse;
+    margin-top: 50px;
+   }  
+   .page_wrap {
+    text-align: center;
+    font-size: 0;
+    margin-top: 30px;
+    margin-bottom: 50px;
+    margin-left: 90px;
+   }
+   .del_all2 {
+    position: absolute;
+    right: -1.5rem;
+    top: 2.5rem;
+    line-height: 30px;
+    background-color: #005aab;
+    color: #fff;
+    text-align: center;
+    border: 0;
+    font-size: 14px;
+    cursor: pointer;
+    transition: all 0.3s ease 0s;
+    }   
+    .mainpages{
+    margin-left:50px;
+    margin-right:50px; 
+    }
+    .clupMain {
+    transform: translateX(17%);
+    width: 95%;
+    border-collapse: collapse;
+    margin-top: 50px;
+    }
+    .del_all {
+    position: absolute;
+    right: -3rem;
+    top: 3rem;
+    line-height: 30px;
+    background-color: #005aab;
+    color: #fff;
+    text-align: center;
+    border: 0;
+    font-size: 14px;
+    cursor: pointer;
+    transition: all 0.3s ease 0s;
+}  
+u_email{width:50px; }
+}

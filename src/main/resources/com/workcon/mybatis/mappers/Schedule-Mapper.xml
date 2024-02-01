@@ -4,4 +4,80 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.mybatis.mapper.ScheduleMapper">
 
+    <insert id="insertSchedule" parameterType="ScheduleVO">
+        <selectKey resultType="int" keyProperty="schedule_Id" order="BEFORE">
+            SELECT SEQ_SCHEDULE_ID.NEXTVAL FROM DUAL
+        </selectKey>
+        insert into SCHEDULE (
+              SCHEDULE_ID
+            ,SCHEDULE_TITLE
+            ,SCHEDULE_CONTENT
+            ,SCHEDULE_CREATE_DT
+            ,SCHEDULE_START_DT
+            ,SCHEDULE_END_DT
+            ,SCHEDULE_IMP
+            ,SCHEDULE_ST
+            ,SCHEDULE_LOCATION
+            ,SCHEDULE_WRITER_ID
+            ,CODE_ID
+            ,DEPT_ID
+        ) VALUES (
+                  #{schedule_Id}
+                ,#{schedule_Title}
+                ,#{schedule_Content}
+        ,SYSDATE
+        ,to_date(#{schedule_Start_Dt},'yyyy-MM-dd HH24:mi')
+        ,to_date(#{schedule_End_Dt},'yyyy-MM-dd HH24:mi')
+        ,#{schedule_Imp}
+        ,1
+        ,#{schedule_Location}
+        ,#{schedule_Writer_Id}
+        ,#{code_Id}
+        ,#{dept_Id}
+        )
+    </insert>
+    <select id="selectScheduleListByDate" resultType="ScheduleVO" parameterType="ScheduleVO">
+        SELECT		SCHEDULE_ID
+        ,SCHEDULE_TITLE
+        ,SCHEDULE_CONTENT
+        ,SCHEDULE_CREATE_DT
+        ,SCHEDULE_START_DT
+        ,SCHEDULE_END_DT
+        ,SCHEDULE_IMP
+        ,SCHEDULE_ST
+        ,SCHEDULE_WRITER_ID
+        ,SCHEDULE_LOCATION
+        ,CODE_ID
+        ,DEPT_ID
+        FROM		SCHEDULE
+    </select>
+
+    <select id="selectScheduleById" resultType="ScheduleVO" parameterType="int">
+        SELECT
+            SCHEDULE_ID
+             ,SCHEDULE_TITLE
+             ,SCHEDULE_CONTENT
+             ,SCHEDULE_CREATE_DT
+             ,SCHEDULE_START_DT
+             ,SCHEDULE_END_DT
+             ,SCHEDULE_IMP
+             ,SCHEDULE_ST
+             ,SCHEDULE_WRITER_ID
+             ,SCHEDULE_LOCATION
+             ,CODE_ID
+             ,DEPT_ID
+        FROM 	SCHEDULE
+        WHERE 	SCHEDULE_ID =#{schedule_Id}
+--           AND		SCHEDULE_ST IN (1,2)
+    </select>
+
+    <update id="deleteSchedule" parameterType="ScheduleVO">
+        UPDATE schedule
+        <set>
+            SCHEDULE_ST = 0
+        </set>
+        WHERE
+        SCHEDULE_ID =  #{schedule_Id}
+        AND		SCHEDULE_WRITER_ID = #{schedule_Writer_Id}
+    </update>
 </mapper>

@@ -1,0 +1,216 @@
+@CHARSET "UTF-8";
+
+.container3{
+    width: 1170px;
+    margin-top: 150px;
+    float: right;
+    margin-right: 320px;
+}
+
+.schedule-Top{
+  
+  
+}
+
+#searchUser{
+    float:right;   
+}
+
+#joinedGroup{
+    background: #FFFFF8;
+    height: 60px;
+    /* border-style: none; */
+    /* border: none; */
+    cursor: pointer;
+    text-align: center;
+    font-size: 28px;
+    -webkit-appearance: none;
+    margin: auto;
+    list-style: none;
+    margin-bottom: 15px;
+    border: 2px solid lightsteelblue;
+    border-radius: 10px;
+}
+     
+
+
+.btnschedule{
+   width: 100px;
+   height: 35px;
+   font-family: 'Roboto', sans-serif;
+   font-size: 14px;
+   text-transform: uppercase;
+   letter-spacing: 2.5px;
+   font-weight: 500;
+   color: #000;
+   background-color: #ffffff;
+   border: none;
+   border-radius: 45px;
+   box-shadow: 0px 8px 15px rgba(0, 0, 0, 0.1);
+   transition: all 0.3s ease 0s;
+   cursor: pointer;
+   margin-left: 150px;
+   margin-top: 25px;
+}
+
+
+.btnschedule:HOVER {
+   background-color: #ff5722;
+   box-shadow: 0px 15px 20px rgba(119, 29, 0, 0.73);
+   color: #fff;
+   transform: translateY(-7px);
+}
+
+/* 팝업 */
+
+.popup_overlay { /*팝업창 */
+  position: fixed;
+  z-index:210;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: rgba(0, 0, 0, 0.7);
+  transition: opacity 1000ms;
+  visibility: hidden;
+  opacity: 0;
+}
+.popup_overlay:target { /*팝업창 */
+  visibility: visible;
+  opacity: 1;
+}
+
+.popup {
+  z-index:211;   
+  vertical-align:middle;
+  text-align:center;
+  margin: 200px auto;
+  padding: 20px;
+  background: #fff;
+  border-radius: 5px;
+  width: 400px;
+  position: relative;
+}
+
+.popup h2 { /*팝업의  위쪽 타이틀*/
+  margin:auto;
+  margin-top : 15px;
+  margin-bottom : 20px;
+  width : 200px;
+  color: #333;
+  font-size: 25px;
+  font-weight: bold;
+  font-family: Tahoma, Arial, sans-serif;
+}
+.popup .close { /*팝업의 x표시 */
+  position: absolute;
+  top: 10px;
+  right: 20px;
+  transition: all 100ms;
+  font-size: 30px;
+  font-weight: bold;
+  text-decoration: none;
+  color: #333;
+}
+.popup .close:hover {/*팝업의 x표시 */
+  color: #06D85F;
+}
+.popup .content {
+  max-height: 90%;
+  overflow: auto;
+}
+
+/*개인정보 체크박스 */
+
+.ok{
+  width:70px;
+  height:35px;
+  outline:none;
+  margin-top: 60px;
+  background-color:#333;
+  font-weight: bold;
+  border-bottom: 1px solid #5e5e5e;
+  color: #f5f5f5;
+  border-radius: 0.4em;
+  }
+.ok:HOVER{
+  background-color:#3D3D3D;
+  }
+
+/* 팝업 */
+
+
+.btnUserse{
+   width: 65px;
+   height: 32px;
+   font-family: 'Roboto', sans-serif;
+   font-size: 15px; 
+   font-weight: 500;
+   color: #fff;
+   background-color: #424242;
+   border: none;
+   cursor: pointer;
+}
+
+#complete {
+  margin-left: 265px;
+  margin-top: 15px;
+  width: 100px;
+   height: 35px;
+   font-family: 'Roboto', sans-serif;
+   font-size: 15px;
+   text-transform: uppercase;
+   letter-spacing: 2.5px;
+   font-weight: 500;
+   color: #fff;
+   background-color: #424242;
+   border: none;
+   border-radius: 45px;
+   box-shadow: 0px 8px 15px rgba(0, 0, 0, 0.1);
+   transition: all 0.3s ease 0s;
+   cursor: pointer;
+  
+}
+
+#complete:HOVER {
+   background-color: #ff5722;
+   box-shadow: 0px 15px 20px rgba(119, 29, 0, 0.73);
+   color: #fff;
+   transform: translateY(-7px);
+}
+
+
+
+.s_ck {width: 20%;
+text-align: center;}
+.s_name{width: 30%;
+text-align: center;}
+.s_pid{width: 50%;
+text-align: center;}
+
+.schedTable{
+	margin: auto;
+	text-align:center; 
+}
+
+
+.resultUser {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top:15px; 
+}
+.resultUser th {
+  border: 1px solid #dbdbdb;
+  padding: 5px 5px;
+  background: #3498db;
+  color: #fff;
+}
+.resultUser td  {
+  border: 1px solid #dbdbdb;
+  padding: 5px 5px;
+  font-size:15px;
+  text-align: center;
+}
+tr:nth-of-type(odd) { 
+   background: #eee; 
+}	

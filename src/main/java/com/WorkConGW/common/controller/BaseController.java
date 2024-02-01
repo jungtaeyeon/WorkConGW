@@ -56,9 +56,13 @@ public class BaseController {
         }
         
         /** 중복등록 방지: token 유효성 검증 */
+
+        //1. 전달된 BaseVO에서 saveToken 가져옴
         public static boolean isValidateSaveToken(HttpSession session, BaseVO baseVO){
             boolean isValid = false;
             String saveToken = baseVO.getSaveToken(); 
+
+            //2. saveToken이 Null 또는 빈 문자열이 아닌 경우에만 검증을 수행
             if(!GenericValidator.isBlankOrNull(saveToken)){
                 @SuppressWarnings("unchecked")
                 List<String> saveTokenList = (List<String>)session.getAttribute(SAVE_TOKEN);
