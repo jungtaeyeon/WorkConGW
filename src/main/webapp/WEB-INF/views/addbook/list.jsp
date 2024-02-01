@@ -31,9 +31,8 @@
 			</div>
 			<div class="serchContain" style="display: flex; align-items: flex-start;">
 				<form action="addBookSearch" id="serchForm">
-					<input type="hidden" name="empId" value="rkdrhd98">
 					<select name="selectSearch">
-						<option>전체</option>
+						<option value="0">전체</option>
 						<option value="manage_display_name">이름</option>
 						<option value="manage_hp">휴대폰</option>
 						<option value="manage_official_name">직급</option>
@@ -51,9 +50,10 @@
 						<th scope="col">이름명</th>
 						<th scope="col">전화번호</th>
 						<th scope="col">이메일</th>
+						<th scope="col">회사</th>
 						<th scope="col">직급</th>
-						<th scope="col">부서명</th>
-						<th scope="col">그룹이름</th>
+						<th scope="col">부서</th>
+						<th scope="col">태그</th>
 						<th scope="col">메모</th>
 					</tr>
 				</thead>
@@ -64,6 +64,7 @@
 						<td><%= addBook.getManage_display_name() %></td>
 						<td><%= addBook.getManage_hp() %></td>
 						<td><%= addBook.getManage_email() %></td>
+						<td><%= addBook.getManage_company_name() %></td>
 						<td><%= addBook.getManage_official_name() %></td>
 						<td><%= addBook.getManage_dept_name() %></td>
 						<td><%= addBook.getAdd_book_title() %></td>

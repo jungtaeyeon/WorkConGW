@@ -2,7 +2,9 @@ package com.WorkConGW.addbook.controller;
 
 import java.util.List;
 import java.util.Map;
+import java.util.HashMap;
 
+import org.apache.commons.collections.map.HashedMap;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,10 +37,13 @@ public class AddBookController extends BaseController{
     public String addBookList(Model model, HttpSession session)
     {
         logger.info("addBookList");
-        session.setAttribute("empId", "rkdrhd98");
+        session.setAttribute("empId", "rkdrhd98"); /* 나중에 로그인 세션 받았을시 삭제 코드 */
+        Map<String, Object> pmap = new HashMap<String, Object>();
         String empId = (String) session.getAttribute("empId");
+        pmap.put("empId", empId);
+        pmap.put("share_add_book", 0);
         List<AddBookVO> abList = null;
-        abList = addBookService.addBookList(empId);
+        abList = addBookService.addBookList(pmap);
         String url = "addbook/list";
         model.addAttribute("abList", abList);
         return url;
@@ -53,24 +58,20 @@ public class AddBookController extends BaseController{
 
 
     /* restcontroller로 전송 */
-    @GetMapping("addBookGroupSelect")
-    public String addBookGroupSelect(Model model, HttpSession session){
-        logger.info("addBookGroupSelect");
-        String empId = (String) session.getAttribute("empId");
-        List<AddBookVO> addBookGroupList = null;
-        addBookGroupList = addBookService.addBookGroupSelect(empId);
-        model.addAttribute("addBookGroupList", addBookGroupList);
-        String url = "addbook/insert";
-        return url;
-    }
+    
 
     @GetMapping("addBookSearch")
-    public String addBookSearch(Model model, @RequestParam Map<String,Object> pmap)
+    public String addBookSearch(Model model, @RequestParam Map<String,Object> pmap, HttpSession session)
     {
         logger.info("addBookSearch");
         List<AddBookVO> abList = null;
+        Object empId = session.getAttribute("empId");
+        pmap.put("empId", empId);
+
+        logger.info(pmap.toString());
         abList = addBookService.addBookSearch(pmap);
-        logger.info(abList.toString());
+        
+        
         String url = "addbook/list";
         model.addAttribute("abList", abList);
         return url;

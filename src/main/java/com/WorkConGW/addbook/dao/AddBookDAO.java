@@ -22,10 +22,10 @@ public class AddBookDAO {
   Logger logger = LoggerFactory.getLogger(AddBookDAO.class);
 
   /* 주소록리스트 */
-  public List<AddBookVO> addBookList(String empId) {
+  public List<AddBookVO> addBookList(Map<String, Object> pmap) {
     logger.info("addBookList");
     AddBookVO addBookVO = new AddBookVO();
-    List<AddBookVO> list = sqlSessionTemplate.selectList("addBookList", empId);
+    List<AddBookVO> list = sqlSessionTemplate.selectList("addBookList", pmap);
     return list;
   }
 
@@ -36,10 +36,10 @@ public class AddBookDAO {
       return list;
   }
 
-  public List<AddBookVO> addBookGroupSelect(String empId) {
+  public List<AddBookVO> addBookGroupSelect(Map<String, Object> pmap) {
     logger.info("addBookGroupSelect");
     AddBookVO addBookVO = new AddBookVO();
-    List<AddBookVO> list = sqlSessionTemplate.selectList("addBookGroupSelect", empId);
+    List<AddBookVO> list = sqlSessionTemplate.selectList("addBookGroupSelect", pmap);
     logger.info(list.toString());
     return list;
   }

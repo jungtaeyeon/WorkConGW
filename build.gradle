@@ -40,6 +40,8 @@ implementation 'commons-validator:commons-validator:1.8.0'
     implementation "org.apache.tomcat.embed:tomcat-embed-jasper"
     implementation group: 'com.oracle.ojdbc', name: 'orai18n', version: '19.3.0.0'
 
+//Gson
+implementation group: 'com.google.code.gson', name: 'gson', version: '2.9.0'
 
 // QR Code - zxing
     implementation group: 'com.google.zxing', name: 'javase', version: '3.5.2'

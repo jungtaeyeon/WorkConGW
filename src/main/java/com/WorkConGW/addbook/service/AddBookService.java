@@ -18,10 +18,10 @@ public class AddBookService {
   private AddBookDAO AddBookDAO;
   Logger logger = LoggerFactory.getLogger(AddBookDAO.class);
 
-  public List<AddBookVO> addBookList(String empId) {
+  public List<AddBookVO> addBookList(Map<String, Object> pmap) {
     logger.info("addBookList");
     List<AddBookVO> list = new ArrayList<>();
-    list = AddBookDAO.addBookList(empId);
+    list = AddBookDAO.addBookList(pmap);
     return list;
   }
 
@@ -39,10 +39,10 @@ public class AddBookService {
     return result;
   }
 
-  public List<AddBookVO> addBookGroupSelect(String empId) {
+  public List<AddBookVO> addBookGroupSelect(Map<String, Object> pmap) {
     logger.info("addBookGroupSelect");
     List<AddBookVO> list = new ArrayList<>();
-    list = AddBookDAO.addBookGroupSelect(empId);
+    list = AddBookDAO.addBookGroupSelect(pmap);
     return list;
   }
 }
