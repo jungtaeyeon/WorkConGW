@@ -19,7 +19,7 @@ public class AnonyReplyVO {
     private Date reply_Create_Dt;
     private Date reply_Update_Dt;
     private int anony_Board_Id;
-    private String emp_writer_id;
+    private String emp_Writer_Id;
 
 
 

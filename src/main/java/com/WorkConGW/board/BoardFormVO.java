@@ -19,8 +19,8 @@ public class BoardFormVO {
 
 
 
-	private AnonyVO annoyVO;
-	private AnonyReplyVO annoyReplyVO;
+	private AnonyVO anonyVO;
+	private AnonyReplyVO anonyReplyVO;
 	private AnonyVO searchAnonyVO;
 
 	public BoardFormVO() {
@@ -28,9 +28,9 @@ public class BoardFormVO {
 		this.searchNoticeVO = new NoticeVO();
 		this.empVO = new EmpVO();
 		this.searchEmpVO = new EmpVO();
-		this.annoyVO = new AnonyVO();
+		this.anonyVO = new AnonyVO();
 		this.searchAnonyVO = new AnonyVO();
-		this.annoyReplyVO= new AnonyReplyVO();
+		this.anonyReplyVO= new AnonyReplyVO();
 	}
 	public FileUploadCommand getFileUploadCommand() {
 		return fileUploadCommand;
@@ -73,28 +73,30 @@ public class BoardFormVO {
 	public void setSearchEmpVO(EmpVO searchEmpVO) {
 		this.searchEmpVO = searchEmpVO;
 	}
-	public AnonyReplyVO getAnnoyReplyVO() {
-		return this.annoyReplyVO;
+
+	/* ////////////////////////////////익명게시판//////////////////////////////// */
+	public AnonyReplyVO getAnonyReplyVO() {
+		return this.anonyReplyVO;
 	}
 
-	public void setAnnoyReplyVO(AnonyReplyVO annoyReplyVO) {
-		this.annoyReplyVO = annoyReplyVO;
+	public void setAnonyReplyVO(AnonyReplyVO anonyReplyVO) {
+		this.anonyReplyVO = anonyReplyVO;
 	}
 
 	public int getAnonyBoardId(){
-		return this.annoyVO.getAnony_Board_Id();
+		return this.anonyVO.getAnony_Board_Id();
 	}
-	public void setAnonyBoardId(int anonyBoardId){
-		this.annoyVO.setAnony_Board_Id(anonyBoardId);
+	public void setAnonyBoardId(int anony_Board_Id){
+		this.anonyVO.setAnony_Board_Id(anony_Board_Id);
 
 	}
 
-	public AnonyVO getannoyVO() {
-		return annoyVO;
+	public AnonyVO getAnonyVO() {
+		return this.anonyVO;
 	}
-
-	public void setannoyVO(AnonyVO annoyVO) {
-		this.annoyVO = annoyVO;
+	
+	public void setAnonyVO(AnonyVO anonyVO) {
+		this.anonyVO = anonyVO;
 	}
 
 	public AnonyVO getSearchAnonyVO()

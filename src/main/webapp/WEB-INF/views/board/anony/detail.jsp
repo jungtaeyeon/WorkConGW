@@ -5,7 +5,22 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
 <head>
-</head>
+	<!-- Font Awesome CDN -->
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" integrity="sha512-" crossorigin="anonymous" />
+	<!-- VENDOR CSS -->
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7/jquery.min.js"></script>
+	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" crossorigin="anonymous">
+	<!-- Bootstrap CSS -->
+	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+	<!-- Bootstrap Datepicker CSS CDN -->
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.10.0/css/bootstrap-datepicker.min.css" integrity="sha512-34s5cpvaNG3BknEWSuOncX28vz97bRI59UnVtEEpFX536A7BtZSJHsDyFoCl8S7Dt2TPzcrCEoHBGeM4SUBDBw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+	<!-- jQuery -->
+	<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+	<!-- Bootstrap JS -->
+	<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+	<!-- Bootstrap Datepicker JS CDN -->
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.10.0/js/bootstrap-datepicker.min.js" integrity="sha512-LsnSViqQyaXpD4mBBdRYeP6sRwJiJveh2ZIbW41EBrNmKxgr/LFZIiWT6yr+nycvhvauz8c2nYMhrP80YhG7Cw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+  </head>
 
 <style>
 .pagination {
@@ -54,17 +69,19 @@ th{
 
 <body>
 
+
+
+	
 <!-- 메인 content -->
 	<div id="main-content" >
 		<div class="container-fluid">
 			<form:form modelAttribute="boardFormVO" name="detailForm" action="${pageContext.request.contextPath }/board/anony/detail">
 				<form:hidden path="anonyVO.pageIndex"/>
-		        <form:hidden path="anonyVO.annoy_Board_Id" />
-		        <form:hidden path="anonyVO.annoy_Board_Title"/>
-		        <form:hidden path="anonyVO.annoy_Board_Content"/>
-		        <form:hidden path="anonyVO.annoy_Board_ReadCnt"/>
-		        <form:hidden path="anonyVO.annoy_Board_Create_Dt"/>
-
+		        <form:hidden path="anonyVO.anony_Board_Id" />
+		        <form:hidden path="anonyVO.anony_Board_Title"/>
+		        <form:hidden path="anonyVO.anony_Board_Content"/>
+		        <form:hidden path="anonyVO.anony_Board_ReadCnt"/>
+		        <form:hidden path="anonyVO.anony_Board_Create_Dt"/>
 		<div class="row clearfix">
 			<div class="col-12" style="margin-top: 2%;">
 				<h2 style="font-family: S-CoreDream-6Bold">
@@ -131,6 +148,7 @@ th{
 						</div>
 					</div>
 				</div>
+			</form:form>
 	<div class="header" style="padding-bottom: 0px;">
       <h2><b>💬 댓글 ${paginationInfo.totalRecordCount}</b></h2>
     </div>
@@ -154,7 +172,7 @@ th{
                		<br>
                		<c:if test="${anony.anonyReplyList.size() > 0 }">
                			<c:forEach items="${anony.anonyReplyList }" var="anonyReply">
-                            <ul class="right_chat list-unstyled mb-0" id="replyList_${anonyReply.reply_Id }">
+                            <ul class="right_chat list-unstyled mb-0" id="replyList_${anonyReply.reply_Id}">
                                 <li class="offline"> 
                                     <a href="javascript:void(0);">
                                         <div class="media">
@@ -179,7 +197,7 @@ th{
 	                                                <span class="message">
 	                                                	<h6 style="margin-bottom:5px; color: grey;">${anonyReply.reply_Content }</h6>
 	                                                </span>
-	<!--                                                 <span class="badge badge-outline status"></span> -->
+	                                               <span class="badge badge-outline status"></span> 
 	                                            </div>
                                         </div>
                                       </a>
@@ -217,6 +235,7 @@ th{
 
 //댓글 등록
 function registAnonyReply(){
+	
    if($.trim($('textarea#reply_Content').val())==""){
       alert('내용을 입력하세요.');
       $('textarea#reply_Content').focus();

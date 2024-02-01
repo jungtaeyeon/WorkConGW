@@ -121,15 +121,15 @@ public class AnonyVO extends BaseVO{
     public AnonyVO(){}
 
 
-    public AnonyVO(String anony_board_update_id,int annoy_Board_Id, String annoy_Board_Title, String annoy_Board_Content, int annoy_Board_ReadCnt, Date annoy_Board_Create_Dt, Date annoy_Board_Update_Dt, String emp_Writer_Id, List<AnonyReplyVO> anonyReplyList, int replyCount)
+    public AnonyVO(String anony_board_update_id,int anony_Board_Id, String anony_Board_Title, String anony_Board_Content, int anony_Board_ReadCnt, Date anony_Board_Create_Dt, Date anony_Board_Update_Dt, String emp_Writer_Id, List<AnonyReplyVO> anonyReplyList, int replyCount)
     {
         super();
-        this.anony_Board_Id = annoy_Board_Id;
-        this.anony_Board_Title = annoy_Board_Title;
-        this.anony_Board_Content=annoy_Board_Content;
-        this.anony_Board_ReadCnt=annoy_Board_ReadCnt;
-        this.anony_Board_Create_Dt=annoy_Board_Create_Dt;
-        this.anony_Board_Update_Dt=annoy_Board_Update_Dt;
+        this.anony_Board_Id = anony_Board_Id;
+        this.anony_Board_Title = anony_Board_Title;
+        this.anony_Board_Content=anony_Board_Content;
+        this.anony_Board_ReadCnt=anony_Board_ReadCnt;
+        this.anony_Board_Create_Dt=anony_Board_Create_Dt;
+        this.anony_Board_Update_Dt=anony_Board_Update_Dt;
         this.anony_board_update_id=anony_board_update_id;
         this.emp_Writer_Id=emp_Writer_Id;
         this.anonyReplyList=anonyReplyList;
