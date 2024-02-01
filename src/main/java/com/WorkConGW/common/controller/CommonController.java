@@ -120,6 +120,7 @@ public class CommonController{
     @PostMapping("/login")
     public String login(String empId, String empPwd,HttpServletRequest request)throws SQLException
     {
+        logger.info("login컨트롤러 호출");
         logger.info(empId);
         logger.info(empPwd);
         String url = "redirect:./home";

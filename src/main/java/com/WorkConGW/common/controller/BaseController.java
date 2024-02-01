@@ -64,6 +64,7 @@ public class BaseController {
 
                 if (!target.exists()) {
                     target.mkdirs();
+    
                 }
 
                 multi.transferTo(target);
@@ -83,6 +84,8 @@ public class BaseController {
 
         return attachList;
     }
+
+
 
     //목록에서 첨부파일 이름을 클릭하면 호출되는 메소드 구현하기
     @GetMapping("fileDownLoad")

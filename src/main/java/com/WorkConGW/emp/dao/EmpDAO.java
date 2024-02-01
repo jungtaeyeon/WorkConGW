@@ -22,12 +22,31 @@ public class EmpDAO {
     Logger logger = LoggerFactory.getLogger(EmpService.class);
 
     public EmpVO selectEmpById(String emp) {
+        logger.info(emp);
         List<EmpVO> empvo = sqlSessionTemplate.selectList("selectEmpById", emp);
-        EmpVO empvo2 = empvo.get(0);
-        logger.info(empvo2.toString());
-        
-        return empvo2;
+        logger.info(empvo.toString());
 
+        if(empvo != null && !empvo.isEmpty()) {
+            EmpVO empvo2 = empvo.get(0);
+            logger.info(empvo.toString());
+            return empvo2;
+        } else {
+            return null;
+        }
+
+    }
+
+    public List<EmpVO> selectEmpList() {
+        List<EmpVO> empList = sqlSessionTemplate.selectList("selectEmpList");
+        logger.info(empList.toString());
+        return empList;
+    }
+
+    public List<EmpVO> selectEmpIdListByDeptId(EmpVO empVO ) {
+        logger.info(empVO.toString());
+        List<EmpVO> empLIst = sqlSessionTemplate.selectList("selectEmpIdListByDeptId", empVO);
+        logger.info(empLIst.toString());
+        return empLIst;
     }
 
     public EmpVO checkEmpUpdateYn(String emp_id) {

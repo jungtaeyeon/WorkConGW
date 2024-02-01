@@ -2,6 +2,7 @@
 
 import java.io.File;
 import java.sql.SQLException;
+import java.util.List;
 
 import org.mindrot.jbcrypt.BCrypt;
 import org.slf4j.Logger;
@@ -21,8 +22,10 @@ import com.WorkConGW.exception.InvalidPasswordException;
 import com.WorkConGW.exception.NotFoundIDException;
 
 import jakarta.servlet.http.HttpSession;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
 
-@Service
+ @Service
 public class EmpService {
 
     Logger logger = LoggerFactory.getLogger(EmpService.class);
@@ -146,5 +149,29 @@ public class EmpService {
 
 
 
+    public List<EmpVO> selectEmpList() throws SQLException{
+        logger.info("empList");
+        List<EmpVO> empList = empDAO.selectEmpList();
+        return empList;
+    }
+
+    public List<EmpVO> selectEmpIdListByDeptId(EmpVO empVO) throws SQLException{
+        ServletRequestAttributes servletRequestAttribute = (ServletRequestAttributes) RequestContextHolder.currentRequestAttributes();
+        HttpSession session = servletRequestAttribute.getRequest().getSession(true);
+
+        if("dept".equals(empVO.getFlag())) {
+            EmpVO emp = (EmpVO)session.getAttribute("loginUser");
+            String deptId = emp.getDept_Id();
+            empVO.setDept_Id(deptId);
+        }else if("team".equals(empVO.getFlag())) {
+            EmpVO emp = (EmpVO)session.getAttribute("loginUser");
+            String teamId = emp.getTeam_Id();
+            empVO.setTeam_Id(teamId);
+
+        }
+        List<EmpVO> empList = empDAO.selectEmpIdListByDeptId(empVO);
+        /* 조인을 걸 떄, deptId, teamId로함. */
+        return empList;
+    }
 	
 }
