@@ -34,14 +34,5 @@ public class NoticeController extends BaseController{
     //     return "/board/notice/list";
     // }
 
-    @RequestMapping(value = "/noticeList", method = {RequestMethod.GET, RequestMethod.POST})
-    public ModelAndView noticeList(BoardFormVO boardFormVO, ModelAndView mnv, HttpSession session, HttpServletRequest request, HttpServletResponse response) throws SQLException
-    {
-        String url = "board/notice/list";
-        NoticeVO saerchNoticeVO = boardFormVO.getSearchNoticeVO();
-        Map<String,Object> datMap = noticeService.getNoticeList(saerchNoticeVO);
-        mnv.setViewName(url);
-        mnv.addObject(datMap);
-        return mnv;
-    }
+
 }

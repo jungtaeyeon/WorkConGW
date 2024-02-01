@@ -43,7 +43,7 @@ import com.zaxxer.hikari.HikariConfig;
  	public SqlSessionFactory sqlSessionFactory(DataSource dataSource) throws Exception {
  		SqlSessionFactoryBean sqlSessionFactoryBean = new SqlSessionFactoryBean();
  		sqlSessionFactoryBean.setDataSource(dataSource);
- 		sqlSessionFactoryBean.setMapperLocations(applicationContext.getResources("classpath:/com/workcon/mybatis/mappers/**/*.xml"));
+ 		sqlSessionFactoryBean.setMapperLocations(applicationContext.getResources("classpath:/mapper/**/*.xml"));
 		sqlSessionFactoryBean.setTypeAliasesPackage("com.WorkConGW");
 		org.apache.ibatis.session.Configuration configuration = new org.apache.ibatis.session.Configuration();
 		configuration.setCallSettersOnNulls(true);
