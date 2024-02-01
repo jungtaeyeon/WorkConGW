@@ -9,12 +9,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 
 
-import com.WorkConGW.common.controller.BaseController;
 
 
 @Controller
 @RequestMapping("/approval")
-public class ApprovalController extends BaseController{
+public class ApprovalController {
 
 
     @RequestMapping(value = "/main")

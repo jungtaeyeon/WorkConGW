@@ -5,6 +5,7 @@ import java.util.Date;
 import org.apache.ibatis.type.Alias;
 
 import com.WorkConGW.common.dto.BaseVO;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @Alias("EmpVO")
 public class EmpVO extends BaseVO{
@@ -12,6 +13,7 @@ public class EmpVO extends BaseVO{
     private String emp_Name;
     private String emp_Pwd;
     private String emp_Regno;
+    private String emp_Regno2;
     private String emp_Hp;
     private String emp_Sign;
     private String emp_Picture;
@@ -32,17 +34,18 @@ public class EmpVO extends BaseVO{
     private String emp_Update_Yn;
     private String team_Id;
     private String auth_Name;
-
     private String search_Auth;
     private String flag;
+    private String emp_Sup_Id;
 
     	
 
 	
     
     public EmpVO(String emp_Id, String emp_Name, String emp_Pwd,String emp_Regno, String emp_Hp, String emp_Sign,String emp_Picture, int emp_St, String emp_Add1,String emp_Add2,String dept_Id, Date emp_Create_Dt, Date emp_Update_Dt,String emp_Email
-        , String auth_Id, String code_Id, String emp_Code_Resp_Id, String code_Name, String dept_Name, String attend_St_Name, String emp_Update_Yn, String team_Id, String auth_Name, String search_Auth) {
+        , String auth_Id, String code_Id, String emp_Code_Resp_Id, String code_Name, String dept_Name, String attend_St_Name, String emp_Update_Yn, String team_Id, String auth_Name, String search_Auth, String attend_St_Id, String emp_Regno2,String emp_Sup_Id) {
             super();
+            this.emp_Regno2 = emp_Regno2;
             this.emp_Id = emp_Id;
             this.emp_Name = emp_Name;
             this.emp_Pwd = emp_Pwd;
@@ -67,15 +70,31 @@ public class EmpVO extends BaseVO{
             this.team_Id=team_Id;
             this.auth_Name =auth_Name;
             this.search_Auth=search_Auth;
+            this.attend_St_Id=attend_St_Id;
+            this.emp_Sup_Id =emp_Sup_Id;
 
     }
     
     public EmpVO(){
     }
 
-
+    public String getemp_Sup_Id()
+    {
+        return this.emp_Sup_Id;
+    }
+    public void setemp_Sup_Id(String emp_Sup_Id){
+        this.emp_Sup_Id=emp_Sup_Id;
+    }
 
     // 생성자를 호출하면 객체가 생성된다.
+
+    public String getemp_Regno2()
+    {
+        return this.emp_Regno2;
+    }
+    public void setemp_Regno2(String emp_Regno2) {
+        this.emp_Regno2 = emp_Regno2;
+    }
 
     public String getEmp_Id() {
         return this.emp_Id;

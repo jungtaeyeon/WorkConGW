@@ -27,7 +27,6 @@
         background-color: #fff;
       }
 
-      @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@100;300;400;500;700;900&family=Passion+One:wght@400;700&display=swap');
 
 * {
     padding: 0;
@@ -288,7 +287,7 @@ body, input {
     <div class="container">
       <div class="form-container">
         <div class="signin">
-          <form id = "loginForm" action="/common/login" class="signin-form" method="post">
+          <form id = "loginForm" action="/WorkConGW/common/login" class="signin-form" method="post">
             <h1 class="title">WorkConGW</h1>
             <h5 class="sub-title">업무도 내 회사 생활도 완벽하게</h5>
             <div class="input-field">
@@ -312,7 +311,6 @@ body, input {
             <input type="submit" value="로그인" class="login-btn solid" />
           </form>
           <div class="media-panel">
-            <span>지금 그룹에 참여해보세요! &nbsp; <a href="${root}/common/join">회원가입</a></span>
           </div>
         </div>
       </div>
@@ -321,9 +319,8 @@ body, input {
           <div class="content">
             <h3 style="color: #0f0f0f">그룹에 참여해보세요!</h3>
             <p>올인원 업무플랫폼 WorkConGW와 함께 새로운 회사 생활을 경험해 보세요.</p>
-            <a href="${root}/common/join" class="btn login-btn transparent" id="signup-btn">회원가입</a>
+            <a href="<%=request.getContextPath()%>/emp/registerView" class="btn login-btn transparent" id="signup-btn">회원가입</a>
           </div>
-          <img src="${root}/resources/img/member-imgs/undraw_remotely_-2-j6y.svg" class="image" alt="" />
         </div>
       </div>
     </div>
@@ -394,114 +391,6 @@ body, input {
         </div>
       </div>
     </div>
-    <script>
-        //모달 초기화
-        $(".modal").on("hidden.bs.modal", function (e) {
-          $(this).find("form")[0].reset();
-  
-          const foundId = document.querySelector("#foundId");
-          foundId.innerText = "";
-        });
-      </script>
-  
-      <script>
-        const login = () =>{
-            document.querySelector("login").submit();
-        }
 
-        //아이디 찾기
-        function findId() {
-          const empName = document.querySelector("#findIdName").value;
-          const empEmail = document.querySelector("#findIdEmail").value;
-          const foundId = document.querySelector("#foundId");
-      
-          $("#findid-hr").css("display", "block");
-          $("#findid-spinner").show();
-  
-          $.ajax({
-            url: "${root}/findId",
-            type: "post",
-            data: {
-              empName: empName,
-              empEmail: empEmail,
-            },
-            success: function (data) {
-              if (data == "") {
-                $("#findid-spinner").hide();
-                foundId.innerText = "아이디를 찾을 수 없습니다.";
-              } else {
-                $("#findid-spinner").hide();
-                foundId.innerText = "아이디 : " + data;
-              }
-            },
-            error: function (e) {
-                console.log("통신실패");
-            },
-          });
-        }
-
-
-        function login(){
-            let user = $('select[name="loginUser"]').val();
-            let id = user.split('|')[0];
-            let pass = user.split('|')[1];
-            $('#emp_Id').val(id);
-            $('#password').val(pass);
-            $('form[name="loginForm"]').submit();		
-        }
-
-
-      </script>
-      
-      <script defer>
-
-
-
-        let deleteCookie = function(name) {
-              document.cookie = name + '=; expires=Thu, 01 Jan 1999 00:00:10 GMT;';
-          }
-      
-          $(document).ready(function(){
-              $("#saveCheck").on("click", function() {
-                  if($(this).prop('checked')) {
-                      
-                  } else {
-                      deleteCookie('mid');
-                      $("#saveCheck").is("checked") == false;
-                  }
-              })
-          });
-      </script>
-      
-      <script>
-          function tempPwd() {
-              const empPwdId = document.querySelector("#findPwdId").value;
-              const empPwdName = document.querySelector("#findPwdName").value;
-              const empPwdEmail = document.querySelector("#findPwdEmail").value;
-              
-              $.ajax({
-                 url: "${root}/findPwd",
-                 type: "post",
-                 data: {
-                   empId: empPwdId,
-                   empName: empPwdName,
-                   empEmail: empPwdEmail,
-                 },
-                 success: function (data) {
-                   if (data == "1") {
-                       toastContent.innerText = "이메일로 임시비밀번호가 발급되었습니다.";                	 
-                       $(".modal-backdrop").remove();
-                       $("#modalFindPwd").modal("hide");
-                   } else if (data == "-1") {
-                       toastContent.innerText = "일치하는 회원이 없습니다.";
-                   }
-                 },
-                 error: function (e) {
-                     console.log("통신실패");
-                     toastContent.innerText = "일치하는 회원이 없습니다.";
-                 },
-               });
-          }
-      </script>
 </body>
 </html>

@@ -26,8 +26,14 @@ repositories {
 // def springVersion = '4.3.22.RELEASE'
 
 dependencies {
+implementation 'org.springframework.boot:spring-boot-starter-mail'
 implementation 'org.apache.commons:commons-lang3:3.14.0'
 implementation 'commons-validator:commons-validator:1.8.0'
+implementation('commons-io:commons-io:2.11.0')
+
+
+
+
 
 // 기본 세팅
 	implementation 'org.springframework.boot:spring-boot-starter-web'
@@ -39,25 +45,26 @@ implementation 'commons-validator:commons-validator:1.8.0'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
     implementation "org.apache.tomcat.embed:tomcat-embed-jasper"
     implementation group: 'com.oracle.ojdbc', name: 'orai18n', version: '19.3.0.0'
-
-
+	implementation 'commons-io:commons-io:2.11.0'    /* Apache commons-io */
+	implementation group: 'commons-fileupload', name: 'commons-fileupload', version: '1.4'
+	implementation 'com.googlecode.json-simple:json-simple:1.1.1'
 // QR Code - zxing
     implementation group: 'com.google.zxing', name: 'javase', version: '3.5.2'
 	implementation group: 'com.google.zxing', name: 'core', version: '3.5.2'
 
 // fullcalendar
     implementation 'org.webjars:fullcalendar:5.11.3'
-
+  
 // oracle
     runtimeOnly 'com.oracle.database.jdbc:ojdbc11'
 
 // jstl
     implementation 'org.glassfish.web:jakarta.servlet.jsp.jstl:3.0.1'
-   
-
-
+	implementation 'jakarta.servlet.jsp.jstl:jakarta.servlet.jsp.jstl-api:3.0.0'
+	implementation group: 'com.google.firebase', name: 'firebase-admin', version: '6.8.1'
     implementation 'org.mybatis:mybatis:3.5.15'
     implementation 'org.mybatis:mybatis-spring:3.0.3'
+	implementation 'org.mindrot:jbcrypt:0.4'
 
 // servlet -> javax : 스프링부트 2.5.5 사용
     implementation 'jakarta.servlet:jakarta.servlet-api:6.0.0'
@@ -78,6 +85,8 @@ implementation 'commons-validator:commons-validator:1.8.0'
 
 // json-path
     implementation 'com.jayway.jsonpath:json-path:2.8.0'
+
+
 
 
 

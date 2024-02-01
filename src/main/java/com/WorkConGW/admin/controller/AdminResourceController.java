@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 
 @Controller
-@RequestMapping("/admin/resource")
+@RequestMapping("WorkConGW/admin/resource")
 public class AdminResourceController {
 	
 	

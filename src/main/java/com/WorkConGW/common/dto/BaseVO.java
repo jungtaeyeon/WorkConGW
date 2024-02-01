@@ -1,5 +1,7 @@
 package com.WorkConGW.common.dto;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.util.List;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
@@ -13,8 +15,6 @@ public class BaseVO{
         /** 검색조건 */
         private String searchCondition = "";
     
-        /** 검색Keyword */
-        private String searchKeyword = "";
     
         /** 검색사용여부 */
         private String searchUseYn = "";
@@ -25,10 +25,10 @@ public class BaseVO{
         private int pageIndex = 1;
     
         /** 페이지갯수 */
-        private int pageUnit = 10;
+        private int pageUnit = 4;
     
         /** 페이지사이즈 */
-        private int pageSize = 10;
+        private int pageSize = 3;
     
         /** firstIndex */
         private int firstIndex = 1;
@@ -51,6 +51,88 @@ public class BaseVO{
         private List<BaseVO> pageUnitSelector;
         
     /////////////////////////////사용자가 각 페이지에 표시할 항목 수를 선택할 수 있도록 하는데 사용
+
+        private int totCnt = 0;				      	
+        private int startDate = 0;			    	
+        private int endDate = 0;				  
+        private int realEnd = 0;				    
+            
+        private boolean prev;
+        private boolean next;
+        
+        //QueryString
+        private String queryString = "";
+         /** 검색Keyword */
+         private String searchKeyword = "";
+
+        public String getQueryString() {
+            return this.queryString;
+        }
+
+        public void setQueryString() throws UnsupportedEncodingException {
+            String qs = "";
+            qs += "&searchKeyword="+URLEncoder.encode(this.searchKeyword, "UTF-8");
+            qs += "&pageIndex="+this.pageIndex;
+            
+            this.queryString = qs;
+            
+        }
+
+
+
+    public boolean isPrev() {
+            return this.prev;
+        }
+
+    public void setPrev(boolean prev) {
+            this.prev = prev;
+        }
+
+    public boolean isNext() {
+            return this.next;
+        }
+
+    public void setNext(boolean next) {
+            this.next = next;
+        } 
+        
+
+
+
+	public int getTotCnt() {
+		return this.totCnt;
+	}
+
+	public void setTotCnt(int totCnt) {
+		this.totCnt = totCnt;
+	}
+
+	public int getStartDate() {
+		return this.startDate;
+	}
+
+	public void setStartDate(int startDate) {
+		this.startDate = startDate;
+	}
+
+	public int getEndDate() {
+		return this.endDate;
+	}
+
+	public void setEndDate(int endDate) {
+		this.endDate = endDate;
+	}
+
+	public int getRealEnd() {
+		return this.realEnd;
+	}
+
+	public void setRealEnd(int realEnd) {
+		this.realEnd = realEnd;
+	}
+
+
+  			
     
     
         /** 중복등록방지용 토큰 */
