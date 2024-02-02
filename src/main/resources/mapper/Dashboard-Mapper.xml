@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mybatis.mapper.DashboardMapper">
+
+
+<update id = "updateDashBoard" parameterType="DashboardVO">
+
+        update dashboard
+        set 
+        dashboard_duty = #{dashboard_duty}, 
+        dashboard_issue = #{dashboard_issue}, 
+        dashboard_project= #{dashboard_project},
+        dashboard_approval = #{dashboard_approval},
+        dashboard_board = #{dashboard_board}
+        where emp_id = #{emp_id}
+
+
+</update>
+
+
+<insert id = "insertDashboard" parameterType = "DashboardVO">
+
+        insert into dashboard values (#{emp_id},#{dashboard_duty}, #{dashboard_issue}, #{dashboard_project}, #{dashboard_approval},#{dashboard_reservation} ,#{dashboard_board})
+
+</insert>
+
+</mapper>

@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mybatis.mapper.AnonyMapper">
+
+
+<sql id = "search">
+        <if test="searchKeyword != null and searchKeyword != ''">
+                <choose> 
+                        <when test='searchCondition == "tc"'>
+                                AND (ANONY_BOARD_TITLE LIKE '%' || #{searchKeyword} || '%'
+                                        OR ANONY_BOARD_CONTENT LIKE '%' || #{searchKeyword} || '%'
+                                )
+                        </when>
+
+                        <when test='searchCondition == "t"'>
+                                AND ANONY_BOARD_TITLE LIKE '%' || #{searchKeyword} || '%'
+                        </when>
+
+                        <when test='searchCondition == "c"'>
+                                AND ANONY_BOARD_CONTENT LIKE '%' || #{searchKeyword} || '%'
+                        </when> 
+                </choose>
+        </if>
+</sql>
+
+<select id = "selectAnonyList" parameterType = "anonyVO" resultType = "anonyVO">
+
+			
+	select A2.*
+	from(
+		select A1.*
+		from (
+			select
+				rownum as seq, A.*
+			from
+				(SELECT
+					anony_Board_Id,
+					anony_Board_Title,
+					anony_Board_Content,
+					anony_Board_ReadCnt,
+					anony_Board_Create_Dt,
+					anony_Board_Update_Dt,
+					anony_board_update_id,
+					emp_Writer_Id
+				FROM
+				    anony_board
+				WHERE 1=1
+			    <include refid="search" />
+			    ORDER BY anony_Board_Create_Dt DESC
+			   ) A
+			) A1
+		where seq <![CDATA[ > ]]> #{firstIndex}
+		) A2
+	where rownum <![CDATA[ <= ]]> #{recordCountPerPage}
+
+</select>
+
+
+
+
+
+
+
+<select id= "selectAnonyListTotalCount" parameterType = "anonyVO" resultType = "int">
+SELECT COUNT(*)
+FROM ANONY_BOARD A JOIN EMP B ON A.EMP_WRITER_ID=B.EMP_ID
+<include refid = "search"/>
+
+</select>
+
+
+<select id = "selectAnonyReplyList" parameterType = "anonyVO" resultType = "anonyReply"> 
+	SELECT REPLY_CONTENT, REPLY_CREATE_DT, REPLY_UPDATE_DT, REPLY_ID, ANONY_BOARD_ID, EMP_WRITER_ID
+	
+	FROM ANONY_REPLY
+	
+	WHERE ANONY_BOARD_ID = #{anony_Board_Id}
+	
+	ORDER BY REPLY_CREATE_DT
+ 
+</select>
+
+
+<insert id ="insertAnony" parameterType="anonyVO">
+INSERT INTO ANONY_BOARD(ANONY_BOARD_ID, ANONY_BOARD_TITLE, ANONY_BOARD_CONTENT, ANONY_BOARD_READCNT, ANONY_BOARD_CREATE_DT, ANONY_BOARD_UPDATE_DT, EMP_WRITER_ID, ANONY_BOARD_UPDATE_ID) VALUES 
+(#{anony_Board_Id}, #{anony_Board_Title}, #{anony_Board_Content}, 0, sysdate,   sysdate, #{emp_Writer_Id}, #{anony_board_update_id})
+</insert>
+
+<update id="updateAnony" parameterType="anonyVO">
+    UPDATE ANONY_BOARD 
+    SET ANONY_BOARD_TITLE = #{anony_Board_Title}, 
+        ANONY_BOARD_CONTENT = #{anony_Board_Content}, 
+        ANONY_BOARD_UPDATE_DT = sysdate, 
+        ANONY_BOARD_UPDATE_ID = #{anony_board_update_id} 
+    WHERE ANONY_BOARD_ID = #{anony_Board_Id}
+</update>
+
+<delete id = "deleteAnony" parameterType = "anonyVO">
+DELETE FROM ANONY_BOARD WHERE ANONY_BOARD_ID = #{anony_Board_Id}
+</delete>
+
+
+<select id = "selectAnonyById" parameterType = "int" resultType = "anonyVO">
+        SELECT 
+			ANONY_BOARD_ID, 
+			 ANONY_BOARD_TITLE, 
+			 ANONY_BOARD_CONTENT, 
+			 ANONY_BOARD_READCNT, 
+			 ANONY_BOARD_CREATE_DT,
+			 ANONY_BOARD_UPDATE_DT,
+			 ANONY_BOARD_UPDATE_ID,
+			 EMP_WRITER_ID
+
+        FROM ANONY_BOARD
+        WHERE ANONY_BOARD_ID = #{anony_Board_Id}
+</select>
+
+<update id="increaseAnonyReadcnt" parameterType="anonyVO">
+	UPDATE ANONY_BOARD
+        SET
+         anony_Board_ReadCnt =  anony_Board_ReadCnt+1
+	WHERE
+	    anony_Board_Id = #{anony_Board_Id}
+</update>
+
+
+
+
+</mapper>

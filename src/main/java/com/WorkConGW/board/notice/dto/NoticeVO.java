@@ -1,46 +1,51 @@
 package com.WorkConGW.board.notice.dto;
 
-import java.util.List;
-
+import com.WorkConGW.common.dto.AttachVO;
+import com.WorkConGW.common.dto.BaseVO;
 import org.apache.ibatis.type.Alias;
 import org.springframework.format.annotation.DateTimeFormat;
 
-import com.WorkConGW.common.dto.AttachVO;
-import com.WorkConGW.common.dto.BaseVO;
+import java.util.Date;
+import java.util.List;
 
-@Alias("searchNoticeVO")
+@Alias("NoticeVO")
 public class NoticeVO extends BaseVO{
+
     private int notice_id;
     private String notice_title;
     private String notice_content;
     private int notice_readcnt;
     @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss")
-    private String notice_create_dt;
-    private String notice_update_dt;
+    private Date notice_create_dt; // string이 아니라 Date로 바꾸면 문제가 되는지?..
+    private Date notice_update_dt;
     private String notice_important_yn;
     private String emp_writer_id;
     private String notice_update_id;
+    private String emp_Name;
+    private String officialName;
     private List<AttachVO> noticeAttachList;
     private int attachCount;
     private String searchDt;
 
     public NoticeVO(){}
 
-    public NoticeVO(int notice_id, String notice_title, String notice_content, int notice_readcnt, String notice_create_dt, String notice_update_dt, String notice_important_yn, String emp_writer_id, String notice_update_id, List<AttachVO> noticeAttachList, int attachCount,String searchDt)
-    {
+    public NoticeVO(int notice_id, String notice_title, String notice_content, int notice_readcnt, Date notice_create_dt, Date notice_update_dt, String notice_important_yn, String emp_writer_id, String notice_update_id, String emp_Name, String officialName, List<AttachVO> noticeAttachList, int attachCount, String searchDt) {
         this.notice_id = notice_id;
         this.notice_title = notice_title;
-        this.notice_content= notice_content;
+        this.notice_content = notice_content;
         this.notice_readcnt = notice_readcnt;
         this.notice_create_dt = notice_create_dt;
         this.notice_update_dt = notice_update_dt;
         this.notice_important_yn = notice_important_yn;
         this.emp_writer_id = emp_writer_id;
         this.notice_update_id = notice_update_id;
+        this.emp_Name = emp_Name;
+        this.officialName = officialName;
         this.noticeAttachList = noticeAttachList;
         this.attachCount = attachCount;
-
+        this.searchDt = searchDt;
     }
+
 
     public int getNotice_id() {
         return this.notice_id;
@@ -75,19 +80,19 @@ public class NoticeVO extends BaseVO{
     }
 
 
-    public String getNotice_create_dt() {
+    public Date getNotice_create_dt() {
         return this.notice_create_dt;
     }
 
-    public void setNotice_create_dt(String notice_create_dt) {
+    public void setNotice_create_dt(Date notice_create_dt) {
         this.notice_create_dt = notice_create_dt;
     }
 
-    public String getNotice_update_dt() {
+    public Date getNotice_update_dt() {
         return this.notice_update_dt;
     }
 
-    public void setNotice_update_dt(String notice_update_dt) {
+    public void setNotice_update_dt(Date notice_update_dt) {
         this.notice_update_dt = notice_update_dt;
     }
 
@@ -113,6 +118,22 @@ public class NoticeVO extends BaseVO{
 
     public void setNotice_update_id(String notice_update_id) {
         this.notice_update_id = notice_update_id;
+    }
+
+    public String getEmp_Name() {
+        return emp_Name;
+    }
+
+    public void setEmp_Name(String emp_Name) {
+        this.emp_Name = emp_Name;
+    }
+
+    public String getOfficialName() {
+        return officialName;
+    }
+
+    public void setOfficialName(String officialName) {
+        this.officialName = officialName;
     }
 
     public List<AttachVO> getNoticeAttachList() {

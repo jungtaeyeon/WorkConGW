@@ -138,15 +138,13 @@ List<AddBookVO> addBookGroupList = (List<AddBookVO>)request.getAttribute("addBoo
   function addBookGroupSelect(share_add_book){
     $.ajax({
         type : 'get',              
-        url : '/addBook/addBookGroupSelect',  
+        url : '/WorkConGW/addBook/addBookGroupSelect',  
         data : {
           share_add_book : share_add_book
         },
         success : function(result) {         
-          console.log(result);
           $("#add_book_id option").remove(".groupOption");    
           for(let i=0; i<result.length; i++){
-            console.log(result[i].add_book_title);
             $("#add_book_id").append("<option class='groupOption' value='"+result[i].add_book_id+"'>"+result[i].add_book_title+"</option>");
           }
         },    

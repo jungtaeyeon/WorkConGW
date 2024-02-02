@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mybatis.mapper.DeptMapper">
+
+
+
+<select id="selectDeptListByTeamYn" resultType="deptVO" parameterType="DeptVO">
+SELECT
+dept_id
+,dept_sub_id
+,dept_name
+,dept_create_dt
+,dept_update_dt
+,dept_st
+,dept_hp
+,dept_leader_id
+,dept_team_yn
+FROM
+DEPT
+WHERE   dept_team_yn = #{dept_Team_Yn}
+<!-- 여기서 팀이냐 부서냐, 이미 정해진 dept_team_yn으로 정해짐  -->
+AND     dept_st = 1
+<if test='emp_Id != null and !"".equals(emp_Id) and "N".equals(dept_Team_Yn)'>
+    AND     dept_id IN (SELECT dept_id as deptId1
+    FROM	 EMP
+    WHERE	 emp_id = #{emp_Id})
+    <!-- 사용자가 속한 부서 정보만 조회 -->
+</if>
+<if test='emp_Id != null and !"".equals(emp_Id) and "Y".equals(dept_Team_Yn)'>
+    AND     dept_id IN (SELECT team_id as deptId1
+    FROM	 EMP
+    WHERE	 emp_id = #{emp_Id})
+    <!-- 사용자가 속한 팀 정보만 조회  -->
+</if>
+ORDER BY dept_id
+</select>
+<!--         팀인경우  팀이 아닌경우 만약에 "Y"이면, 팀인경우 (팀인경우를 조회한다.)-->
+
+</mapper>

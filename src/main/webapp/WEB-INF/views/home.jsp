@@ -5,16 +5,25 @@
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7/jquery.min.js"></script>
 
-<!-- 풀켈린더 -->
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" crossorigin="anonymous">
+<!-- Bootstrap CSS -->
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+<!-- jQuery -->
+<!-- Bootstrap JS -->
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+
 
 
 
 
 <style>
+
+	
+	
 #calendar {
     width: 300px;
     margin: 0 auto;
@@ -122,6 +131,18 @@
 .fa-sort-down:before, .fa-sort-desc:before, .dd4 .dd-item > button[data-action="collapse"]:before, .dd4 .dd-item > button:before{
 	content:"";
 }
+
+
+.weathertitle{ 
+	font-family: arial;
+	text-align: center;
+	border: 1px solid rgb(0,0,0,0.2);
+	border-radius:0%;
+	height: auto;
+}
+
+
+
 </style>
 <body>
 
@@ -283,17 +304,18 @@
                             </div>                            
                         </div>
                </div>
-               
-               <div class="card text-center" style="font-family: GoyangIlsan">
-                  <h2 style="margin-top: 20px;">오늘날씨</h2>
-                  <div class="head text-center" style="margin-top: 20px; margin-bottom: 20px;">
-                     <div class = 'weather'>
-                         <div class="CurrIcon"></div> 
-                         <div class="CurrTemp"></div>
-                         <div class="City" style="font-size: 27px;"></div>
-                     </div>
-                  </div>
-               </div>
+               <!-- //////////////////////////////날씨///////////////////////////////////// -->
+			   		<div class = "weathertitle"> 
+						<span class="nowtime"></span>
+						<span>현재날씨</span>
+					   
+						<h3>경기도</h3>
+						<h3 class="SeoulIcon"></h3>
+						<h3 class="SeoulNowtemp">현재기온:</h3>
+						<h3 class="SeoulLowtemp">최저기온:</h3>
+						<h3 class="SeoulHightemp">최대기온:</h3>
+					</div>
+					<!-- //////////////////////////////날씨///////////////////////////////////// -->
             </div>
             
          <!-- 왼쪽줄 끝 -->   
@@ -966,7 +988,45 @@
 <%@ include file="./include/footer.jsp"%>
 </body>
 
-<script>
+<script defer>
+
+
+//오늘 날짜출력
+$(document).ready(function () {
+
+	function convertTime() {
+		let now = new Date();
+
+
+		let month = now.getMonth() + 1;
+		let date = now.getDate();
+
+		return month + '월' + date + '일';
+	}
+
+	let currentTime = convertTime();
+	$('.nowtime').append(currentTime);
+});
+
+
+//제이쿼리사용
+$.getJSON("<%=request.getContextPath()%>/common/api/weather-app-key",
+function (WeatherResult) {
+	//기온출력
+	$('.SeoulNowtemp').append(WeatherResult.main.temp);
+	$('.SeoulLowtemp').append(WeatherResult.main.temp_min);
+	$('.SeoulHightemp').append(WeatherResult.main.temp_max);
+
+	//날씨아이콘출력
+	//WeatherResult.weater[0].icon
+	let weathericonUrl =
+		'<img src= "http://openweathermap.org/img/wn/'
+		+ WeatherResult.weather[0].icon +
+		'@2x.png" alt="' + WeatherResult.weather[0].description + '"/>'
+
+	$('.SeoulIcon').html(weathericonUrl);
+});	
+
 	window.onload = function(){
 		// 대시보드 순서 변경
 		let orderList = new Array();
@@ -1017,7 +1077,7 @@
 	
 	</script>
 	<!-- 근태 -->
-	<script>
+	<script >
 	function setNowDate() {
 		 tellMonth();
 		 getAttendence();
@@ -1162,10 +1222,6 @@
 		});
 	}
 	
-	
-
-	
-	
 	let meetroomFlag = 0;
 	let distance = 900;
 	// 회의실 예약시간 이전버튼
@@ -1178,6 +1234,9 @@
 			});
 		}
 	}
+
+
+	
 	
 	// 회의실 예약시간 다음버튼
 	function nextTime(){
@@ -1190,4 +1249,7 @@
 		}
 		
 	}
+
+
+
 	</script>

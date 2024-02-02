@@ -1,0 +1,296 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mybatis.mapper.NoticeMapper">
+
+	<sql id="search">
+	<if test="searchKeyword != null and searchKeyword != ''">
+        <choose>
+            <when test='searchCondition == "tcm"'>
+				AND	(A.notice_title LIKE '%' || #{searchKeyword} || '%'
+					OR A.notice_content LIKE '%' || #{searchKeyword} || '%'
+					OR B.emp_name LIKE '%' || #{searchKeyword} || '%'
+				)
+			</when>
+            <when test='searchCondition == "t"'>
+				AND	A.notice_title LIKE '%' || #{searchKeyword} || '%'
+			</when>
+            <when test='searchCondition == "c"'>
+				AND	A.notice_content LIKE '%' || #{searchKeyword} || '%'
+			</when>
+            <when test='searchCondition == "m"'>
+				AND	B.emp_name LIKE '%' || #{searchKeyword} || '%'
+			</when>
+		</choose>
+	</if>
+	<if test="searchDt != null and searchDt != ''">
+		AND TO_CHAR(A.NOTICE_CREATE_DT,'yyyyMMdd') = TO_CHAR(to_date(#{searchDt},'MM/DD/YYYY'),'yyyyMMdd')
+	</if>
+    </sql>
+
+<!--	사내공지 전체조회-->
+	<select id="noticeList" parameterType="NoticeVO" resultType="NoticeVO">
+		select D3.*
+		  from(
+				select D2.*
+				from(
+					  select rownum as seq, D1.*
+					  from(
+							SELECT
+								    A.notice_id
+								   ,A.notice_title
+								   ,A.notice_content
+								   ,A.notice_readcnt
+								   ,A.notice_create_dt
+								   ,A.notice_update_dt
+								   ,A.notice_update_id
+								   ,A.emp_writer_id
+								   ,A.notice_end_dt
+								   ,A.notice_important_yn
+								   ,B.emp_name
+								   ,C.CODE_NAME officialName
+								   ,D.attachCount
+								FROM notice A 
+								     ,emp B 
+								     ,CODE C
+									<!-- 서브쿼리 D => notice_id에 대한 첨부파일 개수 count -->
+								     ,(
+                                        SELECT notice_id,
+                                               COUNT(*) as attachCount
+                                        FROM notice_attach 
+                                        GROUP BY notice_id
+                                       ) D
+								<!-- 작성자 필터링 -->
+								WHERE A.emp_writer_id = B.emp_id
+									<!-- CODE_ID 필터링 -->
+								  AND B.code_id = C.CODE_ID
+									<!--  notice에 첨부파일이 없는 컬럼도 조회하기 위해 아우터조인 사용-->
+								  AND A.notice_id = D.notice_id(+)
+								  <include refid="search" />
+								ORDER BY A.notice_create_dt DESC
+						) D1
+				) D2
+				where seq <![CDATA[ >= ]]> #{firstIndex}
+			) D3
+		where rownum <![CDATA[ <= ]]> #{recordCountPerPage}
+	</select>
+
+<!--	사내 중요공지 조회-->
+	<select id="selectImportantNoticeList" parameterType="NoticeVO" resultType="NoticeVO" >
+		SELECT T1.notice_id
+			 ,T1.notice_title
+			 ,T1.notice_content
+			 ,T1.notice_readcnt
+			 ,T1.notice_create_dt
+			 ,T1.notice_update_dt
+			 ,T1.notice_update_id
+			 ,T1.emp_writer_id
+			 ,T1.notice_end_dt
+			 ,T1.notice_important_yn
+			 ,T1.emp_name
+			 ,T1.officialName
+			 ,T1.attachCount
+			 ,ROWNUM
+		FROM (
+				 SELECT
+					 A.notice_id
+					  ,A.notice_title
+					  ,A.notice_content
+					  ,A.notice_readcnt
+					  ,A.notice_create_dt
+					  ,A.notice_update_dt
+					  ,A.notice_update_id
+					  ,A.emp_writer_id
+					  ,A.notice_end_dt
+					  ,A.notice_important_yn
+					  ,B.emp_name
+					  ,C.CODE_NAME officialName
+					  ,D.attachCount
+				 FROM notice A
+					,emp B
+					,CODE C
+					,(
+					 SELECT notice_id,
+							COUNT(*) as attachCount
+					 FROM notice_attach
+					 GROUP BY notice_id
+				 ) D
+				 WHERE A.emp_writer_id = B.emp_id
+				   AND B.CODE_ID = C.CODE_ID
+				   AND A.notice_important_yn = 'Y'
+				   AND A.notice_id = D.notice_id(+)
+				 ORDER BY A.notice_create_dt DESC ) T1
+		WHERE ROWNUM <![CDATA[ <= ]]> 3
+	</select>
+
+<!--	사내공지 상세조회-->
+	<select id="selectNoticeById" parameterType="NoticeVO" resultType="NoticeVO">
+		select
+			NOTICE_ID
+			 ,NOTICE_TITLE
+			 ,NOTICE_CONTENT
+			 ,NOTICE_READCNT
+			 ,NOTICE_CREATE_DT
+			 ,NOTICE_UPDATE_DT
+			 ,NOTICE_UPDATE_ID
+			 ,EMP_WRITER_ID
+			 ,NOTICE_END_DT
+			 ,B.EMP_NAME
+		from NOTICE A, EMP B
+		where A.EMP_WRITER_ID = B.EMP_ID
+		  and notice_id = #{notice_id}
+	</select>
+
+<!--	첨부파일 목록 가져오기-->
+	<select id="selectNoticeAttachList" parameterType="NoticeAttachVO" resultType="NoticeAttachVO">
+		SELECT
+			ATTACH_ID
+			 ,ATTACH_PATH
+		     ,ATTACH_NAME
+		     ,ATTACH_TYPE
+		     ,ATTACH_CREATE_DT
+		     ,EMP_ATTACHER_ID
+			 ,NOTICE_ID
+		FROM
+			NOTICE_ATTACH
+		WHERE notice_id=#{notice_id}
+	</select>
+
+<!--	조회수 증가-->
+	<update id="increaseNoticeReadCnt" parameterType="NoticeVO">
+		update
+			notice
+		set
+			notice_readcnt=notice_readcnt+1
+		where notice_id = #{notice_id}
+	</update>
+
+<!--	긴급공지 삭제-->
+	<delete id="deleteEmergency">
+		DELETE FROM notice
+		WHERE
+			notice_important_yn = 'E'
+	</delete>
+
+<!--	<select id="selectNoticeSeqNext" resultType="int">-->
+<!--		select notice_seq.nextval as notice_id from dual-->
+<!--	</select>-->
+
+<!--	공지 추가-->
+	<insert id="insertNotice" parameterType="NoticeVO">
+		<selectKey resultType="int" keyProperty="notice_id" order="BEFORE">
+			SELECT notice_seq.nextval FROM dual
+		</selectKey>
+		INSERT INTO notice (
+		notice_id,
+		notice_title,
+		<if test='notice_content != null and notice_content != ""'>
+			notice_content,
+		</if>
+		notice_update_id,
+		emp_writer_id,
+		notice_important_yn,
+		notice_readcnt,
+		notice_create_dt,
+		notice_update_dt
+		) VALUES (
+		#{notice_id},
+		#{notice_title},
+		<if test='notice_content != null and notice_content != ""'>
+			#{notice_content},
+		</if>
+		#{notice_update_id},
+		#{emp_writer_id},
+		#{notice_important_yn},
+		0,
+		sysdate,
+		sysdate
+		)
+	</insert>
+
+<!--	공지 파일 추가-->
+	<insert id="insertNoticeFile" parameterType="NoticeAttachVO">
+		INSERT INTO notice_attach (
+									   attach_id
+									 ,attach_path
+									 ,attach_name
+									 ,attach_type
+									 ,attach_create_dt
+									 ,notice_id
+									 ,emp_attacher_id
+		) VALUES (
+				   notice_attach_seq.nextval
+				 ,#{attach_path}
+				 ,#{attach_name}
+				 ,#{attach_type}
+				 ,sysdate
+				 ,#{notice_id}
+				 ,#{emp_attacher_id}
+				 )
+	</insert>
+
+<!--	공지사항 게시글 삭제-->
+	<delete id="deleteNotice" parameterType="NoticeVO">
+		DELETE FROM notice
+		WHERE
+			notice_id = #{notice_id}
+	</delete>
+
+<!--	공지사항 게시글 삭제할 때 파일도 함께 삭제하기 위해-->
+	<delete id="deleteNoticeFile" parameterType="NoticeAttachVO">
+		DELETE FROM notice_attach
+		WHERE
+			notice_id = #{notice_id}
+	</delete>
+
+<!--	공지사항 수정-->
+	<update id="updateNotice" parameterType="NoticeVO">
+		UPDATE notice
+		SET
+		notice_title = #{notice_title}
+		<if test='notice_content != null and notice_content != ""'>
+			,notice_content = #{notice_content}
+		</if>
+		,notice_update_dt = sysdate
+		,notice_update_id = #{notice_update_id}
+		WHERE
+		notice_id = #{notice_id}
+	</update>
+
+<!--	페이징 처리를 위해-->
+	<select id="selectNoticeListTotalCount" parameterType="NoticeVO" resultType="int">
+		SELECT
+		COUNT(*)
+		FROM notice A
+		JOIN emp B
+		ON A.emp_writer_id=B.emp_Id
+		WHERE 1=1
+		<include refid="search" />
+	</select>
+
+<!--	파일 id값을 찾아 수정 폼 에서 파일만 삭제하기 위해-->
+	<select id="selectNoticeAttachById" parameterType="NoticeAttachVO" resultType="NoticeAttachVO">
+		SELECT
+			attach_id
+			 ,attach_path
+			 ,attach_name
+			 ,attach_type
+			 ,attach_create_dt
+			 ,emp_attacher_id
+			 ,notice_id
+		FROM
+			notice_attach
+		WHERE notice_id=#{notice_id}
+		  AND attach_id=#{attach_id}
+	</select>
+
+<!--	selectNoticeAttachById로 찾은 id값으로 수정 폼 에서 파일만 삭제-->
+	<delete id="deleteNoticeFileById" parameterType="NoticeAttachVO">
+		DELETE FROM notice_attach
+		WHERE
+			notice_id = #{notice_id}
+		  AND attach_id = #{attach_id}
+	</delete>
+
+</mapper>
