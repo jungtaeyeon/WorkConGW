@@ -159,13 +159,13 @@ public class AnonyVO extends BaseVO{
         /** 페이지사이즈 */
         private int pageSize = 3;
     
-        /** firstIndex */
+        /** 첫번쨰 인덱스 */
         private int firstIndex = 1;
     
         /** lastIndex */
         private int lastIndex = 1;
     
-        /** recordCountPerPage */
+        /** 한페이지당 게시되는 게시물 수 */
         private int recordCountPerPage = 10;
     
         //////////////////////////////////////////
@@ -181,10 +181,10 @@ public class AnonyVO extends BaseVO{
         
     /////////////////////////////사용자가 각 페이지에 표시할 항목 수를 선택할 수 있도록 하는데 사용
 
-        private int totCnt = 0;				      	
-        private int startDate = 0;			    	
-        private int endDate = 0;				  
-        private int realEnd = 0;	
+        private int totCnt = 0;		// 총 개수
+        private int startDate = 0;			    // 시작데이터
+        private int endDate = 0;				  // 종료데이터
+        private int realEnd = 0;	                //페이징 마지막 숫자
             
         private boolean prev;
         private boolean next;

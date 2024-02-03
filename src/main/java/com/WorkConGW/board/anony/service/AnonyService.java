@@ -4,6 +4,8 @@ package com.WorkConGW.board.anony.service;
 import java.util.List;
 import java.util.Map;
 
+import com.WorkConGW.emp.dto.EmpVO;
+import jakarta.servlet.http.HttpSession;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,7 +15,9 @@ import com.WorkConGW.board.BoardFormVO;
 import com.WorkConGW.board.anony.dao.AnonyDAO;
 import com.WorkConGW.board.anony.dto.AnonyReplyVO;
 import com.WorkConGW.board.anony.dto.AnonyVO;
-
+import org.springframework.web.context.request.RequestAttributes;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
 
 
 @Service
@@ -52,6 +56,10 @@ public class AnonyService {
     public int searchListTotalCount(AnonyVO searchAnonyVO) {
         return anonyDAO.selectAnonyListTotalCount(searchAnonyVO);   
         
+    }
+
+    public int selectReplyCount(int queryString){
+        return anonyDAO.selectReplyCount(queryString);
     }
 
     public void regist(AnonyVO anonyVO) {
@@ -93,6 +101,19 @@ public class AnonyService {
         return pmap;
     }
 
+    public void deleteAnonyReply(AnonyReplyVO anonyReplyVO)
+    {
+        anonyDAO.deleteAnonyReply(anonyReplyVO);
+    }
 
-	
+
+    public void registAnonyReply(AnonyReplyVO anonyReplyVO) {
+        ServletRequestAttributes servletRequestAttributes = (ServletRequestAttributes) RequestContextHolder.currentRequestAttributes();
+        HttpSession session = servletRequestAttributes.getRequest().getSession(true);
+        EmpVO emp = (EmpVO)session.getAttribute("loginUser");
+        String empId = emp.getEmp_Id();
+
+        anonyReplyVO.setEmp_Writer_Id(empId);
+        anonyDAO.insertAnonyReply(anonyReplyVO);
+    }
 }

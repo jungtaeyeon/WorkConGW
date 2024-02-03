@@ -6,21 +6,16 @@
 
 <head>
 	<!-- Font Awesome CDN -->
-	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" integrity="sha512-" crossorigin="anonymous" />
-	<!-- VENDOR CSS -->
-	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7/jquery.min.js"></script>
-	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" crossorigin="anonymous">
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" integrity="sha512-" crossorigin="anonymous" />
 	<!-- Bootstrap CSS -->
 	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-	<!-- Bootstrap Datepicker CSS CDN -->
-	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.10.0/css/bootstrap-datepicker.min.css" integrity="sha512-34s5cpvaNG3BknEWSuOncX28vz97bRI59UnVtEEpFX536A7BtZSJHsDyFoCl8S7Dt2TPzcrCEoHBGeM4SUBDBw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 	<!-- jQuery -->
 	<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 	<!-- Bootstrap JS -->
 	<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-	<!-- Bootstrap Datepicker JS CDN -->
-	<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.10.0/js/bootstrap-datepicker.min.js" integrity="sha512-LsnSViqQyaXpD4mBBdRYeP6sRwJiJveh2ZIbW41EBrNmKxgr/LFZIiWT6yr+nycvhvauz8c2nYMhrP80YhG7Cw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-  </head>
+
+
+</head>
 
 <style>
 .pagination {
@@ -75,7 +70,7 @@ th{
 <!-- 메인 content -->
 	<div id="main-content" >
 		<div class="container-fluid">
-			<form:form modelAttribute="boardFormVO" name="detailForm" action="${pageContext.request.contextPath }/board/anony/detail">
+			<form:form modelAttribute="boardFormVO"  name="detailForm" action="${pageContext.request.contextPath }/board/anony/detail" method="get">
 				<form:hidden path="anonyVO.pageIndex"/>
 		        <form:hidden path="anonyVO.anony_Board_Id" />
 		        <form:hidden path="anonyVO.anony_Board_Title"/>
@@ -144,13 +139,13 @@ th{
 										</tr>
 										</table>
 <!-- 내용 -->
-	<div style="margin-top: 20px; margin-top: 20px;padding-left: 13px;padding-right: 13px;">${anony.anony_Board_Content}</div>
+	<div style="margin-top: 20spx; margin-top: 20px;padding-left: 13px;padding-right: 13px;">${anony.anony_Board_Content}</div>
 						</div>
 					</div>
 				</div>
-			</form:form>
+
 	<div class="header" style="padding-bottom: 0px;">
-      <h2><b>💬 댓글 ${paginationInfo.totalRecordCount}</b></h2>
+      <h4><b>💬 댓글 ${paginationInfo.totalRecordCount}</b></h4>
     </div>
 <!-- 댓글 등록 -->
   <div class="body">
@@ -204,10 +199,35 @@ th{
                                   </li>
                                   </ul> 
                             </c:forEach>
+						<%--//////////////////////////페이징 처리구간/////////////////////////////////////////////////--%>
                                <nav aria-label="Page navigation example" style="height:45px;text-align: center;margin-top:15px;">
-				                  <ul class="pagination" style="display: inline-block;">
-				                  </ul>z
+								   <div class="col-sm-12 col-md-7" style="text-align:right">
+									   <div class="dataTables_paginate paging_simple_numbers" id="dataTable_paginate">
+										   <ul class="pagination">
+
+											   <c:if test="${anony.prev}">
+												   <li class="paginate_button page-item previous" id="dataTable_previous">
+													   <a href="javascript:void(0);" onclick="searchAnonyReplyList(${anony.startDate - 1}); return false;" aria-controls="dataTable" data-dt-idx="0" tabindex="0" class="page-link">Previous</a>
+												   </li>
+											   </c:if>
+
+											   <c:forEach var="num" begin="${anony.startDate}" end="${anony.endDate}">
+												   <li class="paginate_button page-item">
+													   <a href="javascript:void(0);" onclick="searchAnonyReplyList(${num}); return false;" aria-controls="dataTable" data-dt-idx="0" tabindex="0" class="page-link">${num}</a>
+												   </li>
+											   </c:forEach>
+
+											   <c:if test="${anony.next}">
+												   <li class="paginate_button page-item next" id="dataTable_next">
+													   <a href="javascript:void(0);" onclick="searchAnonyReplyList(${anony.endDate + 1}); return false;" aria-controls="dataTable" data-dt-idx="0" tabindex="0" class="page-link">Next</a>
+												   </li>
+											   </c:if>
+										   </ul>
+									   </div>
+								   </div>
                      			</nav>
+
+						<%--//////////////////////////페이징 처리구간/////////////////////////////////////////////////--%>
                      	</c:if>
 							<div class="button1" >
 <!-- 								<button type="button" class="btn btn-outline-info"> -->
@@ -219,6 +239,7 @@ th{
 				</div>
 			</div>
 		</div>
+			</form:form>
 	</div>
 </div>
 
@@ -233,6 +254,9 @@ th{
 <script type="text/javascript">
 
 
+
+
+
 //댓글 등록
 function registAnonyReply(){
 	
@@ -241,9 +265,9 @@ function registAnonyReply(){
       $('textarea#reply_Content').focus();
       return;
    }
-   
-   $('input[name="anonyReplyVO.reply_Content"]').val($('textarea#reply_Content').val());
-   
+   $('input[name="anonyReplyVO.reply_Content"]').val($('textarea#reply_Content').val()); // hidden의 name에 form id+text값을 넣어줌.
+
+
    $.ajax({
       url:'<c:url value="/board/anony/reply/regist"/>',
       type:'post',
@@ -263,7 +287,8 @@ function modifyReplyForm(reply_Id, reply_Content){
    if($('#replyListModify_'+reply_Id).children().length>0){
       return;
    }
-   var modifyForm = '<div id="replyListModify_'+reply_Id+'" class="body" style="background-color: #eee;margin-top:15px;">'
+   //reply_Id를 줘야 (시퀀스 처럼) 앞 값이 바뀌어야함.
+   let modifyForm = '<div id="replyListModify_'+reply_Id+'" class="body" style="background-color: #eee;margin-top:15px;">'
                    +'<div class="form-group">'
                          +'<textarea id="reply_Content" rows="3" class="form-control no-resize">'+reply_Content+'</textarea>'
                    +'</div>'
@@ -277,7 +302,8 @@ function modifyReplyForm(reply_Id, reply_Content){
 
 // 댓글 수정
 function modifyReply(reply_Id){
-   var textarea = $('#replyListModify_'+reply_Id+' textarea');
+   let textarea = $('#replyListModify_'+reply_Id+' textarea'); // 위에 Contents에 접근했음.
+
    if($.trim(textarea.val()) == ""){
       alert('내용을 입력하세요.');
       textarea.focus();
@@ -302,11 +328,12 @@ function modifyReply(reply_Id){
 // 댓글 수정 취소
 function modifyCancel(reply_Id){
    $('#replyListModify_'+reply_Id).remove();
+   //jQuery를 사용하여 해당 댓글의 수정 폼을 DOM에서 제거
 }
 
 // 댓글 삭제
 function removeReply(reply_Id){
-   var chk = confirm('댓글을 삭제하시겠습니까?');
+   let chk = confirm('댓글을 삭제하시겠습니까?');
    if(!chk) return;
    
    $.ajax({
@@ -328,14 +355,14 @@ function searchAnonyReplyList(pageNo){
    if(!pageNo){
       pageNo = 1;
    }
-   var detailForm = document.detailForm;
+   let detailForm = document.detailForm;
    $('input[name="anonyVO.pageIndex"]').val(pageNo);
    detailForm.submit();
 }
 
 //수정 페이지
 function modify_go(){
-	var anonyModifyForm = document.detailForm;
+	let anonyModifyForm = document.detailForm;
 	anonyModifyForm.action = '${pageContext.request.contextPath }/board/anony/modifyForm';
 	
 	anonyModifyForm.submit();
@@ -343,13 +370,13 @@ function modify_go(){
 
 //게시글 삭제
 function remove_go(){
-	var check = confirm('글을 삭제하시겠습니까?');
+	let check = confirm('글을 삭제하시겠습니까?');
 	if(!check) return;
-	
-	var detailForm = document.detailForm;
+
+	let detailForm = document.detailForm;
 	detailForm.action = '${pageContext.request.contextPath }/board/anony/remove';
-	
-	var form = new FormData(detailForm);
+
+	let form = new FormData(detailForm);
 	
 	$.ajax({
 		url:detailForm.action,

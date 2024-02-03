@@ -36,6 +36,12 @@ public class AnonyDAO {
         return sqlSessionTemplate.selectOne("selectAnonyListTotalCount", searchAnonyVO);
     }
 
+    public int selectReplyCount(int queryString)
+    {
+        int result = sqlSessionTemplate.selectOne("selectReplyCount", queryString);
+        return result;
+    }
+
     public void insertAnony(AnonyVO anonyVO) {
         sqlSessionTemplate.insert("insertAnony",anonyVO);
     }
@@ -63,10 +69,18 @@ public class AnonyDAO {
 
     }
 
+    public void deleteAnonyReply(AnonyReplyVO anonyReplyVO)
+    {
+        sqlSessionTemplate.delete("deleteAnonyReply",anonyReplyVO);
+    }
+
     public List<Map<String,Object>> getJsonAnnoyList(AnonyVO searchVO) {
         List<Map<String,Object>> pmap =sqlSessionTemplate.selectList("getJsonAnnoyList",searchVO);
         logger.info(pmap.toString());
         return pmap;
     }
 
+    public void insertAnonyReply(AnonyReplyVO anonyReplyVO) {
+        sqlSessionTemplate.insert("insertAnonyReply", anonyReplyVO);
+    }
 }

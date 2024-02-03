@@ -11,56 +11,15 @@
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" crossorigin="anonymous">
   <!-- Bootstrap Datepicker CSS CDN -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.10.0/css/bootstrap-datepicker.min.css" integrity="sha512-34s5cpvaNG3BknEWSuOncX28vz97bRI59UnVtEEpFX536A7BtZSJHsDyFoCl8S7Dt2TPzcrCEoHBGeM4SUBDBw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+  <!-- Bootstrap CSS -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css">
   <!-- Bootstrap JS -->
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+jjXkk+Q2h455rYXK/7HAuoJl+0I4" crossorigin="anonymous"></script>
-  <!-- Bootstrap Datepicker JS CDN -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.10.0/js/bootstrap-datepicker.min.js" integrity="sha512-LsnSViqQyaXpD4mBBdRYeP6sRwJiJveh2ZIbW41EBrNmKxgr/LFZIiWT6yr+nycvhvauz8c2nYMhrP80YhG7Cw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/js/bootstrap.bundle.min.js"></script>
   <!-- Summernote -->
   <link href="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote.min.css" rel="stylesheet">
   <script src="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.18/lang/summernote-ko-KR.min.js"></script>
 
-
-<%--  공통으로 뺄 예정 --%>
-  <script>
-	  $(document).ready(function() {
-		  summernote_start('.summernote', '<%= request.getContextPath() %>');
-	  });
-  </script>
-
-  <script>
-	  function summernote_start(content,contextPath){
-		  $(content).summernote({
-			  placeholder:'여기에 내용을 적으세요.',
-			  height:250,
-			  disableResizeEditor: true,
-			  callbacks:{
-				  onImageUpload : function(files, editor, welEditable) {
-					  //alert("image insert!!");
-					  //file size check!
-					  for (var i = files.length - 1; i >= 0; i--) {
-						  if(files[i].size > 1024*1024*5){
-							  alert("이미지는 5MB 미만입니다.");
-							  return;
-						  }
-					  }
-
-					  //file sending
-					  for (var i = files.length - 1; i >= 0; i--) {
-						  sendImg(files[i], this,contextPath+'/common/summernote/uploadImg.do');
-					  }
-				  },
-				  onMediaDelete : function(target) {
-					  //alert(target[0].src);
-					  var answer=confirm("정말 이미지를 삭제하시겠습니다.");
-					  if(answer){
-						  deleteImg(target[0].src,contextPath+'/common/summernote/deleteImg.do');
-					  }
-				  }
-			  }
-		  });
-	  }
-  </script>
 
 <style>
 .formGroup{
@@ -69,6 +28,8 @@
 </style>
 
 <body>
+
+<script src="<%=request.getContextPath()%>/js/summernote.js"></script>
 <!-- Overlay For Sidebars -->
     <div id="main-content">
         <div class="container-fluid">
@@ -168,19 +129,6 @@
 			                                </div>
 		                                 </div>
 		                             </div>
-		                             <div class="col-sm-12 formGroup dutyForm">
-			                             <div class="col-sm-3" style="padding-left:0;">
-			                                 <div class="form-group">
-			                                 <label>완료 기한</label>
-			                                 	<div class="input-group date" data-date-autoclose="true" data-provide="datepicker">
-				                                 	<input type="text" class="form-control" id="boardEndDt" placeholder="완료일자 선택" readonly="readonly">
-					                                <div class="input-group-append">
-					                                    <button class="btn btn-outline-secondary" type="button"><i class="fa fa-calendar"></i></button>
-					                                </div>
-				                                </div>
-			                                 </div>
-		                                 </div>
-		                             </div>
 	                            </div>
 
 
@@ -212,8 +160,7 @@
         </div>
 	</div>
 
-<form name="temp">
-</form>
+
 
 
 <form name="cacRegistForm" method="post">
@@ -227,10 +174,10 @@
 </form>
 
 <form name="anonyRegistForm" method="post">
-	<input type="hidden" name="anonyBoardTitle">
-	<input type="hidden" name="anonyBoardContent">
-	<input type="hidden" name="anonyBoardUpdaterId" value="${loginUser.emp_Id }">
-	<input type="hidden" name="empWriterId" value="${loginUser.emp_Id }">
+	<input type="hidden" name="anony_Board_Title">
+	<input type="hidden" name="anony_Board_Content">
+	<input type="hidden" name="anony_board_update_id" value="${loginUser.emp_Id }">
+	<input type="hidden" name="emp_Writer_Id" value="${loginUser.emp_Id }">
 </form>
 
 <script>
@@ -289,24 +236,25 @@ function changeCategory(obj){
 }
 
 // 글 등록
-function submit_go(){
+function submit_go() {
 	let boardCategory = $('#selectBoard').val();
 	let form = document.boardRegistForm;
+	//<form name="boardRegistForm">접근함.
 
-	if(boardCategory=='default'){
+	if (boardCategory == 'default') {
 		alert('게시판을 선택하세요.');
 		return;
 	}
-	if($.trim($('#boardTitle').val())==""){
+	if ($.trim($('#boardTitle').val()) == "") {
 		alert('제목을 입력하세요.');
 		$('#boardTitle').focus();
 		return;
 	}
 
 	//사내공지
-	if(boardCategory=='notice'){
+	if (boardCategory == 'notice') {
 		let notice_important_yn = $('select[name="noticeVO.notice_important_yn"]').val();
-		if(notice_important_yn == "default"){	//위에서 option value가 default일 경우에 해당할때
+		if (notice_important_yn == "default") {	//위에서 option value가 default일 경우에 해당할때
 			alert('필독여부를 선택해주세요.');
 			return;
 		}
@@ -316,18 +264,18 @@ function submit_go(){
 		form.encoding = "multipart/form-data";
 	}
 	//경조사
-	else if(boardCategory=='cac'){
-		if($.trim($('#selectCacboard').val())==""){
+	else if (boardCategory == 'cac') {
+		if ($.trim($('#selectCacboard').val()) == "") {
 			alert('경조사 분류를 선택하세요.');
 			$('#selectCacboard').focus();
 			return;
 		}
-		if($.trim($('#cacStartDate').val())==""){
+		if ($.trim($('#cacStartDate').val()) == "") {
 			alert('행사 시작일자를 설정하세요');
 			$('#cacStartDate').focus();
 			return;
 		}
-		if($.trim($('#cacEndDate').val())==""){
+		if ($.trim($('#cacEndDate').val()) == "") {
 			alert('행사 종료일자를 설정하세요');
 			$('#cacEndDate').focus();
 			return;
@@ -335,63 +283,65 @@ function submit_go(){
 
 		form = document.cacRegistForm;
 
-		var cacBoardTitle = $('#boardTitle').val();
+		let cacBoardTitle = $('#boardTitle').val();
 		$('input[name="cacBoardTitle"]').val(cacBoardTitle);
 
-		var boardContent = $('div.note-editable').html();
+		let boardContent = $('div.note-editable').html();
 		$('input[name="cacBoardContent"]').val(boardContent);
 
-		var cacStartDate = $('#cacStartDate').val();
+		let cacStartDate = $('#cacStartDate').val();
 		$('input[name="cacStartDt"]').val(cacStartDate);
 
-		var cacEndDate = $('#cacEndDate').val();
+		let cacEndDate = $('#cacEndDate').val();
 		$('input[name="cacEndDt"]').val(cacEndDate);
 
-		var cacCategory = $('#selectCacboard').val();
+		let cacCategory = $('#selectCacboard').val();
 		$('input[name="cacCategory"]').val(cacCategory);
 
 		form.action = "<c:url value='/board/cac/regist'/>";
 	}
 
 	//익명 게시판
-	else if(boardCategory=='anony'){
+	else if (boardCategory == 'anony') {
+		console.log("여기들어오니?");
 		form = document.anonyRegistForm;
-		var boardTitle = $('input#boardTitle').val();
-		$('input[name="anonyBoardTitle"]').val(boardTitle);
+		let boardTitle = $('input#boardTitle').val();
+		$('input[name="anony_Board_Title"]').val(boardTitle);
+		console.log($('input[name="anony_Board_Title"]').val(boardTitle));
 
-		var boardContent = $('div.note-editable').html();
-		$('input[name="anonyBoardContent"]').val(boardContent);
+		let boardContent = $('div.note-editable').html();
+		$('input[name="anonyVO.anony_Board_Content"]').val(boardContent);
 
 		form.action = "<c:url value='/board/anony/regist'/>";
 	}
 
 	// 글 등록
-	var formData = new FormData(form);
+	let formData = new FormData(form);
 	$.ajax({
-		url:form.action,
-		type:'post',
-		data:formData,
-		processData:false,
-		contentType:false,
-		dataType:"text",
-		success:function(data){
-			if(boardCategory=='notice'){
+		url: form.action,
+		type: 'post',
+		data: formData,
+		processData: false,
+		contentType: false,
+		dataType: "text",
+		success: function (data) {
+			if (boardCategory == 'notice') {
 				alert("공지게시판에 글이 등록되었습니다.");
 				window.close();
-				window.opener.location.href='<c:url value="/board/notice/noticeList" />';
+				window.opener.location.href = '<c:url value="/board/notice/noticeList" />';
 
-			}else if(boardCategory=='cac'){
+			} else if (boardCategory == 'cac') {
 				alert("경조사게시판에 글이 등록되었습니다.");
 				window.close();
-				window.opener.location.href='<c:url value="/board/cac/list" />';
+				window.opener.location.href = '<c:url value="/board/cac/list" />';
 
-			}else if(boardCategory=='anony'){
+			} else if (boardCategory == 'anony') {
 				alert("익명게시판에 글이 등록되었습니다.");
 				window.close();
-				window.opener.location.href='<c:url value="/board/anony/list" />'
+				window.opener.location.href = '<c:url value="/board/anony/list" />'
 			}
 		},
-		error:function(){
+		error: function () {
 			alert("글 등록에 실패했습니다.");
 			window.opener.location.reload(true);
 			window.close();

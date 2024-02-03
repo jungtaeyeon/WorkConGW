@@ -58,6 +58,29 @@
 </select>
 
 
+<update id = "updateAnonyReply" parameterType="anonyReply">
+	UPDATE ANONY_REPLY
+	SET REPLY_CONTENT = #{reply_Content}, REPLY_UPDATE_DT = sysdate
+	WHERE REPLY_ID = #{reply_Id}
+</update>
+
+<update id = "deleteAnonyReply">
+	DELETE FROM ANONY_REPLY WHERE REPLY_ID = #{reply_Id}
+</update>
+
+
+<select id = "selectReplyCount" parameterType="int" resultType="int">
+	select count(*)
+	from anony_reply
+	where anony_board_id =  #{anony_board_id}
+
+
+</select>
+
+<insert id = "insertAnonyReply" parameterType="anonyReply">
+	INSERT INTO ANONY_REPLY(REPLY_CONTENT, REPLY_CREATE_DT, REPLY_UPDATE_DT, REPLY_ID, ANONY_BOARD_ID, EMP_WRITER_ID)
+	VALUES (#{reply_Content}, sysdate, sysdate, reply_Id.nextval,#{anony_Board_Id}, #{emp_Writer_Id})
+</insert>
 
 
 
@@ -85,7 +108,7 @@ FROM ANONY_BOARD A JOIN EMP B ON A.EMP_WRITER_ID=B.EMP_ID
 
 <insert id ="insertAnony" parameterType="anonyVO">
 INSERT INTO ANONY_BOARD(ANONY_BOARD_ID, ANONY_BOARD_TITLE, ANONY_BOARD_CONTENT, ANONY_BOARD_READCNT, ANONY_BOARD_CREATE_DT, ANONY_BOARD_UPDATE_DT, EMP_WRITER_ID, ANONY_BOARD_UPDATE_ID) VALUES 
-(#{anony_Board_Id}, #{anony_Board_Title}, #{anony_Board_Content}, 0, sysdate,   sysdate, #{emp_Writer_Id}, #{anony_board_update_id})
+(anony_board_seq.nextval, #{anony_Board_Title}, #{anony_Board_Content}, 0, sysdate,   sysdate, #{emp_Writer_Id}, #{anony_board_update_id})
 </insert>
 
 <update id="updateAnony" parameterType="anonyVO">
