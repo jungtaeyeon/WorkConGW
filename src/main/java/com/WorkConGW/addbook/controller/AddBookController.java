@@ -2,6 +2,7 @@ package com.WorkConGW.addbook.controller;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Enumeration;
 import java.util.HashMap;
 
 import org.apache.commons.collections.map.HashedMap;
@@ -20,6 +21,7 @@ import com.WorkConGW.addbook.dto.AddBookVO;
 import com.WorkConGW.addbook.service.AddBookService;
 import com.WorkConGW.common.controller.BaseController;
 import com.WorkConGW.common.dto.HomeFormVO;
+import com.WorkConGW.emp.dto.EmpVO;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
@@ -37,15 +39,34 @@ public class AddBookController extends BaseController{
     public String addBookList(Model model, HttpSession session)
     {
         logger.info("addBookList");
-        session.setAttribute("empId", "rkdrhd98"); /* 나중에 로그인 세션 받았을시 삭제 코드 */
         Map<String, Object> pmap = new HashMap<String, Object>();
-        String empId = (String) session.getAttribute("empId");
+        EmpVO empVO = (EmpVO) session.getAttribute("loginUser");
+        String empId = null;
+        if(empVO != null) {
+            empId = empVO.getEmp_Id();
+        }
         pmap.put("empId", empId);
         pmap.put("share_add_book", 0);
         List<AddBookVO> abList = null;
         abList = addBookService.addBookList(pmap);
         String url = "addbook/list";
         model.addAttribute("abList", abList);
+        return url;
+    }
+
+    @GetMapping("addBookShare")
+    public String addBookShare()
+    {
+        logger.info("addBookShare");
+        String url = "addbook/shareList";
+        return url;
+    }
+
+    @GetMapping("addBookStarred")
+    public String addBookStarred()
+    {
+        logger.info("addBookStarred");
+        String url = "addbook/starredList";
         return url;
     }
     
@@ -65,13 +86,16 @@ public class AddBookController extends BaseController{
     {
         logger.info("addBookSearch");
         List<AddBookVO> abList = null;
-        Object empId = session.getAttribute("empId");
+        EmpVO empVO = (EmpVO) session.getAttribute("loginUser");
+        String empId = null;
+        if(empVO != null) {
+            empId = empVO.getEmp_Id();
+        }
         pmap.put("empId", empId);
 
         logger.info(pmap.toString());
         abList = addBookService.addBookSearch(pmap);
-        
-        
+        logger.info(abList.toString());
         String url = "addbook/list";
         model.addAttribute("abList", abList);
         return url;
@@ -84,6 +108,7 @@ public class AddBookController extends BaseController{
         String path = "";
         logger.info(pmap.toString());
         result = addBookService.addBookInsert(pmap);
+        
         if (result == 1) {// 입력이 성공했을때
             path = "redirect:/addBook/addBookList";
         } else {// 입력이 실패 했을때

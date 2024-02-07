@@ -15,6 +15,19 @@ List<AddBookVO> addBookGroupList = (List<AddBookVO>)request.getAttribute("addBoo
 </script>
 <body>
   <style>
+    .subTitleText{
+      margin-bottom: 25px;
+    }
+    .subTitleText h2{
+      display: flex;
+      justify-content: flex-start;
+      align-items: center;
+      font-size: 27px;
+    }
+    .subTitleText i{
+      font-size: 24px;
+      margin-right: 5px;
+    }
     .share_add_book_btn_contain{
       display: flex;
     }
@@ -34,104 +47,83 @@ List<AddBookVO> addBookGroupList = (List<AddBookVO>)request.getAttribute("addBoo
       color: #2985db;
       background:#fff;
     }
+    #addBookInsert{
+      margin: 30px 0 1rem;
+    }
+    .insertBtn{ margin-bottom:30px; }
   </style>
-	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7/jquery.min.js"></script>
-	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet">
-	<link href="<%=request.getContextPath() %>/css/sideBar.css" rel="stylesheet">
     <%@ include file="../include/header.jsp"%>
+  <section class="subPageContain">
+
+    <%@ include file="./sideBar.jsp"%>
+
     <div class="contentConteiner">
         <div class="subTitleText">
-            <h2>주소록등록</h2>
+            <h2><i class="fa-solid fa-angles-right"></i>주소록등록</h2>
         </div>
         <div class="share_add_book_btn_contain">
           <div class="share_add_book_btn share_add_book_btn_on" data-sharecond="0">개인주소록</div>
           <div class="share_add_book_btn" data-sharecond="1">공유주소록</div>
         </div>
-        <form id="addBookInsert" method="get" action="/addBook/addBookInsert">
-            <div class="form-floating mb-3 mt-3">
-              <input
-                type="text"
-                class="form-control"
-                id="manage_display_name"
-                name="manage_display_name"
-                placeholder="Enter 이름"
-              />
-              <label for="manage_display_name">이름</label>
+        <form id="addBookInsert" method="get" action="addBookInsert">
+            <div class="input-group mb-3">
+              <div class="input-group-prepend">
+                <span class="input-group-text" id="manage_display_name">이름</span>
+              </div>
+              <input type="text" class="form-control"name="manage_display_name" aria-label="이름" aria-describedby="manage_display_name">
             </div>
-            <div class="form-floating mb-3 mt-3">
-              <input
-                type="text"
-                class="form-control"
-                id="manage_hp"
-                name="manage_hp"
-                placeholder="Enter 전화번호"
-              />
-              <label for="manage_hp">전화번호</label>
+            <div class="input-group mb-3">
+              <div class="input-group-prepend">
+                <span class="input-group-text" id="manage_hp">전화번호</span>
+              </div>
+              <input type="text" class="form-control" name="manage_hp" aria-label="전화번호" aria-describedby="manage_hp">
             </div>
-            <div class="form-floating mb-3 mt-3">
-                <input
-                  type="text"
-                  class="form-control"
-                  id="manage_email"
-                  name="manage_email"
-                  placeholder="Enter 이메일"
-                />
-                <label for="manage_email">이메일</label>
+            <div class="input-group mb-3">
+              <div class="input-group-prepend">
+                <span class="input-group-text" id="manage_email">이메일</span>
+              </div>
+              <input type="text" class="form-control" name="manage_email" aria-label="이메일" aria-describedby="manage_email">
             </div>
-            <div class="form-floating mb-3 mt-3">
-              <input
-                type="text"
-                class="form-control"
-                id="manage_company_name"
-                name="manage_company_name"
-                placeholder="Enter 회사"
-              />
-              <label for="manage_company_name">회사</label>
-          </div>
-            <div class="form-floating mb-3 mt-3">
-                <input
-                  type="text"
-                  class="form-control"
-                  id="manage_dept_name"
-                  name="manage_dept_name"
-                  placeholder="Enter 부서"
-                />
-                <label for="manage_dept_name">부서</label>
+            <div class="input-group mb-3">
+              <div class="input-group-prepend">
+                <span class="input-group-text" id="manage_company_name">회사</span>
+              </div>
+              <input type="text" class="form-control" name="manage_company_name" aria-label="회사" aria-describedby="manage_company_name">
             </div>
-            <div class="form-floating mb-3 mt-3">
-              <input
-                type="text"
-                class="form-control"
-                id="manage_official_name"
-                name="manage_official_name"
-                placeholder="Enter 직급"
-              />
-            <label for="manage_official_name">직급</label>
+            <div class="input-group mb-3">
+              <div class="input-group-prepend">
+                <span class="input-group-text" id="manage_dept_name">부서</span>
+              </div>
+              <input type="text" class="form-control" name="manage_dept_name" aria-label="부서" aria-describedby="manage_dept_name">
             </div>
+            <div class="input-group mb-3">
+              <div class="input-group-prepend">
+                <span class="input-group-text" id="manage_official_name">직급</span>
+              </div>
+              <input type="text" class="form-control" name="manage_official_name" aria-label="직급" aria-describedby="manage_official_name">
+            </div>
+
             <div class="mb-3 mt-3">
-                <select id="add_book_id" name="add_book_id" class="form-select" aria-label="Default select example">
+                <select id="add_book_id" name="add_book_id" class="custom-select" aria-label="그룹">
                     <option value="0" selected>그룹</option>
                 </select>
             </div>
-            <div class="form-floating mb-3 mt-3">
-                <input
-                  type="text"
-                  class="form-control"
-                  id="manage_remark"
-                  name="manage_remark"
-                  placeholder="Enter 메모"
-                />
-                <label for="manage_remark">메모</label>
+            <div class="input-group mb-3">
+              <div class="input-group-prepend">
+                <span class="input-group-text">메모</span>
               </div>
+              <textarea class="form-control" name="manage_remark" aria-label="메모"></textarea>
+            </div>
           </form>
           <input
               type="button"
-              class="btn btn-warning"
+              class="btn btn-warning insertBtn"
               data-bs-dismiss="modal"
               onclick="addBookInsert()"
               value="저장"
             />
     </div>
+  </section>
     <%@ include file="../include/footer.jsp"%>
 </body>
 <script>

@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.WorkConGW.addbook.dto.AddBookVO;
 import com.WorkConGW.addbook.service.AddBookService;
+import com.WorkConGW.emp.dto.EmpVO;
 import com.google.gson.Gson;
 
 import jakarta.servlet.http.HttpSession;
@@ -31,7 +32,11 @@ public class RestAddBookController {
     @GetMapping("addBookGroupSelect")
     public List<AddBookVO> addBookGroupSelect(@RequestParam Map<String, Object> pmap ,HttpSession session){
         logger.info("addBookGroupSelect");
-        String empId = (String) session.getAttribute("empId");
+        EmpVO empVO = (EmpVO) session.getAttribute("loginUser");
+        String empId = null;
+        if(empVO != null) {
+            empId = empVO.getEmp_Id();
+        }
         pmap.put("empId", empId);
         logger.info(pmap.toString());
         List<AddBookVO> addBookGroupList = null;

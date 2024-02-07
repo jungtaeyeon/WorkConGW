@@ -5,17 +5,17 @@
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
-<% 
-	List<AddBookVO> abList = (List<AddBookVO>)request.getAttribute("abList");
-	int i = 0;
-%>	
+
 <script>
 	const serchBtn =()=>{
 		document.querySelector("#serchForm").submit();
 	}
 </script>
 <style>
-	
+	.serchContain{
+		display: flex; 
+		align-items: flex-start;
+	}
 	.subTitleText{
 		margin-bottom: 25px;
 	}
@@ -28,10 +28,6 @@
 	.subTitleText i{
 		font-size: 24px;
     margin-right: 5px;
-	}
-	.serchContain{
-		display: flex; 
-		align-items: flex-start;
 	}
 	#serchForm{display: flex;}
 	.serchSelect{width: 150px;}
@@ -50,7 +46,7 @@
 		<!--컨텐츠 영역-->
 		<div class="contentConteiner">
 			<div class="subTitleText"> <!--컨텐츠 부분 타이틀 클래스(이건 부트스트랩 클래스 아니고 임의로 만든 클래스)--> 
-				<h2><i class="fa-solid fa-angles-right"></i> <!--왼쪽 아이콘 폰트어썸-->개인주소록</h2>
+				<h2><i class="fa-solid fa-angles-right"></i> <!--왼쪽 아이콘 폰트어썸-->공유주소록</h2>
 			</div>
 
 			<div class="serchContain">  <!--셀렉/검색/버튼 묶는 div클래스 (이건 부트스트랩 클래스 아니고 임의로 만든 클래스)-->
@@ -87,18 +83,16 @@
 				</thead>
 
 				<tbody>
-					<% for (AddBookVO addBook : abList) { i++; %>
 					<tr>
 						<th class="tableCheckBox"><input type="checkbox"/></th>
-						<td><%= addBook.getManage_display_name() %></td>
-						<td><%= addBook.getManage_company_name() %></td>
-						<td><%= addBook.getManage_official_name() %></td>
-						<td><%= addBook.getManage_dept_name() %></td>
-						<td><%= addBook.getAdd_book_title() %></td>
-						<td><%= addBook.getManage_hp() %></td>
-						<td><%= addBook.getManage_email() %></td>
+						<td>테스트</td>
+						<td>테스트</td>
+						<td>테스트@테스트</td>
+						<td>테스트</td>
+						<td>테스트</td>
+						<td>테스트</td>
+						<td>테스트</td>
 					</tr>
-					<% } %>
 				</tbody>
 
 			</table>

@@ -396,7 +396,7 @@
 
 
 <script src="<%=request.getContextPath()%>/resources/vendor/js/jquery.min.js"></script>
-<script src="<%=request.getContextPath()%>/resources/vendor/js/bootstrap.min.js"></script>
+
 <script src="<%=request.getContextPath()%>/resources/vendor/js/moment.min.js"></script>
 <script src="<%=request.getContextPath()%>/resources/vendor/js/fullcalendar.min.js"></script>
 <script src="<%=request.getContextPath()%>/resources/vendor/js/ko.js"></script>

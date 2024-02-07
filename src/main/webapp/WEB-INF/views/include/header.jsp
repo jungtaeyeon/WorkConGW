@@ -16,21 +16,12 @@
 	<link rel="stylesheet" href="<%=request.getContextPath() %>/js/treeview/jquery.treeview.css" />
 	<link rel="stylesheet" href="<%=request.getContextPath() %>/js/treeview/screen.css" />
 	<script src="<%=request.getContextPath() %>/js/treeview/jquery.treeview.js"></script>
-
 	<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.10.2/dist/umd/popper.min.js"></script>
-<%--	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.min.js"></script>--%>
 	<script src="https://kit.fontawesome.com/3a92c85ff9.js" crossorigin="anonymous"></script>
-    <link
-      href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css"
-      rel="stylesheet"
-      integrity="sha384-Zenh87qX5JnK2Jl0vWa8Ck2rdkQ2Bzep5IDxbcnCeuOxjzrPF/et3URy9Bv1WTRi"
-      crossorigin="anonymous"
-    />
-    <script
-      src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.bundle.min.js"
-      integrity="sha384-OERcA2EqjJCMA+/3y+gxIOqMEjwtxJY7qPCqsdltbNJuaOe923+mo//f6V8Qbsw3"
-      crossorigin="anonymous"
-    ></script>
+	<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+	<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
 
 
 	<title>:: WorkConGW ::</title>
@@ -38,33 +29,33 @@
 	<style type="text/css">
 		@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@100;300;400;500;700;900&family=Passion+One:wght@400;700&display=swap');
 		
-        ul.menuList {
-            position: absolute;
-            left: 50%;
-            margin-left: -550px !important;
-            height: 90px; /* 더 높은 높이로 조절 */
-            font-size: 1.4em;
-            display: flex;
-            align-items: center;
-        }
+    ul.menuList {
+      height: 100%; /* 더 높은 높이로 조절 */
+      font-size: 1.5em;
+      display: flex;
+      align-items: center;
+    }
 		ul.menuList li {
 			height:100%;
-			padding:25px 15px 0px;
-			text-align: center;
+			display: flex;
+			padding: 0 15px;
+			justify-content: center;
+			align-items: center;
 			color: white;
 			font-weight: bold;
+			transition: 0.3s;
 		}
 		ul.menuList li:hover {
-			background-color: #132029;
+			background-color: #343a40;
 			cursor: pointer;
 		}
 		#navbar-menu{
-			margin-right: 75px;
+			display: flex;
+			justify-content: center;
+			align-items: center;
 		}
 		#usernameBox{
-			position: relative;
-		    right: -72px;
-		    top: -41px;
+		
 		    color: #ffffff;
 		    font-size: 1.2em;
 		}
@@ -92,7 +83,7 @@
 		#pictureView{
 			border-radius: 50%;
 			border: 1px solid gray; 
-			margin: 0px 20px 0px 0px;
+			margin: 0px 8px 0px 0px;
 			background-position: center;
 			background-size: cover;
 			background-repeat: no-repeat;
@@ -148,23 +139,37 @@
 		    opacity: .01;
 		}
 
-
-
+		.user-account{
+			display:flex;
+			margin: 0px 0px 0 15px;
+			justify-content: center;
+			align-items: center;
+		}
+		.menuProfile{
+			will-change: transform; 
+			min-width: 8rem; 
+			padding: 0.5rem 0.7rem; 
+			transform: translate3d(-46px, 5px, 0px); 
+			font-family: InfinitySans-RegularA1
+		}
+		.menuProfile a{color:#000;}
+		.user-name{color: #fff;}
 	</style>
 </head>
-<body class="theme-black" style="min-width: 1700px;">
+<body class="theme-black" style="">
 	<a id="viewModal" href="#defaultModal" data-toggle="modal" data-target="#defaultModal" style="display: none;"></a>
 	<div id='backLayer' style='z-index: 5'></div>
-	<nav class="navbar navbar-fixed-top" style="min-width: 1900px; top:0px;">
-		<div class="container-fluid" style="background-color:#0a1218;">
+	<nav class="navbar navbar-fixed-top" style="top:0px; padding: 0; height: 80px;">
+		<div class="container-fluid" style="background-color:#0a1218; height: 100%;">
 			<!-- 로고 -->
 			<div class="navbar-brand">
 				<a href="${pageContext.request.contextPath }/common/home" style="color:white;font-weight: bold;"><span>WorkConGW</span></a>                
 			</div>
 			
 				<!-- 메뉴 -->
-				   <ul class="nav navbar-nav menuList">
-					   <li id="home" onclick="location.href='${pageContext.request.contextPath }/common/home';">홈</li>
+				<ul class="nav navbar-nav menuList">
+					<li id="home" onclick="location.href='${pageContext.request.contextPath }/common/home';">홈</li>
+					<li id="home" onclick="location.href='${pageContext.request.contextPath }/addBook/addBookList';">주소록</li>
 				</ul>
 	
 				<div id="navbar-menu">
@@ -226,18 +231,19 @@
 							</ul>
 						</li>
 					</ul>
-						<div class="user-account" style="display:inline-block;margin: 10px 0px 0 15px;vertical-align: middle;height:60px;">
+						<div class="user-account">
 							<a href="javascript:void(0);" class="user-name" data-toggle="dropdown" aria-expanded="false">
 								<c:if test="${ loginUser.emp_Picture != null}">
 								<div id="pictureView" style="background-image:url('${pageContext.request.contextPath }/pds/empPicture/${ loginUser.emp_Picture}'); width: 55px; height: 55px;" class="rounded-circle avatar" ></div>
 								</c:if>
 								<c:if test = "${loginUser.emp_Picture == null}">
-								 <div id="pictureViewPhoto" style="background-color: #ffffff;" class="rounded-circle user-photo"></div>
+									<div id="pictureViewPhoto" style="background-color: #ffffff;" class="rounded-circle user-photo">
+									</div>
 								</c:if>
 							</a>
 							<div class="dropdown" id="usernameBox">
 								<a href="javascript:void(0);" class="dropdown-toggle user-name" data-toggle="dropdown" style="font-family: InfinitySans-RegularA1"><strong>${loginUser.emp_Name }&nbsp;님</strong></a>                    
-								<ul class="dropdown-menu dropdown-menu-right account animated flipInY menuProfile" x-placement="bottom-end" style="position: absolute; will-change: transform; top: 0px; left: -100px; transform: translate3d(89px, 42px, 0px); font-family: InfinitySans-RegularA1">
+								<ul class="dropdown-menu dropdown-menu-right account animated flipInY menuProfile" x-placement="bottom-end">
 									<li><a href=""><i class="icon-direction"></i>관리페이지</a></li>
 									<li><a href="${pageContext.request.contextPath }/common/mypage/modifyform"><i class="icon-user"></i>내정보</a></li>
 									<li></i>권한위임</a></li>
@@ -481,4 +487,3 @@ function sample6_execDaumPostcode() {
 
 
 </body>
-</html>

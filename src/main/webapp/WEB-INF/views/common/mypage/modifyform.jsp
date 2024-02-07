@@ -285,7 +285,7 @@
 
 <div class="con main-2">
     <div class="side-bar">
-        <div><%@ include file="/WEB-INF/views/include/sidebar.jsp" %></div>        
+        <div><%@ include file="/WEB-INF/views/include/sideBar.jsp" %></div>        
     </div>
     <div class="content">
         <div>
