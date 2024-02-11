@@ -127,6 +127,7 @@ public class EmpService {
     @Transactional
     public void register(EmpVO empVO)
     {
+        logger.info(empVO.toString());
        try{
         empDAO.register(empVO);
         String key = new TempKey().getKey(50,false);

@@ -107,6 +107,7 @@ public class EmpDAO {
         pmap.put("emp_authkey", authKey);
         pmap.put("email_Emp", emp_Email);
 		sqlSessionTemplate.update("empAuth", pmap);
+
 	}
 
 

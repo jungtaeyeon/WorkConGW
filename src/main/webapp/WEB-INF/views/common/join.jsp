@@ -288,9 +288,9 @@
           <div class="input-field">
             <label>* 상태설정 : </label>
             <select id = "emp_St" name="emp_St" class="form-control">
-              <option value="1" ${loginUser.emp_St eq '2'? 'selected' : '' }>휴직</option>
-              <option value="0" ${loginUser.emp_St eq '1'? 'selected' : '' }>재직</option>
-              <option value="2" ${loginUser.emp_St eq '3'? 'selected' : '' }>퇴사</option>
+              <option value="2" ${loginUser.emp_St eq '2'? 'selected' : '' }>휴직</option>
+              <option value="1" ${loginUser.emp_St eq '1'? 'selected' : '' }>재직</option>
+              <option value="3" ${loginUser.emp_St eq '3'? 'selected' : '' }>퇴사</option>
             </select>
           </div>
 

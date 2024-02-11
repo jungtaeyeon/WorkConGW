@@ -120,20 +120,19 @@ public class CommonController{
     @PostMapping("/login")
     public String login(EmpVO empVO,HttpServletRequest request,Model model)throws SQLException
     {
-        logger.info("login컨트롤러 호출");
-        logger.info(empVO.getEmp_Id());
-        logger.info(empVO.getEmp_Pwd());
-        logger.info(String.valueOf(empVO.getEmp_authkey()));
+
         String url = "redirect:./home";
         HttpSession session = request.getSession();
         try{
-          empService.login(empVO.getEmp_Id(),empVO.getEmp_Pwd(),session);
+            empVO = empService.login(empVO.getEmp_Id(),empVO.getEmp_Pwd(),session);
+            logger.info(empVO.toString());
           users.put(empVO.getEmp_Id(),session); // users에서 관리하는 이유는 로그인 유저 정보를 조회하기 위해서
-          if(empVO.getEmp_authkey() == 0)
-         {
-              model.addAttribute("Auth",empVO.getEmp_authkey());
-              return "/common/registerReady";
-          }
+            if(empVO.getEmp_authkey() == 0)
+            {
+                logger.info("여기에 들어왔습니다.");
+                model.addAttribute("Auth",empVO.getEmp_authkey());
+                return "/common/registerReady";
+            }
         }catch(NotFoundIDException|InvalidPasswordException e){
             url = "/common/loginForm";
             logger.info("여기서 지금 에러가 발생합니다."); // 이 부분은 postHandle에서 txt 파일로 에러관리 시 사용된다.
