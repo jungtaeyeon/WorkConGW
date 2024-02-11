@@ -85,9 +85,7 @@ th{
 		        <form:hidden path="anonyVO.anony_Board_Content" id="anony_Board_Content"/>
 		        <form:hidden path="anonyVO.anony_Board_ReadCnt"/>
 		        <form:hidden path="anonyVO.anony_Board_Create_Dt"/>
-		        <form:hidden path="anonyVO.anony_board_update_id" value="${loginUser.emp_Id }" />
 				<%--현재 로그인한 사용자의 ID를 hidden input에 설정 --> 서버단에서 사용--%>
-		        <form:hidden path="anonyVO.emp_Writer_Id" value="${loginUser.emp_Id }"/>
 		        <form:hidden path="anonyVO.replyCount"/>
 		<div class="row clearfix">
 			<div class="col-12" style="margin-top: 2%;">
@@ -189,11 +187,11 @@ function modify_go(){
 		success:function(){
 			alert("글이 수정되었습니다.");
 			
-			window.location.href='<c:url value="/board/anony/detail?anony_Board_Id=${boardFormVO.anonyVO.anony_Board_Id}"/>';
+			window.location.href='<c:url value="/board/anony/detail?anonyVO.anony_Board_Id=${boardFormVO.anonyVO.anony_Board_Id}"/>';
 		},
 		error:function(){
 			alert("글 수정에 실패했습니다.");
-			window.location.href='<c:url value="/board/anony/detail?anony_Board_Id=${boardFormVO.anonyVO.anony_Board_Id}" />';
+			window.location.href='<c:url value="/board/anony/detail?anonyVO.anony_Board_Id=${boardFormVO.anonyVO.anony_Board_Id}" />';
 		}
 	});
 }

@@ -1,12 +1,11 @@
-    $(document).ready(function() {
+$(document).ready(function() {
     summernote_start('.summernote', '<%= request.getContextPath() %>');
 });
 
-    function summernote_start(content,contextPath){
+function summernote_start(content,contextPath){
     $(content).summernote({
         placeholder:'여기에 내용을 적으세요.',
         height:250,
-        focus: true, // 에디터 로딩 후 포커스
         // 에디터 한글 설정
         lang: 'ko-KR',
         toolbar: [

@@ -1,5 +1,6 @@
 package com.WorkConGW.emp.controller;
 
+import jakarta.servlet.http.HttpServletRequest;
 import org.json.simple.JSONObject;
 import org.mindrot.jbcrypt.BCrypt;
 import org.slf4j.Logger;
@@ -87,7 +88,15 @@ public class EmpController {
         rttr.addFlashAttribute("emp_Id", empVO.getEmp_Id());
 
         
-        return "redirect:/common/loginForm";
+        return "redirect:/emp/registerAuth";
+    }
+
+    @GetMapping("/registerEmail")
+    public String emailConfirm(String emp_Email,String authKey, Model model) throws  Exception{
+        logger.info("emp_Email :" + emp_Email);
+        empService.empAuth(emp_Email,authKey);
+        model.addAttribute("emp_Email", emp_Email);
+        return "/common/registerEmail";
     }
 
 
@@ -139,6 +148,17 @@ public class EmpController {
 
 
 
+    }
+
+   @GetMapping("/registerAuth")
+    public String loginView(HttpServletRequest request, Model model, String emp_Email, String emp_Id){
+        logger.info("loginView");
+        logger.info("emp_Email:"+emp_Email+"emp_Id:"+emp_Id);
+
+        model.addAttribute("emp_Email",emp_Email);
+        model.addAttribute("emp_Id",emp_Id);
+
+        return "/common/registerAuth";
     }
 
 

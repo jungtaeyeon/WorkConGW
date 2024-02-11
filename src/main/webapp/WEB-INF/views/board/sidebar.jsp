@@ -1,258 +1,58 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
-<!DOCTYPE html>
-<html>
-<head>   
-<meta charset="UTF-8">
-<title>Insert title here</title>
-<style>
-    .active {
-        background-color: #4876EF; /* 활성화된 메뉴 배경색 설정 */
-        color: white; /* 클릭된 메뉴 글씨 색 변경 */
-    }
+  <style>
+  a{text-decoration: none;}
+  .sidebar{
+    border-right:2px solid rgb(0,0,0,0.1);
+    margin-right: 10px;
+  }
+  .sidebar-scroll{
+    padding:0 10px 20px;
+    width: 250px;
+  }
+  .subPageContain{
+    display: flex;
+  }
+  .contentConteiner{
+    width: 100%;
+  }
+  .metismenu, .metismenu span{
+    list-style: none;
+    color: #5a5a5a;
+  }
+  #go_btn{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #2980b9; 
+    color: white; 
+    width: 14rem; 
+    height: 3.8rem; 
+    border-radius: 5%; 
+    font-family: InfinitySans-RegularA1;
+  }
+  .metismenuLI a{
+    font-family: S-CoreDream-4Regular; 
+    font-size: 20px;
+  }
+  .go_btn{margin-bottom: 15px;}
+  </style>
+  <div id="left-sidebar" class="sidebar">
+    <div class="sidebar-scroll">
 
-    .side-bar > ul > li.active ul li:hover > a {
-        border-left: 6px solid #4876EF; /* 호버 시 왼쪽 테두리 변경 */
-    }
-    #sidebar{
-      width: 255px;
-      /* height: 93vh; */
-      background-color: white;
-      border-right: 1px solid rgb(213, 213, 213);
-    }
-    
+        <!--큰버튼이 필요한 페이지에 쓰임-->
+        <div class="tab-content p-l-0 p-r-0 text-align" style="font-size: 20px; text-align: center;">
+            <button style="font-family: paybooc-Bold; background-color: #2980b9; color: white; border: 0px; width: 80%; height: 3rem; border-radius: 5%; margin: 4% 0;" onclick="location.href='<%=request.getContextPath()%>/board/registForm'">글 작성</button>
+        </div>
 
-    
-    
-    /* 노멀라이즈 시작 */
-    body, ul, li {
-      margin: 0;
-      padding: 0;
-        /* 해당 태그의 list-style을 none으로 하는 것으로 ●을 제거한다 */
-    }
-    
-    a {
-      color: inherit;   /* 부모 엘리먼트의 값을 물려받는다 */
-      text-decoration: none;    /* 해당 태그의 text-decoration 속성을 none 값으로 하는 것으로 밑줄을 제거한다 */
-    }
-    /* 노멀라이즈 끝 */
-    
-    /* 커스텀 시작 */
-    .side-bar > ul ul {
-      display: none;
-    }
-    
-    /* 커스텀 끝 */
-    
-    
-    /* 사이드바 시작 */
-    /* 사이드바의 너비와 높이를 변수를 통해 통제 */
-    :root {
-      --side-bar-width: 270px;
-      --side-bar-height: 95vh;
-    }
-    .side-bar {
-        position: fixed;
-        background-color: rgba(255, 255, 255, 0.95);
-        box-shadow: 0px 0px 7px -2px rgba(0, 0, 0, 0.025);
-        width: let(--side-bar-width);
-        min-height: let(--side-bar-height);
-        -webkit-user-select: none;
-        -moz-user-select: none;
-        -ms-user-select: none;
-        user-select: none;
-      }
-    
-    
-    body {
-      -webkit-user-select:none;
-      -moz-user-select:none;
-      -ms-user-select:none;
-      user-select:none
-    }
-    
-    
-    
-    /* 자식의 position이 absolute일 때 자식을 영역 안에 가두어 준다 */
-    .side-bar > ul > li {
-      position: relative;
-    }
-    
-    /* 모든 메뉴의 a에 속성값 부여 */
-    .side-bar ul > li > a {
-    display: block;
-    color: #828B9D;
-    font-size: 15px;
-    font-style: normal;
-    font-weight: 400;
-    line-height: 152.8%;
-    letter-spacing: 0.28px;
-    
-    padding-top: 20px;
-    padding-bottom: 10px;
-    padding-left: 50px;
-    }
-    
-    
-    
-    /* 사이드 바 고정 */
-    /* 사이드바 끝 */
-    /* 커스텀 끝 */
-    /*--------------------------------------------------------------------*/
-    
-    /* 사이드바 토글 방식 */
-    .side-bar > ul > li.active > ul {
-      display: block;
-      background-color: #ffffff;
-    }
-    /*------------------*/
-    
-    .side-bar ul ul li a {
-      font-size: 13px; 
-      color: #B0BCD4;
-    }
-    
-    .side-bar ul ul li a:hover{
-      color: #5E687B;
-    }
-</style>
-</head>
-<body>
+        <div class="tab-content p-l-0 p-r-0" style="font-size: 25px; margin-left: 3%; padding-bottom: 0; font-family: S-CoreDream-4Regular">
+            <a href="<c:url value="/board/notice/list"/>" style="font-family: InfinitySans-RegularA1; font-size: 23px;"><i class="fa fa-bullhorn" ></i> <span>사내공지</span></a>
+        </div>
+        </br>
+        <div id="commonHeader" class="tab-content p-l-0 p-r-0" style="font-size: 25px; margin-left: 3%; padding-bottom: 0; font-family: S-CoreDream-4Regular">
+          <!--서브메뉴 타이틀-->
+            <a href="<c:url value="/board/anony/list"/>" style="font-family: InfinitySans-RegularA1; font-size: 23px;"><i class="fa fa-comments-o" ></i> <span>익명 게시판</span></a>
 
-    <aside class="side-bar">
-     
-        <ul>
-        <li>
-            <a href="#"><i class="fa-solid fa-cat"></i> 근태 관리</a>
-            <ul>
-            <!-- 'ADMIN'을 포함하는 경우에 실행할 내용 -->
-			        <li><a href="${root}/attendance/admin/allList">근무 조회</a></li>
-			        <li><a href="${root}/attendance/admin/objection">이의신청 조회</a></li>
-		            <li><a href="${root}/attendance/main">근무현황</a></li>
-		            <li><a href="${root}/attendance/list">근무현황 목록 조회</a></li>
-            
-            </ul>
-        </li>
-        <li>
-            <a href="#">일정 관리</a>
-            <ul>
-            <li><a href="${root}/calendar/main">캘린더</a></li>
-            <li><a href="${root}/meetingroom/reserve">회의실관리</a></li>
-            </ul>
-        </li>
-        <li>
-            <a href="#">업무 할당</a>
-            <ul>
-            <li><a href="${root}/work/work">업무 할당</a></li>
-            </ul>
-        </li>
-
-            <li>
-                <a href="#">인사 관리</a>
-                <ul>
-                <li><a href="${root}/employee/enroll">인사등록</a></li>
-                <li><a href="${root}/employee/list">인사목록</a></li>
-                </ul>
-            </li>
-
-        <li>
-            <a href="#">주소록</a>
-            <ul>
-            <li><a href="${root}/addressbook">주소록(조직도)</a></li>
-            </ul>
-        </li>
-        <li>
-            <a href="#">메일</a>
-            <ul>
-            <li><a href="${root}/mail/list?folder=receive">메일 목록</a></li>
-            <li><a href="${root}/mail/write">메일 작성</a></li>
-            </ul>
-        </li>
-        <li>
-            <a href="#">전자 결재</a>
-            <ul>
-            <li><a href="${root}/approval/list">전자메일 목록 </a></li>
-            <li><a href="${root}/approval/write/1">전자결재 작성 </a></li>
-            </ul>
-        </li>
-        <li>
-            <a href="#">프로젝트 관리</a>
-            <ul>
-            <li><a href="${root}/project/progress">진행중인 프로젝트</a></li>
-            </ul>
-        </li>
-        <li>
-            <a href="#">커뮤니티</a>
-            <ul>
-            <li><a href="${root}/community/board/list/">게시판</a></li>
-            <li><a href="${root}/community/vote/">투표</a></li>
-            <li><a href="${root}/community/survey/">설문 조사</a></li>
-            <li><a onclick="goSuggestion('${loginMember.id}');">건의사항</a></li>
-            <li><a onclick="goNotice('${loginMember.id}');">공지사항</a></li>
-            </ul>
-        </li>
-
-        </ul>
-       
-    </aside>
-
-</body>
-</html>
-    <script>
-        // side-bar 토글 형식
-        document.addEventListener('DOMContentLoaded', function() {
-            let menuItems = document.querySelectorAll('.side-bar > ul > li > a');
-            
-            menuItems.forEach(function(item) {
-                item.addEventListener('click', function(e) {
-                    e.preventDefault();
-                    
-                    // 현재 클릭된 메뉴의 부모 요소 (li)
-                    let listItem = this.parentNode;
-                    
-                    // 현재 클릭된 메뉴가 활성화되어 있는지 여부
-                    let isActive = listItem.classList.contains('active');
-                    
-                    // 모든 메뉴 비활성화
-                    menuItems.forEach(function(otherItem) {
-                        let otherListItem = otherItem.parentNode;
-                        if (otherListItem !== listItem) {
-                            otherListItem.classList.remove('active');
-                        }
-                    });
-
-                    if (!isActive) {
-                    listItem.classList.add('active');
-                 }
-                    // 클릭된 요소의 글씨 색을 하얀색으로 변경
-                    menuItems.forEach(function(otherItem) {
-                    if (otherItem !== item) {
-                        otherItem.style.color = ''; // 기본 색상으로 되돌리기
-                    }
-                });
-                item.style.color = 'white'; // 클릭된 요소의 글씨 색 변경
-                });
-            });
-        });
-
-
-        //건의사항 주소
-        function goSuggestion(id){
-           if(id == 'admin'){
-                location.href = '${root}/admin/suggestion/list';
-           }else if(id != 'admin'){
-                location.href = '${root}/suggestion/list';
-           }
-        }
-
-        //공지사항 주소
-        function goNotice(id){
-            if(id == 'admin'){
-                location.href = '${root}/admin/notice/list';
-            }else if(id != 'admin'){
-                location.href = '${root}/notice/list';
-            }
-        }
-
-
-    </script>
+        </div>
+    </div>
+</div>

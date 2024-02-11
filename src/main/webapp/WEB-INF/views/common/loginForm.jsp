@@ -292,11 +292,11 @@ body, input {
             <h5 class="sub-title">업무도 내 회사 생활도 완벽하게</h5>
             <div class="input-field">
               <i class="fas fa-user"></i>
-              <input id = "emp_Id" name="empId" value="${cookie.mid.value}" type="text" placeholder="아이디" required />
+              <input id = "emp_Id" name="emp_Id" value="${cookie.mid.value}" type="text" placeholder="아이디" required />
             </div>
             <div class="input-field">
               <i class="fa-solid fa-shield-halved"></i>
-              <input id = "emp_Pwd"name="empPwd" type="password" placeholder="비밀번호" required />
+              <input id = "emp_Pwd"name="emp_Pwd" type="password" placeholder="비밀번호" required />
             </div>
             <div class="login-info">
               <div class="save-id form-check form-switch">

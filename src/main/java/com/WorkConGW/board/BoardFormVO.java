@@ -21,6 +21,10 @@ public class BoardFormVO {
 
 	private AnonyVO anonyVO;
 	private AnonyReplyVO anonyReplyVO;
+
+
+
+	private AnonyReplyVO searchanonyReplyVO;
 	private AnonyVO searchAnonyVO;
 
 	public BoardFormVO() {
@@ -31,7 +35,10 @@ public class BoardFormVO {
 		this.anonyVO = new AnonyVO();
 		this.searchAnonyVO = new AnonyVO();
 		this.anonyReplyVO= new AnonyReplyVO();
+		this.searchanonyReplyVO = new AnonyReplyVO();
 	}
+
+
 	public FileUploadCommand getFileUploadCommand() {
 		return fileUploadCommand;
 	}
@@ -108,6 +115,15 @@ public class BoardFormVO {
 	{
 		this.searchAnonyVO=searchAnonyVO;
 	}
+
+	public AnonyReplyVO getSearchanonyReplyVO() {
+		return searchanonyReplyVO;
+	}
+
+	public void setSearchanonyReplyVO(AnonyReplyVO searchanonyReplyVO) {
+		this.searchanonyReplyVO = searchanonyReplyVO;
+	}
+
 
 }
 

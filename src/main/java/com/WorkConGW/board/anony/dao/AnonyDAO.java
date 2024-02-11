@@ -1,6 +1,7 @@
 package com.WorkConGW.board.anony.dao;
 
 
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -27,8 +28,8 @@ public class AnonyDAO {
         return anonyList;
     }
 
-    public List<AnonyReplyVO> selectAnonyReplyList(int queString) {
-        List<AnonyReplyVO> anonyReplyVO = sqlSessionTemplate.selectList("selectAnonyReplyList",queString);
+    public List<AnonyReplyVO> selectAnonyReplyList(AnonyVO searchAnonyVO) {
+        List<AnonyReplyVO> anonyReplyVO = sqlSessionTemplate.selectList("selectAnonyReplyList",searchAnonyVO);
         return anonyReplyVO;
     }
 
@@ -54,9 +55,9 @@ public class AnonyDAO {
         sqlSessionTemplate.delete("deleteAnony", anonyVO);
     }
 
-    public AnonyVO selectAnonyById(int queString) {
-       AnonyVO anony = sqlSessionTemplate.selectOne("selectAnonyById",queString);
-       return anony;
+    public AnonyVO selectAnonyById(AnonyVO anonyVO) {
+        AnonyVO anony = sqlSessionTemplate.selectOne("selectAnonyById",anonyVO);
+        return anony;
     }
 
     public void increaseAnonyReadcnt(AnonyVO anonyVO) {
@@ -65,7 +66,7 @@ public class AnonyDAO {
     }
 
     public void updateAnonyReply(AnonyReplyVO anonyVO) {
-        sqlSessionTemplate.update("updateAnonyReply",anonyVO); 
+        sqlSessionTemplate.update("updateAnonyReply",anonyVO);
 
     }
 
@@ -82,5 +83,17 @@ public class AnonyDAO {
 
     public void insertAnonyReply(AnonyReplyVO anonyReplyVO) {
         sqlSessionTemplate.insert("insertAnonyReply", anonyReplyVO);
+    }
+
+    public List<AnonyReplyVO> selectReplyPaging(AnonyReplyVO anonyReplyVO) {
+        return sqlSessionTemplate.selectList("selectReplyPaging", anonyReplyVO);
+    }
+
+    public Date getCreatePost(AnonyVO searchAnonyVO) {
+        return sqlSessionTemplate.selectOne("getCreatePost", searchAnonyVO);
+    }
+
+    public Date getPostTime(int anonyBoardId) {
+        return sqlSessionTemplate.selectOne("getPostTime",anonyBoardId);
     }
 }

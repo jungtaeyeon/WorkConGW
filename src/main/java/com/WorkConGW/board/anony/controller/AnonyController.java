@@ -58,6 +58,15 @@ public class AnonyController extends CommonController{
 
 
 
+        @GetMapping("/registForm")
+        public String registForm(BoardFormVO boardFormVO)
+        {
+            String url = "board/anony/registForm";
+
+            return url;
+        }
+
+
     @ResponseBody
     @PostMapping("/reply/modify")
     public void replyModify(AnonyReplyVO anonyReplyVO)
@@ -73,26 +82,26 @@ public class AnonyController extends CommonController{
     //     logger.info(boardFormVO.getSearchAnonyVO().toString());
     //     Map<String, ?> inputFlashMap = RequestContextUtils.getInputFlashMap(request);
     //     if(null != inputFlashMap) {
-        
+
     //         model.addAttribute("msg",(String) inputFlashMap.get("msg"));
-            
+
     //     }
 
     //     String url = "/board/anony/list";
     //     AnonyVO searchAnonyVO = boardFormVO.getSearchAnonyVO();
     //     logger.info(searchAnonyVO.toString());
     //     removeCookieByName(request,response,"annoy_Board_Id");
-       
+
     //     logger.info("다시들어오니?");
     //     PaginationInfo paginationInfo = new PaginationInfo();
     //     paginationInfo.setCurrentPageNo(searchAnonyVO.getPageIndex()); //현재 페이지 번호에 pageindex 값을 넣는다.
-        
+
     //     paginationInfo.setRecordCountPerPage(searchAnonyVO.getPageUnit()); //한 페이지당 게시되는 게시물 수에 pageunit의 디폴트 값인 10 을 넣는다.
     //     paginationInfo.setPageSize(searchAnonyVO.getPageSize());
 
     //     searchAnonyVO.setFirstIndex(paginationInfo.getFirstRecordIndex());
     //     searchAnonyVO.setRecordCountPerPage(paginationInfo.getRecordCountPerPage());
-       
+
     //     List<AnonyVO> anonyList = anonyService.getAnnoyList(searchAnonyVO);
     //     int totCnt = anonyService.searchListTotalCount(searchAnonyVO);
     //     paginationInfo.setTotalRecordCount(totCnt);
@@ -111,6 +120,7 @@ public class AnonyController extends CommonController{
     // }
 
 
+
     @GetMapping("/list")
     public String list(@ModelAttribute("boardFormVO")@Valid BoardFormVO boardFormVO ,ModelAndView mnv, HttpSession session, HttpServletResponse response, HttpServletRequest request,Model model)throws Exception
     {
@@ -118,27 +128,27 @@ public class AnonyController extends CommonController{
         logger.info(boardFormVO.getSearchAnonyVO().toString());
         Map<String, ?> inputFlashMap = RequestContextUtils.getInputFlashMap(request);
         if(null != inputFlashMap) {
-        
+
             model.addAttribute("msg",(String) inputFlashMap.get("msg"));
-            
+
         }
 
         String url = "/board/anony/list";
         AnonyVO searchAnonyVO = boardFormVO.getSearchAnonyVO();
         logger.info(searchAnonyVO.toString());
         removeCookieByName(request,response,"annoy_Board_Id");
-       
-        logger.info("다시들어오니?");
+
         PaginationInfo paginationInfo = new PaginationInfo();
         paginationInfo.setCurrentPageNo(searchAnonyVO.getPageIndex()); //현재 페이지 번호에 pageindex 값을 넣는다.
-        
+
         paginationInfo.setRecordCountPerPage(searchAnonyVO.getPageUnit()); //한 페이지당 게시되는 게시물 수에 pageunit의 디폴트 값인 10 을 넣는다.
         paginationInfo.setPageSize(searchAnonyVO.getPageSize());
 
         searchAnonyVO.setFirstIndex(paginationInfo.getFirstRecordIndex());
         searchAnonyVO.setRecordCountPerPage(paginationInfo.getRecordCountPerPage());
-       
+
         List<AnonyVO> anonyList = anonyService.getAnnoyList(searchAnonyVO);
+
         int totCnt = anonyService.searchListTotalCount(searchAnonyVO);
         paginationInfo.setTotalRecordCount(totCnt);
         logger.info(paginationInfo.toString());
@@ -146,6 +156,16 @@ public class AnonyController extends CommonController{
         searchAnonyVO.setStartDate(paginationInfo.getFirstPageNoOnPageList());
         searchAnonyVO.setPrev(paginationInfo.getXprev());
         searchAnonyVO.setNext(paginationInfo.getXnext());
+
+        for(AnonyVO anonyVO : anonyList)
+        {
+            Date now = new Date();
+            Date postTime = anonyService.getPostTime(anonyVO.getAnony_Board_Id());
+            long defferTime = now.getTime()-postTime.getTime();
+            anonyVO.setAnony_Hangle_Dt(defferTime);
+            logger.info(String.valueOf(anonyVO.getAnony_Hangle_Dt()));
+        }
+
         model.addAttribute("searchAnonyVO", searchAnonyVO);
         model.addAttribute("anonyList", anonyList);
         model.addAttribute("paginationInfo", paginationInfo);
@@ -157,7 +177,7 @@ public class AnonyController extends CommonController{
     }
 
 
-/* 얘는 비동기 통신일 떄 사용한다. ajax로 처리 그렇게 되면 main페이지가 필요하다. */
+    /* 얘는 비동기 통신일 떄 사용한다. ajax로 처리 그렇게 되면 main페이지가 필요하다. */
     // @ResponseBody
     // @PostMapping("/list/paging")
     // public String tlist(@ModelAttribute("boardFormVO")@Valid BoardFormVO boardFormVO ,@RequestBody(required = false) String filterJSON, HttpServletResponse response, ModelMap model)throws Exception
@@ -172,14 +192,14 @@ public class AnonyController extends CommonController{
 
     //         ObjectMapper mapper = new ObjectMapper();
     //         AnonyVO searchVO  = (AnonyVO)mapper.readValue(filterJSON, new TypeReference<AnonyVO>(){});
-            
+
     //         PaginationInfo paginationInfo = new PaginationInfo();
     //         paginationInfo.setCurrentPageNo(searchVO.getPageIndex());
     //         paginationInfo.setRecordCountPerPage(searchVO.getPageUnit());
     //         paginationInfo.setPageSize(searchVO.getPageSize());
     //         searchVO.setFirstIndex(paginationInfo.getFirstRecordIndex());
     //         searchVO.setRecordCountPerPage(paginationInfo.getRecordCountPerPage());
-            
+
     //         List<AnonyVO> anonyList = anonyService.getAnnoyList(searchAnonyVO);
     //         int totCnt = anonyService.searchListTotalCount(searchAnonyVO);
     //         logger.info(String.valueOf(totCnt));
@@ -189,7 +209,7 @@ public class AnonyController extends CommonController{
     //         searchVO.setPrev(paginationInfo.getXprev());
     //         searchVO.setNext(paginationInfo.getXnext());
     //         searchVO.setRealEnd(paginationInfo.getRealEnd());
-    
+
     //         obj.put("resultList",anonyList);
     //         obj.put("resultCnt", totCnt);
     //         obj.put("totalPageCnt", (int)Math.ceil(totCnt / (double)searchVO.getPageUnit()));
@@ -202,8 +222,8 @@ public class AnonyController extends CommonController{
     //         obj.put("res","error");
     //     }
 
-    
-     
+
+
     //     out.print(obj);
 
 
@@ -211,52 +231,8 @@ public class AnonyController extends CommonController{
 
     // }
 
-    
 
 
-
-
-//     @ResponseBody
-//     @PostMapping(value = "/list/paging", produces = "application/json;charset=utf-8")
-//     public Object tlist(@RequestBody(required = false) String filterJSON, HttpServletResponse response, ModelMap model)throws Exception
-//     {
-//         JSONObject obj = new JSONObject();
-//         response.setContentType("text/html; charset=UTF-8");
-//         PrintWriter out = response.getWriter();
-//
-//             ObjectMapper mapper = new ObjectMapper();
-//             AnonyVO searchVO  = (AnonyVO)mapper.readValue(filterJSON, new TypeReference<AnonyVO>(){});
-//
-//             PaginationInfo paginationInfo = new PaginationInfo();
-//             paginationInfo.setCurrentPageNo(searchVO.getPageIndex());
-//             paginationInfo.setRecordCountPerPage(searchVO.getPageUnit());
-//             paginationInfo.setPageSize(searchVO.getPageSize());
-//             searchVO.setFirstIndex(paginationInfo.getFirstRecordIndex());
-//             searchVO.setRecordCountPerPage(paginationInfo.getRecordCountPerPage());
-//
-//             List<AnonyVO> anonyList = anonyService.getAnnoyList(searchVO);
-//             int totCnt = anonyService.searchListTotalCount(searchVO);
-//             logger.info(String.valueOf(totCnt));
-//             paginationInfo.setTotalRecordCount(totCnt);
-//             searchVO.setEndDate(paginationInfo.getLastPageNoOnPageList());
-//             searchVO.setStartDate(paginationInfo.getFirstPageNoOnPageList());
-//             searchVO.setPrev(paginationInfo.getXprev());
-//             searchVO.setNext(paginationInfo.getXnext());
-//             searchVO.setRealEnd(paginationInfo.getRealEnd());
-//
-//             obj.put("resultList",anonyList);
-//             obj.put("resultCnt", totCnt);
-//             model.addAttribute("paginationInfo", paginationInfo);
-//             obj.put("totalPageCnt", (int)Math.ceil(totCnt / (double)searchVO.getPageUnit()));
-//             obj.put("searchVO", searchVO);
-//             logger.info(String.valueOf(obj));
-//
-//
-//         return obj;
-//
-//     }
-
-    
 
     @ResponseBody
     @PostMapping("/reply/regist")
@@ -269,60 +245,70 @@ public class AnonyController extends CommonController{
 
 
 
-    /* 
+    /*
      * @작성자 : 오지환
      * @작성일자 : 2024/01/29
-     * @메소드 설계 목적 : 
+     * @메소드 설계 목적 :
      */
 
     @GetMapping("/detail")
-    public ModelAndView detail(@ModelAttribute("boardFormVO")@Valid BoardFormVO boardFormVO, @RequestParam("anony_Board_Id") int queryString,ModelAndView mnv, HttpServletResponse response, HttpServletRequest request)throws Exception
+    public ModelAndView detail(@ModelAttribute("boardFormVO")@Valid BoardFormVO boardFormVO, ModelAndView mnv, HttpServletResponse response, HttpServletRequest request)throws Exception
     {
-        // @RequestParam("anony_Board_Id") int queryString
-        logger.info("detail"+"여기들어와수까?");
+
         String url = "/board/anony/detail";
         //boardForVO.getannoyVO()하면 board_id값을 파라미터로 넘긴다음, 그 테이블을 boardFormVO에 담는다.
-        boardFormVO.setAnonyVO(anonyService.getAnony(queryString)); // 디비에서 게시글을 가져옴
+        boardFormVO.setAnonyVO(anonyService.getAnony(boardFormVO.getAnonyVO())); // 디비에서 게시글을 가져옴
+        logger.info(boardFormVO.getAnonyVO().toString());
         AnonyVO anonyVO = boardFormVO.getAnonyVO(); //밖 boardFormVO에서 annoyVO를 얻어온다.
-        logger.info(anonyVO.toString());
-        if(!isCookieExist(request,response,"anony_Board_Id",String.valueOf(queryString)))
+        if(!isCookieExist(request,response,"anony_Board_Id",String.valueOf(anonyVO.getAnony_Board_Id())))
         {
-        /* 쿠키가 존재하면 true / 없으면 false */
+            /* 쿠키가 존재하면 true / 없으면 false */
             anonyService.increaseAnonyReadcnt(anonyVO);
         }
 
-        AnonyVO detailVO = anonyService.getAnony(queryString);
-        List<AnonyReplyVO> anonyReplyVOList = detailVO.getAnonyReplyList();
-        Map<String,Object> pmap = new HashMap<>();
-        pmap.put("anonyReplyVOList", anonyReplyVOList);
+//        AnonyVO searchAnonyVO = boardFormVO.getSearchAnonyVO();
+        AnonyReplyVO searchanonyReplyVO = boardFormVO.getSearchanonyReplyVO();
+        searchanonyReplyVO.setAnony_Board_Id(anonyVO.getAnony_Board_Id());
+        logger.info("searchReplyVO.pageIndex : "+searchanonyReplyVO.toString());
 
 
-
-        boardFormVO.setAnonyVO(anonyVO);
         /* ///////////////////페이지네이션//////////////////////////////////////////// */
 
-
         PaginationInfo paginationInfo = new PaginationInfo();
-        paginationInfo.setCurrentPageNo(anonyVO.getPageIndex()); //현재 페이지번호에 pageIndex 값을 넣어준다.
-        paginationInfo.setRecordCountPerPage(anonyVO.getPageUnit()); //Pagination의 한페이지당 게시되는 게시물 수에 pageunit의 디폴트 값 10을 넣는다.
-        paginationInfo.setPageSize(anonyVO.getPageSize()); // 페이지 리스트에 게시되는 페이지 수는 pageSize의 디폴트 값 10으 넣는다.
+        paginationInfo.setCurrentPageNo(searchanonyReplyVO.getPageIndex()); //현재 페이지 번호에 pageindex 값을 넣는다.
+        logger.info(String.valueOf(paginationInfo.getCurrentPageNo()));
+        paginationInfo.setRecordCountPerPage(searchanonyReplyVO.getPageUnit()); //한 페이지당 게시되는 게시물 수에 pageunit의 디폴트 값인 10 을 넣는다.
+        paginationInfo.setPageSize(searchanonyReplyVO.getPageSize());
 
 
 ///////////////////////이렇게 pagination의 변수에 값을 넣어준 다음,  firstPageNoOnPageList 계산을 한 다음, firstIndex에 넣어준다./////////////////
-        anonyVO.setFirstIndex(paginationInfo.getFirstRecordIndex()); //첫 인덱스 값(firstIndex)은 계산된 firstPageNoOnPageList의 값을 넣어준다.
-        anonyVO.setRecordCountPerPage(paginationInfo.getRecordCountPerPage()); //한 페이지당 게시되는 게시물 수(recordCountPerPage)를 recordCountPerPage의 값을 넣어준다.
+        searchanonyReplyVO.setFirstIndex(paginationInfo.getFirstRecordIndex());
+        searchanonyReplyVO.setRecordCountPerPage(paginationInfo.getRecordCountPerPage());
+
         int totCnt = anonyService.selectReplyCount(anonyVO.getAnony_Board_Id());
+
         paginationInfo.setTotalRecordCount(totCnt); // 그리고 searchListTotalCount를 통해 게시판의 총 갯수를 구해주고,  totalRecordCount란 변수에 수를 넣어준다.
-        logger.info(paginationInfo.toString());
         /*pagination에서 끝나는데이터와 시작하는데이터, 이전버튼, 다음버튼을 전부 계산한뒤에 pageVO의 값들로 넣어준다.*/
-        anonyVO.setEndDate(paginationInfo.getLastPageNoOnPageList());
-        anonyVO.setStartDate(paginationInfo.getFirstPageNoOnPageList());
-        anonyVO.setPrev(paginationInfo.getXprev());
-        anonyVO.setNext(paginationInfo.getXnext());
+        searchanonyReplyVO.setEndDate(paginationInfo.getLastPageNoOnPageList());
+        searchanonyReplyVO.setStartDate(paginationInfo.getFirstPageNoOnPageList());
+        searchanonyReplyVO.setPrev(paginationInfo.getXprev());
+        searchanonyReplyVO.setNext(paginationInfo.getXnext());
+        List<AnonyReplyVO> anonyReplyVOList = anonyService.selectReplyPaging(searchanonyReplyVO);
         /* ///////////////////페이지네이션//////////////////////////////////////////// */
+
+        Date now = new Date();
+        Date postTime = anonyService.getPostTime(anonyVO.getAnony_Board_Id());
+        long defferTime = now.getTime()-postTime.getTime();
+        anonyVO.setAnony_Hangle_Dt(defferTime);
+        logger.info(String.valueOf(anonyVO.getAnony_Hangle_Dt()));
+
 
         mnv.addObject("anony", anonyVO);
         mnv.addObject("paginationInfo", paginationInfo);
+        mnv.addObject("searchanonyReplyVO", searchanonyReplyVO);
+        mnv.addObject("totalPageCnt", (int)Math.ceil(totCnt/(double)searchanonyReplyVO.getPageUnit()));
+        mnv.addObject("totCnt", totCnt);
+        mnv.addObject("anonyReplyVOList",anonyReplyVOList);
         mnv.setViewName(url);
 
         return mnv;
@@ -336,7 +322,7 @@ public class AnonyController extends CommonController{
         anonyService.regist(anonyVO);
     }
 
-    @PostMapping("/modifyForm")
+    @GetMapping("/modifyForm")
     public String modifyForm(BoardFormVO boardFormVO)
     {
         String url = "board/anony/modifyForm";
@@ -350,11 +336,14 @@ public class AnonyController extends CommonController{
         anonyService.modify(boardFormVO);
     }
 
-    @ResponseBody
-    @PostMapping("/remove")
-    public void remove(BoardFormVO boardFormVO)
+    @GetMapping("/remove")
+    public String remove(BoardFormVO boardFormVO)
     {
         anonyService.remove(boardFormVO.getAnonyVO());
+        String url = "redirect:./list";
+
+        return url;
+
     }
 
 

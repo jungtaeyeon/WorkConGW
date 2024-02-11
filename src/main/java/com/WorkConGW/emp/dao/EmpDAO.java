@@ -21,6 +21,7 @@ public class EmpDAO {
 
     Logger logger = LoggerFactory.getLogger(EmpService.class);
 
+
     public EmpVO selectEmpById(String emp) {
         logger.info(emp);
         List<EmpVO> empvo = sqlSessionTemplate.selectList("selectEmpById", emp);
@@ -91,17 +92,21 @@ public class EmpDAO {
         return sqlSessionTemplate.selectOne("findPwCheck",empVO);
     }
 
-	public void createAuthKey(String emp_Email,String emp_authkey) throws Exception{
+	public void createAuthKey(String email_Emp,String email_authkey) throws Exception{
 		Map<String, Object> map = new HashMap<String, Object>();
-		map.put("emp_Email", emp_Email);
-		map.put("emp_authkey", emp_authkey);
+		map.put("email_Emp", email_Emp);
+		map.put("email_authkey", email_authkey);
 		
 		sqlSessionTemplate.selectOne("createAuthKey", map);
 		
 	}
 
-    public void empAuth(String emp_Email) throws Exception{
-		sqlSessionTemplate.update("empAuth", emp_Email);
+    public void empAuth(String emp_Email,String authKey) throws Exception{
+        logger.info("여기 들어오니? empDAO:"+emp_Email);
+        Map<String,Object> pmap = new HashMap<>();
+        pmap.put("emp_authkey", authKey);
+        pmap.put("email_Emp", emp_Email);
+		sqlSessionTemplate.update("empAuth", pmap);
 	}
 
 
