@@ -43,8 +43,8 @@ ERD 설명서
 
 ### Installation
 ``` bash
-$ git clone https://github.com/Ohsaam/bookSideProject.git
-$ cd bookSideProject
+$ git clone [https://github.com/Ohsaam/bookSideProject.git](https://github.com/jungtaeyeon/WorkConGW.git)
+$ cd WorkConGW
 ```
 ## Group
 - ![SLACK](https://img.shields.io/badge/Slack-4A154B?style=for-the-badge&logo=slack&logoColor=white)
