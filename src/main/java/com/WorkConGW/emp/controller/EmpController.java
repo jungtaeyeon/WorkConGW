@@ -59,8 +59,7 @@ public class EmpController {
         ResponseEntity<String> entity = null;
         EmpVO empVO = empService.checkEmpUdateYn(); // 다오에 접근해서 사용자에 대한 정보를 불러옴
         String empUpdateYn = empVO.getEmp_Update_Yn();
-        logger.info(empUpdateYn);
-        
+
         if(empUpdateYn == "" || empUpdateYn == "Y" || empUpdateYn == null)
         {
             logger.info("여기는?");

@@ -246,7 +246,7 @@
           </div>
           <div class="input-field">
             <label>* 우편번호</label>
-            <input id = "myAdd3" name="emp_Add3" type="text"  placeholder="우편번호" required /><br />
+            <input id = "myAdd3" name="emp_ZipCode" type="text"  placeholder="우편번호" required /><br />
           </div>
             <div class="input-field">
               <label>* 상세주소</label>
@@ -286,7 +286,7 @@
             </div>
 
           <div class="input-field">
-            <label>* 상태설정 : </label>
+            <label>* 상태 : </label>
             <select id = "emp_St" name="emp_St" class="form-control">
               <option value="2" ${loginUser.emp_St eq '2'? 'selected' : '' }>휴직</option>
               <option value="1" ${loginUser.emp_St eq '1'? 'selected' : '' }>재직</option>

@@ -20,6 +20,7 @@
 			,A.EMP_EMAIL				
 			,A.EMP_ADD1	
             ,A.EMP_ADD2
+	     	,A.EMP_ZIPCODE
             ,A.ATTEND_ST_ID
 			,A.DEPT_ID								
 			,A.EMP_CREATE_DT			
@@ -83,6 +84,7 @@ UPDATE EMP SET EMP_PWD = #{emp_Pwd} where EMP_EMAIL = #{emp_Email} and EMP_ID = 
        ,EMP_EMAIL = #{emp_Email}
        ,EMP_ADD1 = #{emp_Add1}
        ,EMP_ADD2 = #{emp_Add2}
+       ,EMP_ZIPCODE = #{emp_ZipCode}
        ,ATTEND_ST_ID = #{attend_St_Id}
   WHERE EMP_ID = #{emp_Id}
 </update>
@@ -103,7 +105,7 @@ INSERT INTO EMP
 (EMP_ID, EMP_NAME, EMP_PWD, EMP_REGNO, EMP_REGNO2, EMP_HP,EMP_ST,EMP_ADD1, EMP_ADD2,EMP_ZIPCODE ,EMP_EMAIL, AUTH_ID, DEPT_ID, TEAM_ID, EMP_SUP_ID, ATTEND_ST_ID,CODE_ID, EMP_AUTHKEY)
 VALUES
 (#{emp_Id}, #{emp_Name
-},#{emp_Pwd},#{emp_Regno},#{emp_Regno2},#{emp_Hp},#{emp_St},#{emp_Add1},#{emp_Add2},#{emp_Add3},#{emp_Email}, #{auth_Id},#{dept_Id}, #{team_Id}, #{emp_Sup_Id}, #{attend_St_Id}, #{code_Id}, #{emp_authkey})
+},#{emp_Pwd},#{emp_Regno},#{emp_Regno2},#{emp_Hp},#{emp_St},#{emp_Add1},#{emp_Add2},#{emp_ZipCode},#{emp_Email}, #{auth_Id},#{dept_Id}, #{team_Id}, #{emp_Sup_Id}, #{attend_St_Id}, #{code_Id}, #{emp_authkey})
 </insert>
 
 
@@ -130,6 +132,7 @@ VALUES
 		,EMP.EMP_ST
 		,EMP.EMP_ADD1
 		,EMP.EMP_ADD2
+		,EMP.EMP_ZIPCODE
 		,EMP.DEPT_ID
 		,EMP.EMP_CREATE_DT
 		,EMP.EMP_UPDATE_DT

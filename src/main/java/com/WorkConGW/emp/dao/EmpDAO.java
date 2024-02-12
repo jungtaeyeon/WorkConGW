@@ -23,10 +23,7 @@ public class EmpDAO {
 
 
     public EmpVO selectEmpById(String emp) {
-        logger.info(emp);
         List<EmpVO> empvo = sqlSessionTemplate.selectList("selectEmpById", emp);
-        logger.info(empvo.toString());
-
         if(empvo != null && !empvo.isEmpty()) {
             EmpVO empvo2 = empvo.get(0);
             logger.info(empvo.toString());

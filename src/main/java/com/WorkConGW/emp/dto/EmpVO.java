@@ -21,7 +21,9 @@ public class EmpVO extends BaseVO{
     private String emp_Add1;
     private String emp_Add2;
 
-    private String emp_Add3;
+
+
+    private String emp_ZipCode;
     private String dept_Id;
     private Date emp_Create_Dt;
     private Date emp_Update_Dt;
@@ -46,10 +48,10 @@ public class EmpVO extends BaseVO{
 
 	
     
-    public EmpVO(String emp_Add3,int emp_authkey,String emp_Id, String emp_Name, String emp_Pwd,String emp_Regno, String emp_Hp, String emp_Sign,String emp_Picture, int emp_St, String emp_Add1,String emp_Add2,String dept_Id, Date emp_Create_Dt, Date emp_Update_Dt,String emp_Email
+    public EmpVO(String emp_ZipCode,int emp_authkey,String emp_Id, String emp_Name, String emp_Pwd,String emp_Regno, String emp_Hp, String emp_Sign,String emp_Picture, int emp_St, String emp_Add1,String emp_Add2,String dept_Id, Date emp_Create_Dt, Date emp_Update_Dt,String emp_Email
         , String auth_Id, String code_Id, String emp_Code_Resp_Id, String code_Name, String dept_Name, String attend_St_Name, String emp_Update_Yn, String team_Id, String auth_Name, String search_Auth, String attend_St_Id, String emp_Regno2,String emp_Sup_Id) {
             super();
-            this.emp_Add3=emp_Add3;
+            this.emp_ZipCode=emp_ZipCode;
             this.emp_Regno2 = emp_Regno2;
             this.emp_Id = emp_Id;
             this.emp_Name = emp_Name;
@@ -84,6 +86,13 @@ public class EmpVO extends BaseVO{
     public EmpVO(){
     }
 
+    public String getEmp_ZipCode() {
+        return emp_ZipCode;
+    }
+
+    public void setEmp_ZipCode(String emp_ZipCode) {
+        this.emp_ZipCode = emp_ZipCode;
+    }
     public String getemp_Sup_Id()
     {
         return this.emp_Sup_Id;
@@ -319,12 +328,7 @@ public class EmpVO extends BaseVO{
         this.emp_authkey = emp_authkey;
     }
 
-    public String getEmp_Add3() {
-        return emp_Add3;
-    }
 
-    public void setEmp_Add3(String emp_Add3) {
-        this.emp_Add3 = emp_Add3;
-    }
+
 }
 

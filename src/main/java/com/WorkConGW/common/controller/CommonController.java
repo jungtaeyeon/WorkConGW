@@ -174,7 +174,7 @@ public class CommonController{
 	}
 
 
-    @GetMapping("/mypage/modify")
+    @PostMapping("/mypage/modify")
 	public String mypageModify(EmpVO empVO) throws SQLException {
 		empService.modifyEmp(empVO);
         String url ="redirect:/common/home";

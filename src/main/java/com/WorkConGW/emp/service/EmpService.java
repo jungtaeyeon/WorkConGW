@@ -61,6 +61,7 @@ public class EmpService {
 
 	public EmpVO getEmp(String emp_Id) {
         EmpVO empVO = empDAO.selectEmpById(emp_Id);
+        logger.info(empVO.toString());
         return empVO;
 	}
 

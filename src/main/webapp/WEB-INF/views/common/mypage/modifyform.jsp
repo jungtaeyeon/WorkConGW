@@ -284,9 +284,6 @@
 </div>
 
 <div class="con main-2">
-    <div class="side-bar">
-        <div><%@ include file="/WEB-INF/views/include/sidebar.jsp" %></div>        
-    </div>
     <div class="content">
         <div>
           <div class="container">
@@ -316,10 +313,10 @@
                 </div>
               </form>
 
-              <form action = "<%=request.getContextPath()%>/common/mypage/modify" class="signup-form" id="modifyForm" name="modifyForm" method="get" enctype="multipart/form-data">
+              <form action = "<%=request.getContextPath()%>/common/mypage/modify" class="signup-form" id="modifyForm" name="modifyForm" method="post" enctype="multipart/form-data">
                 <div class="input-field">
                   <label>* 이름 : </label>
-                  <input type="text" id = "empName" name="emp_Name" value = "${loginUser.emp_Name}"  />
+                  <input type="text" id = "empName" name="emp_Name" value = "${empVO.emp_Name}"  />
                 </div>
                 <div class="input-field">
                   <label>* 상태설정 : </label>
@@ -333,46 +330,50 @@
 
                 <div class="input-field id-field">
                   <label>* 비밀번호 : </label>
-                  <input id = "empPwd" name="emp_Pwd" type="password" value="${loginUser.emp_Pwd}" required />
+                  <input id = "empPwd" name="emp_Pwd" type="password" value="${empVO.emp_Pwd}" required />
                   <button id="modifyPwdBtn" class="input-btn">비밀번호변경</button>
                   <input type="hidden" value="o" id="isDup" />
                 </div>
                 <div class="input-field">
                   <label>* 사번</label>
-                  <input id ="empId" name="emp_Id" type="text" maxlength="6" value = ${loginUser.emp_Id} readonly />
+                  <input id ="empId" name="emp_Id" type="text" maxlength="6" value = ${empVO.emp_Id} readonly />
                 </div>
                 <div class="input-field">
                   <label>* 부서</label>
-                  <input id="deptName"  name="dept_Name" type="text" maxlength="6" value = ${loginUser.dept_Name} readonly />
+                  <input id="deptName"  name="dept_Name" type="text" maxlength="6" value = ${empVO.dept_Name} readonly />
                 </div>
                 <div class="input-field">
                   <label>* 직위</label>
-                  <input id ="codeName" name="code_Name" type="text" maxlength="6" value = ${loginUser.code_Name} readonly />
+                  <input id ="codeName" name="code_Name" type="text" maxlength="6" value = ${empVO.code_Name} readonly />
                 </div>
                 <div class="input-field">
                   <label>* 휴대전화</label>
-                  <input id = "empHp"name="emp_Hp" type="text" value="${loginUser.emp_Hp}" required maxlength="20" />
+                  <input id = "empHp"name="emp_Hp" type="text" value="${empVO.emp_Hp}" required maxlength="20" />
                 </div>
                 <div class="input-field">
                   <label>* 이메일</label>
-                  <input id = "empEmail" name="emp_Email" type="text" value ="${loginUser.emp_Email}"placeholder="'@' 을 포함한 이메일 주소 전체를 입력해주세요" required />
+                  <input id = "empEmail" name="emp_Email" type="text" value ="${empVO.emp_Email}"placeholder="'@' 을 포함한 이메일 주소 전체를 입력해주세요" required />
                 </div>
                 <div class="input-field">
                   <label>* 주소</label>
                   <div>
-                    <input id = "myAdd1" name="emp_Add1" value = "${loginUser.emp_Add1}" type="text" placeholder="우편번호" required />
+                    <input id = "emp_Add1" name="emp_Add1"  type="text" value = "${empVO.emp_Add1}" placeholder="우편번호" required />
                     <input type="button" onclick="sample6_execDaumPostcode()" value="우편번호 찾기" /><br />
                   </div>
                 </div>
-                  <div class="input-field">
-                    <label>* 상세주소</label>
-                    <input id = "myAdd2" name="emp_Add2" type="text" value="${loginUser.emp_Add2}" placeholder="상세주소" required /><br />
-                  </div>
+                <div class="input-field">
+                  <label>* 우편번호</label>
+                  <input id = "emp_ZipCode" name="emp_ZipCode" type="text" value ="${empVO.emp_ZipCode}" placeholder="우편번호" required /><br />
+                </div>
+                <div class="input-field">
+                  <label>* 상세주소</label>
+                  <input id = "emp_Add2" name="emp_Add2" type="text" value ="${empVO.emp_Add2}" placeholder="상세주소" required /><br />
+                </div>
 
                   <div class="input-field">
                     <label>*필수 서명 &nbsp&nbsp(png만 가능)</label>
                     <div class = "input-group">
-                      <input id="myFileName" type="text" class="form-control" name="myEmpSign" style="cursor: pointer;" value="${loginUser.emp_Sign}" onclick="addEmpSign();" required readonly>
+                      <input id="myFileName" type="text" class="form-control" name="myEmpSign" style="cursor: pointer;" value="${empVO.emp_Sign}" onclick="addEmpSign();" required readonly>
 										<input type="file" id = "myEmpSign"class="myEmpSign" onchange="myAddSignFile(this);" name="myEmpSign" style="display: none;"> 
                       <div class="input-group-prepend">
                         <span class="input-group-text"><i class="fa fa-file-o" ></i> </span> 
@@ -393,7 +394,6 @@
 
 <div class="con main-bottom">
     <div class="foot">
-      <%@ include file="/WEB-INF/views/common/mypage/mypage-sidebar.jsp" %>
     </div>
 </div>
 
@@ -579,35 +579,31 @@ function modify_go(){
 	//사인 파일 있는지 없는지 체크
 	$.ajax({
 		type:"POST",
-    url : "<%=request.getContextPath()%>/emp/checkEmpUpdateYn",
-		processData: false,  
+        url : "<%=request.getContextPath()%>/emp/checkEmpUpdateYn",
+		processData: false,
 		contentType: false,
 		async: false,
 		success: function(data) {
 			msg = data;
+            console.log(data);
 		},
 		error: function(e) {
 			console.log(e);
 		}
 	});
-	
+
 	console.log(msg);
-	
-	if(msg == 'fail' && $(".myEmpSign")[0].files[0] === undefined){
-		alert("첫 방문 시 사인을 필수로 등록하셔야 합니다.");
-		$(".myEmpSign").click();
-		return false;
-	}
-	
-	
-	
+
+
+
+
 	let modifyForm = $("#modifyForm")[0];
 	let uploadFiles = new FormData(modifyForm);
 	if($(".myEmpSign")[0].files[0] !== undefined){
 		$.ajax({
 			type:"POST",
       url : "<%= request.getContextPath() %>/emp/registSign",
-			processData: false,  
+			processData: false,
 			contentType: false,
 		 	data : uploadFiles,
 			success: function(data) {
@@ -619,65 +615,69 @@ function modify_go(){
 		});
 	}
 	alert("수정이 완료되었습니다.");
-	
+
 	document.modifyForm.submit();
-	
-} 
+
+}
 
 </script>
 
 
     <script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
-    <script>
-    	//다음 주소api
-		function sample6_execDaumPostcode() {
-		  new daum.Postcode({
-		    oncomplete: function (data) {
-		      // 팝업에서 검색결과 항목을 클릭했을때 실행할 코드를 작성하는 부분.
-		
-		      // 각 주소의 노출 규칙에 따라 주소를 조합한다.
-		      // 내려오는 변수가 값이 없는 경우엔 공백('')값을 가지므로, 이를 참고하여 분기 한다.
-		      let addr = ""; // 주소 변수
-		      let extraAddr = ""; // 참고항목 변수
-		
-		      //사용자가 선택한 주소 타입에 따라 해당 주소 값을 가져온다.
-		      if (data.userSelectedType === "R") {
-		        // 사용자가 도로명 주소를 선택했을 경우
-		        addr = data.roadAddress;
-		      } else {
-		        // 사용자가 지번 주소를 선택했을 경우(J)
-		        addr = data.jibunAddress;
-		      }
-		
-		      // 사용자가 선택한 주소가 도로명 타입일때 참고항목을 조합한다.
-		      if (data.userSelectedType === "R") {
-		        // 법정동명이 있을 경우 추가한다. (법정리는 제외)
-		        // 법정동의 경우 마지막 문자가 "동/로/가"로 끝난다.
-		        if (data.bname !== "" && /[동|로|가]$/g.test(data.bname)) {
-		          extraAddr += data.bname;
-		        }
-		        // 건물명이 있고, 공동주택일 경우 추가한다.
-		        if (data.buildingName !== "" && data.apartment === "Y") {
-		          extraAddr += extraAddr !== "" ? ", " + data.buildingName : data.buildingName;
-		        }
-		        // 표시할 참고항목이 있을 경우, 괄호까지 추가한 최종 문자열을 만든다.
-		        if (extraAddr !== "") {
-		          extraAddr = "(" + extraAddr + ")";
-		        }
-		        // 조합된 참고항목을 해당 필드에 넣는다.
-		        document.getElementById("myAdd1").value = extraAddr;
-		      } else {
-		        document.getElementById("myAdd1").value = "";
-		      }
-		
-		      // 우편번호와 주소 정보를 해당 필드에 넣는다.
-		      document.getElementById("myAdd1").value = addr;
-		      // 커서를 상세주소 필드로 이동한다.
-		      document.getElementById("myAdd2").focus();
-		    },
-		  }).open();
-		}
-      </script>
+  <script>
+    //다음 주소api
+    function sample6_execDaumPostcode() {
+      new daum.Postcode({
+        oncomplete: function (data) {
+          // 팝업에서 검색결과 항목을 클릭했을때 실행할 코드를 작성하는 부분.
+
+          // 각 주소의 노출 규칙에 따라 주소를 조합한다.
+          // 내려오는 변수가 값이 없는 경우엔 공백('')값을 가지므로, 이를 참고하여 분기 한다.
+          let addr = ""; // 주소 변수
+          let extraAddr = ""; // 참고항목 변수
+          let zipCode = data.zonecode;
+
+          //사용자가 선택한 주소 타입에 따라 해당 주소 값을 가져온다.
+          if (data.userSelectedType === "R") {
+            // 사용자가 도로명 주소를 선택했을 경우
+            addr = data.roadAddress;
+          } else {
+            // 사용자가 지번 주소를 선택했을 경우(J)
+            addr = data.jibunAddress;
+          }
+
+          // 사용자가 선택한 주소가 도로명 타입일때 참고항목을 조합한다.
+          if (data.userSelectedType === "R") {
+            // 법정동명이 있을 경우 추가한다. (법정리는 제외)
+            // 법정동의 경우 마지막 문자가 "동/로/가"로 끝난다.
+            if (data.bname !== "" && /[동|로|가]$/g.test(data.bname)) {
+              extraAddr += data.bname;
+            }
+            // 건물명이 있고, 공동주택일 경우 추가한다.
+            if (data.buildingName !== "" && data.apartment === "Y") {
+              extraAddr += extraAddr !== "" ? ", " + data.buildingName : data.buildingName;
+            }
+            // 표시할 참고항목이 있을 경우, 괄호까지 추가한 최종 문자열을 만든다.
+            if (extraAddr !== "") {
+              extraAddr = "(" + extraAddr + ")";
+            }
+            // 조합된 참고항목을 해당 필드에 넣는다.
+
+            document.getElementById("emp_Add1").value = extraAddr;
+          } else {
+            document.getElementById("emp_Add1").value = "";
+          }
+
+          document.getElementById("emp_ZipCode").value = zipCode;
+          // 우편번호와 주소 정보를 해당 필드에 넣는다.
+          document.getElementById("emp_Add1").value = addr;
+          // 커서를 상세주소 필드로 이동한다.
+          document.getElementById("emp_Add2").focus();
+
+        },
+      }).open();
+    }
+  </script>
       
  
   </body>
