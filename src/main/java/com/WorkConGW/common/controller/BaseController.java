@@ -13,6 +13,7 @@ import javax.print.attribute.standard.Media;
 
 import com.WorkConGW.common.command.FileUploadCommand;
 import com.WorkConGW.common.dto.AttachVO;
+import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpSession;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -156,6 +157,42 @@ public class BaseController {
         //logger.info(fileArray.length);
         return null;
     }// end of imageGet
+
+
+    // 새로고침 조회수 증가 방지
+    public boolean isCookieExist(HttpServletRequest request, HttpServletResponse response, String cookieName, String cookieValue) throws Exception {
+        boolean isExist = false;
+        Cookie[] cookies = request.getCookies();
+        Cookie checkCookie = null;
+        if(cookies != null && cookies.length > 0) {
+            for(Cookie cookie : cookies) {
+                if(cookie.getName().equals(cookieName) && cookie.getValue().equals(cookieValue)) {	// 쿠키가 존재하면
+                    checkCookie = cookie;
+                    /* 쿠키가 존재한다는 얘기 */
+                    break; // breadk는 가까운 for문 탈출~ 다음 로직은 밑에 else isExist = true (존재하니깐)
+                }
+            }
+        }
+
+        if(checkCookie == null) {	// 쿠키가 존재하지 않으면
+            Cookie newCookie = new Cookie(cookieName, cookieValue);
+            response.addCookie(newCookie); // 클라이언트에 쿠키값을 보낸다.
+        }else {	// 쿠키가 존재하면
+            isExist = true;
+        }
+        return isExist;
+    }
+
+    public void removeCookieByName(HttpServletRequest request, HttpServletResponse response, String deleteCookieName) throws Exception{
+        Cookie[] cookies = request.getCookies();
+        for(Cookie cookie : cookies) {
+            if(cookie.getName().equals(deleteCookieName)) {
+                cookie.setMaxAge(0);
+                response.addCookie(cookie);
+                break;
+            }
+        }
+    }
 
 
 }

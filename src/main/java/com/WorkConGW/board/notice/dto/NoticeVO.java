@@ -16,7 +16,7 @@ public class NoticeVO extends BaseVO{
     private String notice_content;
     private int notice_readcnt;
     @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss")
-    private Date notice_create_dt; // string이 아니라 Date로 바꾸면 문제가 되는지?..
+    private Date notice_create_dt;
     private Date notice_update_dt;
     private String notice_important_yn;
     private String emp_writer_id;

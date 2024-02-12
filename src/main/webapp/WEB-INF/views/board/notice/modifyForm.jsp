@@ -3,67 +3,8 @@
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<%-- <jsp:include page="../sidebar.jsp" /> --%>
-<head>
-	<link rel="stylesheet" href="<%=request.getContextPath() %>/js/treeview/jquery.treeview.css" />
-	<!-- jQuery -->
-	<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-	<!-- Font Awesome CDN -->
-	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" integrity="sha512-" crossorigin="anonymous" />
-	<!-- Bootstrap CSS -->
-	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" crossorigin="anonymous">
-	<!-- Bootstrap JS -->
-	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+jjXkk+Q2h455rYXK/7HAuoJl+0I4" crossorigin="anonymous"></script>
-	<!-- Summernote -->
-	<link href="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote.min.css" rel="stylesheet">
-	<script src="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote.min.js"></script>
-	<script src="https://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.18/lang/summernote-ko-KR.min.js"></script>
-
-<%--	공통으로 뺄 예정 --%>
-	<script>
-		$(document).ready(function() {
-			summernote_start('.summernote', '<%= request.getContextPath() %>');
-		});
-	</script>
-
-	<script>
-		function summernote_start(content,contextPath){
-			$(content).summernote({
-				placeholder:'여기에 내용을 적으세요.',
-				height:250,
-				disableResizeEditor: true,
-				callbacks:{
-					onImageUpload : function(files, editor, welEditable) {
-						//alert("image insert!!");
-						//file size check!
-						for (var i = files.length - 1; i >= 0; i--) {
-							if(files[i].size > 1024*1024*5){
-								alert("이미지는 5MB 미만입니다.");
-								return;
-							}
-						}
-
-						//file sending
-						for (var i = files.length - 1; i >= 0; i--) {
-							sendImg(files[i], this,contextPath+'/common/summernote/uploadImg.do');
-						}
-					},
-					onMediaDelete : function(target) {
-						//alert(target[0].src);
-						var answer=confirm("정말 이미지를 삭제하시겠습니다.");
-						if(answer){
-							deleteImg(target[0].src,contextPath+'/common/summernote/deleteImg.do');
-						}
-					}
-				}
-			});
-		}
-	</script>
-
-</head>
 
 <!-- MAIN CSS -->
-
 <style>
 .pagination {
 	text-align: center;
@@ -99,11 +40,20 @@ tbody {
     padding-right: 17px;	
 
 }
-
+.dropdown-toggle::after{
+	display: none;
+}
 
 </style>
 
 <body>
+<!-- 헤더인클루드 -->
+<%@ include file="../../include/header.jsp"%>
+<section class="subPageContain">
+	<!-- 사이드바 -->
+	<%@ include file="../boardSidebar.jsp"%>
+	<!--컨텐츠 영역-->
+	<div class="contentConteiner">
 
 	<!-- 메인 content -->
 	<div id="main-content">
@@ -112,6 +62,7 @@ tbody {
 				<div class="col-12" style="margin-top: 2%; font-family: S-CoreDream-4Regular" >
 					<h2>
 						<i class="fa fa-bullhorn"></i>&nbsp;사내공지
+						<button type="button" class="btn btn-secondary float-right" onclick="goBackToList();">목록</button>
 					</h2>
 					<hr>
 				</div>
@@ -274,23 +225,9 @@ tbody {
 </div>
 
 <script>
-//파일 첨부 창 보이기/닫기
-function toggleFileContent() {
-	if($("#hideFileWindow").css("display") == "none"){	// 수정창 열기
-		$("#showFileWindow").css("display","none");
-		$("#hideFileWindow").css("display","");
-		
-		$('#attachInline').css('display','none');
-		$('#attachBox').css('display','');
+	function goBackToList() {
+		location.href = "${pageContext.request.contextPath}/board/notice/noticeList";
 	}
-	else{	// 수정창 닫기
-		$("#hideFileWindow").css("display","none");
-		$("#showFileWindow").css("display","");
-		
-		$('#attachInline').css('display','');
-		$('#attachBox').css('display','none');
-	}
-}
 
 //파일 다운로드
 function fileDownload(obj){
@@ -344,13 +281,13 @@ function myFileUpload() {
 		alert('파일은 5개까지만 첨부할 수 있습니다.');
 		return;
 	}
-	
+
 	// 선택 안된 파일 지우기
 	$('.attach_'+uuid).remove();
-	
+
 	var input = $('<input>').attr({"type":"file",'class':'attach_'+uuid,"name":"fileUploadCommand.uploadFile",'onchange':'myFileChange();'}).css('display','none');
 	$("#fileUploadForm").append(input);
-	
+
 	// 파일 선택
 	var inputFileTag = $("input[name='fileUploadCommand.uploadFile']");
 	inputFileTag.eq(inputFileTag.length-1).click();
@@ -452,19 +389,6 @@ function removeEl(obj){
 	$('#fileCount').text($('#appendTbody').children().length);
 }
 
-//수정 sweetAlert
-// $(function () {
-//     $('.js-sweetalert').on('click', function () {
-//         var type = $(this).data('type');
-//         if (type === 'basic') {
-//             showBasicMessage();
-//         }
-        
-//         else if (type === 'confirm') {
-//             showConfirmMessage();
-//         }
-//     });
-// });
 
 //수정
 function modify_go(){
@@ -483,8 +407,9 @@ function modify_go(){
 		$('.note-editable').focus();
 		return;
 	}
-	$('input[name="noticeVO.notice_content"]').val($('.note-editable').html());
-	// $('#noticeVO.notice_content').val($('.note-editable').html());
+	// $('input[name="noticeVO.notice_content"]').val($('.note-editable').html());
+	$('#notice_content').val($('.note-editable').html());
+	// $('#noticeVO.notice_content').val($('.note-editable').html()); path값이 아니라 id값을 적어줘야함
 
 	// 선택 안된 파일 지우기
 	$('.attach_'+uuid).remove();
@@ -515,6 +440,8 @@ function modify_go(){
 
 
 
-
+</div>
+</section>
+<%@ include file="../../include/footer.jsp"%>
 </body>
 			

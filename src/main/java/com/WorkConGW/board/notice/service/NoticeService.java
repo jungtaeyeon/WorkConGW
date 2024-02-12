@@ -22,12 +22,24 @@ public class NoticeService {
     private NoticeDAO noticeDAO;
     Logger logger = LoggerFactory.getLogger(NoticeService.class);
 
+//    public Map<String, Object> getNoticeList(NoticeVO searchNoticeVO) throws SQLException {
+//		Map<String, Object> datMap = new HashMap<>();
+//		List<NoticeVO> noticeList =noticeDAO.selectNoticeList(searchNoticeVO);
+//		/*  */
+//		List<NoticeVO> importantNoticeList = noticeDAO.selectImportantNoticeList();
+//
+//		datMap.put("noticeList", noticeList);
+//        logger.info(datMap.toString());
+//		datMap.put("importantNoticeList", importantNoticeList);
+//        logger.info(datMap.get("importantNoticeList").toString());
+//        return datMap;
+//	}
     public Map<String, Object> getNoticeList(NoticeVO searchNoticeVO) throws SQLException {
 		Map<String, Object> datMap = new HashMap<>();
 		List<NoticeVO> noticeList =noticeDAO.selectNoticeList(searchNoticeVO);
 		/*  */
 		List<NoticeVO> importantNoticeList = noticeDAO.selectImportantNoticeList();
-		
+
 		datMap.put("noticeList", noticeList);
         logger.info(datMap.toString());
 		datMap.put("importantNoticeList", importantNoticeList);
@@ -64,15 +76,16 @@ public class NoticeService {
         noticeDAO.insertNotice(notice);
         logger.info("시퀀스로 id 채번 후 => " + String.valueOf(notice.getNotice_id()));
 
-        // 파일 업로드 추가 예정
-        // 파일 업로드
-        for(AttachVO attachVO : notice.getNoticeAttachList()) {
+        if(notice.getNoticeAttachList() != null){
+            // 파일 업로드
+            for(AttachVO attachVO : notice.getNoticeAttachList()) {
 
-            NoticeAttachVO noticeAttachVO = new NoticeAttachVO(attachVO);
-            noticeAttachVO.setNotice_id(notice.getNotice_id());
-            noticeAttachVO.setEmp_attacher_id(notice.getEmp_writer_id());
+                NoticeAttachVO noticeAttachVO = new NoticeAttachVO(attachVO);
+                noticeAttachVO.setNotice_id(notice.getNotice_id());
+                noticeAttachVO.setEmp_attacher_id(notice.getEmp_writer_id());
 
-            noticeDAO.insertNoticeFile(noticeAttachVO);
+                noticeDAO.insertNoticeFile(noticeAttachVO);
+            }
         }
     }
 
@@ -102,6 +115,7 @@ public class NoticeService {
         NoticeVO noticeVO = boardFormVO.getNoticeVO();
         noticeDAO.updateNotice(noticeVO);
 
+        if (boardFormVO.getFileUploadCommand() != null) {
             // 파일 삭제
             int[] deleteFileIds = boardFormVO.getFileUploadCommand().getDeleteFileIds();
             if(deleteFileIds != null && deleteFileIds.length > 0) {
@@ -132,6 +146,7 @@ public class NoticeService {
                 noticeAttachVO.setEmp_attacher_id(noticeVO.getEmp_writer_id());
                 noticeDAO.insertNoticeFile(noticeAttachVO);
             }
+        }
     }
 
 //    페이징 처리

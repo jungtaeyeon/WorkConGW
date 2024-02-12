@@ -4,19 +4,6 @@
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
-<head>
-	<!-- Font Awesome CDN -->
-	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" integrity="sha512-" crossorigin="anonymous" />
-	<!-- Bootstrap CSS -->
-	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-	<!-- jQuery -->
-	<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-	<!-- Bootstrap JS -->
-	<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-
-</head>
-
-<%--<!-- MAIN CSS -->--%>
 
 <style>
 .pagination {
@@ -62,6 +49,13 @@ tbody {
 </style>
 
 <body>
+<!-- 헤더인클루드 -->
+<%@ include file="../../include/header.jsp"%>
+<section class="subPageContain">
+	<!-- 사이드바 -->
+	<%@ include file="../boardSidebar.jsp"%>
+	<!--컨텐츠 영역-->
+	<div class="contentConteiner">
 
 <%--	<!-- 메인 content -->--%>
 	<div id="main-content">
@@ -70,10 +64,8 @@ tbody {
 				<div class="col-12" style="margin-top: 2%; font-family: S-CoreDream-4Regular" >
 					<h2 style="font-family: S-CoreDream-4Regular">
 						<i class="fas fa-bullhorn"></i>&nbsp;사내공지
-						<button type="button" class="btn btn-secondary float-right" onclick="window.close('<%=request.getContextPath()%>/board/notice/list');"
-							style="margin-right: 22px; font-family: S-CoreDream-4Regular" >
-							<i class="fas fa-times"></i> <span>닫기</span>
-						</button>
+						<button type="button" class="btn btn-secondary float-right" onclick="goBackToList();">목록</button>
+
 						<c:if test="${loginUser.emp_Id == notice.emp_writer_id }">
 							<button class="btn btn-danger float-right m-r-5"
 								data-type="confirm" onclick="remove_go();">
@@ -166,27 +158,12 @@ tbody {
 				</div>
 			</div>
 
-<!-- 			<div class="button1"> -->
-<!-- 								<button type="button" class="btn btn-outline-info" > -->
-<!-- 									<i class="fa fa-paperclip" >링크복사</i> -->
-<!-- 								</button> -->
-
-<!-- 						</div> -->
 					</div>
 				</div>
 			</div>
 		</div>
 	</div>
 </div>
-
-<%-- <form:form commandName="boardFormVO" name="detailForm" action="${pageContext.request.contextPath }/board/notice/detail"> --%>
-<%-- 	<form:hidden path="noticeVO.noticeId" /> --%>
-<%-- 	<form:hidden path="noticeVO.noticeTitle"/> --%>
-<%-- 	<form:hidden path="noticeVO.noticeContent"/> --%>
-<%-- 	<form:hidden path="noticeVO.empName"/> --%>
-<%-- 	<form:hidden path="noticeVO.noticeReadcnt"/> --%>
-<%-- 	<form:hidden path="noticeVO.noticeCreateDt"/> --%>
-<%-- </form:form> --%>
 
 <form name="fileForm" action="${pageContext.request.contextPath }/common/getFile" method="post">
 	<input type="hidden" name="fileUploadPath"/>
@@ -212,6 +189,10 @@ tbody {
 
 
 <script>
+	function goBackToList() {
+		location.href = "${pageContext.request.contextPath}/board/notice/noticeList";
+	}
+
 //파일 다운로드
 function fileDownload(obj){
 	var fileForm = $('form[name="fileForm"]');
@@ -249,20 +230,6 @@ function remove_go(){
 			window.opener.location.reload(true);
 			window.close();
 		},
-// 		function showConfirmMessage() {
-//     		swal({
-// 		        title: "정말 삭제하시겠습니까?",
-// 		//         text: "You will not be able to recover this imaginary file!",
-// 		        type: "warning",
-// 		        showCancelButton: true,
-// 		        confirmButtonColor: "#dc3545",
-// 		        confirmButtonText: "삭제",
-// 		        closeOnConfirm: false
-// 		    }, function () {
-// 		        swal("삭제가 완료되었습니다.", "  ", "success");
-// 		    });
-// 		},
-
 		error:function(){
 			alert('삭제 실패');
 		}
@@ -271,6 +238,8 @@ function remove_go(){
 
 </script>
 
-
-
+</div>
+</section>
+<%-- 푸터 인클루드 --%>
+<%@ include file="../../include/footer.jsp"%>
 </body>

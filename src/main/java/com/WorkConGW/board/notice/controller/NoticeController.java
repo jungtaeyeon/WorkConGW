@@ -1,6 +1,7 @@
 package com.WorkConGW.board.notice.controller;
 
 import com.WorkConGW.board.BoardFormVO;
+import com.WorkConGW.board.anony.dto.AnonyVO;
 import com.WorkConGW.board.notice.dto.NoticeVO;
 import com.WorkConGW.board.notice.service.NoticeService;
 import com.WorkConGW.common.PaginationInfo;
@@ -35,53 +36,6 @@ public class NoticeController extends BaseController{
     @Value("${uploadPath}")
     private String fileUploadPath;
 
-    // 페이징
-//    protected void setUpPaginationInfo(PaginationInfo paginationInfo, BaseVO baseVO) {
-//
-//
-//        List<BaseVO> pageUnitSelector = new ArrayList<BaseVO>();
-//        BaseVO pageUnitVO = null;
-//        for(String unit : BaseVO.PAGE_UNITS) {
-//            pageUnitVO = new BaseVO();
-//            pageUnitVO.setPageUnitValue(unit);
-//            pageUnitVO.setPageUnitLabel(unit+"개씩");
-//            pageUnitSelector.add(pageUnitVO);
-//        }
-//        baseVO.setPageUnitSelector(pageUnitSelector);
-//
-//        paginationInfo.setCurrentPageNo(baseVO.getPageIndex());
-//        paginationInfo.setRecordCountPerPage(baseVO.getPageUnit());
-//        paginationInfo.setPageSize(baseVO.getPageSize());
-//
-//        baseVO.setFirstIndex(paginationInfo.getFirstRecordIndex()+1);
-//        baseVO.setLastIndex(paginationInfo.getLastRecordIndex());
-//        baseVO.setRecordCountPerPage(paginationInfo.getRecordCountPerPage());
-//
-//    }
-
-//    새로고침 시 조회수 증가 방지를 위해 작성
-    public boolean isCookieExist(HttpServletRequest request, HttpServletResponse response, String cookieName, String cookieValue) throws Exception {
-        boolean isExist = false;
-        Cookie[] cookies = request.getCookies();
-        Cookie checkCookie = null;
-        if(cookies != null && cookies.length > 0) {
-            for(Cookie cookie : cookies) {
-                if(cookie.getName().equals(cookieName) && cookie.getValue().equals(cookieValue)) {	// 쿠키가 존재하면
-                    checkCookie = cookie;
-                    /* 쿠키가 존재한다는 얘기 */
-                    break; // breadk는 가까운 for문 탈출~ 다음 로직은 밑에 else isExist = true (존재하니깐)
-                }
-            }
-        }
-
-        if(checkCookie == null) {	// 쿠키가 존재하지 않으면
-            Cookie newCookie = new Cookie(cookieName, cookieValue);
-            response.addCookie(newCookie); // 클라이언트에 쿠키값을 보낸다.
-        }else {	// 쿠키가 존재하면
-            isExist = true;
-        }
-        return isExist;
-    }
 
 //    공지 전체조회
     @RequestMapping(value = "noticeList", method = {RequestMethod.GET, RequestMethod.POST})
@@ -89,16 +43,32 @@ public class NoticeController extends BaseController{
         String url = "/board/notice/list";
 
         NoticeVO searchNoticeVO = boardFormVO.getSearchNoticeVO();
+        // 페이지네이션
         PaginationInfo paginationInfo = new PaginationInfo();
-//        setUpPaginationInfo(paginationInfo, searchNoticeVO);
+        paginationInfo.setCurrentPageNo(searchNoticeVO.getPageIndex());
 
-        int totCnt = noticeService.searchListTotalCount(searchNoticeVO);
-        paginationInfo.setTotalRecordCount(totCnt);
+        paginationInfo.setRecordCountPerPage(searchNoticeVO.getPageUnit()); //한 페이지당 게시되는 게시물 수에 pageunit의 디폴트 값인 10 을 넣는다.
+        paginationInfo.setPageSize(searchNoticeVO.getPageSize());
+
+        searchNoticeVO.setFirstIndex(paginationInfo.getFirstRecordIndex());
+        searchNoticeVO.setRecordCountPerPage(paginationInfo.getRecordCountPerPage());
 
         Map<String,Object> dataMap = noticeService.getNoticeList(searchNoticeVO);
+        int totCnt = noticeService.searchListTotalCount(searchNoticeVO);
+        paginationInfo.setTotalRecordCount(totCnt);
+        logger.info(paginationInfo.toString());
+        searchNoticeVO.setEndDate(paginationInfo.getLastPageNoOnPageList());
+        searchNoticeVO.setStartDate(paginationInfo.getFirstPageNoOnPageList());
+        searchNoticeVO.setPrev(paginationInfo.getXprev());
+        searchNoticeVO.setNext(paginationInfo.getXnext());
+
+
+
         model.addAttribute("noticeList", dataMap.get("noticeList"));
         model.addAttribute("importantNoticeList", dataMap.get("importantNoticeList"));
         model.addAttribute("paginationInfo", paginationInfo);//목록페이징
+        model.addAttribute("totCnt", totCnt);
+        model.addAttribute("totalPageCnt", (int)Math.ceil(totCnt/(double)searchNoticeVO.getPageUnit()));
         model.addAttribute("today", new Date());
         return url;
     }
@@ -136,15 +106,16 @@ public class NoticeController extends BaseController{
     @ResponseBody
     @PostMapping("regist")
     public String regist(BoardFormVO boardFormVO)throws Exception {
-        // 파일 업로드 설정
-        boardFormVO.getFileUploadCommand().setFileUploadPath(fileUploadPath);
-        List<AttachVO> attachList = saveFile(boardFormVO.getFileUploadCommand());
-        boardFormVO.getNoticeVO().setNoticeAttachList(attachList);
 
+        if(boardFormVO.getFileUploadCommand() != null){
+            // 파일 업로드 설정
+            boardFormVO.getFileUploadCommand().setFileUploadPath(fileUploadPath);
+            List<AttachVO> attachList = saveFile(boardFormVO.getFileUploadCommand());
+            boardFormVO.getNoticeVO().setNoticeAttachList(attachList);
+        }
 
         noticeService.regist(boardFormVO.getNoticeVO());
         logger.info(String.valueOf(boardFormVO.getNoticeVO().getNotice_id()));
-        logger.info(String.valueOf(boardFormVO.getNoticeVO()));
 
         return String.valueOf(boardFormVO.getNoticeVO().getNotice_id());
     }
@@ -170,13 +141,12 @@ public class NoticeController extends BaseController{
     @ResponseBody
     @PostMapping("modify")
     public void modify(BoardFormVO boardFormVO)throws Exception{
+        if (boardFormVO.getFileUploadCommand() != null){
             // 파일 업로드 설정
             boardFormVO.getFileUploadCommand().setFileUploadPath(fileUploadPath);
             List<AttachVO> attachList = saveFile(boardFormVO.getFileUploadCommand());
             boardFormVO.getNoticeVO().setNoticeAttachList(attachList);
-
+        }
         noticeService.modify(boardFormVO);
-        logger.info(boardFormVO.getNoticeVO().getNotice_title());
-        logger.info(boardFormVO.getNoticeVO().getNotice_content());
     }
 }

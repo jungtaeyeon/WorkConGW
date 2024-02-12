@@ -4,4 +4,72 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.mybatis.mapper.MilestoneMapper">
 
+    <select id="selectMilestoneList" parameterType="MilestoneVO" resultType="MilestoneVO">
+        SELECT
+        A.milestone_id
+        ,A.milestone_name
+        ,A.milestone_create_dt
+        ,to_char(A.milestone_end_dt, 'yyyy-MM-dd') milestoneEndDt
+        ,A.milestone_update_dt
+        ,A.milestone_st
+        ,A.emp_id
+        ,A.emp_name
+        ,NVL(B.openIssueCount,0) as openIssueCount
+        ,NVL(C.closedIssueCount,0) as closedIssueCount
+        FROM
+        milestone A
+        ,(SELECT milestone_id, count(*) as openIssueCount
+        FROM issue_board
+        WHERE issue_board_st = 'Y'
+        GROUP BY milestone_id
+        ORDER BY milestone_id) B
+        ,(SELECT milestone_id, count(*) as closedIssueCount
+        FROM issue_board
+        WHERE issue_board_st = 'N'
+        GROUP BY milestone_id
+        ORDER BY milestone_id) C
+        WHERE 1=1
+        <choose>
+            <when test='isOpen == "open"'>
+                AND milestone_st='Y'
+            </when>
+            <otherwise>
+                AND milestone_st='N'
+            </otherwise>
+        </choose>
+        AND A.milestone_id = B.milestone_id(+)
+        AND A.milestone_id = C.milestone_id(+)
+        AND A.emp_id = #{emp_Id}
+        ORDER BY milestone_update_dt DESC
+    </select>
+
+    <select id="selectMilestone" parameterType="MilestoneVO" resultType="MilestoneVO">
+        SELECT
+            A.milestone_id
+             ,A.milestone_name
+             ,A.milestone_create_dt
+             ,to_char(A.milestone_end_dt, 'MM/DD/YYYY') milestoneEndDt
+             ,A.milestone_update_dt
+             ,A.milestone_st
+             ,A.emp_id
+             ,A.emp_name
+             ,NVL(B.openIssueCount,0) as openIssueCount
+             ,NVL(C.closedIssueCount,0) as closedIssueCount
+        FROM
+            milestone A
+           ,(SELECT milestone_id, count(*) as openIssueCount
+             FROM issue_board
+             WHERE issue_board_st = 'Y'
+             GROUP BY milestone_id
+             ORDER BY milestone_id) B
+           ,(SELECT milestone_id, count(*) as closedIssueCount
+             FROM issue_board
+             WHERE issue_board_st = 'N'
+             GROUP BY milestone_id
+             ORDER BY milestone_id) C
+        WHERE A.milestone_id = B.milestone_id(+)
+          AND A.milestone_id = C.milestone_id(+)
+          AND A.milestone_id = #{milestone_Id}
+    </select>
+
 </mapper>

@@ -4,4 +4,23 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.mybatis.mapper.DutyMapper">
 
+    <select id="selectDutyVO" parameterType="DutyVO" resultType="DutyVO">
+        SELECT
+            A.duty_board_id
+             ,A.duty_board_title
+             ,A.duty_board_content
+             ,A.duty_board_readcnt
+             ,A.duty_board_create_dt
+             ,A.duty_board_update_dt
+             ,A.duty_updater_id
+             ,A.duty_board_end_dt
+             ,A.emp_writer_id
+             ,B.emp_name
+             ,A.duty_board_security
+        FROM duty A
+                 JOIN emp B
+                      ON A.emp_writer_id=B.emp_id
+        WHERE A.duty_board_id = #{duty_Board_Id}
+    </select>
+
 </mapper>

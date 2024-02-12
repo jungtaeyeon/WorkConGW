@@ -4,4 +4,181 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.mybatis.mapper.IssueMapper">
 
+    <sql id="search">
+        <if test="searchKeyword != null and searchKeyword != ''">
+            <choose>
+                <when test='searchCondition == "tcw"'>
+                    AND	(A.issue_board_title LIKE '%' || #{searchKeyword} || '%'
+                    OR A.issue_board_title LIKE '%' || #{searchKeyword} || '%'
+                    OR B.emp_name LIKE '%' || #{searchKeyword} || '%'
+                    )
+                </when>
+                <when test='searchCondition == "t"'>
+                    AND	A.issue_board_title LIKE '%' || #{searchKeyword} || '%'
+                </when>
+                <when test='searchCondition == "c"'>
+                    AND	A.issue_board_content LIKE '%' || #{searchKeyword} || '%'
+                </when>
+                <when test='searchCondition == "w"'>
+                    AND	B.emp_name LIKE '%' || #{searchKeyword} || '%'
+                </when>
+            </choose>
+        </if>
+    </sql>
+
+    <select id="selectIssueList" parameterType="IssueVO" resultType="IssueVO">
+        select D3.*
+        from(
+        select D2.*
+        from(
+        select rownum as seq, D1.*
+        from(
+        SELECT
+        A.issue_board_id
+        ,A.issue_board_title
+        ,A.issue_board_content
+        ,A.issue_board_readcnt
+        ,to_char(A.issue_board_create_dt,'YYYY.MM.DD HH24:MI:SS') issue_board_create_dt
+        ,to_char(A.issue_board_update_dt,'YYYY.MM.DD') issue_board_update_dt
+        ,A.issue_board_updater_id
+        ,A.emp_id
+        ,A.duty_board_id
+        ,A.milestone_id
+        ,A.issue_board_st
+        ,A.issue_open_st
+        ,B.emp_name
+        ,B.emp_picture
+        ,B.code_name as officialName
+        ,B.dept_name
+        ,B.teamName
+        ,NVL(C.reply_count,0) as replyCount
+        ,D.milestone_name
+        ,E.duty_board_title
+        FROM
+        issue_board A, milestone D, duty E,
+        (
+        SELECT issue_board_id,
+        COUNT(*) AS reply_count
+        FROM issue_reply
+        WHERE reply_group_code = 1
+        GROUP BY issue_board_id
+        ) C
+        ,(
+        SELECT  D1.emp_id
+        ,D1.emp_name
+        ,D1.emp_picture
+        ,D1.code_id
+        ,D2.code_name
+        ,D3.dept_name
+        ,D4.dept_name teamName
+        FROM emp D1, code D2, dept D3, dept D4
+        WHERE D1.CODE_ID = D2.code_id
+        AND D1.dept_id = D3.dept_id
+        AND D1.team_id = D4.dept_id(+)
+        ORDER BY D1.code_id DESC
+        ) B
+        WHERE A.emp_id = B.emp_id
+        AND A.milestone_id = D.milestone_id(+)
+        AND	A.issue_board_id = C.issue_board_id(+)
+        AND	A.duty_board_id = E.duty_board_id(+)
+        <if test='issue_Open_St == "Y"'>
+            AND A.issue_open_st = 'Y'
+        </if>
+        <choose>
+            <when test='isOpen == "open"'>
+                AND A.issue_board_st='Y'
+            </when>
+            <otherwise>
+                AND A.issue_board_st='N'
+            </otherwise>
+        </choose>
+         <include refid="search" />
+        ORDER BY issue_board_create_dt DESC
+        ) D1
+        ) D2
+        where seq <![CDATA[ >= ]]> #{firstIndex}
+        ) D3
+        where rownum <![CDATA[ <= ]]> #{recordCountPerPage}
+    </select>
+
+    <select id="selectMyIssueList" parameterType="EmpVO" resultType="IssueVO">
+        SELECT
+            A.issue_board_id
+             ,A.issue_board_title
+             ,A.issue_board_content
+             ,A.issue_board_readcnt
+             ,to_char(A.issue_board_create_dt, 'yyyy.mm.dd HH24:MI:SS') as issueBoardCreateDt
+             ,to_char(A.issue_board_update_dt, 'yyyy.mm.dd HH24:MI:SS') as issueBoardUpdateDt
+             ,A.issue_board_updater_id
+             ,A.emp_id
+             ,A.duty_board_id
+             ,A.milestone_id
+             ,A.issue_board_st
+             ,A.issue_project_st
+             ,A.issue_open_st
+             ,B.duty_board_title
+        FROM
+            issue_board A, duty B
+        WHERE A.duty_board_id = B.duty_board_id(+)
+          AND emp_id = #{emp_Id}
+        ORDER BY issueBoardUpdateDt DESC
+    </select>
+
+    <select id="selectIssueListByMilestoneId" parameterType="MilestoneVO" resultType="IssueVO">
+        SELECT  A.issue_board_id
+        ,A.issue_board_title
+        ,A.issue_board_content
+        ,A.issue_board_readcnt
+        ,to_char(A.issue_board_create_dt,'YYYY.MM.DD') issue_board_create_dt
+        ,to_char(A.issue_board_update_dt,'YYYY.MM.DD') issue_board_update_dt
+        ,A.issue_board_updater_id
+        ,A.emp_id
+        ,A.duty_board_id
+        ,A.milestone_id
+        ,A.issue_board_st
+        ,B.milestone_name
+        ,C.emp_name
+        ,NVL(D.oppListCount,0) oppIssueCount
+        ,NVL(E.replyCount,0) as replyCount
+        ,F.duty_board_title
+        FROM issue_board A, milestone B, emp C, duty F
+        ,(
+        SELECT COUNT(*) oppListCount
+        ,milestone_id
+        FROM issue_board
+        WHERE 1=1
+        <choose>
+            <when test='isOpen == "open"'>
+                AND issue_board_st='N'
+            </when>
+            <otherwise>
+                AND issue_board_st='Y'
+            </otherwise>
+        </choose>
+        GROUP BY milestone_id
+        ) D
+        ,(
+        SELECT issue_board_id,
+        COUNT(*) AS replyCount
+        FROM issue_reply
+        WHERE reply_group_code = 1
+        GROUP BY issue_board_id
+        ) E
+        WHERE A.milestone_id = B.milestone_id(+)
+        AND A.emp_id = C.emp_id
+        AND A.milestone_id = D.milestone_id(+)
+        AND A.issue_board_id = E.issue_board_id(+)
+        AND A.duty_board_id = F.duty_board_id(+)
+        AND A.milestone_id = #{milestone_Id}
+        <choose>
+            <when test='isOpen == "open"'>
+                AND A.issue_board_st='Y'
+            </when>
+            <otherwise>
+                AND A.issue_board_st='N'
+            </otherwise>
+        </choose>
+        ORDER BY issue_board_update_dt DESC
+    </select>
+
 </mapper>
