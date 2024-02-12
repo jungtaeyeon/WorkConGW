@@ -135,10 +135,7 @@
 
 </style>
 <body>
-
-<%@ include file="./include/header.jsp"%>
-
-
+    <%@ include file="./include/header.jsp"%>
 <div id="main-content" style="width: 100%;">
 	<div class="container-fluid" >
 		<!-- 메인 content 넣는 곳 -->

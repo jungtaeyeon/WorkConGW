@@ -76,10 +76,10 @@
                 <h3 class="form-title">일정 상세조회</h3>
                 <div>
 <%--                    <c:if test="${loginUser.empId eq schedule.username }">--%>
-                        <button type="button" class="btn btn-info" onclick="javascript:location.href='<%=request.getContextPath() %>/schedule/modifyForm?schedule_Id=${param.schedule_Id }';">수정</button>
+                        <button type="button" class="btn btn-info" onclick="location.href='<%=request.getContextPath() %>/schedule/modifyForm?schedule_Id=${param.schedule_Id }';">수정</button>
                         <button type="button" class="btn btn-danger" onclick="removeSchedule();">삭제</button>
 <%--                    </c:if>--%>
-                    <button type="button" class="btn btn-secondary" onclick="javascript:location.href='<%=request.getContextPath()%>/schedule/main';" style="border: 1px solid gray">닫기</button>
+                    <button type="button" class="btn btn-secondary" onclick="location.href='main';" style="border: 1px solid gray">닫기</button>
                 </div>
             </div>
             <hr>

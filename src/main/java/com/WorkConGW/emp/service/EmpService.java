@@ -4,12 +4,15 @@ import java.io.File;
 import java.sql.SQLException;
 import java.util.List;
 
+import com.WorkConGW.mail.MailUtils;
+import com.WorkConGW.mail.TempKey;
 import org.mindrot.jbcrypt.BCrypt;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 import org.springframework.web.multipart.MultipartFile;
@@ -22,8 +25,6 @@ import com.WorkConGW.exception.InvalidPasswordException;
 import com.WorkConGW.exception.NotFoundIDException;
 
 import jakarta.servlet.http.HttpSession;
-import org.springframework.web.context.request.RequestContextHolder;
-import org.springframework.web.context.request.ServletRequestAttributes;
 
  @Service
 public class EmpService {
@@ -31,11 +32,12 @@ public class EmpService {
     Logger logger = LoggerFactory.getLogger(EmpService.class);
     @Autowired 
     private HomeService homeService;
-
+    @Autowired
+    private JavaMailSender mailSender;
 
     @Autowired
     private EmpDAO empDAO;
-    public EmpVO login(String empId, String empPwd, HttpSession session)throws SQLException, NotFoundIDException,InvalidPasswordException {
+    public EmpVO login(String empId, String empPwd ,HttpSession session)throws SQLException, NotFoundIDException,InvalidPasswordException {
         
         EmpVO emp = empDAO.selectEmpById(empId);
 
@@ -43,11 +45,10 @@ public class EmpService {
         {
             throw new NotFoundIDException(); // 아이디 자체가 없다는 뜻
         }
-        if(!empPwd.equals(emp.getEmp_Pwd())) // 조회된 emp.getEmp_Pwd()값과 empPwd가 같지 않다면,
+        if(!BCrypt.checkpw(empPwd,emp.getEmp_Pwd())) // 조회된 emp.getEmp_Pwd()값과 empPwd가 같지 않다면,
         { 
             throw new InvalidPasswordException(); // 비밀번호가 다르다는 에러를 던져라
         }
-
         session.setAttribute("loginUser", emp);
         return emp;
     }
@@ -57,12 +58,10 @@ public class EmpService {
         return empDAO.findPwCheck(empVO);
     }
 
-    // public void findPw(String emp_Email, String emp_Id)
-    // {
-    //     String empKey = new TempKey().getKey()
-    // }
+
 	public EmpVO getEmp(String emp_Id) {
         EmpVO empVO = empDAO.selectEmpById(emp_Id);
+        logger.info(empVO.toString());
         return empVO;
 	}
 
@@ -126,18 +125,34 @@ public class EmpService {
 		empDAO.updateEmpMyPage(empVO);
 	}
 
+    @Transactional
     public void register(EmpVO empVO)
     {
+        logger.info(empVO.toString());
        try{
         empDAO.register(empVO);
+        String key = new TempKey().getKey(50,false);
+        empDAO.createAuthKey(empVO.getEmp_Email(), key);
+        MailUtils sendMail = new MailUtils(mailSender);
+        sendMail.setSubject("[WorkConGW 그룹웨어 이메일 인증메일입니다.]");
+           sendMail.setText(
+                   "<h1>메일인증</h1>" +
+                           "<br/>WorkconGW에 회원가입해주셔서 감사합니다."+
+                           "<br/>아래 [이메일 인증 확인]을 눌러주세요."+
+                           "<a href='http://localhost:8000/WorkConGW/emp/registerEmail?emp_Email=" + empVO.getEmp_Email() +
+                           "&key=" + key +
+                           "' target='_blenk'>이메일 인증 확인</a>");
+        sendMail.setFrom("ohjihwan170@gamil.com", "오지환");
+        sendMail.setTo(empVO.getEmp_Email());
+        sendMail.send();
        }catch(Exception e)
        {
         e.printStackTrace();
        }
     }
 
-    public void empAuth(String emp_Email) throws Exception{
-		empDAO.empAuth(emp_Email);
+    public void empAuth(String email_Emp,String authKey) throws Exception{
+		empDAO.empAuth(email_Emp,authKey);
 	}
 
     public int idCnt(EmpVO empVO)
@@ -145,7 +160,9 @@ public class EmpService {
         return empDAO.idCnt(empVO);
     }
 
-
+     public String empId() {
+        return empDAO.empId();
+     }
 
 
 
@@ -173,5 +190,6 @@ public class EmpService {
         /* 조인을 걸 떄, deptId, teamId로함. */
         return empList;
     }
-	
-}
+
+
+ }

@@ -1,5 +1,6 @@
 package com.WorkConGW.emp.controller;
 
+import jakarta.servlet.http.HttpServletRequest;
 import org.json.simple.JSONObject;
 import org.mindrot.jbcrypt.BCrypt;
 import org.slf4j.Logger;
@@ -29,6 +30,7 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.sql.SQLException;
+import java.util.Map;
 
 import jakarta.servlet.http.HttpServletResponse;
 
@@ -58,8 +60,7 @@ public class EmpController {
         ResponseEntity<String> entity = null;
         EmpVO empVO = empService.checkEmpUdateYn(); // 다오에 접근해서 사용자에 대한 정보를 불러옴
         String empUpdateYn = empVO.getEmp_Update_Yn();
-        logger.info(empUpdateYn);
-        
+
         if(empUpdateYn == "" || empUpdateYn == "Y" || empUpdateYn == null)
         {
             logger.info("여기는?");
@@ -87,7 +88,28 @@ public class EmpController {
         rttr.addFlashAttribute("emp_Id", empVO.getEmp_Id());
 
         
-        return "redirect:/common/loginForm";
+        return "redirect:/emp/registerAuth";
+    }
+
+    @GetMapping("/registerEmail")
+    public String emailConfirm(String emp_Email,String authKey, Model model) throws  Exception{
+        logger.info("emp_Email :" + emp_Email);
+        empService.empAuth(emp_Email,authKey);
+        model.addAttribute("emp_Email", emp_Email);
+        return "/common/registerEmail";
+    }
+
+    @PostMapping("/empId")
+    @ResponseBody
+    public ResponseEntity<Map<String,Object>> empId()
+    {
+        logger.info("empId들어오니?");
+        JSONObject resMap = new JSONObject();
+        String emp_Id = empService.empId();
+        resMap.put("res","ok");
+        resMap.put("emp_Id",emp_Id);
+        return ResponseEntity.ok(resMap);
+
     }
 
 
@@ -95,13 +117,13 @@ public class EmpController {
     @PostMapping("/idCnt")
     @ResponseBody
     public String idCnt(@RequestBody String filterJSON, HttpServletResponse response, ModelMap model)throws IOException{
-        JSONObject resMap = new JSONObject(); //JSON으로 변환
-            ObjectMapper mapper = new ObjectMapper();
-            EmpVO searchVO = (EmpVO)mapper.readValue(filterJSON, new TypeReference<EmpVO>(){}); //JSON -> JAVA로 변환
-            logger.info(searchVO.toString());
-            int idCnt = empService.idCnt(searchVO);
-            resMap.put("res","ok");
-            resMap.put("idCnt",idCnt);
+        JSONObject resMap = new JSONObject(); //JSON으로 변환하기 위해 사용
+        ObjectMapper mapper = new ObjectMapper(); // JSON ->JAVA로 변환하기 위해 사용
+        EmpVO searchVO = (EmpVO)mapper.readValue(filterJSON, new TypeReference<EmpVO>(){}); //JSON -> JAVA로 변환
+        logger.info(searchVO.toString());
+        int idCnt = empService.idCnt(searchVO);
+        resMap.put("res","ok");
+        resMap.put("idCnt",idCnt);
         
         logger.info("idCnt"+resMap);
         response.setContentType("text");
@@ -139,6 +161,17 @@ public class EmpController {
 
 
 
+    }
+
+   @GetMapping("/registerAuth")
+    public String loginView(HttpServletRequest request, Model model, String emp_Email, String emp_Id){
+        logger.info("loginView");
+        logger.info("emp_Email:"+emp_Email+"emp_Id:"+emp_Id);
+
+        model.addAttribute("emp_Email",emp_Email);
+        model.addAttribute("emp_Id",emp_Id);
+
+        return "/common/registerAuth";
     }
 
 

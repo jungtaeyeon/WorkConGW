@@ -29,20 +29,23 @@ public class AnonyVO extends BaseVO{
     @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss")
     private Date anony_Board_Create_Dt;
     private Date anony_Board_Update_Dt;
-    private String emp_Writer_Id;
     private List<AnonyReplyVO> anonyReplyList;
     private int replyCount;
-    private String anony_board_update_id;
+
+    private long anony_Hangle_Dt;
+
+
+    public long getAnony_Hangle_Dt() {
+        return anony_Hangle_Dt;
+    }
+
+    public void setAnony_Hangle_Dt(long anony_Hangle_Dt) {
+        this.anony_Hangle_Dt = anony_Hangle_Dt;
+    }
  
     
 
-    public String getAnony_board_update_id() {
-        return this.anony_board_update_id;
-    }
 
-    public void setAnony_board_update_id(String anony_board_update_id) {
-        this.anony_board_update_id = anony_board_update_id;
-    };
 
     public int getAnony_Board_Id() {
         return this.anony_Board_Id;
@@ -93,13 +96,7 @@ public class AnonyVO extends BaseVO{
         this.anony_Board_Update_Dt = anony_Board_Update_Dt;
     }
 
-    public String getEmp_Writer_Id() {
-        return this.emp_Writer_Id;
-    }
 
-    public void setEmp_Writer_Id(String emp_Writer_Id) {
-        this.emp_Writer_Id = emp_Writer_Id;
-    }
 
     public List<AnonyReplyVO> getAnonyReplyList() {
         return this.anonyReplyList;
@@ -121,19 +118,18 @@ public class AnonyVO extends BaseVO{
     public AnonyVO(){}
 
 
-    public AnonyVO(String anony_board_update_id,int annoy_Board_Id, String annoy_Board_Title, String annoy_Board_Content, int annoy_Board_ReadCnt, Date annoy_Board_Create_Dt, Date annoy_Board_Update_Dt, String emp_Writer_Id, List<AnonyReplyVO> anonyReplyList, int replyCount)
+    public AnonyVO(long anony_Hangle_Dt ,int anony_Board_Id, String anony_Board_Title, String anony_Board_Content, int anony_Board_ReadCnt, Date anony_Board_Create_Dt, Date anony_Board_Update_Dt,  List<AnonyReplyVO> anonyReplyList, int replyCount)
     {
         super();
-        this.anony_Board_Id = annoy_Board_Id;
-        this.anony_Board_Title = annoy_Board_Title;
-        this.anony_Board_Content=annoy_Board_Content;
-        this.anony_Board_ReadCnt=annoy_Board_ReadCnt;
-        this.anony_Board_Create_Dt=annoy_Board_Create_Dt;
-        this.anony_Board_Update_Dt=annoy_Board_Update_Dt;
-        this.anony_board_update_id=anony_board_update_id;
-        this.emp_Writer_Id=emp_Writer_Id;
+        this.anony_Board_Id = anony_Board_Id;
+        this.anony_Board_Title = anony_Board_Title;
+        this.anony_Board_Content=anony_Board_Content;
+        this.anony_Board_ReadCnt=anony_Board_ReadCnt;
+        this.anony_Board_Create_Dt=anony_Board_Create_Dt;
+        this.anony_Board_Update_Dt=anony_Board_Update_Dt;
         this.anonyReplyList=anonyReplyList;
         this.replyCount=replyCount;
+        this.anony_Hangle_Dt = anony_Hangle_Dt;
     }
 
     //////////////////////////////////////////////////////////////////////
@@ -159,14 +155,14 @@ public class AnonyVO extends BaseVO{
         /** 페이지사이즈 */
         private int pageSize = 3;
     
-        /** firstIndex */
+        /** 첫번쨰 인덱스 */
         private int firstIndex = 1;
     
         /** lastIndex */
         private int lastIndex = 1;
     
-        /** recordCountPerPage */
-        private int recordCountPerPage = 10;
+        /** 한페이지당 게시되는 게시물 수 */
+        private int recordCountPerPage = 4;
     
         //////////////////////////////////////////
         
@@ -181,10 +177,10 @@ public class AnonyVO extends BaseVO{
         
     /////////////////////////////사용자가 각 페이지에 표시할 항목 수를 선택할 수 있도록 하는데 사용
 
-        private int totCnt = 0;				      	
-        private int startDate = 0;			    	
-        private int endDate = 0;				  
-        private int realEnd = 0;	
+        private int totCnt = 0;		// 총 개수
+        private int startDate = 0;			    // 시작데이터
+        private int endDate = 0;				  // 종료데이터
+        private int realEnd = 0;	                //페이징 마지막 숫자
             
         private boolean prev;
         private boolean next;

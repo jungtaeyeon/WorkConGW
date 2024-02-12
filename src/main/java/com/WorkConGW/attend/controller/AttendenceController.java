@@ -17,6 +17,16 @@ public class AttendenceController extends CommonController{
 	public String attendMain() {
 		return "attend/main";
 	}
+
+	@RequestMapping(value="/attentMyList",method = RequestMethod.GET)
+	public String attentMyList() {
+		return "attend/myList";
+	}
+
+	@RequestMapping(value="/attentEmpList",method = RequestMethod.GET)
+	public String attentEmpList() {
+		return "attend/empList";
+	}
 	
 	
 }

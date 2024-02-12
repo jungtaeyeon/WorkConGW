@@ -94,7 +94,7 @@
 		}
 		#pictureView{
 			border-radius: 50%;
-			border: 1px solid gray;
+			border: 1px solid gray; 
 			margin: 0px 8px 0px 0px;
 			background-position: center;
 			background-size: cover;

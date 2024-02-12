@@ -6,16 +6,25 @@
 
 <head>
 <!-- VENDOR CSS -->
-<link rel="stylesheet" href="<%=request.getContextPath() %>/resources/templates/assets/vendor/bootstrap/css/bootstrap.min.css">
-<link rel="stylesheet" href="<%=request.getContextPath() %>/resources/templates/assets/vendor/font-awesome/css/font-awesome.min.css">
-<link rel="stylesheet" href="<%=request.getContextPath() %>/resources/templates/assets/vendor/sweetalert/sweetalert.css"/>
+	<link rel="stylesheet" href="<%=request.getContextPath() %>/js/treeview/jquery.treeview.css" />
+	<!-- jQuery -->
+	<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+	<!-- Font Awesome CDN -->
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" integrity="sha512-" crossorigin="anonymous" />
+	<!-- Bootstrap CSS -->
+	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" crossorigin="anonymous">
+	<!-- Bootstrap JS -->
+	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+jjXkk+Q2h455rYXK/7HAuoJl+0I4" crossorigin="anonymous"></script>
+	<!-- Summernote -->
+	<link href="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote.min.css" rel="stylesheet">
+	<script src="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.18/lang/summernote-ko-KR.min.js"></script>
 
-<!-- MAIN CSS -->
-<link rel="stylesheet" href="<%=request.getContextPath()%>/resources/templates/light/assets/css/main.css">
-<link rel="stylesheet" href="<%=request.getContextPath()%>/resources/templates/light/assets/css/color_skins.css">
-<link rel="stylesheet" href="<%=request.getContextPath() %>/resources/templates/light/assets/fonts/font.css">
 
-<!-- MAIN CSS -->
+
+
+
+
 </head>
 
 <style>
@@ -65,18 +74,18 @@ th{
 
 <body>
 
+<script src="<%=request.getContextPath()%>/js/summernote.js"></script>
 <!-- 메인 content -->
 	<div id="main-content" >
 		<div class="container-fluid">
-			<form:form ModelAttribute="boardFormVO" name="anonyModifyForm" action="${pageContext.request.contextPath }/board/anony/modify" enctype="multipart/form-data">
+			<form:form modelAttribute="boardFormVO" name="anonyModifyForm" action="${pageContext.request.contextPath }/board/anony/modify" enctype="multipart/form-data">
 				<form:hidden path="anonyVO.pageIndex"/>
-		        <form:hidden path="anonyVO.anonyBoardId" />
+		        <form:hidden path="anonyVO.anony_Board_Id" />
 <%-- 		        <form:hidden path="anonyVO.anonyBoardTitle"/> --%>
-		        <form:hidden path="anonyVO.anonyBoardContent" id="anonyBoardContent"/>
-		        <form:hidden path="anonyVO.anonyBoardReadcnt"/>
-		        <form:hidden path="anonyVO.anonyBoardCreateDt"/>
-		        <form:hidden path="anonyVO.anonyBoardUpdaterId" value="${loginUser.empId }" />
-		        <form:hidden path="anonyVO.empWriterId" value="${loginUser.empId }"/>
+		        <form:hidden path="anonyVO.anony_Board_Content" id="anony_Board_Content"/>
+		        <form:hidden path="anonyVO.anony_Board_ReadCnt"/>
+		        <form:hidden path="anonyVO.anony_Board_Create_Dt"/>
+				<%--현재 로그인한 사용자의 ID를 hidden input에 설정 --> 서버단에서 사용--%>
 		        <form:hidden path="anonyVO.replyCount"/>
 		<div class="row clearfix">
 			<div class="col-12" style="margin-top: 2%;">
@@ -101,7 +110,7 @@ th{
 											</td>
 											<td colspan="5">
 												<div style="padding-left:15px;border-left: 1px dotted gray;">
-												<form:textarea path="anonyVO.anonyBoardTitle" style="width: 85%; height: 35px;"/>
+												<form:textarea path="anonyVO.anony_Board_Title" style="width: 85%; height: 35px;"/>
 												</div>
 											</td>
 										</tr>
@@ -111,14 +120,14 @@ th{
 											</td>
 											<td>
 												<div style="padding-left:15px;border-left: 1px dotted gray;">
-													<fmt:formatDate value="${boardFormVO.anonyVO.anonyBoardCreateDt }" pattern="yyyy-MM-dd"/>
+													<fmt:formatDate value="${boardFormVO.anonyVO.anony_Board_Create_Dt }" pattern="yyyy-MM-dd"/>
 												</div>
 											</td>
 											<td style="width:130px;">
 												<strong>조회수</strong>
 											</td>
 											<td>
-												<div style="padding-left:15px;border-left: 1px dotted gray;">${boardFormVO.anonyVO.anonyBoardReadcnt }</div>
+												<div style="padding-left:15px;border-left: 1px dotted gray;">${boardFormVO.anonyVO.anony_Board_ReadCnt }</div>
 											</td>
 										</tr>
 									</thead>
@@ -126,8 +135,7 @@ th{
 										</tr>
 										</table>
 <!-- 내용 -->
-<%-- 	<div style="margin-top: 20px; margin-top: 20px;padding-left: 13px;padding-right: 13px;">${anony.anonyBoardContent}</div> --%>
-	<div style="margin-top: 20px; margin-top: 20px;padding-left: 13px;padding-right: 13px;"><div class="summernote">${boardFormVO.anonyVO.anonyBoardContent }</div>
+	<div style="margin-top: 20px; margin-top: 20px;padding-left: 13px;padding-right: 13px;"><div class="summernote" contenteditable="true">${boardFormVO.anonyVO.anony_Board_Content }</div>
 						</div>
 						</form:form>
 					</div>
@@ -155,23 +163,21 @@ function plusFromMinus(obj){
 }
 //수정
 function modify_go(){
-	var modifyForm = $('form[name="anonyModifyForm"]')[0];
+	let modifyForm = $('form[name="anonyModifyForm"]')[0];
 	
-	if($.trim($('textarea[name="anonyVO.anonyBoardTitle"]').val())==""){
+	if($.trim($('textarea[name="anonyVO.anony_Board_Title"]').val())==""){
 		alert('제목을 입력하세요.');
-		$('textarea[name="anonyVO.anonyBoardTitle"]').focus();
+		$('textarea[name="anonyVO.anony_Board_Title"]').focus();
 		return;
 	}
-	
-	if($.trim($('.note-editable').text())==""){
-		alert('내용을 입력하세요.');
-		$('.note-editable').focus();
-		return;
-	}
-	$('#anonyBoardContent').val($('.note-editable').text());
+
+
+
+	$('input[name="anonyVO.anony_Board_Content"]').val($('.note-editable').html());
+
 
 	
-	var formData = new FormData(modifyForm);
+	let formData = new FormData(modifyForm);
 	$.ajax({
 		url:modifyForm.action,
 		type:'post',
@@ -181,11 +187,11 @@ function modify_go(){
 		success:function(){
 			alert("글이 수정되었습니다.");
 			
-			window.location.href='<c:url value="/board/anony/detail?anonyBoardId=${boardFormVO.anonyVO.anonyBoardId}"/>';
+			window.location.href='<c:url value="/board/anony/detail?anonyVO.anony_Board_Id=${boardFormVO.anonyVO.anony_Board_Id}"/>';
 		},
 		error:function(){
 			alert("글 수정에 실패했습니다.");
-			window.location.href='<c:url value="/board/anony/detail?anonyBoardId=${boardFormVO.anonyVO.anonyBoardId}" />';	
+			window.location.href='<c:url value="/board/anony/detail?anonyVO.anony_Board_Id=${boardFormVO.anonyVO.anony_Board_Id}" />';
 		}
 	});
 }

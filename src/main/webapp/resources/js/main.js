@@ -10,8 +10,7 @@ str += " value='" + id +"' checked>개인일정</label>" ;
 $("#joinedMember").html(str);
 
 var calendar = $('#calendar').fullCalendar({
-		
-	
+
 	 /** ******************
 	   *  OPTIONS
 	   * *******************/
@@ -94,7 +93,7 @@ var calendar = $('#calendar').fullCalendar({
 
 		  popoverSchedule(element);
 
-		  var content = event.description;
+		  var content = event.content;
 		  if(!content) content = "내용 없음";
 		  var id = event._id;
 
@@ -168,7 +167,7 @@ var calendar = $('#calendar').fullCalendar({
 
 		  $.ajax({
 	      type: "post",
-	      url: "/schedule/list",
+	      url: "list",
 			//data:JSON.stringify(dateData),// {"g_code" : g_code}
 	      dataType:"json",
 			  data: JSON.stringify({
@@ -405,7 +404,7 @@ var calendar = $('#calendar').fullCalendar({
 	  //이벤트 클릭시 수정이벤트
 	  eventClick: function (event, jsEvent, view) {
 		  jsEvent.preventDefault();
-		  window.location.href ='/schedule/detail?schedule_Id='+event.id;
+		  window.location.href ='detail?schedule_Id='+event.id;
 		  //editEvent(event);
 
 		  return false;

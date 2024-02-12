@@ -8,8 +8,14 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 
 @Controller
-@RequestMapping("WorkConGW/admin/resource")
+@RequestMapping("/admin/resource/*")
 public class AdminResourceController {
+
+
+    @RequestMapping("/loginlog")
+    public String loginLog() {
+        return "/admin/resource/loginlog";
+    }
 	
 	
 }

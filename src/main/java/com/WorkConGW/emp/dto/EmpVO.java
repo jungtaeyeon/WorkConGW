@@ -20,6 +20,10 @@ public class EmpVO extends BaseVO{
     private int emp_St;
     private String emp_Add1;
     private String emp_Add2;
+
+
+
+    private String emp_ZipCode;
     private String dept_Id;
     private Date emp_Create_Dt;
     private Date emp_Update_Dt;
@@ -38,13 +42,16 @@ public class EmpVO extends BaseVO{
     private String flag;
     private String emp_Sup_Id;
 
+    private int emp_authkey;
+
     	
 
 	
     
-    public EmpVO(String emp_Id, String emp_Name, String emp_Pwd,String emp_Regno, String emp_Hp, String emp_Sign,String emp_Picture, int emp_St, String emp_Add1,String emp_Add2,String dept_Id, Date emp_Create_Dt, Date emp_Update_Dt,String emp_Email
+    public EmpVO(String emp_ZipCode,int emp_authkey,String emp_Id, String emp_Name, String emp_Pwd,String emp_Regno, String emp_Hp, String emp_Sign,String emp_Picture, int emp_St, String emp_Add1,String emp_Add2,String dept_Id, Date emp_Create_Dt, Date emp_Update_Dt,String emp_Email
         , String auth_Id, String code_Id, String emp_Code_Resp_Id, String code_Name, String dept_Name, String attend_St_Name, String emp_Update_Yn, String team_Id, String auth_Name, String search_Auth, String attend_St_Id, String emp_Regno2,String emp_Sup_Id) {
             super();
+            this.emp_ZipCode=emp_ZipCode;
             this.emp_Regno2 = emp_Regno2;
             this.emp_Id = emp_Id;
             this.emp_Name = emp_Name;
@@ -72,12 +79,20 @@ public class EmpVO extends BaseVO{
             this.search_Auth=search_Auth;
             this.attend_St_Id=attend_St_Id;
             this.emp_Sup_Id =emp_Sup_Id;
+            this.emp_authkey = emp_authkey;
 
     }
     
     public EmpVO(){
     }
 
+    public String getEmp_ZipCode() {
+        return emp_ZipCode;
+    }
+
+    public void setEmp_ZipCode(String emp_ZipCode) {
+        this.emp_ZipCode = emp_ZipCode;
+    }
     public String getemp_Sup_Id()
     {
         return this.emp_Sup_Id;
@@ -268,6 +283,8 @@ public class EmpVO extends BaseVO{
         return this.emp_Update_Yn;
     }
 
+
+
     public void setEmp_Update_Yn(String emp_Update_Yn) {
         this.emp_Update_Yn = emp_Update_Yn;
     }
@@ -305,6 +322,15 @@ public class EmpVO extends BaseVO{
     }
 
 
-	
+    public int getEmp_authkey() {
+        return emp_authkey;
+    }
+
+    public void setEmp_authkey(int emp_authkey) {
+        this.emp_authkey = emp_authkey;
+    }
+
+
+
 }
 

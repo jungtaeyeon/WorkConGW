@@ -23,8 +23,12 @@ public class BoardFormVO {
 
 
 
-	private AnonyVO annoyVO;
-	private AnonyReplyVO annoyReplyVO;
+	private AnonyVO anonyVO;
+	private AnonyReplyVO anonyReplyVO;
+
+
+
+	private AnonyReplyVO searchanonyReplyVO;
 	private AnonyVO searchAnonyVO;
 
 	private DutyVO dutyVO;
@@ -44,15 +48,18 @@ public class BoardFormVO {
 		this.searchNoticeVO = new NoticeVO();
 		this.empVO = new EmpVO();
 		this.searchEmpVO = new EmpVO();
-		this.annoyVO = new AnonyVO();
+		this.anonyVO = new AnonyVO();
 		this.searchAnonyVO = new AnonyVO();
-		this.annoyReplyVO= new AnonyReplyVO();
+		this.anonyReplyVO= new AnonyReplyVO();
 		this.dutyVO = new DutyVO();
 		this.searchDutyVO = new DutyVO();
 		this.issueVO = new IssueVO();
 		this.searchIssueVO = new IssueVO();
 		this.issueReplyVO = new IssueReplyVO();
+		this.searchanonyReplyVO = new AnonyReplyVO();
 	}
+
+
 	public FileUploadCommand getFileUploadCommand() {
 		return fileUploadCommand;
 	}
@@ -94,28 +101,40 @@ public class BoardFormVO {
 	public void setSearchEmpVO(EmpVO searchEmpVO) {
 		this.searchEmpVO = searchEmpVO;
 	}
-	public AnonyVO getAnnoyVO() {
-		return annoyVO;
+
+	/* ////////////////////////////////익명게시판//////////////////////////////// */
+	public AnonyReplyVO getAnonyReplyVO() {
+		return this.anonyReplyVO;
 	}
 
-	public void setAnnoyVO(AnonyVO annoyVO) {
-		this.annoyVO = annoyVO;
+	public void setAnonyReplyVO(AnonyReplyVO anonyReplyVO) {
+		this.anonyReplyVO = anonyReplyVO;
 	}
 
-	public AnonyReplyVO getAnnoyReplyVO() {
-		return annoyReplyVO;
+	public int getAnonyBoardId(){
+		return this.anonyVO.getAnony_Board_Id();
+	}
+	public void setAnonyBoardId(int anony_Board_Id){
+		this.anonyVO.setAnony_Board_Id(anony_Board_Id);
+
 	}
 
-	public void setAnnoyReplyVO(AnonyReplyVO annoyReplyVO) {
-		this.annoyReplyVO = annoyReplyVO;
+	public AnonyVO getAnonyVO() {
+		return this.anonyVO;
+	}
+	
+	public void setAnonyVO(AnonyVO anonyVO) {
+		this.anonyVO = anonyVO;
 	}
 
-	public AnonyVO getSearchAnonyVO() {
+	public AnonyVO getSearchAnonyVO()
+	{
 		return searchAnonyVO;
 	}
 
-	public void setSearchAnonyVO(AnonyVO searchAnonyVO) {
-		this.searchAnonyVO = searchAnonyVO;
+	public void setSearchAnonyVO(AnonyVO searchAnonyVO)
+	{
+		this.searchAnonyVO=searchAnonyVO;
 	}
 
 	public DutyVO getDutyVO() {
@@ -181,5 +200,13 @@ public class BoardFormVO {
 	public void set_DutyBoard_Id(int duty_Board_Id) {
 		this.dutyVO.setDuty_Board_Id(duty_Board_Id);
 	}
+	public AnonyReplyVO getSearchanonyReplyVO() {
+		return searchanonyReplyVO;
+	}
+
+	public void setSearchanonyReplyVO(AnonyReplyVO searchanonyReplyVO) {
+		this.searchanonyReplyVO = searchanonyReplyVO;
+	}
+
 }
 

@@ -1,6 +1,7 @@
 package com.WorkConGW.board.anony.dao;
 
 
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -27,13 +28,19 @@ public class AnonyDAO {
         return anonyList;
     }
 
-    public List<AnonyReplyVO> selectAnonyReplyList(AnonyVO anonyVO) {
-        List<AnonyReplyVO> anonyReplyVO = sqlSessionTemplate.selectList("selectAnonyReplyList",anonyVO);
+    public List<AnonyReplyVO> selectAnonyReplyList(AnonyVO searchAnonyVO) {
+        List<AnonyReplyVO> anonyReplyVO = sqlSessionTemplate.selectList("selectAnonyReplyList",searchAnonyVO);
         return anonyReplyVO;
     }
 
     public int selectAnonyListTotalCount(AnonyVO searchAnonyVO) {
         return sqlSessionTemplate.selectOne("selectAnonyListTotalCount", searchAnonyVO);
+    }
+
+    public int selectReplyCount(int queryString)
+    {
+        int result = sqlSessionTemplate.selectOne("selectReplyCount", queryString);
+        return result;
     }
 
     public void insertAnony(AnonyVO anonyVO) {
@@ -49,8 +56,8 @@ public class AnonyDAO {
     }
 
     public AnonyVO selectAnonyById(AnonyVO anonyVO) {
-       AnonyVO anony = sqlSessionTemplate.selectOne("selectAnonyById",anonyVO);
-       return anony;
+        AnonyVO anony = sqlSessionTemplate.selectOne("selectAnonyById",anonyVO);
+        return anony;
     }
 
     public void increaseAnonyReadcnt(AnonyVO anonyVO) {
@@ -59,8 +66,13 @@ public class AnonyDAO {
     }
 
     public void updateAnonyReply(AnonyReplyVO anonyVO) {
-        sqlSessionTemplate.update("updateAnonyReply",anonyVO); 
+        sqlSessionTemplate.update("updateAnonyReply",anonyVO);
 
+    }
+
+    public void deleteAnonyReply(AnonyReplyVO anonyReplyVO)
+    {
+        sqlSessionTemplate.delete("deleteAnonyReply",anonyReplyVO);
     }
 
     public List<Map<String,Object>> getJsonAnnoyList(AnonyVO searchVO) {
@@ -69,4 +81,19 @@ public class AnonyDAO {
         return pmap;
     }
 
+    public void insertAnonyReply(AnonyReplyVO anonyReplyVO) {
+        sqlSessionTemplate.insert("insertAnonyReply", anonyReplyVO);
+    }
+
+    public List<AnonyReplyVO> selectReplyPaging(AnonyReplyVO anonyReplyVO) {
+        return sqlSessionTemplate.selectList("selectReplyPaging", anonyReplyVO);
+    }
+
+    public Date getCreatePost(AnonyVO searchAnonyVO) {
+        return sqlSessionTemplate.selectOne("getCreatePost", searchAnonyVO);
+    }
+
+    public Date getPostTime(int anonyBoardId) {
+        return sqlSessionTemplate.selectOne("getPostTime",anonyBoardId);
+    }
 }

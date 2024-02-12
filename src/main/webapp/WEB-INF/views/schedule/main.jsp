@@ -42,7 +42,7 @@
         /*    top: 60px; */
         /* } */
         nav.navbar.navbar-fixed-top{
-            border: 0px;
+            border: 3px;
         }
 
         #external-events .fc-event {
@@ -243,6 +243,8 @@
 
 
 <body>
+    <%@ include file="./header.jsp"%>
+<section style="display: flex;">
 <!-- 사이드바 -->
 <div id="left-sidebar" class="sidebar" style="border-right:2px solid rgb(0,0,0,0.1); margin-top: 50px; left:0px;">
     <div class="sidebar-scroll">
@@ -253,6 +255,9 @@
         <div class="tab-content p-l-0 p-r-0" style="font-size: 25px; margin-left: 3%; padding-bottom: 0; font-family: S-CoreDream-4Regular">
             나의 일정
         </div>
+
+
+
         <ul class="main-menu metismenu">
             <li id="li_mySchedule">
                 <a href="javascript:event.preventDefault();"  style="font-family: S-CoreDream-4Regular; font-size: 20px;"><i class="fa fa-square" id="privateSchedule"></i></i> <span>개인일정</span></a>
@@ -283,7 +288,7 @@
 
 
 <!-- 메인 content -->
-<div id="main-content">
+<section id="main-content" style="width: 100%">
     <div class="container-fluid">
         <div class="row clearfix">
             <div class="col-12" style="margin-top: 2%;font-family: S-CoreDream-6Bold">
@@ -373,7 +378,7 @@
                                 <div class="card mb-4" style="font-family: S-CoreDream-4Regular">
                                     <div id="wrapper">
                                         <div id="loading"></div>
-                                        <div id="calendar" style="font-family: S-CoreDream-4Regular"></div>
+                                       <div id="calendar" style="font-family: S-CoreDream-4Regular"></div>
                                     </div>
                                 </div>
                             </div>
@@ -385,7 +390,7 @@
             </div>
         </div>
     </div>
-</div>
+</section>
 
 
 <form id="excelForm" name="excelForm" method="post" enctype="multipart/form-data">
@@ -393,10 +398,9 @@
     <input type="hidden" id="startForExcel" name="start" />
     <input type="hidden" id="endForExcel" name="end" />
 </form>
-
+</section>
 
 <script src="<%=request.getContextPath()%>/resources/vendor/js/jquery.min.js"></script>
-<script src="<%=request.getContextPath()%>/resources/vendor/js/bootstrap.min.js"></script>
 <script src="<%=request.getContextPath()%>/resources/vendor/js/moment.min.js"></script>
 <script src="<%=request.getContextPath()%>/resources/vendor/js/fullcalendar.min.js"></script>
 <script src="<%=request.getContextPath()%>/resources/vendor/js/ko.js"></script>
@@ -404,9 +408,9 @@
 <script src="<%=request.getContextPath()%>/resources/vendor/js/bootstrap-datetimepicker.min.js"></script>
 <script src="<%=request.getContextPath()%>/resources/js/main.js"></script>
 <script src="<%=request.getContextPath()%>/resources/js/addEvent.js"></script>
+<script src="<%=request.getContextPath()%>/resources/js/editEvent.js"></script>
 <script src="<%=request.getContextPath()%>/resources/js/etcSetting.js"></script>
 <%--<script src="<%=request.getContextPath() %>/resources/js/common.js"></script>--%>
-
 
 
 <script> // 전역 셋팅
@@ -444,7 +448,7 @@ function popoverSchedule(event){
         */
     function schedule_go(){
 
-        location.href = "/schedule/registForm";
+        location.href = "registForm";
 
     }
 
@@ -588,4 +592,5 @@ function popoverSchedule(event){
 
 </script>
 </body>
+<%--</body>--%>
 
