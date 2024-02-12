@@ -5,9 +5,6 @@
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-
-
 
 
 
@@ -138,8 +135,6 @@
 
 </style>
 <body>
-
-
 
     <%@ include file="./include/header.jsp"%>
     

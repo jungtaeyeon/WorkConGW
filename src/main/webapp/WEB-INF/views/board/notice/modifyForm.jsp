@@ -19,46 +19,7 @@
 	<script src="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote.min.js"></script>
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.18/lang/summernote-ko-KR.min.js"></script>
 
-<%--	공통으로 뺄 예정 --%>
-	<script>
-		$(document).ready(function() {
-			summernote_start('.summernote', '<%= request.getContextPath() %>');
-		});
-	</script>
 
-	<script>
-		function summernote_start(content,contextPath){
-			$(content).summernote({
-				placeholder:'여기에 내용을 적으세요.',
-				height:250,
-				disableResizeEditor: true,
-				callbacks:{
-					onImageUpload : function(files, editor, welEditable) {
-						//alert("image insert!!");
-						//file size check!
-						for (var i = files.length - 1; i >= 0; i--) {
-							if(files[i].size > 1024*1024*5){
-								alert("이미지는 5MB 미만입니다.");
-								return;
-							}
-						}
-
-						//file sending
-						for (var i = files.length - 1; i >= 0; i--) {
-							sendImg(files[i], this,contextPath+'/common/summernote/uploadImg.do');
-						}
-					},
-					onMediaDelete : function(target) {
-						//alert(target[0].src);
-						var answer=confirm("정말 이미지를 삭제하시겠습니다.");
-						if(answer){
-							deleteImg(target[0].src,contextPath+'/common/summernote/deleteImg.do');
-						}
-					}
-				}
-			});
-		}
-	</script>
 
 </head>
 
@@ -105,6 +66,7 @@ tbody {
 
 <body>
 
+<script src="<%=request.getContextPath()%>/js/summernote.js"></script>
 	<!-- 메인 content -->
 	<div id="main-content">
 		<div class="container-fluid" style="font-family: S-CoreDream-4Regular" >

@@ -215,6 +215,7 @@ public class ScheduleController extends BaseController {
     @PostMapping(value="/list", produces="application/json;charset=utf-8")
     @ResponseBody
     public List<ScheduleCommand> list(@RequestBody ScheduleCommand scheduleCommand) {
+        log.info("List컨트롤러호출");
         ScheduleVO schedule = scheduleCommand.toScheduleVO();
 
         List<ScheduleCommand> scheduleList = new ArrayList<>();

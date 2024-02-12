@@ -205,11 +205,18 @@
         <form action="<%=request.getContextPath()%>/emp/register" class="signup-form" method="post" id="join">
           <h1 class="title"><a href="${root}/common/login">WorkConGW</a></h1>
           <h3 class="sub-title">회원가입</h3>
+
+
           <div class="input-field id-field">
-            <label>* 아이디</label>
-            <input id = "emp_Id" name="emp_Id" type="text" placeholder="아이디를 입력해주세요" required />
+            <label>* 사번</label>
+            <input id = "emp_Id_input" name="emp_Id" type="text" placeholder="사번를 입력해주세요" required />
+            <button type="button"  class="input-btn" onclick="checkemp_Id();">사번생성</button>
+          </div>
+          <div class="input-field id-field">
+            <label>* 이메일</label>
+            <input id = "emp_Email" name="emp_Email" type="text" placeholder="이메일를 입력해주세요" required />
             <button type="button" id="id-dup-check" class="input-btn" onclick="checkDup();">중복확인</button>
-          	<input type="hidden" value="N" id="isDup" />
+            <input type="hidden" value="N" id="isDup" />
           </div>
           <div class="input-field">
             <label>* 비밀번호</label>
@@ -233,16 +240,17 @@
             <label>* 휴대전화</label>
             <input id = "emp_Hp" name="emp_Hp" type="text" placeholder="'-' 를 제외한 휴대전화 번호를 입력해주세요" required maxlength="11" />
           </div>
-          <div class="input-field">
-            <label>* 이메일</label>
-            <input id = "emp_Email" name="emp_Email" type="text" placeholder="'@' 을 포함한 이메일 주소 전체를 입력해주세요" required />
-          </div>
+
           <div class="input-field">
             <label>* 주소</label>
             <div>
               <input id = "myAdd1" name="emp_Add1"  type="text" placeholder="우편번호" required />
               <input type="button" onclick="sample6_execDaumPostcode()" value="우편번호 찾기" /><br />
             </div>
+          </div>
+          <div class="input-field">
+            <label>* 우편번호</label>
+            <input id = "myAdd3" name="emp_ZipCode" type="text"  placeholder="우편번호" required /><br />
           </div>
             <div class="input-field">
               <label>* 상세주소</label>
@@ -275,11 +283,20 @@
               <label>* 상태설정 : </label>
               <select id = "attendStId" name="attend_St_Id" class="form-control">
                 <option value="1" ${loginUser.attend_St_Id eq '1'? 'selected' : '' }>정상출근</option>
-                <option value="4" ${loginUser.attend_St_Id eq '4'? 'selected' : '' }>휴가중</option>
-                <option value="5" ${loginUser.attend_St_Id eq '5'? 'selected' : '' }>외근</option>
-                <option value="6" ${loginUser.attend_St_Id eq '6'? 'selected' : '' }>야근</option>
+                <option value="4" ${loginUser.attend_St_Id eq '0'? 'selected' : '' }>퇴근</option>
+                <option value="5" ${loginUser.attend_St_Id eq '2'? 'selected' : '' }>지각</option>
+                <option value="6" ${loginUser.attend_St_Id eq '3'? 'selected' : '' }>조퇴</option>
               </select>
             </div>
+
+          <div class="input-field">
+            <label>* 상태 : </label>
+            <select id = "emp_St" name="emp_St" class="form-control">
+              <option value="2" ${loginUser.emp_St eq '2'? 'selected' : '' }>휴직</option>
+              <option value="1" ${loginUser.emp_St eq '1'? 'selected' : '' }>재직</option>
+              <option value="3" ${loginUser.emp_St eq '3'? 'selected' : '' }>퇴사</option>
+            </select>
+          </div>
 
             <button class="btn btn-dark" data-type="success" onclick="fnSubmit()">가입 완료</button>
         </form>
@@ -293,12 +310,13 @@
 		  new daum.Postcode({
 		    oncomplete: function (data) {
 		      // 팝업에서 검색결과 항목을 클릭했을때 실행할 코드를 작성하는 부분.
-		
+
 		      // 각 주소의 노출 규칙에 따라 주소를 조합한다.
 		      // 내려오는 변수가 값이 없는 경우엔 공백('')값을 가지므로, 이를 참고하여 분기 한다.
 		      let addr = ""; // 주소 변수
 		      let extraAddr = ""; // 참고항목 변수
-		
+              let zipCode = data.zonecode;
+
 		      //사용자가 선택한 주소 타입에 따라 해당 주소 값을 가져온다.
 		      if (data.userSelectedType === "R") {
 		        // 사용자가 도로명 주소를 선택했을 경우
@@ -307,7 +325,7 @@
 		        // 사용자가 지번 주소를 선택했을 경우(J)
 		        addr = data.jibunAddress;
 		      }
-		
+
 		      // 사용자가 선택한 주소가 도로명 타입일때 참고항목을 조합한다.
 		      if (data.userSelectedType === "R") {
 		        // 법정동명이 있을 경우 추가한다. (법정리는 제외)
@@ -324,15 +342,18 @@
 		          extraAddr = "(" + extraAddr + ")";
 		        }
 		        // 조합된 참고항목을 해당 필드에 넣는다.
+
 		        document.getElementById("myAdd1").value = extraAddr;
 		      } else {
 		        document.getElementById("myAdd1").value = "";
 		      }
-		
+
+              document.getElementById("myAdd3").value = zipCode;
 		      // 우편번호와 주소 정보를 해당 필드에 넣는다.
 		      document.getElementById("myAdd1").value = addr;
 		      // 커서를 상세주소 필드로 이동한다.
 		      document.getElementById("myAdd2").focus();
+
 		    },
 		  }).open();
 		}
@@ -349,9 +370,9 @@
         return false;
       }
 
-      if ($("#emp_Id").val() == null || $("#emp_Id").val() == "") {
-        alert("아이디를 입력해주세요.");
-        $("#emp_Id").focus();
+      if ($("#emp_Id_input").val() == null || $("#emp_Id_input").val() == "") {
+        alert("사번를 입력해주세요.");
+        $("#emp_Id_input").focus();
          
         return false;
         }
@@ -403,20 +424,6 @@
       }
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 		//유효성 체크
 		const isDup = document.querySelector("#isDup");
 		const pwd = document.querySelector("input[name=emp_Pwd]");
@@ -427,7 +434,7 @@
 		
 		function check() {
 		 if(isDup.value == 'Y') {
-			 toastContent.innerText = "아이디 중복확인을 진행해주세요.";
+			 toastContent.innerText = "이메일 중복확인을 진행해주세요.";
 			 return false;
 		 }
 		 
@@ -451,24 +458,24 @@
 	<script>
 		//아이디 중복체크
 		function checkDup() {
-		  const userId = document.querySelector("input[name=emp_Id]").value;
+		  const userId = document.querySelector("input[name=emp_Email]").value;
 		  
 		  if(userId != "") {
 		   $.ajax({
 		     url: "<%=request.getContextPath()%>/emp/idCnt",
 		     type: "POST",
-         contentType : "application/json; charset-utf-8",
-         dataType : "json",
-		     data: JSON.stringify({emp_Id : userId}),
+             contentType : "application/json; charset-utf-8",
+             dataType : "json",
+		     data: JSON.stringify({emp_Email : userId}),
 		     success: function (data) {
           console.log(data);
           $("#isDup").val("Y")
 		       if (data.idCnt == 0) {
 		         $("#isDup").val("Y")
-		         alert("사용할 수 있는 아이디입니다.");
+		         alert("사용할 수 있는 이메일입니다.");
 		       } else {
             $("#isDup").val("N")
-		         alert("중복된 아이디 입니다.");
+		         alert("중복된 이메일 입니다.");
 		       }
 		     },
 		     error: function () {
@@ -477,6 +484,24 @@
 		   });
 		  } 
 		}
+
+        function checkemp_Id()
+        {
+              $.ajax({
+                url : "<%=request.getContextPath()%>/emp/empId",
+                type : "POST",
+                dataType: 'json',
+                success:function (data) {
+                  console.log(data);
+                  document.getElementById("emp_Id_input").value=data.emp_Id;
+                  alert('사용할 수 있는 사번입니다.');
+
+                },error:function () {
+                  alert('등록 시도에 실패했습니다.'+e);
+                }
+              })
+
+        }
 	</script>
   </body>
 </html>

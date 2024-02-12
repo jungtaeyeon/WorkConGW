@@ -41,9 +41,7 @@
 					anony_Board_Content,
 					anony_Board_ReadCnt,
 					anony_Board_Create_Dt,
-					anony_Board_Update_Dt,
-					anony_board_update_id,
-					emp_Writer_Id
+					anony_Board_Update_Dt
 				FROM
 				    anony_board
 				WHERE 1=1
@@ -58,6 +56,29 @@
 </select>
 
 
+<update id = "updateAnonyReply" parameterType="anonyReply">
+	UPDATE ANONY_REPLY
+	SET REPLY_CONTENT = #{reply_Content}, REPLY_UPDATE_DT = sysdate
+	WHERE REPLY_ID = #{reply_Id}
+</update>
+
+<update id = "deleteAnonyReply">
+	DELETE FROM ANONY_REPLY WHERE REPLY_ID = #{reply_Id}
+</update>
+
+
+<select id = "selectReplyCount" parameterType="int" resultType="int">
+	select count(*)
+	from anony_reply
+	where anony_board_id =  #{anony_board_id}
+
+
+</select>
+
+<insert id = "insertAnonyReply" parameterType="anonyReply">
+	INSERT INTO ANONY_REPLY(REPLY_CONTENT, REPLY_CREATE_DT, REPLY_UPDATE_DT, REPLY_ID, ANONY_BOARD_ID)
+	VALUES (#{reply_Content}, sysdate, sysdate, reply_Id.nextval,#{anony_Board_Id})
+</insert>
 
 
 
@@ -65,41 +86,79 @@
 
 <select id= "selectAnonyListTotalCount" parameterType = "anonyVO" resultType = "int">
 SELECT COUNT(*)
-FROM ANONY_BOARD A JOIN EMP B ON A.EMP_WRITER_ID=B.EMP_ID
+FROM ANONY_BOARD
+WHERE  1=1
 <include refid = "search"/>
 
 </select>
 
 
-<select id = "selectAnonyReplyList" parameterType = "anonyVO" resultType = "anonyReply"> 
-	SELECT REPLY_CONTENT, REPLY_CREATE_DT, REPLY_UPDATE_DT, REPLY_ID, ANONY_BOARD_ID, EMP_WRITER_ID
-	
+
+<select id = "selectReplyPaging" parameterType = "anonyVO" resultType = "anonyReply">
+
+		select A2.*
+		from(
+				select A1.*
+				from (
+						 select
+							 rownum as seq, A.*
+						 from
+							 (SELECT
+								  REPLY_ID,
+								  REPLY_CONTENT,
+								  REPLY_CREATE_DT,
+								  REPLY_UPDATE_DT,
+								  ANONY_BOARD_ID
+							  FROM
+								  anony_reply
+							  WHERE 1=1 and
+							      ANONY_BOARD_ID = #{anony_Board_Id}
+							  ORDER BY REPLY_CREATE_DT DESC
+							 ) A
+					 ) A1
+				where seq <![CDATA[ > ]]> #{firstIndex}
+			) A2
+		where rownum <![CDATA[ <= ]]> #{recordCountPerPage}
+
+</select>
+
+
+<select id = "selectAnonyReplyList" parameterType = "anonyVO" resultType = "anonyReply">
+	SELECT REPLY_CONTENT, REPLY_CREATE_DT, REPLY_UPDATE_DT, REPLY_ID, ANONY_BOARD_ID
+
 	FROM ANONY_REPLY
-	
+
 	WHERE ANONY_BOARD_ID = #{anony_Board_Id}
-	
+
 	ORDER BY REPLY_CREATE_DT
  
 </select>
 
 
 <insert id ="insertAnony" parameterType="anonyVO">
-INSERT INTO ANONY_BOARD(ANONY_BOARD_ID, ANONY_BOARD_TITLE, ANONY_BOARD_CONTENT, ANONY_BOARD_READCNT, ANONY_BOARD_CREATE_DT, ANONY_BOARD_UPDATE_DT, EMP_WRITER_ID, ANONY_BOARD_UPDATE_ID) VALUES 
-(#{anony_Board_Id}, #{anony_Board_Title}, #{anony_Board_Content}, 0, sysdate,   sysdate, #{emp_Writer_Id}, #{anony_board_update_id})
+INSERT INTO ANONY_BOARD(ANONY_BOARD_ID, ANONY_BOARD_TITLE, ANONY_BOARD_CONTENT, ANONY_BOARD_READCNT, ANONY_BOARD_CREATE_DT, ANONY_BOARD_UPDATE_DT) VALUES
+(anony_board_seq.nextval, #{anony_Board_Title}, #{anony_Board_Content}, 0, sysdate,   sysdate)
 </insert>
 
 <update id="updateAnony" parameterType="anonyVO">
     UPDATE ANONY_BOARD 
     SET ANONY_BOARD_TITLE = #{anony_Board_Title}, 
         ANONY_BOARD_CONTENT = #{anony_Board_Content}, 
-        ANONY_BOARD_UPDATE_DT = sysdate, 
-        ANONY_BOARD_UPDATE_ID = #{anony_board_update_id} 
+        ANONY_BOARD_UPDATE_DT = sysdate
     WHERE ANONY_BOARD_ID = #{anony_Board_Id}
 </update>
 
 <delete id = "deleteAnony" parameterType = "anonyVO">
 DELETE FROM ANONY_BOARD WHERE ANONY_BOARD_ID = #{anony_Board_Id}
 </delete>
+
+<select id="getPostTime" parameterType="int" resultType="Date">
+	SELECT  ANONY_BOARD_CREATE_DT
+
+	FROM ANONY_BOARD
+
+	WHERE ANONY_BOARD_ID = #{anony_Board_Create_Dt}
+</select>
 
 
 <select id = "selectAnonyById" parameterType = "int" resultType = "anonyVO">
@@ -109,9 +168,7 @@ DELETE FROM ANONY_BOARD WHERE ANONY_BOARD_ID = #{anony_Board_Id}
 			 ANONY_BOARD_CONTENT, 
 			 ANONY_BOARD_READCNT, 
 			 ANONY_BOARD_CREATE_DT,
-			 ANONY_BOARD_UPDATE_DT,
-			 ANONY_BOARD_UPDATE_ID,
-			 EMP_WRITER_ID
+			 ANONY_BOARD_UPDATE_DT
 
         FROM ANONY_BOARD
         WHERE ANONY_BOARD_ID = #{anony_Board_Id}

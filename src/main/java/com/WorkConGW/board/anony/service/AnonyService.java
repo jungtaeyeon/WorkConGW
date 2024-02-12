@@ -1,9 +1,12 @@
 package com.WorkConGW.board.anony.service;
 
 
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
+import com.WorkConGW.emp.dto.EmpVO;
+import jakarta.servlet.http.HttpSession;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,21 +16,21 @@ import com.WorkConGW.board.BoardFormVO;
 import com.WorkConGW.board.anony.dao.AnonyDAO;
 import com.WorkConGW.board.anony.dto.AnonyReplyVO;
 import com.WorkConGW.board.anony.dto.AnonyVO;
-
-
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
 
 
 @Service
 public class AnonyService {
 
-     Logger logger = LoggerFactory.getLogger(AnonyService.class);
+    Logger logger = LoggerFactory.getLogger(AnonyService.class);
     @Autowired
-	private AnonyDAO anonyDAO;
+    private AnonyDAO anonyDAO;
 
 
     /* @ 작성자 : 오지환
      * @ 작성일자 : 2024.01.29
-     * @ 설계목적 : 
+     * @ 설계목적 :
      * - anonyVO 필드를 보면, 댓글 List가 존재한다. 1번 게시물에 대해 모든 댓글을 출력해야함.
      * - 1. anonyDAO.selectList로 모든 게시물에 대해서 List로 저장.
      * - 2. for문을 통해서 게시물 List를 순회하는데, 여기서 게시물에 맞는 댓글들을 모두 가져와야함
@@ -43,7 +46,7 @@ public class AnonyService {
         for(AnonyVO anonyVO : anonyList)
         {
             List<AnonyReplyVO> anonyReplyList = anonyDAO.selectAnonyReplyList(anonyVO);
-            anonyVO.setAnonyReplyList(anonyReplyList); 
+            anonyVO.setAnonyReplyList(anonyReplyList);
 
             logger.info("anonyReplyList : " + anonyReplyList.toString());
         }
@@ -51,8 +54,12 @@ public class AnonyService {
     }
 
     public int searchListTotalCount(AnonyVO searchAnonyVO) {
-        return anonyDAO.selectAnonyListTotalCount(searchAnonyVO);   
-        
+        return anonyDAO.selectAnonyListTotalCount(searchAnonyVO);
+
+    }
+
+    public int selectReplyCount(int queryString){
+        return anonyDAO.selectReplyCount(queryString);
     }
 
     public void regist(AnonyVO anonyVO) {
@@ -60,7 +67,7 @@ public class AnonyService {
     }
 
     public void modify(BoardFormVO boardFormVO) {
-        AnonyVO anonyVO = boardFormVO.getAnnoyVO();
+        AnonyVO anonyVO = boardFormVO.getAnonyVO();
         anonyDAO.updateAnony(anonyVO);
     }
 
@@ -69,17 +76,17 @@ public class AnonyService {
     }
 
     public AnonyVO getAnony(AnonyVO anonyVO) {
-        /* anonyVO는 사용자로부터 받은 값을 의미. 그 값을 넣음. 
+        /* anonyVO는 사용자로부터 받은 값을 의미. 그 값을 넣음.
          * anony는 사용자가 파리미터로 넘긴 annoyVO의 결과값을 받음.
          * 댓글도 같이 가져옴(이것도 annoyVO를 넘겨야함(사용자 입력값))
-        */
-       AnonyVO anony =  anonyDAO.selectAnonyById(anonyVO);
-       logger.info(anony.toString());
-       List<AnonyReplyVO> anonyReplyVOList = anonyDAO.selectAnonyReplyList(anonyVO);
-       anony.setAnonyReplyList(anonyReplyVOList);
-    
-       return anony;
+         */
+        AnonyVO anony =  anonyDAO.selectAnonyById(anonyVO);
+        List<AnonyReplyVO> anonyReplyVOList = anonyDAO.selectAnonyReplyList(anonyVO);
+        anony.setAnonyReplyList(anonyReplyVOList);
+
+        return anony;
     }
+
 
     public void increaseAnonyReadcnt(AnonyVO anonyVO) {
         anonyDAO.increaseAnonyReadcnt(anonyVO);
@@ -95,6 +102,31 @@ public class AnonyService {
         return pmap;
     }
 
+    public void deleteAnonyReply(AnonyReplyVO anonyReplyVO)
+    {
+        anonyDAO.deleteAnonyReply(anonyReplyVO);
+    }
 
-	
+
+    public void registAnonyReply(AnonyReplyVO anonyReplyVO) {
+        anonyDAO.insertAnonyReply(anonyReplyVO);
+    }
+
+    public List<AnonyReplyVO> selectReplyPaging(AnonyReplyVO anonyReplyVO) {
+        List<AnonyReplyVO> anonyReplyVOList = anonyDAO.selectReplyPaging(anonyReplyVO);
+        for(AnonyReplyVO anonyReply : anonyReplyVOList)
+        {
+            anonyReply.setPageIndex(anonyReplyVO.getPageIndex());
+        }
+        return anonyReplyVOList;
+
+    }
+
+
+    public Date getPostTime(int anonyBoardId) {
+        Date postTime = anonyDAO.getPostTime(anonyBoardId);
+        return postTime;
+    }
 }
+
+
