@@ -42,6 +42,9 @@ ERD 설명서
 
 https://drive.google.com/file/d/1cKeWUpvTD8EjLoB5c0bL1biyGofqAQZ1/view?usp=drive_link
 
+깃가이드
+
+https://drive.google.com/file/d/1rGDMJYlF2u-pF5uoDLwvY60jcaqz_HLm/view?usp=drive_link
 
 ## 시작 가이드
 
