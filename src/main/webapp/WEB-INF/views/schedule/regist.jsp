@@ -4,15 +4,17 @@
 <html lang="ko"></html>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <head>
-<link rel="stylesheet" href="<%=request.getContextPath() %>/resources/vendor/css/fullcalendar.min.css" />
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <link rel="stylesheet" href="<%=request.getContextPath() %>/resources/vendor/css/fullcalendar.min.css" />
 <link rel="stylesheet" href="<%=request.getContextPath() %>/resources/vendor/css/bootstrap.min.css">
 <link rel="stylesheet" href='<%=request.getContextPath() %>/resources/vendor/css/select2.min.css' />
 <link rel="stylesheet" href='<%=request.getContextPath() %>/resources/vendor/css/bootstrap-datetimepicker.min.css' />
 
+
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:400,500,600">
 <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+    <link rel="stylesheet" href="<%=request.getContextPath() %>/resources/css/main.css">
 
-     <link rel="stylesheet" href="<%=request.getContextPath() %>/resources/css/main.css">
 <style>
     #main-content{
         margin: 0px;
@@ -77,7 +79,7 @@
                     <button type="button" class="btn btn-outline-light hiddenFillBtn"  onclick="presentationFill_2();" style="position:absolute;right:17em;top:35px;color:#ffffff">시연용버튼 2</button>
                     <button type="button" class="btn btn-outline-light hiddenFillBtn"  onclick="presentationFill();" style="position:absolute;right:140px;top:35px;color:#ffffff">시연용버튼</button>
                     <button type="button" class="btn btn-primary" id="save-event" onclick="scheduleSave();">등록</button>
-                    <button type="button" class="btn btn-secondary" onclick="window.location.href='<%=request.getContextPath()%>/schedule/main';"  style="border: 1px solid gray">취소</button>
+                    <button type="button" class="btn btn-secondary" onclick="window.location.href='main';"  style="border: 1px solid gray">취소</button>
                 </div>
             </div>
             <hr>
@@ -181,7 +183,7 @@
 <script src="<%=request.getContextPath() %>/resources/vendor/js/bootstrap-datetimepicker.min.js"></script>
 
 <!-- 공통 js -->
-<script src="<%=request.getContextPath() %>/resources/js/common.js"></script>
+<%--<script src="<%=request.getContextPath() %>/resources/js/common.js"></script>--%>
 
 <!-- fullCalendar 커스텀 js -->
 <script src="<%=request.getContextPath() %>/resources/js/main.js"></script>
@@ -225,7 +227,7 @@
         var editStart = $('#edit-start');
         var editEnd = $('#edit-end');
         //------ 추가사항
-        var editImportant = $('#edit-important').is(':checked')
+        var editImportant = $('#edit-important').prop('checked') //체크박스 여부확인(true, false)
         var editLocation = $('#edit-location');
         var editDeptId = $('#edit-dept_Id');
         var editTeamId = $('#edit-teamId');
@@ -244,7 +246,7 @@
             ,content:editContent.val()
             ,start: editStart
             ,end: editEnd
-            ,imp: editImportant.toString()
+            ,imp: editImportant.toString() //(체크박스 여부를 문자열로 변환)
             ,location: editLocation.val()
             ,description: editDesc.val()
             ,type: $('#edit-type option:selected').val() //127번에서 개인,부서,팀 일정 중에 선택한 값을 가져옴
@@ -285,9 +287,7 @@
             }
         }
 
-        if(editImportant.is(':checked')){
-            eventData.important = true;
-        }
+
 
         console.dir(JSON.stringify(eventData));
         console.log(selectGroup + " , " + editTeamId.val());
@@ -295,7 +295,7 @@
         //새로운 일정 저장
         $.ajax({
             type: "post"
-            ,url: "<%=request.getContextPath()%>/schedule/regist"
+            ,url: "regist"
             ,data: JSON.stringify(eventData)
             ,dataType:"json"
             ,contentType:"application/json;charset=utf-8"
@@ -304,7 +304,7 @@
                 alert("일정이 등록되었습니다.");
                 if(window.opener)  window.opener.location.reload();
                 window.close();
-                window.location.href='<%=request.getContextPath()%>/schedule/main';
+                window.location.href='main';
             }
             ,error: function(request, status, error){
                 console.log("error 발생 >> " + request +", "+ status+", "+error);
