@@ -108,4 +108,8 @@ public class EmpDAO {
 	}
 
 
+    public String empId() {
+        String emp_Id = sqlSessionTemplate.selectOne("empIdSquence");
+        return emp_Id;
+    }
 }

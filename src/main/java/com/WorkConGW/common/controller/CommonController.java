@@ -72,7 +72,6 @@ public class CommonController{
 
     @GetMapping("/home")
     public String home(HomeFormVO homeFormVO, Model model) throws SQLException {
-        
         return "/home";
     }
 
@@ -126,7 +125,7 @@ public class CommonController{
         try{
             empVO = empService.login(empVO.getEmp_Id(),empVO.getEmp_Pwd(),session);
             logger.info(empVO.toString());
-          users.put(empVO.getEmp_Id(),session); // users에서 관리하는 이유는 로그인 유저 정보를 조회하기 위해서
+            users.put(empVO.getEmp_Id(),session); // users에서 관리하는 이유는 로그인 유저 정보를 조회하기 위해서
             if(empVO.getEmp_authkey() == 0)
             {
                 logger.info("여기에 들어왔습니다.");
@@ -219,7 +218,11 @@ public class CommonController{
         return url;
     }
 
-
+    @GetMapping("/password/modifyForm")
+    public String pwdModifyForm()
+    {
+        return "common/password/modifyForm";
+    }
 
 
 

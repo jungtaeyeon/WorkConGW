@@ -205,11 +205,18 @@
         <form action="<%=request.getContextPath()%>/emp/register" class="signup-form" method="post" id="join">
           <h1 class="title"><a href="${root}/common/login">WorkConGW</a></h1>
           <h3 class="sub-title">회원가입</h3>
+
+
           <div class="input-field id-field">
-            <label>* 아이디</label>
-            <input id = "emp_Id" name="emp_Id" type="text" placeholder="아이디를 입력해주세요" required />
+            <label>* 사번</label>
+            <input id = "emp_Id_input" name="emp_Id" type="text" placeholder="사번를 입력해주세요" required />
+            <button type="button"  class="input-btn" onclick="checkemp_Id();">사번생성</button>
+          </div>
+          <div class="input-field id-field">
+            <label>* 이메일</label>
+            <input id = "emp_Email" name="emp_Email" type="text" placeholder="이메일를 입력해주세요" required />
             <button type="button" id="id-dup-check" class="input-btn" onclick="checkDup();">중복확인</button>
-          	<input type="hidden" value="N" id="isDup" />
+            <input type="hidden" value="N" id="isDup" />
           </div>
           <div class="input-field">
             <label>* 비밀번호</label>
@@ -233,10 +240,7 @@
             <label>* 휴대전화</label>
             <input id = "emp_Hp" name="emp_Hp" type="text" placeholder="'-' 를 제외한 휴대전화 번호를 입력해주세요" required maxlength="11" />
           </div>
-          <div class="input-field">
-            <label>* 이메일</label>
-            <input id = "emp_Email" name="emp_Email" type="text" placeholder="'@' 을 포함한 이메일 주소 전체를 입력해주세요" required />
-          </div>
+
           <div class="input-field">
             <label>* 주소</label>
             <div>
@@ -366,9 +370,9 @@
         return false;
       }
 
-      if ($("#emp_Id").val() == null || $("#emp_Id").val() == "") {
-        alert("아이디를 입력해주세요.");
-        $("#emp_Id").focus();
+      if ($("#emp_Id_input").val() == null || $("#emp_Id_input").val() == "") {
+        alert("사번를 입력해주세요.");
+        $("#emp_Id_input").focus();
          
         return false;
         }
@@ -420,20 +424,6 @@
       }
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 		//유효성 체크
 		const isDup = document.querySelector("#isDup");
 		const pwd = document.querySelector("input[name=emp_Pwd]");
@@ -444,7 +434,7 @@
 		
 		function check() {
 		 if(isDup.value == 'Y') {
-			 toastContent.innerText = "아이디 중복확인을 진행해주세요.";
+			 toastContent.innerText = "이메일 중복확인을 진행해주세요.";
 			 return false;
 		 }
 		 
@@ -468,24 +458,24 @@
 	<script>
 		//아이디 중복체크
 		function checkDup() {
-		  const userId = document.querySelector("input[name=emp_Id]").value;
+		  const userId = document.querySelector("input[name=emp_Email]").value;
 		  
 		  if(userId != "") {
 		   $.ajax({
 		     url: "<%=request.getContextPath()%>/emp/idCnt",
 		     type: "POST",
-         contentType : "application/json; charset-utf-8",
-         dataType : "json",
-		     data: JSON.stringify({emp_Id : userId}),
+             contentType : "application/json; charset-utf-8",
+             dataType : "json",
+		     data: JSON.stringify({emp_Email : userId}),
 		     success: function (data) {
           console.log(data);
           $("#isDup").val("Y")
 		       if (data.idCnt == 0) {
 		         $("#isDup").val("Y")
-		         alert("사용할 수 있는 아이디입니다.");
+		         alert("사용할 수 있는 이메일입니다.");
 		       } else {
             $("#isDup").val("N")
-		         alert("중복된 아이디 입니다.");
+		         alert("중복된 이메일 입니다.");
 		       }
 		     },
 		     error: function () {
@@ -494,6 +484,24 @@
 		   });
 		  } 
 		}
+
+        function checkemp_Id()
+        {
+              $.ajax({
+                url : "<%=request.getContextPath()%>/emp/empId",
+                type : "POST",
+                dataType: 'json',
+                success:function (data) {
+                  console.log(data);
+                  document.getElementById("emp_Id_input").value=data.emp_Id;
+                  alert('사용할 수 있는 사번입니다.');
+
+                },error:function () {
+                  alert('등록 시도에 실패했습니다.'+e);
+                }
+              })
+
+        }
 	</script>
   </body>
 </html>

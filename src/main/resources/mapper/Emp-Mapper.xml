@@ -96,8 +96,12 @@ UPDATE EMP SET EMP_SIGN = #{emp_Sign} where EMP_ID = #{emp_Id}
 
 <select id = "idCnt" parameterType = "EmpVO" resultType = "int">
 <![CDATA[
-	SELECT COUNT(*) FROM EMP WHERE EMP_ID = #{emp_Id}
+	SELECT COUNT(*) FROM EMP WHERE EMP_EMAIL = #{emp_Email}
 ]]>
+</select>
+
+<select id = "empIdSquence" resultType="String">
+	SELECT LPAD(EMP_ID_SEQ.NEXTVAL,5,0) FROM DUAL
 </select>
 
 <insert id = "register">

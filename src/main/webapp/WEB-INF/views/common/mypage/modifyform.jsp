@@ -331,8 +331,7 @@
                 <div class="input-field id-field">
                   <label>* 비밀번호 : </label>
                   <input id = "empPwd" name="emp_Pwd" type="password" value="${empVO.emp_Pwd}" required />
-                  <button id="modifyPwdBtn" class="input-btn">비밀번호변경</button>
-                  <input type="hidden" value="o" id="isDup" />
+                  <button id="modifyPwdBtn" class="btn btn-primary" data-type="success" onclick="window.open('<%=request.getContextPath()%>/common/password/modifyForm', '비밀번호수정', 'width=700,height=650,left=600');" style="width: 141px;">비밀번호 변경</button>
                 </div>
                 <div class="input-field">
                   <label>* 사번</label>
@@ -569,6 +568,50 @@ function getExtensionOfFilename(filename) {
   let _fileExt = filename.substring(_lastDot+1, _fileLen).toLowerCase();
 
   return _fileExt;
+}
+// 최초 로그인 시 비밀번호 변경 부분 로직
+
+// 세션을 받아와야함
+let empId = '${loginUser.emp_Id}';
+
+//이 변수는 세션 초기화로 인해 최초 로그인 시 비밀번호를 변경하면 -> 다시 로그인 페이지로 빠져야함 그렇기 때문에 이 부분을 처리하기 위한 변수
+let flag_empUpdate = false;
+// 최초 비밀번호 변경 여부
+let flag_empUpdateYn = false;
+
+checkEmpUdateYn();
+function checkEmpUpdateYn()
+{
+  let mst = ""
+
+  $.ajax({
+    type:"post",
+    url:"<%=request.getContextPath()%>/emp/checkEmpUpdateYn",
+    contentType:"html/text",
+    async : false,
+    success : function (data)
+    {
+      msg = data;
+    },
+    error:function (e)
+    {
+      console.log(e)
+    }
+
+  })
+
+  if(msg ==='fail')
+  {
+    $("#emp_Pwd").html("* 변경필요");
+    alert("비밀번호 변경이 필요합니다.");
+    window.open('<%=request.getContextPath()%>/common/password/modifyForm', '비밀번호수정', "width=700,height=650,left=600")
+  }
+
+  if(msg ==='success')
+  {
+    $("#emp_Pwd").html("");
+    flag_empUpdateYn = true;
+  }
 }
 
 

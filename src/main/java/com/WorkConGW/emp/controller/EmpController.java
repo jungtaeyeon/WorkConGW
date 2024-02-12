@@ -30,6 +30,7 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.sql.SQLException;
+import java.util.Map;
 
 import jakarta.servlet.http.HttpServletResponse;
 
@@ -98,18 +99,31 @@ public class EmpController {
         return "/common/registerEmail";
     }
 
+    @PostMapping("/empId")
+    @ResponseBody
+    public ResponseEntity<Map<String,Object>> empId()
+    {
+        logger.info("empId들어오니?");
+        JSONObject resMap = new JSONObject();
+        String emp_Id = empService.empId();
+        resMap.put("res","ok");
+        resMap.put("emp_Id",emp_Id);
+        return ResponseEntity.ok(resMap);
+
+    }
+
 
 
     @PostMapping("/idCnt")
     @ResponseBody
     public String idCnt(@RequestBody String filterJSON, HttpServletResponse response, ModelMap model)throws IOException{
-        JSONObject resMap = new JSONObject(); //JSON으로 변환
-            ObjectMapper mapper = new ObjectMapper();
-            EmpVO searchVO = (EmpVO)mapper.readValue(filterJSON, new TypeReference<EmpVO>(){}); //JSON -> JAVA로 변환
-            logger.info(searchVO.toString());
-            int idCnt = empService.idCnt(searchVO);
-            resMap.put("res","ok");
-            resMap.put("idCnt",idCnt);
+        JSONObject resMap = new JSONObject(); //JSON으로 변환하기 위해 사용
+        ObjectMapper mapper = new ObjectMapper(); // JSON ->JAVA로 변환하기 위해 사용
+        EmpVO searchVO = (EmpVO)mapper.readValue(filterJSON, new TypeReference<EmpVO>(){}); //JSON -> JAVA로 변환
+        logger.info(searchVO.toString());
+        int idCnt = empService.idCnt(searchVO);
+        resMap.put("res","ok");
+        resMap.put("idCnt",idCnt);
         
         logger.info("idCnt"+resMap);
         response.setContentType("text");

@@ -160,7 +160,9 @@ public class EmpService {
         return empDAO.idCnt(empVO);
     }
 
-
+     public String empId() {
+        return empDAO.empId();
+     }
 
 
 
@@ -188,5 +190,6 @@ public class EmpService {
         /* 조인을 걸 떄, deptId, teamId로함. */
         return empList;
     }
-	
-}
+
+
+ }
