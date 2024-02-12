@@ -287,6 +287,7 @@
     <div class="side-bar">
         <div><%@ include file="/WEB-INF/views/include/sidebar.jsp" %></div>        
     </div>
+
     <div class="content">
         <div>
           <div class="container">

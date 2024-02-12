@@ -268,6 +268,8 @@ public class EmpVO extends BaseVO{
         return this.emp_Update_Yn;
     }
 
+
+
     public void setEmp_Update_Yn(String emp_Update_Yn) {
         this.emp_Update_Yn = emp_Update_Yn;
     }
