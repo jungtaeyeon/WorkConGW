@@ -136,7 +136,7 @@
     .com {
         color: #999;
     }
-    . alignCenter{
+    .alignCenter{
         text-align: center;
     }
     #hiddenFillBtn:hover{
@@ -148,7 +148,7 @@
 
 <body>
 <!-- 헤더인클루드 -->
-<%@ include file="./header.jsp"%>
+<%@ include file="../include/header.jsp"%>
 
 <section class="subPageContain">
 

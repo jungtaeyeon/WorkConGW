@@ -13,46 +13,26 @@ List<AddBookVO> addBookGroupList = (List<AddBookVO>)request.getAttribute("addBoo
 		document.querySelector("#addBookInsert").submit();
 	}
 </script>
-<body>
-  <style>
-    .subTitleText{
-      margin-bottom: 25px;
-    }
-    .subTitleText h2{
-      display: flex;
-      justify-content: flex-start;
-      align-items: center;
-      font-size: 27px;
-    }
-    .subTitleText i{
-      font-size: 24px;
-      margin-right: 5px;
-    }
-    .share_add_book_btn_contain{
-      display: flex;
-    }
-    .share_add_book_btn{
-      width: 150px;
-      height: 35px;
-      background: #f2f2f2;
-      border: 1px solid #f2f2f2;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      color: #646464;
-      cursor: pointer;
-    }
-    .share_add_book_btn_on{
-      border: 1px solid #2985db;
-      color: #2985db;
-      background:#fff;
-    }
-    #addBookInsert{
-      margin: 30px 0 1rem;
-    }
-    .insertBtn{ margin-bottom:30px; }
-  </style>
-    <%@ include file="../include/header.jsp"%>
+<style>
+  .subTitleText{
+    margin-bottom: 25px;
+  }
+  .subTitleText h2{
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    font-size: 27px;
+  }
+  .subTitleText i{
+    font-size: 24px;
+    margin-right: 5px;
+  }
+  #addBookInsert{
+    margin: 30px 0 1rem;
+  }
+  .insertBtn{ margin-bottom:30px; }
+</style>
+  <%@ include file="../include/header.jsp"%>
   <section class="subPageContain">
 
     <%@ include file="./sideBar.jsp"%>
@@ -60,10 +40,6 @@ List<AddBookVO> addBookGroupList = (List<AddBookVO>)request.getAttribute("addBoo
     <div class="contentConteiner">
         <div class="subTitleText">
             <h2><i class="fa-solid fa-angles-right"></i>주소록등록</h2>
-        </div>
-        <div class="share_add_book_btn_contain">
-          <div class="share_add_book_btn share_add_book_btn_on" data-sharecond="0">개인주소록</div>
-          <div class="share_add_book_btn" data-sharecond="1">공유주소록</div>
         </div>
         <form id="addBookInsert" method="get" action="addBookInsert">
             <div class="input-group mb-3">
@@ -125,36 +101,3 @@ List<AddBookVO> addBookGroupList = (List<AddBookVO>)request.getAttribute("addBoo
     </div>
   </section>
     <%@ include file="../include/footer.jsp"%>
-</body>
-<script>
-  function addBookGroupSelect(share_add_book){
-    $.ajax({
-        type : 'get',              
-        url : '/WorkConGW/addBook/addBookGroupSelect',  
-        data : {
-          share_add_book : share_add_book
-        },
-        success : function(result) {         
-          $("#add_book_id option").remove(".groupOption");    
-          for(let i=0; i<result.length; i++){
-            $("#add_book_id").append("<option class='groupOption' value='"+result[i].add_book_id+"'>"+result[i].add_book_title+"</option>");
-          }
-        },    
-        error : function(request, status, error) {        
-          console.log(error)    
-        }
-      })
-  }
-
-  $(".share_add_book_btn").click(function(){
-    if(!$(this).hasClass('share_add_book_btn_on')){
-      $(".share_add_book_btn").not(this).removeClass("share_add_book_btn_on");
-      $(this).addClass('share_add_book_btn_on');
-      let share_add_book = $(this).data('sharecond');
-      addBookGroupSelect(share_add_book);
-    }
-  })
-  $(document).ready(function(){
-    addBookGroupSelect(0);
-  })
-</script>

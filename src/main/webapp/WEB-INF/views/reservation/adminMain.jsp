@@ -67,7 +67,7 @@
 
 <body>
 <!-- 헤더인클루드 -->
-<%@ include file="./header.jsp"%>
+<%@ include file="../include/header.jsp"%>
 <section class="subPageContain">
 
 <button type="button" class="btn btn-outline-light" id="hiddenFillBtn" onclick="presentationFill();" style="position:absolute;right:25px;top:160px;color:#ffffff; z-index: 100; border: 0px;width:100px;height:50px;"></button>

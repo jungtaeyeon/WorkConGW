@@ -33,6 +33,7 @@
 	.serchSelect{width: 150px;}
 	.serchTextGroup{width: 350px;}
 	.tableCheckBox{text-align: center; vertical-align: middle !important;}
+	.starred{margin-left: 5px;}
 </style>
 <body>
 	<!-- 헤더인클루드 -->
@@ -83,14 +84,24 @@
 				</thead>
 
 				<tbody>
-					<tr>
+					<tr data-toggle="modal" data-target="#staticBackdrop2">
 						<th class="tableCheckBox"><input type="checkbox"/></th>
-						<td>테스트</td>
-						<td>테스트</td>
-						<td>테스트@테스트</td>
+						<td>테스트<i class="starred fa-solid fa-star"></i></td>
 						<td>테스트</td>
 						<td>테스트</td>
 						<td>테스트</td>
+						<td>010-1234-5678</td>
+						<td>rkdrhd55@naver.com</td>
+						<td>테스트</td>
+					</tr>
+					<tr data-toggle="modal" data-target="#staticBackdrop2">
+						<th class="tableCheckBox"><input type="checkbox"/></th>
+						<td>테스트<i class="starred fa-regular fa-star"></i></td>
+						<td>테스트</td>
+						<td>테스트</td>
+						<td>테스트</td>
+						<td>010-1234-5678</td>
+						<td>rkdrhd55@naver.com</td>
 						<td>테스트</td>
 					</tr>
 				</tbody>
@@ -98,7 +109,29 @@
 			</table>
 		</div>
 	</section>
-
+<!-- Modal -->
+<div class="modal fade" id="staticBackdrop2" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="staticBackdropLabel">홍길동2</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <p>전화번호 : 010-1234-5678</p>
+        <p>전화번호 : 010-1234-5678</p>
+        <p>전화번호 : 010-1234-5678</p>
+        <p>전화번호 : 010-1234-5678</p>
+        <p>전화번호 : 010-1234-5678</p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">닫기 </button>
+      </div>
+    </div>
+  </div>
+</div>
 	<!-- 푸터 인클루드 -->
 	<%@ include file="../include/footer.jsp"%>
 </body>

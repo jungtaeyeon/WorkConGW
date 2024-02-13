@@ -3,14 +3,13 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 
-일정관리 메인페이지입니다.
+
 <html lang="ko"></html>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <head>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 <link rel=" shortcut icon" href="<%=request.getContextPath()%>/resources/image/favicon.ico">
 <link rel="stylesheet" href="<%=request.getContextPath()%>/resources/vendor/css/fullcalendar.min.css" />
-<link rel="stylesheet" href="<%=request.getContextPath()%>/resources/vendor/css/bootstrap.min.css" />
 <link rel="stylesheet" href="<%=request.getContextPath()%>/resources/vendor/css/select2.min.css" />
 <link rel="stylesheet" href="<%=request.getContextPath()%>/resources/vendor/css/bootstrap-datetimepicker.min.css" />
 <link rel="stylesheet" href="<%=request.getContextPath()%>/resources/vendor/css/fullcalendar.min.css" />
@@ -243,7 +242,7 @@
 
 
 <body>
-    <%@ include file="./header.jsp"%>
+<%@ include file="../include/header.jsp"%>
 <section style="display: flex;">
 <!-- 사이드바 -->
 <div id="left-sidebar" class="sidebar" style="border-right:2px solid rgb(0,0,0,0.1); margin-top: 50px; left:0px;">

@@ -71,15 +71,22 @@ public class AddBookController extends BaseController{
     }
     
     @GetMapping("addBookInsertPage")
-    public String addBookInsertPage(){
+    public String addBookInsertPage(Model model, @RequestParam Map<String,Object> pmap, HttpSession session){
         logger.info("addBookInsertPage");
+        EmpVO empVO = (EmpVO) session.getAttribute("loginUser");
+        String empId = null;
+        if(empVO != null) {
+            empId = empVO.getEmp_Id();
+        }
+        pmap.put("empId", empId);
+        logger.info(pmap.toString());
+        List<AddBookVO> addBookGroupList = null;
+        addBookGroupList = addBookService.addBookGroupSelect(pmap);
+        logger.info(addBookGroupList.toString());
+        model.addAttribute("addBookGroupList", addBookGroupList);
         String url = "addbook/insert";
         return url;
     }
-
-
-    /* restcontroller로 전송 */
-    
 
     @GetMapping("addBookSearch")
     public String addBookSearch(Model model, @RequestParam Map<String,Object> pmap, HttpSession session)

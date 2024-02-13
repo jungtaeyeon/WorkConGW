@@ -48,6 +48,13 @@
     font-size: 20px;
   }
   .go_btn{margin-bottom: 15px;}
+  .modal.show{background-color: rgba(0, 0, 0, 0.7);}
+  .modalBtnGroup{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .modalBtn{cursor: pointer; color:#000 !important;}
   </style>
   <div id="left-sidebar" class="sidebar">
     <div class="sidebar-scroll">
@@ -60,29 +67,58 @@
 
         <div class="tab-content p-l-0 p-r-0 subsubmenu">
           <!--서브메뉴 타이틀-->
-          <a href="addBookStarred">중요주소록</a>
-          <div>
-            <i class="fa-solid fa-plus"></i>
-          </div>
+            <a href="addBookStarred">중요주소록</a>
         </div>
 
         <div class="tab-content p-l-0 p-r-0 subsubmenu">
+          <div class="modalBtnGroup">
           <!--서브메뉴 타이틀-->
-          <a href="addBookList">개인주소록</a>
-          <ul class="main-menu metismenu">
-              <li id="li_importantSchedule" class="metismenuLI">
-                  <!--이동 주소 적기--><a href="addBookList" class=""><i class="fa fa-square" id="importantSchedule"></i> <span> <!--이동할 메뉴 이름 적기-->미등록그룹</span></a>
-              </li>
-          </ul>
+            <a href="addBookList">개인주소록</a>
+            <i class="fa-solid fa-plus modalBtn" data-toggle="modal" data-target="#staticBackdrop"></i>
+          </div>
+            <ul class="main-menu metismenu">
+                <li id="li_importantSchedule" class="metismenuLI">
+                    <!--이동 주소 적기--><a href="addBookList" class=""><i class="fa fa-square" id="importantSchedule"></i> <span> <!--이동할 메뉴 이름 적기-->미등록그룹</span></a>
+                </li>
+            </ul>
+          
         </div>
         <div class="tab-content p-l-0 p-r-0 subsubmenu">
-          <!--서브메뉴 타이틀-->  
-          <a href="addBookShare">공유주소록</a>
+            <div class="modalBtnGroup">
+              <!--서브메뉴 타이틀--> 
+              <a href="addBookShare">공유주소록</a>
+              <i class="fa-solid fa-plus modalBtn" data-toggle="modal" data-target="#staticBackdrop"></i>
+            </div>
             <ul class="main-menu metismenu">
               <li id="li_deptSchedule" class="metismenuLI"> 
+                <div class="modalBtnGroup">
                   <!--이동 주소 적기--><a href="addBookShare" class=""><i class="fa fa-square" id="deptSchedule"></i> <span><!--이동할 메뉴 이름 적기-->미등록그룹</span></a>
+                  <i class="fa-solid fa-ellipsis modalBtn"></i>
+                </div>
               </li>
           </ul>
         </div>
     </div>
+</div>
+
+
+<!-- Modal -->
+<div class="modal fade" id="staticBackdrop" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="staticBackdropLabel">그룹추가</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <p style="font-size: 18px;">그룹명<input type="text" class="form-control"></p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">닫기</button>
+        <button type="button" class="btn btn-primary">저장</button>
+      </div>
+    </div>
+  </div>
 </div>

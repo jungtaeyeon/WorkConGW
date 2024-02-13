@@ -12,7 +12,7 @@
 
 <body>
 <!-- 헤더인클루드 -->
-<%@ include file="./header.jsp"%>
+<%@ include file="../include/header.jsp"%>
 
 <section class="subPageContain">
 <!-- 메인 content -->

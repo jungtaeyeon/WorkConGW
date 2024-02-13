@@ -47,7 +47,7 @@
 
 <body>
 <!-- 헤더인클루드 -->
-<%@ include file="./header.jsp"%>
+<%@ include file="../include/header.jsp"%>
 
 <div id="main-content">
     <div class="container-fluid">

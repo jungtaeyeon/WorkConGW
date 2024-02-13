@@ -73,7 +73,7 @@
                 add_book_id, 
                 add_book_title
                 FROM add_book
-                WHERE emp_id = #{empId} and share_add_book = #{share_add_book} ORDER BY add_book_id ASC
+                WHERE emp_id = #{empId} ORDER BY add_book_id ASC
         </select>
 
         <!-- 주소록 추가 -->
