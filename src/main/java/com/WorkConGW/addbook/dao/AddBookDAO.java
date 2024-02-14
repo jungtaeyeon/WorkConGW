@@ -5,6 +5,7 @@ package com.WorkConGW.addbook.dao;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.collections.map.HashedMap;
 import org.mybatis.spring.SqlSessionTemplate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -25,7 +26,10 @@ public class AddBookDAO {
   public List<AddBookVO> addBookList(Map<String, Object> pmap) {
     logger.info("addBookList");
     AddBookVO addBookVO = new AddBookVO();
+    logger.info(pmap.toString());
     List<AddBookVO> list = sqlSessionTemplate.selectList("addBookList", pmap);
+    
+    logger.info(list.toString());
     return list;
   }
 

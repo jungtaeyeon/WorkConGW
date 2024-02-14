@@ -46,9 +46,10 @@ public class AddBookController extends BaseController{
             empId = empVO.getEmp_Id();
         }
         pmap.put("empId", empId);
-        pmap.put("share_add_book", 0);
         List<AddBookVO> abList = null;
+        logger.info(pmap.toString());
         abList = addBookService.addBookList(pmap);
+        logger.info(pmap.toString());
         String url = "addbook/list";
         model.addAttribute("abList", abList);
         return url;
@@ -109,8 +110,14 @@ public class AddBookController extends BaseController{
     }
 
     @GetMapping("addBookInsert")
-    public String addBookInsert(@RequestParam Map<String, Object> pmap) {
+    public String addBookInsert(@RequestParam Map<String, Object> pmap, HttpSession session) {
         logger.info("addBookInsert");
+        EmpVO empVO = (EmpVO) session.getAttribute("loginUser");
+        String empId = null;
+        if(empVO != null) {
+            empId = empVO.getEmp_Id();
+        }
+        pmap.put("empId", empId);
         int result = 0;
         String path = "";
         logger.info(pmap.toString());

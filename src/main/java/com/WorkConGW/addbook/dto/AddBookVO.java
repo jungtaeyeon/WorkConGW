@@ -14,8 +14,7 @@ public class AddBookVO extends BaseVO{
   // add_book
 	private int add_book_id;		// PK 주소록 코드. 시퀀스로 계속 올리는 숫자 (자리수 제한X)
 	private String add_book_title;	// 주소록 그룹명
-	private String code_add_id;		// 주소록 코드 아이디( A + 숫자 2자리 : 코드그룹 참고.. )
-	private int share_add_book; //공유주소록 판별
+	private int share_add_book_yn; //공유주소록 판별
 					
 	// add_book_manage
 	private int manage_id;		// PK 주소록관리번호

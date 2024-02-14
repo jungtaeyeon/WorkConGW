@@ -7,22 +7,16 @@
         <!-- 주소록 전체 셀렉(개인/공유 공용) -->
         <select id="addBookList" resultType="AddBookVO" parameterType="map">
                 SELECT 
-                manage_id, 
-                manage_display_name, 
-                manage_hp, 
-                manage_email, 
-                NVL(manage_remark, ' ') AS manage_remark, 
-                manage_company_name,
-                manage_official_name, 
-                manage_dept_name, 
-                manage_starred,
-                b.add_book_id, 
-                add_book_title, 
-                code_add_id, 
-                share_add_book,
-                emp_id 
-                FROM add_book_manage a, add_book b
-                WHERE emp_id = #{empId} and a.add_book_id = b.add_book_id ORDER BY manage_id ASC
+                *
+                FROM add_book_manage
+                WHERE emp_id = 00001
+        </select>
+        <!-- 주소록 그룹 셀렉(주소록 생성시 필요) -->
+        <select id="addBookGroupSelect" resultType="AddBookVO" parameterType="map">
+                SELECT 
+                *
+                FROM add_book
+                WHERE emp_id = #{empId}
         </select>
 
         <!-- 주소록 특정 검색 셀렉(개인/공유 공용) -->
@@ -39,51 +33,42 @@
                 manage_starred,
                 b.add_book_id, 
                 add_book_title, 
-                code_add_id, 
-                share_add_book,
                 emp_id 
         FROM 
                 add_book_manage a, 
                 add_book b
         WHERE 
-                emp_id = #{empId} 
+                a.emp_id = #{empId} 
                 AND a.add_book_id = b.add_book_id
                 <if test="selectSearch != null">
                         <choose>
                                 <when test="selectSearch == 'manage_display_name'">
-                                AND UPPER(manage_display_name) LIKE '%' || UPPER(#{searchText}) || '%'
+                                AND manage_display_name LIKE '%' || #{searchText} || '%'
                                 </when>
                                 <when test="selectSearch == 'manage_hp'">
-                                AND UPPER(manage_hp) LIKE '%' || UPPER(#{searchText}) || '%'
+                                AND manage_hp LIKE '%' || #{searchText} || '%'
                                 </when>
                                 <when test="selectSearch == 'manage_official_name'">
-                                AND UPPER(manage_official_name) LIKE '%' || UPPER(#{searchText}) || '%'
+                                AND manage_official_name LIKE '%' || #{searchText} || '%'
                                 </when>
                                 <when test="selectSearch == 'manage_dept_name'">
-                                AND UPPER(manage_dept_name) LIKE '%' || UPPER(#{searchText}) || '%'
+                                AND manage_dept_name LIKE '%' || #{searchText} || '%'
                                 </when>
                         </choose>
                 </if>
                 ORDER BY manage_id ASC
         </select>
 
-        <!-- 주소록 그룹 셀렉(주소록 생성시 필요) -->
-        <select id="addBookGroupSelect" resultType="AddBookVO" parameterType="map">
-                SELECT 
-                add_book_id, 
-                add_book_title
-                FROM add_book
-                WHERE emp_id = #{empId} ORDER BY add_book_id ASC
-        </select>
+        
 
         <!-- 주소록 추가 -->
         <insert id="addBookInsert" parameterType="java.util.Map">
                 INSERT INTO add_book_manage(manage_id, manage_display_name, manage_hp, manage_email, 
                                             manage_remark, manage_company_name,manage_official_name, manage_dept_name, 
-                                            manage_starred,add_book_id)
+                                            manage_starred,add_book_id,emp_id)
                 VALUES(seq_add_book_manage_no.nextval, #{manage_display_name}, #{manage_hp}
                         , #{manage_email},#{manage_remark}, #{manage_company_name},#{manage_official_name}, #{manage_dept_name}
-                        , 0,#{add_book_id})
+                        , 0,#{add_book_id},#{empId})
         </insert>
 
         <!-- 주소록 수정 -->

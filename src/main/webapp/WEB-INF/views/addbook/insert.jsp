@@ -81,7 +81,7 @@ List<AddBookVO> addBookGroupList = (List<AddBookVO>)request.getAttribute("addBoo
 
             <div class="mb-3 mt-3">
                 <select id="add_book_id" name="add_book_id" class="custom-select" aria-label="그룹">
-                    <option value="0" selected>그룹</option>
+                    <option value="" selected>그룹</option>
                 </select>
             </div>
             <div class="input-group mb-3">

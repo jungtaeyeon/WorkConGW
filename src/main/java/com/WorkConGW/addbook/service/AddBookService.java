@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.collections.map.HashedMap;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,6 +36,7 @@ public class AddBookService {
   public int addBookInsert(Map<String, Object> pmap) {
     logger.info("addBookInsert");
     int result = 0;
+    logger.info(pmap.toString());
     result = AddBookDAO.addBookInsert(pmap);
     return result;
   }
