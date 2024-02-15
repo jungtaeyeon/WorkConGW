@@ -36,10 +36,9 @@ public class AddBookController extends BaseController{
     private AddBookService addBookService;
 
     @GetMapping("addBookList")
-    public String addBookList(Model model, HttpSession session)
+    public String addBookList(Model model, HttpSession session, @RequestParam Map<String,Object> pmap)
     {
         logger.info("addBookList");
-        Map<String, Object> pmap = new HashMap<String, Object>();
         EmpVO empVO = (EmpVO) session.getAttribute("loginUser");
         String empId = null;
         if(empVO != null) {
@@ -47,11 +46,13 @@ public class AddBookController extends BaseController{
         }
         pmap.put("empId", empId);
         List<AddBookVO> abList = null;
+        List<AddBookVO> addBookGroupList = null;
         logger.info(pmap.toString());
         abList = addBookService.addBookList(pmap);
-        logger.info(pmap.toString());
+        addBookGroupList = addBookService.addBookGroupSelect(pmap);
         String url = "addbook/list";
         model.addAttribute("abList", abList);
+        model.addAttribute("addBookGroupList", addBookGroupList);
         return url;
     }
 
@@ -108,7 +109,7 @@ public class AddBookController extends BaseController{
         model.addAttribute("abList", abList);
         return url;
     }
-
+    
     @GetMapping("addBookInsert")
     public String addBookInsert(@RequestParam Map<String, Object> pmap, HttpSession session) {
         logger.info("addBookInsert");
@@ -131,5 +132,25 @@ public class AddBookController extends BaseController{
         return path;
     }
 
+    @GetMapping("addBookGroupInsert")
+    public String addBookGroupInsert(Model model, @RequestParam Map<String, Object> pmap, HttpSession session) {
+        logger.info("addBookGroupInsert");
+        EmpVO empVO = (EmpVO) session.getAttribute("loginUser");
+        String empId = null;
+        if(empVO != null) {
+            empId = empVO.getEmp_Id();
+        }
+        pmap.put("empId", empId);
+        int result = 0;
+        String path = "";
+        logger.info(pmap.toString());
+        result = addBookService.addBookGroupInsert(pmap);
+        if (result == 1) {// 입력이 성공했을때
+            path = "redirect:/addBook/addBookList";
+        } else {// 입력이 실패 했을때
+            path = "/error";
+        }
+        return path;
+    }
 }
 

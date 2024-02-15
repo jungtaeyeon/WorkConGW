@@ -27,9 +27,7 @@
 			,A.EMP_UPDATE_DT
 			,NVL(A.EMP_EMAIL,'없음') 
 			,A.AUTH_ID
-			,A.TEAM_ID
 			,A.CODE_ID
-			,A.EMP_CODE_RESP_ID			
             ,B.ATTEND_ST_NAME
 						<!-- 출근상태(지각..etc) -->
             ,A.EMP_UPDATE_YN
@@ -38,12 +36,7 @@
 						<!-- 부서이름 -->
             ,D.CODE_NAME 
 						<!-- 코드 이름==부서이름-->
-            ,(
-                SELECT  F.DEPT_NAME
-                FROM    EMP E, DEPT F				
-                WHERE   E.TEAM_ID = F.DEPT_ID
-                AND     E.EMP_ID = #{emp_Id}
-              ) AS TEAM_NAME
+
 							<!-- 부서이름출력 ((개인)팀id=부서(id)) 
 								AND 사원정보까지 같으면(empId)는 객체로 넘겨받아야함
 								부서와 팀 구분❌ -> DEPT_TEAM_YN : 부서 / 팀 구분 처리
@@ -106,10 +99,10 @@ UPDATE EMP SET EMP_SIGN = #{emp_Sign} where EMP_ID = #{emp_Id}
 
 <insert id = "register">
 INSERT INTO EMP 
-(EMP_ID, EMP_NAME, EMP_PWD, EMP_REGNO, EMP_REGNO2, EMP_HP,EMP_ST,EMP_ADD1, EMP_ADD2,EMP_ZIPCODE ,EMP_EMAIL, AUTH_ID, DEPT_ID, TEAM_ID, EMP_SUP_ID, ATTEND_ST_ID,CODE_ID, EMP_AUTHKEY)
+(EMP_ID, EMP_NAME, EMP_PWD, EMP_REGNO,EMP_CREATE_DT ,EMP_REGNO2, EMP_HP,EMP_ST,EMP_ADD1, EMP_ADD2,EMP_ZIPCODE ,EMP_EMAIL, AUTH_ID, DEPT_ID, EMP_SUP_ID, ATTEND_ST_ID,CODE_ID, EMP_AUTHKEY)
 VALUES
 (#{emp_Id}, #{emp_Name
-},#{emp_Pwd},#{emp_Regno},#{emp_Regno2},#{emp_Hp},#{emp_St},#{emp_Add1},#{emp_Add2},#{emp_ZipCode},#{emp_Email}, #{auth_Id},#{dept_Id}, #{team_Id}, #{emp_Sup_Id}, #{attend_St_Id}, #{code_Id}, #{emp_authkey})
+},#{emp_Pwd},#{emp_Regno},sysdate,#{emp_Regno2},#{emp_Hp},#{emp_St},#{emp_Add1},#{emp_Add2},#{emp_ZipCode},#{emp_Email}, #{auth_Id},#{dept_Id}, #{emp_Sup_Id}, #{attend_St_Id}, #{code_Id}, #{emp_authkey})
 </insert>
 
 
@@ -128,7 +121,6 @@ VALUES
 		,EMP.EMP_NAME
 		,EMP.EMP_PWD
 		,EMP.AUTH_ID
-		,EMP.EMP_CODE_RESP_ID
 		,EMP.EMP_REGNO
 		,NVL(EMP.EMP_HP,'없음') empHp
 		,EMP.EMP_SIGN
@@ -163,9 +155,7 @@ VALUES
 		<if test='dept_Id != null and !"".equals(dept_Id) '> <!-- dept_id가 null이 아니고 그 값이 빈 문자열이 아닐경우에 참-->
 			AND		dept_id = #{dept_Id}
 		</if>
-		<if test='team_Id != null and !"".equals(team_Id) '> <!-- dept_id가 null이 아니고 그 값이 빈 문자열이 아닐경우에 참-->
-			AND		team_id = #{team_Id}
-		</if>
+
 	</select>
 
 

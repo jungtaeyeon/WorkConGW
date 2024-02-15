@@ -1,7 +1,10 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+    <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
   <style>
-    
   a{text-decoration: none;}
   .sidebar{
     border-right:2px solid rgb(0,0,0,0.1);
@@ -56,6 +59,11 @@
   }
   .modalBtn{cursor: pointer; color:#000 !important;}
   </style>
+  <script>
+    const addBookGroupInsert = () => {
+      document.querySelector("#addBookGroupInsert").submit();
+    }
+  </script>
   <div id="left-sidebar" class="sidebar">
     <div class="sidebar-scroll">
 
@@ -63,8 +71,8 @@
         <div class="tab-content p-l-0 p-r-0 text-align go_btn">
             <a href="addBookInsertPage"  id="go_btn">주소록등록</a>
         </div>
-        <!--큰버튼이 필요한 페이지에 쓰임-->
 
+        <!--큰버튼이 필요한 페이지에 쓰임-->
         <div class="tab-content p-l-0 p-r-0 subsubmenu">
           <!--서브메뉴 타이틀-->
             <a href="addBookStarred">중요주소록</a>
@@ -76,9 +84,16 @@
             <a href="addBookList">개인주소록</a>
             <i class="fa-solid fa-plus modalBtn" data-toggle="modal" data-target="#staticBackdrop"></i>
           </div>
-            <ul class="main-menu metismenu">
-                <li id="li_importantSchedule" class="metismenuLI">
-                    <!--이동 주소 적기--><a href="addBookList" class=""><i class="fa fa-square" id="importantSchedule"></i> <span> <!--이동할 메뉴 이름 적기-->미등록그룹</span></a>
+            <ul class="main-menu metismenu addBook">
+                <c:forEach var="list" items="${addBookGroupList}">
+                  <c:if test="${list.share_add_book_yn eq '0'}">
+                    <li id="li_importantSchedule" class="metismenuLI addBookGroupLi">
+                      <a href="addBookList?add_book_id=${list.add_book_id}" class=""><i class="fa fa-square" id="importantSchedule"></i><span>${list.add_book_title}</span></a>
+                    </li>
+                  </c:if>
+                </c:forEach>
+                <li id="li_importantSchedule" class="metismenuLI noGroup">
+                    <a href="addBookList?add_book_id=noGroup" class=""><i class="fa fa-square" id="importantSchedule"></i><span>미등록그룹</span></a>
                 </li>
             </ul>
           
@@ -87,15 +102,15 @@
             <div class="modalBtnGroup">
               <!--서브메뉴 타이틀--> 
               <a href="addBookShare">공유주소록</a>
-              <i class="fa-solid fa-plus modalBtn" data-toggle="modal" data-target="#staticBackdrop"></i>
             </div>
-            <ul class="main-menu metismenu">
-              <li id="li_deptSchedule" class="metismenuLI"> 
-                <div class="modalBtnGroup">
-                  <!--이동 주소 적기--><a href="addBookShare" class=""><i class="fa fa-square" id="deptSchedule"></i> <span><!--이동할 메뉴 이름 적기-->미등록그룹</span></a>
-                  <i class="fa-solid fa-ellipsis modalBtn"></i>
-                </div>
-              </li>
+            <ul class="main-menu metismenu shareAddBook">
+              <c:forEach var="list" items="${addBookGroupList}">
+                  <c:if test="${list.share_add_book_yn eq '1'}">
+                    <li id="li_importantSchedule" class="metismenuLI addBookGroupLi">
+                      <a href="addBookList?add_book_id=${list.add_book_id}" class=""><i class="fa fa-square" id="importantSchedule"></i><span>${list.add_book_title}</span></a>
+                    </li>
+                  </c:if>
+                </c:forEach>
           </ul>
         </div>
     </div>
@@ -113,11 +128,13 @@
         </button>
       </div>
       <div class="modal-body">
-        <p style="font-size: 18px;">그룹명<input type="text" class="form-control"></p>
+        <form id="addBookGroupInsert" action="addBookGroupInsert" method="get">
+          <p style="font-size: 18px;">그룹명<input type="text" name="add_book_title" class="form-control"></p>
+        </form>
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-dismiss="modal">닫기</button>
-        <button type="button" class="btn btn-primary">저장</button>
+        <button type="button" class="btn btn-primary" onclick="addBookGroupInsert()">저장</button>
       </div>
     </div>
   </div>

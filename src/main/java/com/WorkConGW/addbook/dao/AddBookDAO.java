@@ -55,4 +55,11 @@ public class AddBookDAO {
     return result;
   }
 
+  public int addBookGroupInsert(Map<String, Object> pmap) {
+    logger.info("addBookGroupInsert");
+    int result = 0;
+    result = sqlSessionTemplate.insert("addBookGroupInsert", pmap);
+    return result;
+  }
+
 }

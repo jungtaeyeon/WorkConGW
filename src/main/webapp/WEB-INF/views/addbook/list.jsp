@@ -1,12 +1,15 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
-pageEncoding="UTF-8"%> <%@ page import="java.util.List, java.util.Map,
-java.util.ArrayList, com.WorkConGW.addbook.dto.AddBookVO" %> <%@ taglib
-prefix="c" uri="http://java.sun.com/jsp/jstl/core"%> <%@ taglib prefix="form"
-uri="http://www.springframework.org/tags/form"%> <%@ taglib prefix="fmt"
-uri="http://java.sun.com/jsp/jstl/fmt"%> <%@ taglib prefix="fn"
-uri="http://java.sun.com/jsp/jstl/functions"%> <% List<AddBookVO>
-  abList = (List<AddBookVO
-    >)request.getAttribute("abList"); int i = 0; %>
+pageEncoding="UTF-8"%> 
+<%@ page import="java.util.List, java.util.Map,
+java.util.ArrayList, com.WorkConGW.addbook.dto.AddBookVO" %> 
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%> 
+<%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%> 
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%> 
+<% 
+  List<AddBookVO>  abList = (List<AddBookVO>)request.getAttribute("abList"); 
+  int i = 0; 
+%>
     <script>
       const serchBtn = () => {
         document.querySelector("#serchForm").submit();
@@ -123,9 +126,7 @@ uri="http://java.sun.com/jsp/jstl/functions"%> <% List<AddBookVO>
               <tr>
                 <th class="tableCheckBox"><input type="checkbox" /></th>
                 <td>
-                  <%= addBook.getManage_display_name() %><i
-                    class="starred fa-solid fa-star"
-                  ></i>
+                  <%= addBook.getManage_display_name() %><i class="starred fa-solid fa-star"></i>
                 </td>
                 <td class="" data-toggle="modal" data-target="#staticBackdrop1">
                   <%= addBook.getManage_company_name() %>

@@ -41,6 +41,14 @@ public class AddBookService {
     return result;
   }
 
+  public int addBookGroupInsert(Map<String, Object> pmap) {
+    logger.info("addBookGroupInsert");
+    int result = 0;
+    logger.info(pmap.toString());
+    result = AddBookDAO.addBookGroupInsert(pmap);
+    return result;
+  }
+
   public List<AddBookVO> addBookGroupSelect(Map<String, Object> pmap) {
     logger.info("addBookGroupSelect");
     List<AddBookVO> list = new ArrayList<>();
