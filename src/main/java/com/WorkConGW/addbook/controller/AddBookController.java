@@ -101,7 +101,6 @@ public class AddBookController extends BaseController{
             empId = empVO.getEmp_Id();
         }
         pmap.put("empId", empId);
-
         logger.info(pmap.toString());
         abList = addBookService.addBookSearch(pmap);
         logger.info(abList.toString());
@@ -145,6 +144,21 @@ public class AddBookController extends BaseController{
         String path = "";
         logger.info(pmap.toString());
         result = addBookService.addBookGroupInsert(pmap);
+        if (result == 1) {// 입력이 성공했을때
+            path = "redirect:/addBook/addBookList";
+        } else {// 입력이 실패 했을때
+            path = "/error";
+        }
+        return path;
+    }
+
+    @GetMapping("addBookListUpdate")
+    public String addBookListUpdate(@RequestParam Map<String, Object> pmap, HttpSession session) {
+        logger.info("addBookListUpdate");
+        int result = 0;
+        String path = "";
+        logger.info(pmap.toString());
+        //result = addBookService.addBookInsert(pmap);
         if (result == 1) {// 입력이 성공했을때
             path = "redirect:/addBook/addBookList";
         } else {// 입력이 실패 했을때

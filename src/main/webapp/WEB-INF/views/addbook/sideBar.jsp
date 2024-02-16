@@ -82,7 +82,7 @@
           <div class="modalBtnGroup">
           <!--서브메뉴 타이틀-->
             <a href="addBookList">개인주소록</a>
-            <i class="fa-solid fa-plus modalBtn" data-toggle="modal" data-target="#staticBackdrop"></i>
+            <i class="fa-solid fa-plus modalBtn" data-toggle="modal" data-target="#addBookGroupModal"></i>
           </div>
             <ul class="main-menu metismenu addBook">
                 <c:forEach var="list" items="${addBookGroupList}">
@@ -118,7 +118,7 @@
 
 
 <!-- Modal -->
-<div class="modal fade" id="staticBackdrop" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+<div class="modal fade" id="addBookGroupModal" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered">
     <div class="modal-content">
       <div class="modal-header">

@@ -6,16 +6,16 @@ java.util.ArrayList, com.WorkConGW.addbook.dto.AddBookVO" %>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%> 
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%> 
-<% 
-  List<AddBookVO>  abList = (List<AddBookVO>)request.getAttribute("abList"); 
-  int i = 0; 
-%>
     <script>
       const serchBtn = () => {
         document.querySelector("#serchForm").submit();
       };
+
     </script>
     <style>
+      .table td{
+        vertical-align: middle !important;
+      }
       .subTitleText {
         margin-bottom: 25px;
       }
@@ -48,6 +48,19 @@ java.util.ArrayList, com.WorkConGW.addbook.dto.AddBookVO" %>
       }
       .starred {
         margin-left: 5px;
+      }
+      .listModalBtn{cursor: pointer;}
+
+      .modal-body p{font-size:16px;}
+      .groupTag{
+        display: inline-block;
+        background-color: rgb(52, 152, 219);
+        color: #fff;
+        padding: 0px 10px;
+        box-sizing: border-box;
+        line-height: 30px;
+        text-align: center;
+        border-radius: 9px;
       }
     </style>
     <body>
@@ -122,81 +135,62 @@ java.util.ArrayList, com.WorkConGW.addbook.dto.AddBookVO" %>
             </thead>
 
             <tbody>
-              <% for (AddBookVO addBook : abList) { i++; %>
+              <c:forEach items="${abList}" var="addBook" varStatus="status">
               <tr>
                 <th class="tableCheckBox"><input type="checkbox" /></th>
                 <td>
-                  <%= addBook.getManage_display_name() %><i class="starred fa-solid fa-star"></i>
+                  ${addBook.manage_display_name}<i class="starred fa-solid fa-star"></i>
                 </td>
-                <td class="" data-toggle="modal" data-target="#staticBackdrop1">
-                  <%= addBook.getManage_company_name() %>
+                <td class="listModalBtn" data-toggle="modal" data-target="#staticBackdrop${status.index}">
+                  ${addBook.manage_company_name}
                 </td>
-                <td data-toggle="modal" data-target="#staticBackdrop1">
-                  <%= addBook.getManage_official_name() %>
+                <td class="listModalBtn" data-toggle="modal" data-target="#staticBackdrop${status.index}">
+                  ${addBook.manage_official_name}
                 </td>
-                <td data-toggle="modal" data-target="#staticBackdrop1">
-                  <%= addBook.getManage_dept_name() %>
+                <td class="listModalBtn" data-toggle="modal" data-target="#staticBackdrop${status.index}">
+                  ${addBook.manage_dept_name}
                 </td>
-                <td data-toggle="modal" data-target="#staticBackdrop1">
-                  <%= addBook.getManage_hp() %>
+                <td class="listModalBtn" data-toggle="modal" data-target="#staticBackdrop${status.index}">
+                  ${addBook.manage_hp}
                 </td>
-                <td data-toggle="modal" data-target="#staticBackdrop1">
-                  <%= addBook.getManage_email() %>
+                <td class="listModalBtn" data-toggle="modal" data-target="#staticBackdrop${status.index}">
+                  ${addBook.manage_email}
                 </td>
-                <td data-toggle="modal" data-target="#staticBackdrop1">
-                  <%= addBook.getAdd_book_title() %>
+                <td class="listModalBtn" data-toggle="modal" data-target="#staticBackdrop${status.index}">
+                  <c:if test="${addBook.add_book_title ne ' '}"> <span class="groupTag">${addBook.add_book_title}</span> </c:if>
                 </td>
+                <!-- Modal -->
               </tr>
-              <% } %>
+              <div class="modal fade" id="staticBackdrop${status.index}" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered">
+                  <div class="modal-content">
+                    <div class="modal-header">
+                      <h5 class="modal-title" id="staticBackdropLabel">${addBook.manage_display_name}</h5>
+                      <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                      </button>
+                    </div>
+                    <div class="modal-body">
+                      <p>회사명 :  ${addBook.manage_company_name}</p>
+                      <p>직급 : ${addBook.manage_official_name}</p>
+                      <p>부서 : ${addBook.manage_dept_name}</p>
+                      <p>전화번호 : ${addBook.manage_hp}</p>
+                      <p>이메일 : ${addBook.manage_email}</p>
+                      <p>그룹 : ${addBook.add_book_title}</p>
+                      <p>메모 : ${addBook.manage_remark}</p>
+                    </div>
+                    <div class="modal-footer">
+                      <button type="button" class="btn btn-secondary" data-dismiss="modal">닫기</button>
+                      <a href="addBookListUpdate?manage_id=${addBook.manage_id}" class="btn btn-primary">수정</a>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              </c:forEach>
             </tbody>
           </table>
         </div>
       </section>
-
-      <!-- Modal -->
-      <div
-        class="modal fade"
-        id="staticBackdrop1"
-        data-backdrop="static"
-        data-keyboard="false"
-        tabindex="-1"
-        aria-labelledby="staticBackdropLabel"
-        aria-hidden="true"
-      >
-        <div class="modal-dialog modal-dialog-centered">
-          <div class="modal-content">
-            <div class="modal-header">
-              <h5 class="modal-title" id="staticBackdropLabel">홍길동1</h5>
-              <button
-                type="button"
-                class="close"
-                data-dismiss="modal"
-                aria-label="Close"
-              >
-                <span aria-hidden="true">&times;</span>
-              </button>
-            </div>
-            <div class="modal-body">
-              <p>전화번호 : 010-1234-5678</p>
-              <p>전화번호 : 010-1234-5678</p>
-              <p>전화번호 : 010-1234-5678</p>
-              <p>전화번호 : 010-1234-5678</p>
-              <p>전화번호 : 010-1234-5678</p>
-            </div>
-            <div class="modal-footer">
-              <button
-                type="button"
-                class="btn btn-secondary"
-                data-dismiss="modal"
-              >
-                닫기
-              </button>
-            </div>
-          </div>
-        </div>
-      </div>
       <!-- 푸터 인클루드 -->
       <%@ include file="../include/footer.jsp"%>
-    </body></AddBookVO
-  ></AddBookVO
->
+    </body>
