@@ -4,4 +4,27 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.mybatis.mapper.TimeMapper">
 
+    <select id ="selectTime" resultType="timeVO">
+        SELECT ATTEND_TIME,
+               LEAVING_TIME,
+               EMP_MANAGER_ID,
+               LUNCH_START_TIME,
+               LUNCH_END_TIME
+        FROM ATTEND_SETTING
+    </select>
+
+    <update id = "modifyTime" parameterType="timeVO">
+        UPDATE ATTEND_SETTING
+        SET
+        ATTEND_TIME = #{attend_Time},
+        LEAVING_TIME = #{leaving_Time},
+        <if test = 'lunch_Start_Time != "" and lunch_Start_Time != null'>
+        LUNCH_START_TIME = #{lunch_Start_Time},
+        </if>
+        <if test = 'lunch_End_Time != "" and lunch_End_Time != null'>
+        LUNCH_END_TIME = #{lunch_End_Time}
+        </if>
+
+    </update>
+
 </mapper>

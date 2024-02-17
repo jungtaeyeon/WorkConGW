@@ -112,4 +112,21 @@ public class EmpDAO {
         String emp_Id = sqlSessionTemplate.selectOne("empIdSquence");
         return emp_Id;
     }
+
+    public List<EmpVO> selectEmpPagingList(EmpVO searchEmpVO) {
+        List<EmpVO>empVOList = sqlSessionTemplate.selectList("selectEmpPagingList", searchEmpVO);
+        return empVOList;
+    }
+
+    public int selectEmpCount(EmpVO searchEmpVO) {
+        return sqlSessionTemplate.selectOne("selectEmpCount",searchEmpVO);
+    }
+
+    public void adminEmpUpdate(EmpVO empVO) {
+        sqlSessionTemplate.update("adminEmpUpdate", empVO);
+    }
+
+    public List<EmpVO> searchLoginUser(EmpVO empVO) {
+       return sqlSessionTemplate.selectList("searchLoginUser", empVO);
+    }
 }

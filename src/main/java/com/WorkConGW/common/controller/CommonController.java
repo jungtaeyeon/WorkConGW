@@ -1,16 +1,22 @@
 package com.WorkConGW.common.controller;
 
 
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpRequest;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -48,7 +54,7 @@ import jakarta.servlet.http.HttpSession;
 */
 @Controller
 @RequestMapping("/common/*")
-public class CommonController{
+public class CommonController {
     Logger logger = LoggerFactory.getLogger(CommonController.class);
 
     @Autowired
@@ -64,14 +70,73 @@ public class CommonController{
 	@Autowired
 	private MenuService menuService;
 
-
-
-
     protected static Map<String, HttpSession> users = new HashMap<>();
 
 
+    public ResponseEntity<byte[]> getPicture(String picturePath, String picture) throws Exception{
+        // EmpCotroller.(baseController호출) -> BaseController
+        ResponseEntity<byte[]> entity = null;
+        InputStream in = null;
+        String imgPath = picturePath;
+        try {
+            in = new FileInputStream(new File(imgPath, picture));
+            entity = new ResponseEntity<byte[]>(IOUtils.toByteArray(in), HttpStatus.CREATED);
+            /* IOUtils.toByteArray(in) : 바이트 배열로 변환
+             * 200 OK: 성공적으로 처리했을 때 쓰인다. 가장 일반적으로 볼 수 있는 HTTP 상태
+             * 201 Created: 요청이 성공적으로 처리되어서 리소스가 만들어졌음을 의미한다.
+             * - POST 나 PUT 으로 게시물 작성이나 회원 가입 등의 새로운 데이터를 서버에 생성하는(쓰는, 넣는) 작업이 성공했을 때 반환한다.
+             */
+        } catch (IOException e) {
+            e.printStackTrace();
+            entity = new ResponseEntity<byte[]>(HttpStatus.INTERNAL_SERVER_ERROR);
+        } finally {
+            in.close();
+        }
+        return entity;
+    }
+
+    //로그인중인 users 가져오기
+
+    /* 작성자 : 오지환
+    
+    @ 메소드 설명
+     * 로그인(Service) 단에서 로그인 유효성 검사를 진행한 뒤 setAttribute를 한다.
+     * 이 때 session.setAttribute("loginUser",emp)를 갖는다.
+     * 그렇게 되면 로그인 시 loginUser로 계속 setAttribute를 한다.
+     *
+     * 이걸 받아올 떄, 그래서 EmpVO empVO = (EmpVO)session.getAttribute("loginUser)로 받아오면,
+     * empVO는 축적 되어 있는 loginUser를 for문을 돌면서 받게 된다.
+     * 그 값을 loginUserList에 add한다(empVO)
+
+    @ 언제 사용하는가? : 관리자(지금 접속한 인원 체크할 때)
+    - getLoginUserList를 받아온다. 이 때, getLoginUserList가 static이라는 것을 명심하자.
+   
+    @ searchLoginUser 여기서 사용
+
+     * */
+    public static List<EmpVO> getLoginUserList()
+    {
+        List<EmpVO> loginUserList = new ArrayList<>();
+        /*
+        * users value에 접근하기 위해서 HttpSession값에 접근해야 됐다.
+        *
+        * */
+        for(HttpSession session : users.values())
+        {
+            EmpVO empVO = (EmpVO)session.getAttribute("loginUser");
+
+            loginUserList.add(empVO);
+        }
+        return loginUserList;
+    }
+
+
+
     @GetMapping("/home")
-    public String home(HomeFormVO homeFormVO, Model model) throws SQLException {
+    public String home(HomeFormVO homeFormVO, Model model, HttpServletRequest request) throws SQLException {
+        EmpVO empVO = (EmpVO)request.getSession().getAttribute("loginUser");
+        empVO = empService.getEmp(empVO.getEmp_Id());
+        model.addAttribute("empVO", empVO);
         return "/home";
     }
 
@@ -120,7 +185,7 @@ public class CommonController{
     public String login(EmpVO empVO,HttpServletRequest request,Model model)throws SQLException
     {
 
-        String url = "redirect:./home";
+        String url = null;
         HttpSession session = request.getSession();
         try{
             empVO = empService.login(empVO.getEmp_Id(),empVO.getEmp_Pwd(),session);
@@ -131,6 +196,14 @@ public class CommonController{
                 logger.info("여기에 들어왔습니다.");
                 model.addAttribute("Auth",empVO.getEmp_authkey());
                 return "/common/registerReady";
+            }
+            if("u".equals(empVO.getAuth_Id()))
+            {
+                url = "redirect:./home";
+            }
+            else if("s".equals(empVO.getAuth_Id()))
+            {
+                url = "redirect:/admin/main";
             }
         }catch(NotFoundIDException|InvalidPasswordException e){
             url = "/common/loginForm";
@@ -187,6 +260,8 @@ public class CommonController{
         String url = "common/mypage/modifyform";
         EmpVO empVO = (EmpVO)request.getSession().getAttribute("loginUser");
         empVO = empService.getEmp(empVO.getEmp_Id());
+        HttpSession session = request.getSession();
+        session.setAttribute("loginUser", empVO);
         model.addAttribute("empVO", empVO);
         return url;
     }

@@ -68,8 +68,6 @@ th{
 <!-- 헤더인클루드 -->
 <%@ include file="/WEB-INF/views/include/header.jsp"%>
 <section class="subPageContain">
-	<!-- 사이드바 -->
-	<%@ include file="../sideBar.jsp"%>
 	<!--컨텐츠 영역-->
 	<div class="contentConteiner">
 

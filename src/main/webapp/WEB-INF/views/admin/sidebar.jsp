@@ -91,8 +91,8 @@
         /* 사이드바 시작 */
         /* 사이드바의 너비와 높이를 변수를 통해 통제 */
         :root {
-            --side-bar-width: 270px;
-            --side-bar-height: 95vh;
+            --side-bar-width: 250px;
+            --side-bar-height: 100vh;
         }
 
         .side-bar {
@@ -110,12 +110,7 @@
         }
 
 
-        body {
-            -webkit-user-select:none;
-            -moz-user-select:none;
-            -ms-user-select:none;
-            user-select:none
-        }
+
 
 
 
@@ -200,29 +195,9 @@
         .navbar-nav ul.notifications .alarm-list:hover {
             background-color: aliceblue;
         }
-        #allAlarmList .media:hover {
-            cursor: pointer;
-            background-color: aliceblue;
-        }
-        span.deleteAlarmBtn{
-            font-size:0.8em;
-            cursor: pointer;
-        }
-        span.deleteAlarmBtn:hover {
-            color:black;
-        }
-        .noAlarm:hover{
-            cursor: default;
-            background-color: white;
-        }
-        #pictureView{
-            border-radius: 50%;
-            border: 1px solid gray;
-            margin: 0px 8px 0px 0px;
-            background-position: center;
-            background-size: cover;
-            background-repeat: no-repeat;
-        }
+
+
+
         .theme-black #wrapper:before, .theme-black #wrapper:after, .theme-black:before, .theme-black:after{
             background: #449cff00;
             display: none;
@@ -280,6 +255,7 @@
             justify-content: center;
             align-items: center;
         }
+
         .menuProfile{
             will-change: transform;
             min-width: 8rem;
@@ -291,23 +267,40 @@
         .user-name{color: #fff;}
 
         .profile-picture {
-            width: 100px; /* 이미지의 너비 설정 */
-            height: 100px; /* 이미지의 높이 설정 */
-            border-radius: 50%; /* 원 모양으로 이미지를 만듭니다 */
-            overflow: hidden; /* 이미지가 넘치는 부분을 숨깁니다 */
-            margin-right: 10px;
-        }
-        .profile-info {
-            display: flex;
-            align-items: center;
-        }
-        .greeting {
-            font-size: 10px;
+            text-align: center; /* 수평 가운데 정렬 */
+
         }
 
-        .profile-picture img {
-            width: 100%; /* 이미지를 부모 요소에 맞춰서 표시합니다 */
-            height: auto; /* 이미지의 높이를 자동으로 조절합니다 */
+        #pictureView{
+            margin: 20px 20px 20px 20px;
+            background-position: center;
+            background-size: cover;
+            background-repeat: no-repeat;
+            border-radius: 80%; /* 이미지를 동그라미 모양으로 만듭니다. */
+        }
+
+        .profile-info {
+            display: flex;
+            align-items: center; /* 수직 가운데 정렬 */
+            margin-top: 30px; /* 상단 여백 조정 */
+            flex-direction: column;
+            border-radius: 80%; /* 이미지를 동그라미 모양으로 만듭니다. */
+
+        }
+        #admin {
+            float:right;
+            font-size: 20px;
+            font-weight: bold;
+
+        }
+
+        #adminpage{
+            font-weight: bold;
+            font-size: 25px;
+            display: inline-block;
+            text-align: center;
+            margin-top: 10px;
+            border-radius: 80%;/* 이미지를 동그라미 모양으로 만듭니다. */
         }
 
     </style>
@@ -317,75 +310,80 @@
 <aside class="side-bar">
 
     <div class="side-text">
-    <h3>관리자 페이지</h3>
-    <h3>WorkConGW</h3>
+    <div id = "adminpage">관리자 페이지</div>
     </div>
         <br>
 
     <div class="profile-info">
-    <div class="profile-picture">
-        <img src="/resources/static/images/WorkCon2.jpg">
+        <div class="profile-picture">
+        <c:if test="${!empty loginUser.emp_Picture}" >
+            <div id="pictureView" style="background-image:url('${pageContext.request.contextPath }/pds/empPicture/${loginUser.emp_Picture}'); width: 100px; height: 100px;" ></div>
+        </c:if>
+
+        <c:if test="${empty loginUser.emp_Picture}" >
+            <img src="<%=request.getContextPath() %>/pds/user1.jpg" id="profileImage">
+        </c:if>
+            <div id = "admin">관리자:${loginUser.emp_Name}</div>
+        </div>
+
+
     </div>
 
-    <div class="greeting">
-    <h4>반갑습니다,</h4>
-        <h4>${loginUser.emp_Name}님</h4>
-    </div>
 
-    </div>
-
-
-
-   <br>
+    </br>
+    </br>
+    </br>
        <p><i class="fa-solid fa-bars"></i> 관리자 메뉴</p>
 
 
     <ul>
 
-        <a href="<%=request.getContextPath()%>/admin/main"><i class="fa-solid fa-cat"></i> 대시보드</a>
-
-
-        <li>
+        <a href="<%=request.getContextPath()%>/admin/main"><i class="fas fa-home"></i> 대시보드</a>
+        <a href="<%=request.getContextPath()%>/common/home"> <i class="fas fa-home"></i> 홈으로 가기</a>
+        <li>  
             <a href="#"><i class="fa-solid fa-user"></i> 조직 관리</a>
             <ul>
-                <li><a href="${root}/calendar/main">사원등록</a></li>
-                <li><a href="${root}/meetingroom/reserve">회의실관리</a></li>
+                <li><a href="<%=request.getContextPath()%>/admin/emp/empInsert">사원등록</a></li>
+                <li><a href="<%=request.getContextPath()%>/admin/emp/empList">사원목록</a></li>
             </ul>
         </li>
+
+
         <li>
-            <a href="#">메뉴바 설정</a>
+            <a href="#"><i class="fas fa-building"></i> 부서 관리</a>
             <ul>
-                <li>
-                    <a href="${root}/work/work">업무 할당</a>
-                </li>
+                <li><a href="<%=request.getContextPath()%>/admin/dept/deptInsert">부서등록</a></li>
+            </ul>
+        </li>
+
+
+
+        <li>
+            <a href="#"><i class="fa-solid fa-clock"></i> 업무시간 설정</a>
+            <ul>
+                <li><a href="<%=request.getContextPath()%>/admin/time">업무시간 설정</a></li>
             </ul>
         </li>
 
         <li>
-            <a href="#">업무시간 설정</a>
-            <ul>
-                <li><a href="${root}/employee/enroll">인사등록</a></li>
-                <li><a href="${root}/employee/list">인사목록</a></li>
-            </ul>
-        </li>
-
-        <li>
-            <a href="#">자원 관리</a>
+            <a href="#"><i class="fas fa-cogs"></i> 자원 관리</a>
             <ul>
                 <li><a href="<%=request.getContextPath()%>/admin/resource/loginlog">로그인 기록</a></li>
-
             </ul>
         </li>
-
 
     </ul>
 
 
+
+
 </aside>
+
 
 </body>
 </html>
 <script>
+
     $(document).ready(function() {
         summernote_start('.summernote', '<%= request.getContextPath() %>');
     });

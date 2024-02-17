@@ -244,7 +244,8 @@
 			</ul>
 			<div class="user-account">
 				<a href="javascript:void(0);" class="user-name" data-toggle="dropdown" aria-expanded="false">
-					<c:if test="${ loginUser.emp_Picture != null}">
+
+					<c:if test="${loginUser.emp_Picture != null}">
 						<div id="pictureView" style="background-image:url('${pageContext.request.contextPath }/pds/empPicture/${ loginUser.emp_Picture}'); width: 55px; height: 55px;" class="rounded-circle avatar" ></div>
 					</c:if>
 					<c:if test = "${loginUser.emp_Picture == null}">
@@ -255,11 +256,11 @@
 				<div class="dropdown" id="usernameBox">
 					<a href="javascript:void(0);" class="dropdown-toggle user-name" data-toggle="dropdown" style="font-family: InfinitySans-RegularA1"><strong>${loginUser.emp_Name }&nbsp;님</strong></a>
 					<ul class="dropdown-menu dropdown-menu-right account animated flipInY menuProfile" x-placement="bottom-end">
-						<li><a href=""><i class="icon-direction"></i>관리페이지</a></li>
+
+					<c:if test="${loginUser.auth_Id eq 's'}">
+						<li><a href="${pageContext.request.contextPath}/admin/main"><i class="icon-direction"></i>관리페이지</a></li>
+					</c:if>
 						<li><a href="${pageContext.request.contextPath }/common/mypage/modifyform"><i class="icon-user"></i>내정보</a></li>
-						<li></i>권한위임</a></li>
-						<li><a href=""><i class="icon-note"></i>결재할 문서</a></li>
-						<li><a href=""><i class="icon-calendar"></i>오늘의 일정</a></li>
 						<li class="divider"></li>
 						<li><a href="javascript:sessionStorage.clear();window.location.href='${pageContext.request.contextPath }/common/logout';"><i class="icon-power"></i>로그아웃</a></li>
 					</ul>

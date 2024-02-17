@@ -4,6 +4,7 @@
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 
+<script src="<%=request.getContextPath() %>/js/common.js"></script>
 <style>
 
   .pagination{
@@ -214,11 +215,10 @@
   </div>
 </section>
 <%-- 푸터 인클루드 --%>
-<%@ include file="../../include/footer.jsp"%>
 </body>
 
-
 <script>
+
   window.onload=function() {
     // 정렬 아이콘 삭제
     var thList = $('tr[role="row"] > th');

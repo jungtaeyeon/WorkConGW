@@ -17,6 +17,7 @@ dept_id
 ,dept_hp
 ,dept_leader_id
 ,dept_team_yn
+
 FROM
 DEPT
 WHERE   dept_team_yn = #{dept_Team_Yn}
@@ -37,5 +38,74 @@ AND     dept_st = 1
 ORDER BY dept_id
 </select>
 <!--         팀인경우  팀이 아닌경우 만약에 "Y"이면, 팀인경우 (팀인경우를 조회한다.)-->
+
+<select id = "checkName" parameterType="String" resultType="int">
+    SELECT COUNT(DEPT_NAME)
+    FROM DEPT
+    WHERE DEPT_NAME = #{dept_Name}
+</select>
+
+
+
+<insert id="insertDept" parameterType="DeptVO">
+    <selectKey resultType="String" keyProperty="dept_Id" order="BEFORE">
+        SELECT   'd' || LPAD(DEPT_ID_SEQ.NEXTVAL,3,0) FROM DUAL
+    </selectKey>
+        INSERT INTO DEPT
+        (DEPT_ID,
+         DEPT_NAME,
+         DEPT_CREATE_DT,
+         <if test = 'dept_Sup_Id != null and !"".equals(dept_Sup_Id)'>
+         DEPT_SUP_ID,
+         </if>
+         <if test = 'dept_Hp !=null and !"".equals(dept_Hp)'>
+         DEPT_HP,
+         </if>
+         <if test = 'dept_Leader_Id !=null and !"".equals(dept_Leader_Id)'>
+         DEPT_LEADER_ID,
+         </if>
+         <if test ='dept_Team_Yn != null and !"".equals(dept_Team_Yn)'>
+             dept_Team_YN
+         </if>
+        )
+        VALUES (
+        #{dept_Id}
+       ,#{dept_Name}
+       ,sysdate
+    <if test = 'dept_Sup_Id != null and !"".equals(dept_Sup_Id)'>
+        ,#{dept_Sup_Id}
+    </if>
+    <if test = 'dept_Hp !=null and !"".equals(dept_Hp)'>
+        ,#{dept_Hp}
+    </if>
+    <if test = 'dept_Leader_Id !=null and !"".equals(dept_Leader_Id)'>
+        ,#{dept_Leader_Id}
+    </if>
+    <if test ='dept_Team_Yn != null and !"".equals(dept_Team_Yn)'>
+        ,#{dept_Team_Yn}
+    </if>
+    )
+</insert>
+
+
+
+    <select id = "selectAllDeptName" resultType="DeptVO">
+        SELECT A.DEPT_ID,
+               A.DEPT_NAME,
+               A.DEPT_CREATE_DT,
+               A.DEPT_UPDATE_DT,
+               A.DEPT_ST,
+               NVL(A.DEPT_HP, '없음'),
+               NVL(A.DEPT_LEADER_ID, '없음'),
+               DECODE(A.DEPT_TEAM_YN, 1, '팀', '부서') ,
+               NVL(B.EMP_NAME, '없음')
+
+
+        FROM DEPT A, EMP B
+
+        WHERE A.DEPT_ST = 0 AND A.DEPT_LEADER_ID = B.EMP_ID(+)
+
+        ORDER BY DEPT_ID
+    </select>
 
 </mapper>

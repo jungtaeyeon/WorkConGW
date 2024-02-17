@@ -4,4 +4,43 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.mybatis.mapper.MeetRoomMapper">
 
+<select id ="getAllComplainList" parameterType="compainVO" resultType="compainVO">
+    SELECT D3.*
+
+    FROM (SELECT D2.*
+
+    FROM(
+    SELECT ROWNUM AS RNUM, D1.*
+
+    FROM(
+
+    SELECT A.COMPLAIN_ID,
+    A.COMPLAIN_TITLE,
+    A.COMPLAIN_CONTENT,
+    A.COMPLAIN_ST,
+    A.EMP_ID,
+    A.MEET_ROOM_ID,
+    A.COMPLAIN_CREATE_DATE,
+    B.EMP_NAME,
+    B.AUTH_NAME
+
+    FROM RESERVATION_COMPLAIN A,
+    (SELECT A.EMP_ID, A.EMP_NAME, B.AUTH_NAME
+
+    FROM EMP A , AUTH B
+
+    WHERE A.AUTH_ID = B.AUTH_ID) B
+    WHERE COMPLAIN_ST ='1'
+    AND A.EMP_ID = B.EMP_ID
+    ORDER BY COMPLAIN_CREATE_DATE DESC
+    ) D1
+
+    ) D2
+    WHERE RNUM <![CDATA[>=]]> #{firstIndex} )D3
+
+    WHERE rownum <![CDATA[<=]]> #{recordCountPerPage}
+
+</select>
+
+
 </mapper>

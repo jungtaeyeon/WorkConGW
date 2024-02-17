@@ -2,6 +2,7 @@
 
 import java.io.File;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 
 import com.WorkConGW.mail.MailUtils;
@@ -125,6 +126,10 @@ public class EmpService {
 		empDAO.updateEmpMyPage(empVO);
 	}
 
+    public void adminEmpUpdate(EmpVO empVO) throws  SQLException{
+        empDAO.adminEmpUpdate(empVO);
+    }
+
     @Transactional
     public void register(EmpVO empVO)
     {
@@ -192,4 +197,19 @@ public class EmpService {
     }
 
 
+
+     public List<EmpVO> selectEmpPagingList(EmpVO searchEmpVO) {
+
+        List<EmpVO> empVOList = new ArrayList<>();
+        empVOList = empDAO.selectEmpPagingList(searchEmpVO);
+        return empVOList;
+     }
+
+     public int selectEmpCount(EmpVO searchEmpVO) {
+         return empDAO.selectEmpCount(searchEmpVO);
+     }
+
+     public List<EmpVO> searchLoginUser(EmpVO empVO) {
+        return empDAO.searchLoginUser(empVO);
+     }
  }

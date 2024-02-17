@@ -11,11 +11,13 @@
 			,A.EMP_SUP_ID				
 			,A.EMP_NAME				
 			,A.EMP_PWD				
-			,A.EMP_REGNO
-			,NVL(A.EMP_HP,'없음') 				
+			,NVL(A.EMP_HP,'없음')
 			,A.EMP_SIGN				
 			,A.EMP_PICTURE			
 			,A.EMP_ST
+	     	,A.EMP_REGNO
+	     	,A.EMP_REGNO2
+	     	,A.EMP_SUP_ID
 			,A.EMP_HP
 			,A.EMP_EMAIL				
 			,A.EMP_ADD1	
@@ -23,13 +25,11 @@
 	     	,A.EMP_ZIPCODE
             ,A.ATTEND_ST_ID
 			,A.DEPT_ID								
-			,A.EMP_CREATE_DT			
+			,A.EMP_CREATE_DT
 			,A.EMP_UPDATE_DT
 			,NVL(A.EMP_EMAIL,'없음') 
 			,A.AUTH_ID
-			,A.TEAM_ID
 			,A.CODE_ID
-			,A.EMP_CODE_RESP_ID			
             ,B.ATTEND_ST_NAME
 						<!-- 출근상태(지각..etc) -->
             ,A.EMP_UPDATE_YN
@@ -38,12 +38,7 @@
 						<!-- 부서이름 -->
             ,D.CODE_NAME 
 						<!-- 코드 이름==부서이름-->
-            ,(
-                SELECT  F.DEPT_NAME
-                FROM    EMP E, DEPT F
-                WHERE   E.TEAM_ID = F.DEPT_ID
-                AND     E.EMP_ID = #{emp_Id}
-              ) AS TEAM_NAME
+
 							<!-- 부서이름출력 ((개인)팀id=부서(id)) 
 								AND 사원정보까지 같으면(empId)는 객체로 넘겨받아야함
 								부서와 팀 구분❌ -> DEPT_TEAM_YN : 부서 / 팀 구분 처리
@@ -89,6 +84,26 @@ UPDATE EMP SET EMP_PWD = #{emp_Pwd} where EMP_EMAIL = #{emp_Email} and EMP_ID = 
   WHERE EMP_ID = #{emp_Id}
 </update>
 
+<update id = "adminEmpUpdate" parameterType="EmpVO">
+	UPDATE EMP
+	SET EMP_HP = #{emp_Hp}
+	  ,EMP_EMAIL = #{emp_Email}
+	  ,EMP_PWD = #{emp_Pwd}
+	  ,EMP_NAME = #{emp_Name}
+	  ,EMP_REGNO = #{emp_Regno}
+	  ,EMP_REGNO2 = #{emp_Regno2}
+	  ,EMP_SUP_ID = #{emp_Sup_Id}
+	  ,EMP_ADD1 = #{emp_Add1}
+	  ,EMP_ADD2 = #{emp_Add2}
+	  ,EMP_ZIPCODE = #{emp_ZipCode}
+	  ,ATTEND_ST_ID = #{attend_St_Id}
+	  ,DEPT_ID = #{dept_Id}
+	  ,CODE_ID = #{code_Id}
+	  ,AUTH_ID = #{auth_Id}
+	  ,EMP_ST = #{emp_St}
+	WHERE EMP_ID = #{emp_Id}
+</update>
+
 <update id = "updateSign" parameterType="EmpVO">
 UPDATE EMP SET EMP_SIGN = #{emp_Sign} where EMP_ID = #{emp_Id}
 
@@ -106,10 +121,10 @@ UPDATE EMP SET EMP_SIGN = #{emp_Sign} where EMP_ID = #{emp_Id}
 
 <insert id = "register">
 INSERT INTO EMP 
-(EMP_ID, EMP_NAME, EMP_PWD, EMP_REGNO, EMP_REGNO2, EMP_HP,EMP_ST,EMP_ADD1, EMP_ADD2,EMP_ZIPCODE ,EMP_EMAIL, AUTH_ID, DEPT_ID, TEAM_ID, EMP_SUP_ID, ATTEND_ST_ID,CODE_ID, EMP_AUTHKEY)
+(EMP_ID, EMP_NAME, EMP_PWD, EMP_REGNO,EMP_CREATE_DT ,EMP_REGNO2, EMP_HP,EMP_ST,EMP_ADD1, EMP_ADD2,EMP_ZIPCODE ,EMP_EMAIL, AUTH_ID, DEPT_ID, EMP_SUP_ID, ATTEND_ST_ID,CODE_ID, EMP_AUTHKEY)
 VALUES
 (#{emp_Id}, #{emp_Name
-},#{emp_Pwd},#{emp_Regno},#{emp_Regno2},#{emp_Hp},#{emp_St},#{emp_Add1},#{emp_Add2},#{emp_ZipCode},#{emp_Email}, #{auth_Id},#{dept_Id}, #{team_Id}, #{emp_Sup_Id}, #{attend_St_Id}, #{code_Id}, #{emp_authkey})
+},#{emp_Pwd},#{emp_Regno},sysdate,#{emp_Regno2},#{emp_Hp},#{emp_St},#{emp_Add1},#{emp_Add2},#{emp_ZipCode},#{emp_Email}, #{auth_Id},#{dept_Id}, #{emp_Sup_Id}, #{attend_St_Id}, #{code_Id}, #{emp_authkey})
 </insert>
 
 
@@ -128,7 +143,6 @@ VALUES
 		,EMP.EMP_NAME
 		,EMP.EMP_PWD
 		,EMP.AUTH_ID
-		,EMP.EMP_CODE_RESP_ID
 		,EMP.EMP_REGNO
 		,NVL(EMP.EMP_HP,'없음') empHp
 		,EMP.EMP_SIGN
@@ -163,10 +177,122 @@ VALUES
 		<if test='dept_Id != null and !"".equals(dept_Id) '> <!-- dept_id가 null이 아니고 그 값이 빈 문자열이 아닐경우에 참-->
 			AND		dept_id = #{dept_Id}
 		</if>
-		<if test='team_Id != null and !"".equals(team_Id) '> <!-- dept_id가 null이 아니고 그 값이 빈 문자열이 아닐경우에 참-->
-			AND		team_id = #{team_Id}
+
+	</select>
+
+
+<select id = "selectEmpPagingList" resultType="EmpVO" parameterType="EmpVO">
+
+SELECT EMP_ID,
+       EMP_NAME,
+       EMP_HP,
+       DEPT_ID,
+       EMP_EMAIL,
+       D3.DEPT_NAME,
+       D3.CODE_NAME,
+       D3.AUTH_ID,
+       D3.AUTH_NAME,
+       D3.ATTEND_ST_NAME
+FROM(SELECT D2.*
+
+		FROM(SELECT ROWNUM as SEQ , D1.*
+
+			 FROM(SELECT
+					  ROW_NUMBER() OVER (ORDER BY A.EMP_ID),
+						A.EMP_ID,
+					  A.EMP_NAME,
+					  A.EMP_HP,
+					  A.EMP_EMAIL,
+					  A.DEPT_ID,
+					  C.CODE_NAME,
+					  B.DEPT_NAME,
+					  E.AUTH_ID,
+					  E.AUTH_NAME,
+					  G.ATTEND_ST_NAME
+
+				  FROM EMP A, DEPT B, CODE C, AUTH E, ATTEND_ST G
+
+				  WHERE A.DEPT_ID=B.DEPT_ID
+				    AND A.CODE_ID = C.CODE_ID
+				    AND A.AUTH_ID = E.AUTH_ID
+					AND A.ATTEND_ST_ID = G.ATTEND_ST_ID(+)
+				    AND A.EMP_ST IN (1,4)
+				  <include refid="search"/>
+				  ORDER BY A.EMP_ID DESC) D1
+			 )D2
+		WHERE <![CDATA[SEQ >= #{firstIndex}]]>
+		)D3
+	WHERE <![CDATA[ROWNUM <= #{recordCountPerPage}]]>
+	</select>
+
+	<select id = "searchLoginUser" parameterType="EmpVO"  resultType="EmpVO">
+		SELECT
+			A.EMP_ID,
+			A.EMP_NAME,
+			A.EMP_PICTURE,
+			A.EMP_ST,
+			A.EMP_HP,
+			B.AUTH_NAME,
+			C.DEPT_NAME,
+			D.CODE_NAME,
+			E.ATTEND_ST_NAME
+
+		FROM EMP A, AUTH B, DEPT  C, CODE D, ATTEND_ST E
+
+		WHERE A.AUTH_ID  = B.AUTH_ID(+) AND A.DEPT_ID = C.DEPT_ID AND A.CODE_ID = D.CODE_ID
+
+		  AND A.ATTEND_ST_ID = E.ATTEND_ST_ID(+)
+
+		<if test="emp_Name != null">
+			AND A.EMP_NAME LIKE '%' || #{emp_Name} || '%'
 		</if>
 	</select>
 
+	<select id = "selectEmpCount" parameterType="EmpVO" resultType="int">
+		SELECT COUNT(A.EMP_ID)
+		FROM EMP A
+		WHERE A.EMP_ST IN(1,4)
+	</select>
+
+
+	<sql id = "search">
+		<if test = "searchKeyword != null and searchKeyword != ''">
+			<choose>
+				<when test = 'searchCondition == "np"'>
+					AND (A.EMP_NAME LIKE '%' || #{searchKeyword} || '%' OR A.EMP_HP LIKE '%' || #{searchKeyword} || '%')
+				</when>
+				<when test = 'searchCondition == "n"'>
+					AND A.EMP_NAME LIKE '%' || #{searchKeyword} || '%'
+				</when>
+				<when test = 'searchCondition == "p"'>
+					AND A.EMP_HP LIKE '%' || #{searchKeyword} || '%'
+				</when>
+			</choose>
+		</if>
+
+		<if test = "search_code != null and search_code != ''">
+			<choose>
+				<when test = 'search_code == "c01"'>
+					AND A.CODE_ID = 'c01'
+				</when>
+
+				<when test = 'search_code =="c02"'>
+					AND A.CODE_ID = 'c02'
+				</when>
+
+				<when test = 'search_code == "c03"'>
+					AND A.CODE_ID = 'c03'
+				</when>
+
+				<when test = 'search_code =="c04"'>
+					AND A.CODE_ID = 'c04'
+				</when>
+
+				<when test = 'search_code =="c05"'>
+					AND A.CODE_ID = 'c05'
+				</when>
+			</choose>
+		</if>
+	</sql>
 
 </mapper>

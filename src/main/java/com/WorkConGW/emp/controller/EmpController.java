@@ -88,7 +88,7 @@ public class EmpController {
         rttr.addFlashAttribute("emp_Id", empVO.getEmp_Id());
 
         
-        return "redirect:/emp/registerAuth";
+        return "redirect:/admin/emp/empInsert";
     }
 
     @GetMapping("/registerEmail")
@@ -171,7 +171,7 @@ public class EmpController {
         model.addAttribute("emp_Email",emp_Email);
         model.addAttribute("emp_Id",emp_Id);
 
-        return "/common/registerAuth";
+        return "/admin/emp/list";
     }
 
 

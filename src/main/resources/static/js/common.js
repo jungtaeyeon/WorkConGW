@@ -595,3 +595,43 @@ function addChatHistory(senderId, content){
 	$('#room_'+senderId+' .chat-history ul').append(chat);
 	$('#room_'+senderId+" .chat-history").scrollTop($('#room_'+senderId+" .chat-history")[0].scrollHeight);
 }
+
+
+//summernote img upload
+function sendImg(file, el,uploadURL) {
+
+	var form_data = new FormData();
+	form_data.append("file", file);
+
+	$.ajax({
+		data: form_data,
+		type: "POST",
+		url: uploadURL,
+		contentType: false,
+		processData: false,
+		success: function(imgUrl) {
+			$(el).summernote('editor.insertImage', imgUrl);
+		}
+	});
+}
+
+//summernote img delete
+function deleteImg(src,deleteURL) {
+
+	var splitSrc= src.split("=");
+	var fileName = splitSrc[splitSrc.length-1];
+
+	//alert(fileName);
+	var fileData = {
+		fileName:fileName
+	}
+
+	$.ajax({
+		url:deleteURL,
+		data : JSON.stringify(fileData),
+		type:"post",
+		success:function(res){
+			console.log(res);
+		}
+	});
+}

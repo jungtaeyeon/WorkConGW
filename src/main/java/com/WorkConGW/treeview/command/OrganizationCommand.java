@@ -1,5 +1,6 @@
 package com.WorkConGW.treeview.command;
 
+import lombok.ToString;
 import org.apache.ibatis.type.Alias;
 
 import java.util.ArrayList;
@@ -9,6 +10,7 @@ import java.util.List;
  * 조직도를 그리기 위한 커맨드
  */
 
+@ToString
 @Alias("OrganizationCommand")
 public class OrganizationCommand {
     private String deptId;

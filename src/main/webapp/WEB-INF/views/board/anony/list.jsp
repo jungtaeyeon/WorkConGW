@@ -290,8 +290,8 @@ tbody{
 
 		let thisIndex = "${searchAnonyVO.pageIndex}"
 		$(".pagination li a").each(function(){
-			var idx = $(this).parent().index();
-			var thistitle = $(this).attr("title");
+			let idx = $(this).parent().index();
+			let thistitle = $(this).attr("title");
 			if(thistitle == thisIndex){
 				$(".pagination").find("li").eq(idx).addClass("active");
 			}

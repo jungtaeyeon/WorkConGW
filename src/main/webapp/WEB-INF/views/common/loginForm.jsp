@@ -319,7 +319,6 @@ body, input {
           <div class="content">
             <h3 style="color: #0f0f0f">그룹에 참여해보세요!</h3>
             <p>올인원 업무플랫폼 WorkConGW와 함께 새로운 회사 생활을 경험해 보세요.</p>
-            <a href="<%=request.getContextPath()%>/emp/registerView" class="btn login-btn transparent" id="signup-btn">회원가입</a>
           </div>
         </div>
       </div>

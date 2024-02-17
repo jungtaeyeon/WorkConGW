@@ -36,13 +36,7 @@ public class LoginInterceptor implements HandlerInterceptor {
         
         String teString = (String)session.getAttribute("myCurrentURL");
         logger.info("teString:" + teString);
-        
-        if(!("/common/loginForm".equals(currentURLStr.split("WorkConGW")[1]) || "/".equals(currentURLStr.split("WorkConGW")[1])
-        		|| "/common/home".equals(currentURLStr.split("WorkConGW")[1]))) {
-        	session.setAttribute("myCurrentURL", currentURLStr);
-        	session.setAttribute("myCurrentParameter", request.getParameter("docId"));
-        }
-        
+
         //session에 로그인 유저가 없을 시
         //로그인하지 않은 사용자일 경우 로그인 페이지로 이동
         if ( obj == null ){

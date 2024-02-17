@@ -30,9 +30,9 @@
                  left outer join attend_st c
                                  on c.attend_st_id=a.attend_st_id
            , code b
-        where b.code_group_id = 'O'
+        where b.code_group_id = 'G01'
           and a.code_id = b.code_id
-        order by b.code_id
+        order   by b.code_id desc
     </select>
 
 

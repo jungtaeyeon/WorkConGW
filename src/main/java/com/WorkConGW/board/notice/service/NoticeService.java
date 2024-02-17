@@ -34,18 +34,17 @@ public class NoticeService {
 //        logger.info(datMap.get("importantNoticeList").toString());
 //        return datMap;
 //	}
-    public Map<String, Object> getNoticeList(NoticeVO searchNoticeVO) throws SQLException {
-		Map<String, Object> datMap = new HashMap<>();
-		List<NoticeVO> noticeList =noticeDAO.selectNoticeList(searchNoticeVO);
-		/*  */
-		List<NoticeVO> importantNoticeList = noticeDAO.selectImportantNoticeList();
 
-		datMap.put("noticeList", noticeList);
-        logger.info(datMap.toString());
-		datMap.put("importantNoticeList", importantNoticeList);
-        logger.info(datMap.get("importantNoticeList").toString());
-        return datMap;
-	}
+    public Map<String,Object> getNoticeList(NoticeVO searchNoticeVO)
+    {
+        Map<String,Object> dataMap = new HashMap<>();
+        List<NoticeVO> noticeList = noticeDAO.selectNoticeList(searchNoticeVO);
+        List<NoticeVO> importantNoticeList = noticeDAO.selectImportantNoticeList();
+        dataMap.put("noticeList", noticeList);
+        dataMap.put("importantNoticeList",importantNoticeList);
+        logger.info(dataMap.toString());
+        return dataMap;
+    }
 
     public NoticeVO getNotice(NoticeVO noticeVO) {
         NoticeVO notice = noticeDAO.selectNoticeById(noticeVO);
@@ -67,12 +66,8 @@ public class NoticeService {
     // 글등록 폼에서 등록
     public void regist(NoticeVO notice) throws SQLException {
         logger.info("시퀀스로 id 채번 전 => " + String.valueOf(notice.getNotice_id()));
-        if("E".equals(notice.getNotice_important_yn())) {	// 긴급 공지이면
-            noticeDAO.deleteEmergency();
-            noticeDAO.insertNotice(notice);
 
-            return;
-        }
+        logger.info(notice.toString());
         noticeDAO.insertNotice(notice);
         logger.info("시퀀스로 id 채번 후 => " + String.valueOf(notice.getNotice_id()));
 

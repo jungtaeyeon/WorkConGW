@@ -1,7 +1,31 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
          pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@ page import ="com.WorkConGW.common.BSPageBar"%>
+<%@ page import="java.util.List" %>
+<%@ page import="java.util.Map" %>
 
+
+
+
+<body>
+<%
+    List<String> bList = (List)request.getAttribute("loginLogList");
+    int size = 0;
+    if(bList != null)
+    {
+        size = bList.size();
+
+    }
+
+    int numPerPage = 10;
+    int nowPage =  0;
+    if(request.getParameter("nowPage")!= null)
+    {
+        nowPage = Integer.parseInt(request.getParameter("nowPage"));
+    }
+
+%>
 
 <!-- 메인 content -->
 <section class="subPageContain" style="display: flex">
@@ -15,7 +39,6 @@
                 <div class="header">
                     <span style="color: #a9a9a9; font-family: S-CoreDream-4Regular">자원 관리</span><br>
                     <h3 style="display:inline-block; font-family: S-CoreDream-6Bold">사용자 로그인 기록</h3>
-                    <span style="font-size: 1.3em;color: rgb(0,0,0,0.5);font-weight: bold;margin-left: 15px; font-family: S-CoreDream-4Regular ">최근 3개월간 로그인 기록을 조회할 수 있습니다.</span>
                     <div class="row clearfix">
                         <div class="col-lg-12 col-md-12">
                             <div class="card" style="font-family: S-CoreDream-6Bold">
@@ -31,18 +54,55 @@
                                             </tr>
                                             </thead>
                                             <tbody>
-                                            <c:forEach items="${loginLogList}" var="log">
+<%
+    for(int i = nowPage*numPerPage; i <(nowPage*numPerPage)+numPerPage;i++)
+    {
+        if(size == i){
+            break;
+        }
 
-                                                <tr>
-                                                    <td>${log.split(',')[1] }</td>
-                                                    <td>${log.split(',')[2] }</td>
-                                                    <td>${log.split(',')[3] }</td>
-                                                    <td>${log.split(',')[4] }</td>
-                                                </tr>
-                                            </c:forEach>
+        String log = bList.get(i);
+%>
+                                            <tr>
+                                                <td><%= log.split(",")[1] %></td>
+                                                <td><%= log.split(",")[2] %></td>
+                                                <td><%= log.split(",")[3] %></td>
+                                                <%
+                                                    if (log.split(",")[4].equals("실패")) {
+                                                %>
+                                                <td><span class="badge badge-danger">실패</span></td>
+                                                <%
+                                                } else if (log.split(",")[4].equals("성공")) {
+                                                %>
+                                                <td><span class="badge badge-primary">성공</span></td>
+                                                <%
+                                                    }
+                                                %>
+                                            </tr>
+<%
+    }
+%>
+
+
+
                                             </tbody>
                                         </table>
+
+
+                                        <div>
+                                            <ul class="pagination">
+                                                <%
+                                                    String pagePath = "";
+                                                    BSPageBar bspb = new BSPageBar(numPerPage,  size, nowPage, pagePath);
+                                                    out.print(bspb.getPageBar());
+                                                %>
+                                            </ul>
+                                        </div>
+
+
                                     </div>
+
+
                                 </div>
                             </div>
                         </div>
@@ -53,17 +113,6 @@
     </div>
 </div>
 
-<form name="fileForm" action='<c:url value="/common/getFile"/>' method="post">
-    <input type="hidden" name="fileUploadPath" value="${fileName }">
-</form>
 </section>
 
-<script>
-    window.onload=function(){
-        $('.dataTables_length').append($('<a href="#" onclick="fileDownload();" style="font-size:1.2em;margin-left:15px;"><i class="fa fa-download" ></i> 로그인 기록 다운로드</a>'))
-    }
-
-    function fileDownload(){
-        $('form[name="fileForm"]').submit();
-    }
-</script>
+</body>

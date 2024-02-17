@@ -26,15 +26,14 @@ public class AdminInterceptor implements HandlerInterceptor {
     {
         HttpSession session = request.getSession();
         EmpVO empVO = (EmpVO)session.getAttribute("loginUser");
-
-        if(! "a04".equals(empVO.getAuth_Id()) && "a07".equals(empVO.getAuth_Id()))
+        logger.info("getAuth_Id : "+empVO.getAuth_Id());
+        logger.info("AdminInterceptor : 여기들어옴?");
+        if("u".equals(empVO.getAuth_Id()))
         {
-           // response.sendRedirect(request.getContextPath()+"/admin/access_denied");
+            response.sendRedirect(request.getContextPath()+"/admin/access_denied?msg=system");
             return false;
         }
-        
-        String url = request.getRequestURI().split("/")[3];
-        logger.info(url.toString());
+
 
         return true;
     }

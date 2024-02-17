@@ -6,12 +6,10 @@
   To change this template use File | Settings | File Templates.
 --%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<html>
-<head>
-    <title>Title</title>
-</head>
-<body>
-메일 인증 하세요
 
-</body>
-</html>
+<script>
+
+alert('메일 인증 하세요.')
+history.go(-1);
+
+</script>

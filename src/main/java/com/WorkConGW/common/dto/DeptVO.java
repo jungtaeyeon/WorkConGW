@@ -7,10 +7,12 @@ import org.apache.ibatis.type.Alias;
 
 @Alias("DeptVO")
 public class DeptVO extends BaseVO {
-        private String dept_Id;
+    private String dept_Id;
     private String dept_Sup_Id;
     private String dept_Name;
     private String dept_Create_Dt; // Date
+
+
     private String dept_Update_Dt; // Date
     private String dept_St;
     private String dept_Hp;
@@ -26,6 +28,31 @@ public class DeptVO extends BaseVO {
     private String emp_Id; // 특정 직원의 부서 및 담당부서 조회를 위해 추가
 
     private String flag; // deptService 이용 시 제어하기 위해 추가
+
+
+
+
+
+    public DeptVO(){}
+    public DeptVO(String dept_Id, String dept_Sup_Id, String dept_Name, String dept_Create_Dt, String dept_Update_Dt, String dept_St, String dept_Hp, String dept_Leader_Id, String dept_Team_Yn, String dept_Leader_Name, String dept_Sup_Name, String emp_Email, int dept_Emp_Count, String emp_Id, String flag) {
+        super();
+        this.dept_Id = dept_Id;
+        this.dept_Sup_Id = dept_Sup_Id;
+        this.dept_Name = dept_Name;
+        this.dept_Create_Dt = dept_Create_Dt;
+        this.dept_Update_Dt = dept_Update_Dt;
+        this.dept_St = dept_St;
+        this.dept_Hp = dept_Hp;
+        this.dept_Leader_Id = dept_Leader_Id;
+        this.dept_Team_Yn = dept_Team_Yn;
+        this.dept_Leader_Name = dept_Leader_Name;
+        this.dept_Sup_Name = dept_Sup_Name;
+        this.emp_Email = emp_Email;
+        this.dept_Emp_Count = dept_Emp_Count;
+        this.emp_Id = emp_Id;
+        this.flag = flag;
+    }
+
 
     public String getDept_Id() {
         return dept_Id;
