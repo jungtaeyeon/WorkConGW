@@ -33,6 +33,15 @@ public class AddBookDAO {
     return list;
   }
 
+  public List<AddBookVO> addBookStarred(Map<String, Object> pmap) {
+    logger.info("addBookStarred");
+    AddBookVO addBookVO = new AddBookVO();
+    logger.info(pmap.toString());
+    List<AddBookVO> list = sqlSessionTemplate.selectList("addBookStarred", pmap); 
+    logger.info(list.toString());
+    return list;
+  }
+
   public List<AddBookVO> addBookSearch(Map<String, Object> pmap) {
       logger.info("addBookSearch");
       AddBookVO addBookVO = new AddBookVO();
@@ -44,6 +53,13 @@ public class AddBookDAO {
     logger.info("addBookGroupSelect");
     AddBookVO addBookVO = new AddBookVO();
     List<AddBookVO> list = sqlSessionTemplate.selectList("addBookGroupSelect", pmap);
+    logger.info(list.toString());
+    return list;
+  }
+
+  public List<Map<String, Object>> addBookListUpdate(Map<String, Object> pmap) {
+    logger.info("addBookListUpdate");
+    List<Map<String, Object>> list = sqlSessionTemplate.selectList("addBookListUpdate", pmap);
     logger.info(list.toString());
     return list;
   }
@@ -62,4 +78,42 @@ public class AddBookDAO {
     return result;
   }
 
+  public int addBookUpdate(Map<String, Object> pmap) {
+    logger.info("addBookUpdate");
+    int result = 0;
+    result = sqlSessionTemplate.update("addBookUpdate", pmap);
+    return result;
+  }
+
+  public List<Map<String, Object>> addBookGroupDoubleCheck(Map<String, Object> pmap) {
+    logger.info("addBookGroupDoubleCheck");
+    List<Map<String, Object>> list = null;
+    list = sqlSessionTemplate.selectList("addBookGroupDoubleCheck", pmap);
+    logger.info(list.toString());
+    return list;
+  }
+
+  public int addBookStarredUpdate(Map<String, Object> pmap) {
+    logger.info("addBookStarredUpdate");
+    int result = 0;
+    result = sqlSessionTemplate.update("addBookStarredUpdate", pmap);
+    logger.info(Integer.toString(result));
+    return result;
+  }
+
+  public int addBookStarredInsert(Map<String, Object> pmap) {
+    logger.info("addBookStarredInsert");
+    int result = 0;
+    result = sqlSessionTemplate.update("addBookStarredInsert", pmap);
+    logger.info(Integer.toString(result));
+    return result;
+  }
+
+  public int addBookStarredDelete(Map<String, Object> pmap) {
+    logger.info("addBookStarredDelete");
+    int result = 0;
+    result = sqlSessionTemplate.update("addBookStarredDelete", pmap);
+    logger.info(Integer.toString(result));
+    return result;
+  }
 }

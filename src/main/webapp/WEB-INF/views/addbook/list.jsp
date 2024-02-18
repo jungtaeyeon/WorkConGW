@@ -130,7 +130,7 @@ java.util.ArrayList, com.WorkConGW.addbook.dto.AddBookVO" %>
                 <th>부서</th>
                 <th>전화번호</th>
                 <th>이메일</th>
-                <th>태그</th>
+                <th>그룹</th>
               </tr>
             </thead>
 
@@ -139,7 +139,9 @@ java.util.ArrayList, com.WorkConGW.addbook.dto.AddBookVO" %>
               <tr>
                 <th class="tableCheckBox"><input type="checkbox" /></th>
                 <td>
-                  ${addBook.manage_display_name}<i class="starred fa-solid fa-star"></i>
+                  ${addBook.manage_display_name}
+                  <i class="starred fa-star <c:choose><c:when test='${addBook.manage_starred eq 1}'> fa-solid</c:when><c:otherwise> fa-regular</c:otherwise></c:choose>"></i>
+                  <input type="hidden" name="manage_id" class="manage_id" value="${addBook.manage_id}"/>
                 </td>
                 <td class="listModalBtn" data-toggle="modal" data-target="#staticBackdrop${status.index}">
                   ${addBook.manage_company_name}
@@ -176,12 +178,12 @@ java.util.ArrayList, com.WorkConGW.addbook.dto.AddBookVO" %>
                       <p>부서 : ${addBook.manage_dept_name}</p>
                       <p>전화번호 : ${addBook.manage_hp}</p>
                       <p>이메일 : ${addBook.manage_email}</p>
-                      <p>그룹 : ${addBook.add_book_title}</p>
+                      <c:if test="${addBook.add_book_title ne ' '}">  <p>그룹 : <span class="groupTag">${addBook.add_book_title}</span></p></c:if>
                       <p>메모 : ${addBook.manage_remark}</p>
                     </div>
                     <div class="modal-footer">
                       <button type="button" class="btn btn-secondary" data-dismiss="modal">닫기</button>
-                      <a href="addBookListUpdate?manage_id=${addBook.manage_id}" class="btn btn-primary">수정</a>
+                      <a href="addBookListUpdate?manage_id=${addBook.manage_id}&add_book_id=${addBook.add_book_id}" class="btn btn-primary">수정</a>
                     </div>
                   </div>
                 </div>
@@ -194,3 +196,37 @@ java.util.ArrayList, com.WorkConGW.addbook.dto.AddBookVO" %>
       <!-- 푸터 인클루드 -->
       <%@ include file="../include/footer.jsp"%>
     </body>
+
+    <script>
+      $(".starred").click(function(){
+        $(this).toggleClass("fa-regular");
+        $(this).toggleClass("fa-solid");
+        let manageId = $(this).closest('td').find('.manage_id').val();
+        let starred = $(this).hasClass("fa-solid");
+        let starredNum;
+        if(starred == true){
+          starredNum = 1;
+        }else{
+          starredNum = 0;
+        }
+        $.ajax({
+          type : 'get',              
+          url : '/WorkConGW/addBook/addBookStarredUpdate',  
+          data : {
+            manage_starred : starredNum,
+            manage_id : manageId
+          },
+          success : function(result) {
+            if(starredNum == 1){
+              alert("중요주소록에 등록되었습니다.");
+            }else{
+              alert("중요주소록에 삭제되었습니다.");
+            }         
+            
+          },    
+          error : function(request, status, error) {        
+            console.log(error)    
+          }
+        })
+      })
+    </script>

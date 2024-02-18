@@ -29,4 +29,55 @@ public class RestAddBookController {
     @Autowired
     private AddBookService addBookService;
 
+    @GetMapping("addBookGroupSelect")
+    public List<AddBookVO> addBookGroupSelect(@RequestParam Map<String, Object> pmap ,HttpSession session){
+        logger.info("addBookGroupSelect");
+        EmpVO empVO = (EmpVO) session.getAttribute("loginUser");
+        String empId = null;
+        if(empVO != null) {
+            empId = empVO.getEmp_Id();
+        }
+        pmap.put("empId", empId);
+        logger.info(pmap.toString());
+        List<AddBookVO> addBookGroupList = null;
+        addBookGroupList = addBookService.addBookGroupSelect(pmap);
+        
+        return addBookGroupList;
+    }
+
+    @GetMapping("addBookGroupDoubleCheck")
+    public String addBookGroupDoubleCheck(@RequestParam Map<String, Object> pmap, HttpSession session) {
+        logger.info("addBookGroupDoubleCheck");
+        EmpVO empVO = (EmpVO) session.getAttribute("loginUser");
+        String empId = null;
+        if(empVO != null) {
+            empId = empVO.getEmp_Id();
+        }
+        pmap.put("empId", empId);
+        logger.info(pmap.toString());
+        String countVal = null;
+        List<Map<String, Object>> result = addBookService.addBookGroupDoubleCheck(pmap);
+        for (Map<String, Object> map : result) {
+            Object countValue = map.get("COUNT");
+            countVal = countValue.toString();
+        }
+        logger.info(countVal);
+        return countVal;
+    }
+
+    @GetMapping("addBookStarredUpdate")
+    public int addBookStarredUpdate(@RequestParam Map<String, Object> pmap, HttpSession session) {
+        logger.info("addBookStarredUpdate");
+        EmpVO empVO = (EmpVO) session.getAttribute("loginUser");
+        String empId = null;
+        if(empVO != null) {
+            empId = empVO.getEmp_Id();
+        }
+        pmap.put("empId", empId);
+        logger.info(pmap.toString());
+        int result = addBookService.addBookStarredUpdate(pmap);
+        return result;
+    }
+
+    
 }

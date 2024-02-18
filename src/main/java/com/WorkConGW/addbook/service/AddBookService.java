@@ -26,6 +26,13 @@ public class AddBookService {
     return list;
   }
 
+  public List<AddBookVO> addBookStarred(Map<String, Object> pmap) {
+    logger.info("addBookList");
+    List<AddBookVO> list = new ArrayList<>();
+    list = AddBookDAO.addBookStarred(pmap);
+    return list;
+  }
+
   public List<AddBookVO> addBookSearch(Map<String, Object> pmap) {
     logger.info("addBookSearch");
     List<AddBookVO> list = new ArrayList<>();
@@ -49,10 +56,49 @@ public class AddBookService {
     return result;
   }
 
+  public List<Map<String, Object>> addBookListUpdate(Map<String, Object> pmap) {
+    logger.info("addBookListUpdate");
+    logger.info(pmap.toString());
+    List<Map<String, Object>> list = AddBookDAO.addBookListUpdate(pmap);
+    return list;
+  }
+
   public List<AddBookVO> addBookGroupSelect(Map<String, Object> pmap) {
     logger.info("addBookGroupSelect");
     List<AddBookVO> list = new ArrayList<>();
     list = AddBookDAO.addBookGroupSelect(pmap);
     return list;
+  }
+
+  public int addBookUpdate(Map<String, Object> pmap) {
+    logger.info("addBookUpdate");
+    int result = 0;
+    logger.info(pmap.toString());
+    result = AddBookDAO.addBookUpdate(pmap);
+    return result;
+  }
+
+  public List<Map<String, Object>> addBookGroupDoubleCheck(Map<String, Object> pmap) {
+    logger.info("addBookGroupDoubleCheck");
+    logger.info(pmap.toString());
+    List<Map<String, Object>> result = AddBookDAO.addBookGroupDoubleCheck(pmap);
+    return result;
+  }
+
+  public int addBookStarredUpdate(Map<String, Object> pmap) {
+    logger.info("addBookStarredUpdate");
+    int result = 0;
+    logger.info(pmap.toString());
+    Object manage_starredObj = pmap.get("manage_starred");
+    String manage_starred = manage_starredObj.toString();
+    logger.info(manage_starred);
+    
+    if("1".equals(manage_starred)){
+      AddBookDAO.addBookStarredInsert(pmap);
+    }else{
+      AddBookDAO.addBookStarredDelete(pmap);
+    }
+    result = AddBookDAO.addBookStarredUpdate(pmap);
+    return result;
   }
 }

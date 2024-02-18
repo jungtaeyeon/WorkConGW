@@ -42,6 +42,35 @@
                 ORDER BY 
                         manage_id ASC
         </select>
+
+        <select id="addBookStarred" resultType="AddBookVO" parameterType="map">
+                SELECT 
+                        manage_id, 
+                        manage_display_name, 
+                        manage_hp, 
+                        manage_email, 
+                        NVL(a.manage_remark, ' ') AS manage_remark, 
+                        manage_company_name,
+                        manage_official_name, 
+                        manage_dept_name, 
+                        manage_starred,
+                        NVL(b.add_book_id, '0') AS add_book_id, 
+                        NVL(b.add_book_title, ' ') AS add_book_title, 
+                        NVL(b.share_add_book_yn, '0') AS share_add_book_yn, 
+                        a.emp_id AS emp_id
+                FROM 
+                        add_book_manage a
+                LEFT OUTER JOIN 
+                        add_book  b
+                ON 
+                        a.emp_id = b.emp_id
+                        and a.add_book_id = b.add_book_id
+                WHERE 
+                        a.emp_id = #{empId}
+                        AND manage_starred = '1'
+                ORDER BY 
+                        manage_id ASC
+        </select>
         <!-- 주소록 그룹 셀렉(주소록 생성시 필요) -->
         <select id="addBookGroupSelect" resultType="AddBookVO" parameterType="map">
                 SELECT 
@@ -110,11 +139,50 @@
         </insert>
 
         <!-- 주소록 수정 -->
-        
+        <select id="addBookListUpdate" resultType="map" parameterType="map">
+                SELECT 
+                        manage_id, 
+                        manage_display_name, 
+                        manage_hp, 
+                        manage_email, 
+                        NVL(a.manage_remark, ' ') AS manage_remark, 
+                        manage_company_name,
+                        manage_official_name, 
+                        manage_dept_name, 
+                        manage_starred,
+                        NVL(b.add_book_id, '0') AS add_book_id, 
+                        NVL(b.add_book_title, ' ') AS add_book_title, 
+                        NVL(b.share_add_book_yn, '0') AS share_add_book_yn, 
+                        a.emp_id AS emp_id
+                FROM 
+                        add_book_manage a
+                LEFT OUTER JOIN 
+                        add_book  b
+                ON 
+                        a.emp_id = b.emp_id
+                        and a.add_book_id = b.add_book_id
+                WHERE 
+                        a.emp_id = #{empId}
+                        AND a.manage_id = #{manage_id}
+                ORDER BY 
+                        manage_id ASC
+        </select>
+        <update id="addBookUpdate" parameterType="map">
+                UPDATE add_book_manage
+                SET 
+                        manage_display_name = #{manage_display_name},
+                        manage_hp = #{manage_hp},
+                        manage_email = #{manage_email},
+                        manage_remark = #{manage_remark},
+                        manage_company_name = #{manage_company_name},
+                        manage_official_name = #{manage_official_name},
+                        manage_dept_name = #{manage_dept_name},
+                        add_book_id = #{add_book_id}
+                WHERE emp_id = #{empId}
+                and manage_id = #{manage_id}
+        </update>
         <!-- 주소록 삭제 -->
 
-
-        <!-- 주소록 그룹별 셀렉(개인/공유 공용) -->
 
         <!-- 주소록 그룹 추가(개인) -->
         <insert id="addBookGroupInsert" parameterType="java.util.Map">
@@ -125,4 +193,29 @@
         <!-- 주소록 그룹 삭제(개인/공유 공용) -->
 
         <!-- 주소록 그룹 수정(개인/공유 공용) -->
+
+        <select id="addBookGroupDoubleCheck" resultType="map" parameterType="map">
+                SELECT COUNT(*) AS count
+                FROM add_book
+                WHERE add_book_title = #{add_book_title}  
+        </select>
+
+        <update id="addBookStarredUpdate" parameterType="map">
+                UPDATE add_book_manage
+                SET 
+                        manage_starred = #{manage_starred}
+                WHERE emp_id = #{empId}
+                and manage_id = #{manage_id}
+        </update>
+
+        <insert id="addBookStarredInsert" parameterType="java.util.Map">
+                INSERT INTO add_book_favorites(manage_id,emp_id)
+                VALUES(#{manage_id}, #{empId})
+        </insert>
+
+        <delete id="addBookStarredDelete" parameterType="map">
+                DELETE FROM add_book_favorites
+                WHERE manage_id = #{manage_id}
+        </delete>
+        
 </mapper>

@@ -65,27 +65,29 @@ public class AddBookController extends BaseController{
     }
 
     @GetMapping("addBookStarred")
-    public String addBookStarred()
+    public String addBookStarred(Model model, HttpSession session, @RequestParam Map<String,Object> pmap)
     {
         logger.info("addBookStarred");
-        String url = "addbook/starredList";
-        return url;
-    }
-    
-    @GetMapping("addBookInsertPage")
-    public String addBookInsertPage(Model model, @RequestParam Map<String,Object> pmap, HttpSession session){
-        logger.info("addBookInsertPage");
         EmpVO empVO = (EmpVO) session.getAttribute("loginUser");
         String empId = null;
         if(empVO != null) {
             empId = empVO.getEmp_Id();
         }
         pmap.put("empId", empId);
-        logger.info(pmap.toString());
+        List<AddBookVO> abList = null;
         List<AddBookVO> addBookGroupList = null;
+        logger.info(pmap.toString());
+        abList = addBookService.addBookStarred(pmap);
         addBookGroupList = addBookService.addBookGroupSelect(pmap);
-        logger.info(addBookGroupList.toString());
+        String url = "addbook/list";
+        model.addAttribute("abList", abList);
         model.addAttribute("addBookGroupList", addBookGroupList);
+        return url;
+    }
+    
+    @GetMapping("addBookInsertPage")
+    public String addBookInsertPage(){
+        logger.info("addBookInsertPage");
         String url = "addbook/insert";
         return url;
     }
@@ -153,12 +155,34 @@ public class AddBookController extends BaseController{
     }
 
     @GetMapping("addBookListUpdate")
-    public String addBookListUpdate(@RequestParam Map<String, Object> pmap, HttpSession session) {
+    public String addBookListUpdate(Model model, @RequestParam Map<String, Object> pmap, HttpSession session) {
         logger.info("addBookListUpdate");
+        EmpVO empVO = (EmpVO) session.getAttribute("loginUser");
+        String empId = null;
+        if(empVO != null) {
+            empId = empVO.getEmp_Id();
+        }
+        pmap.put("empId", empId);
+        logger.info(pmap.toString());
+        List<Map<String, Object>> addBookListUpdate = addBookService.addBookListUpdate(pmap);
+        model.addAttribute("addBookListUpdate", addBookListUpdate);
+        String url = "addbook/insert";
+        return url;
+    }
+
+    @GetMapping("addBookUpdate")
+    public String addBookUpdate(@RequestParam Map<String, Object> pmap, HttpSession session) {
+        logger.info("addBookUpdate");
+        EmpVO empVO = (EmpVO) session.getAttribute("loginUser");
+        String empId = null;
+        if(empVO != null) {
+            empId = empVO.getEmp_Id();
+        }
+        pmap.put("empId", empId);
         int result = 0;
         String path = "";
         logger.info(pmap.toString());
-        //result = addBookService.addBookInsert(pmap);
+        result = addBookService.addBookUpdate(pmap);
         if (result == 1) {// 입력이 성공했을때
             path = "redirect:/addBook/addBookList";
         } else {// 입력이 실패 했을때
@@ -166,5 +190,7 @@ public class AddBookController extends BaseController{
         }
         return path;
     }
+
+    
 }
 

@@ -58,10 +58,59 @@
     align-items: center;
   }
   .modalBtn{cursor: pointer; color:#000 !important;}
+  .addBookGroupInput{
+    display: flex;
+    align-items: center;
+  }
+  .addBookGroupInput p{
+    margin-bottom: 0;
+    margin-right: 5%;
+  }
+  .addBookGroupInput input{width: auto;}
   </style>
   <script>
+    $('input[type="text"]').keydown(function() {
+      if (event.keyCode === 13) {
+        event.preventDefault();
+      };
+    });
     const addBookGroupInsert = () => {
-      document.querySelector("#addBookGroupInsert").submit();
+      addBookGroupDoubleCheck(1);
+    }
+    const addBookGroupDoubleCheck = (num) =>{
+      let add_book_title = $("input[name='add_book_title']").val();
+      let DoubleCheck = $("input[name='DoubleCheck']").val();
+      if(add_book_title == ''){
+        alert("그룹명을 적어주세요.");
+      }else{
+        $.ajax({
+          type : 'get',              
+          url : '/WorkConGW/addBook/addBookGroupDoubleCheck',  
+          data : {
+            add_book_title : add_book_title
+          },
+          success : function(result) {         
+            console.log("result :" +result)
+            console.log("num :" +num)
+            console.log("DoubleCheck :" +DoubleCheck)
+            if(result == 0 && num == 0){
+              alert("생성가능한 그룹명입니다.");
+              $("input[name='DoubleCheck']").val(1);
+            }else if(result == 1 && num == 0){
+              alert("중복된 그룹명입니다.");
+              $("input[name='DoubleCheck']").val(0);
+            }else if(result == 1 && DoubleCheck == 1 && num == 1){
+              alert("중복확인을 해주세요.");
+            }else if(result == 0 && DoubleCheck == 1 && num == 1){
+              alert("추가되었습니다.");
+              document.querySelector("#addBookGroupInsert").submit();
+            }
+          },    
+          error : function(request, status, error) {        
+            console.log(error)    
+          }
+        })
+      }
     }
   </script>
   <div id="left-sidebar" class="sidebar">
@@ -129,7 +178,12 @@
       </div>
       <div class="modal-body">
         <form id="addBookGroupInsert" action="addBookGroupInsert" method="get">
-          <p style="font-size: 18px;">그룹명<input type="text" name="add_book_title" class="form-control"></p>
+          <div class="addBookGroupInput">
+            <p style="font-size: 18px;">그룹명</p>
+            <input type="hidden" name="DoubleCheck" value="0">
+            <input type="text" name="add_book_title" class="form-control">
+            <button type="button" class="btn btn-primary" onclick="addBookGroupDoubleCheck(0)">중복확인</button>
+          </div>
         </form>
       </div>
       <div class="modal-footer">
