@@ -91,6 +91,31 @@ public class EmpController {
         return "redirect:/admin/emp/empInsert";
     }
 
+    @PostMapping("/findPw")
+    public String findPw(EmpVO empVO, Model model) throws Exception
+    {
+        logger.info("findPw : "+empVO.toString());
+
+        logger.info("findPw");
+        if(empService.findPwCheck(empVO) == 0) // 0이라는 것은 결과가 틀렸다는 것.
+        {
+         logger.info("empService.findPwCheck if문에 진입함");
+         model.addAttribute("msg", "아이디와 비밀번호를 확인해주세요");
+         return "/common/loginForm";
+        }else{
+            empService.findPw(empVO.getEmp_Email(),empVO.getEmp_Id());
+            model.addAttribute("empVO", empVO);
+            return "/common/findPw"; // 임시비멀번호 뿌리는 창
+        }
+
+    }
+
+    @GetMapping("/findPwView")
+    public String findPwView()
+    {
+        return "/common/findPwView";
+    }
+
     @GetMapping("/registerEmail")
     public String emailConfirm(String emp_Email,String authKey, Model model) throws  Exception{
         logger.info("emp_Email :" + emp_Email);

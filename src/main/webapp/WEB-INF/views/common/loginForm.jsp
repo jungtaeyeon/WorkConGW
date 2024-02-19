@@ -1,4 +1,8 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%> 
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+         pageEncoding="UTF-8"%>
+<%@ page trimDirectiveWhitespaces="true" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 
 
 <!DOCTYPE html>
@@ -305,7 +309,8 @@ body, input {
               </div>
               <div class="find-idpwd">
                 <button type="button" class="btn btn-sm" data-bs-toggle="modal" data-bs-target="#modalFindId">아이디 찾기</button> |
-                <button type="button" class="btn btn-sm" data-bs-toggle="modal" data-bs-target="#modalFindPwd">비밀번호 찾기</button>
+                <button type="button" class="btn btn-sm" onclick="OpenWindow('<%=request.getContextPath()%>/emp/findPwView', 'WorkConGW', 700,700)">비밀번호 찾기</button>
+
               </div>
             </div>
             <input type="submit" value="로그인" class="login-btn solid" />
@@ -358,38 +363,82 @@ body, input {
     </div>
 
     <!-- 비밀번호 찾기(변경) 모달-->
-    <div class="modal fade" tabindex="-1" role="dialog" id="modalFindPwd">
-      <div class="modal-dialog modal-dialog-centered" role="document">
-        <div class="modal-content rounded-4 shadow">
-          <div class="modal-header p-5 pb-4 border-bottom-0">
-            <!-- <h1 class="modal-title fs-5" >Modal title</h1> -->
-            <h1 class="fw-bold mb-0 fs-2">비밀번호 찾기</h1>
-            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-          </div>
+<%--    <div class="modal fade" tabindex="-1" role="dialog" id="modalFindPwd">--%>
+<%--      <div class="modal-dialog modal-dialog-centered" role="document">--%>
+<%--        <div class="modal-content rounded-4 shadow">--%>
+<%--          <div class="modal-header p-5 pb-4 border-bottom-0">--%>
+<%--            <!-- <h1 class="modal-title fs-5" >Modal title</h1> -->--%>
+<%--            <h1 class="fw-bold mb-0 fs-2">비밀번호 찾기</h1>--%>
+<%--            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>--%>
+<%--          </div>--%>
 
-          <div class="modal-body p-5 pt-0">
-            <form>
-              <div class="form-floating mb-3">
-                <input type="text" class="form-control rounded-4" id="findPwdId" placeholder="아이디"/>
-                <label for="findPwdName">아이디</label>
-              </div>
-              <div class="form-floating mb-3">
-                <input type="text" class="form-control rounded-4" id="findPwdName" placeholder="성명"/>
-                <label for="findPwdName">성명</label>
-              </div>
-              <div class="form-floating mb-3">
-                <input type="email" class="form-control rounded-4" id="findPwdEmail" placeholder="회원가입시 입력한 이메일"/>
-                <label for="findPwdEmail">이메일주소</label>
-                <p style="margin-left: 5px">
-                  <small class="text-muted me-1"> * 회원가입시 입력한 이메일주소</small>
-                </p>
-              </div>
-              <button class="w-100 mb-2 btn btn-lg rounded-4 btn-secondary" type="button" onclick="tempPwd();">임시 비밀번호 발급</button>
-            </form>
-          </div>
+<%--            <form id = "find" action="<%=request.getContextPath()%>/emp/findPw" method="post">--%>
+<%--              <div class="form-floating mb-3">--%>
+<%--                <input type="text" class="form-control rounded-4"  name = "emp_Id" placeholder="아이디"/>--%>
+<%--                <label for="emp_Id">아이디</label>--%>
+<%--              </div>--%>
+<%--              <div class="form-floating mb-3">--%>
+<%--                <input type="text" class="form-control rounded-4" id="emp_Name" name = "emp_Name" placeholder="성명"/>--%>
+<%--                <label for="emp_Name">성명</label>--%>
+<%--              </div>--%>
+<%--              <div class="form-floating mb-3">--%>
+<%--                <input type="email" class="form-control rounded-4" id="emp_Email" name = "emp_Email"placeholder="회원가입시 입력한 이메일"/>--%>
+<%--                <label for="emp_Email">이메일주소</label>--%>
+<%--                <p style="margin-left: 5px">--%>
+<%--                  <small class="text-muted me-1"> * 회원가입시 입력한 이메일주소</small>--%>
+<%--                </p>--%>
+<%--              </div>--%>
+<%--              <button class="w-100 mb-2 btn btn-lg rounded-4 btn-secondary" type="button" onclick="tempPwd();">임시 비밀번호 발급</button>--%>
+<%--            </form>--%>
         </div>
       </div>
     </div>
 
 </body>
 </html>
+
+
+<script>
+
+
+  function list_go()
+  {
+    location.href = "<%=request.getContextPath()%>/admin/emp/empList"
+  }
+
+
+  function OpenWindow(UrlStr, WinTitle, WinWidth, WinHeight){
+    winleft = (screen.width - WinWidth) / 2;
+    wintop = (screen.height - WinHeight) / 2;
+    var winX      = window.screenX || window.screenLeft || 0;// 현재창의 x좌표
+    var winY      = window.screenY || window.screenTop || 0; // 현재창의 y좌표
+
+    winleft = winX + winleft;
+    wintop = winY + wintop;
+
+    var win = window.open(UrlStr, WinTitle, "scrollbars=yes,width="+ WinWidth +", "
+            +"height="+WinHeight + ", top=" + wintop +", left="
+            + winleft +", resizable=yes, status=yes");
+    win.focus();
+  }
+
+  function tempPwd()
+  {
+   let total = $("#find").serialize();
+   console.log('total : '+total)
+
+    $.ajax({
+      url: "<%=request.getContextPath()%>/emp/findPw",
+      type: "POST",
+      data: total,
+      success:function (data)
+      {
+        alert('전송에 성공했습니다.')
+      },
+      error:function(){
+        alert('에러가 발생했습니다.')
+      }
+    })
+
+  }
+</script>

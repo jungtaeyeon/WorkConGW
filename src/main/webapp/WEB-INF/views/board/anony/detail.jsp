@@ -88,7 +88,7 @@ th{
 										style="margin-right: 22px; font-family: S-CoreDream-4Regular" >
 									<i class="icon-close"></i> <span>목록</span>
 								</button>
-								<c:if test="${loginUser.auth_Id == 'a06' }">
+								<c:if test="${loginUser.auth_Id == 's' }">
 									<button class="btn btn-danger float-right m-r-5"
 											data-type="confirm" onclick="remove_go();">
 										<i class="fa fa-trash-o"></i> <span>삭제</span>
@@ -184,7 +184,7 @@ th{
 	                                               	<small class="float-right"><i class="fa fa-clock-o"></i>
 	                                                </small>
 	                                                </span>
-																	<c:if test="${loginUser.auth_Id == 'a06' }">
+																	<c:if test="${loginUser.auth_Id == 's' }">
 																		<div class="float-right">
 																			<a href="javascript:void(0);" style="margin-left:10px;" onclick="removeReply(${anonyReply.reply_Id});"><i class="fa fa-trash-o"></i> 삭제</a>
 																		</div>

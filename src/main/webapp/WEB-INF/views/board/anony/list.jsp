@@ -62,7 +62,7 @@ tbody{
 <%@ include file="/WEB-INF/views/include/header.jsp"%>
 <section class="subPageContain">
 	<!-- 사이드바 -->
-	<%@ include file="../sideBar.jsp"%>
+	<%@ include file="../boardSidebar.jsp"%>
 	<!--컨텐츠 영역-->
 	<div class="contentConteiner">
 		<div class="container-fluid">

@@ -158,10 +158,8 @@
 		</div>
 
 		<form name="anonyRegistForm" method="post">
-			<input type="hidden" name="anonyBoardTitle">
-			<input type="hidden" name="anonyBoardContent">
-			<input type="hidden" name="anonyBoardUpdaterId" value="${loginUser.emp_Id }">
-			<input type="hidden" name="empWriterId" value="${loginUser.emp_Id }">
+			<input type="hidden" name="anony_Board_Title">
+			<input type="hidden" name="anony_Board_Content">
 		</form>
 
 		<script>
@@ -215,10 +213,10 @@
 				else if(boardCategory=='anony'){
 					form = document.anonyRegistForm;
 					var boardTitle = $('input#boardTitle').val();
-					$('input[name="anonyBoardTitle"]').val(boardTitle);
+					$('input[name="anony_Board_Title"]').val(boardTitle);
 
 					var boardContent = $('div.note-editable').html();
-					$('input[name="anonyBoardContent"]').val(boardContent);
+					$('input[name="anony_Board_Content"]').val(boardContent);
 
 					form.action = "<c:url value='/board/anony/regist'/>";
 				}

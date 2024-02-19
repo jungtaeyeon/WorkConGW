@@ -117,7 +117,7 @@
                       <fmt:parseNumber value="${(today.time) - (notice.notice_create_dt.time) }" integerOnly="true" var="defferTime"/>
                       <tr class="xl-pink" onclick="window.location.href='<%=request.getContextPath()%>/board/notice/detail?notice_id=${notice.notice_id}';" >
                         <td id="notice_id" >${notice.notice_id }</td>
-                        <c:if test="${notice.notice_important_yn eq 'Y'}">
+                        <c:if test="${notice.notice_important_st eq 'Y'}">
                           <td id="noticeImportantYN"><span class="badge badge-danger">필독</span></td>
                         </c:if>
                         <td id="noticeTitle" style="text-align: left; padding-left: 80px; " >
@@ -144,10 +144,10 @@
                       <fmt:parseNumber value="${today.time - notice.notice_create_dt.time }" integerOnly="true" var="defferTime"/>
                       <tr onclick="window.location.href='<%=request.getContextPath()%>/board/notice/detail?notice_id=${notice.notice_id}';" >
                         <td id="notice_id" >${notice.notice_id }</td>
-                        <c:if test="${notice.notice_important_yn eq 'Y'}">
+                        <c:if test="${notice.notice_important_st eq 'Y'}">
                           <td id="noticeImportantYN"><span class="badge badge-danger">필독</span></td>
                         </c:if>
-                        <c:if test="${notice.notice_important_yn eq 'N'}">
+                        <c:if test="${notice.notice_important_st eq 'N'}">
                           <td id="noticeImportantYN"><span class="badge badge-success">공지</span></td>
                         </c:if>
                         <td id="noticeTitle" style="text-align: left; padding-left: 80px; cursor: pointer;" onclick="window.location.href='<%=request.getContextPath()%>/board/notice/detail?notice_id=${notice.notice_id}';">

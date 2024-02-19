@@ -212,4 +212,24 @@ public class EmpService {
      public List<EmpVO> searchLoginUser(EmpVO empVO) {
         return empDAO.searchLoginUser(empVO);
      }
+
+     public void findPw(String emp_Email, String emp_Id) throws Exception{
+        String empKey = new TempKey().getKey(6,false);
+        String empPw = BCrypt.hashpw(empKey,BCrypt.gensalt()); // 여가서 사용자의 비밀번호를 암호호한다.(물론 키값)
+        empDAO.findPw(emp_Email,emp_Id,empPw); // 여기서 난수로 비번을 업데이트함
+        MailUtils sendMail = new MailUtils(mailSender);
+        sendMail.setSubject("[WorkConGW 임시비밀번호입니다.]");
+        sendMail.setText(
+                "<h1>임시비밀번호 발급</h1>" +
+                        "<br/>"+emp_Id+"님" +
+                        "<br/> 비밀번호 찾기를 통한 임시 비밀번호입니다."+
+                        "<br/>임시비밀번호 : <h2>"+empKey+"</h2>" +
+                        "<br/>로그인 후 비밀번호 변경을 해주세요."+
+                        "<a href='http://localhost:8080/WorkConGW/common/loginForm"+
+                        ">로그인 페이지</a>");
+
+         sendMail.setFrom("ohjihwan170@gamil.com", "오지환");
+         sendMail.setTo(emp_Email);
+         sendMail.send();
+     }
  }

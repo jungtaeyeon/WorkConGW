@@ -311,8 +311,11 @@
                 </select>
             </div>
 
-            <button class="btn btn-dark" data-type="success" onclick="fnSubmit()">등록 완료</button>
-            <button class="btn btn-dark" data-type="success" onclick="fnSubmit()">목록으로</button>
+            <div>
+                <button class="btn btn-dark" data-type="success" onclick="fnSubmit()">등록 완료</button>
+                <button type="button" class="btn btn-dark" onclick="list_go();">목록으로</button>
+            </div>
+
         </form>
     </div>
 </div>
@@ -371,6 +374,14 @@
             },
         }).open();
     }
+
+
+
+    function list_go()
+    {
+        location.href = "<%=request.getContextPath()%>/admin/emp/empList"
+    }
+
 
     function OpenWindow(UrlStr, WinTitle, WinWidth, WinHeight){
         winleft = (screen.width - WinWidth) / 2;
