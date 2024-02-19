@@ -16,6 +16,7 @@
                         manage_official_name, 
                         manage_dept_name, 
                         manage_starred,
+                        A.MANAGE_ADD_BOOK_ID,
                         NVL(b.add_book_id, '0') AS add_book_id, 
                         NVL(b.add_book_title, ' ') AS add_book_title, 
                         NVL(b.share_add_book_yn, '0') AS share_add_book_yn, 
@@ -26,9 +27,13 @@
                         add_book  b
                 ON 
                         a.emp_id = b.emp_id
-                        and a.add_book_id = b.add_book_id
                 WHERE 
-                        a.emp_id = #{empId}
+                        a.emp_id = '00016'
+                        AND b.add_book_id IN (
+                                SELECT REGEXP_SUBSTR(A.MANAGE_ADD_BOOK_ID, '[^#]+', 1, LEVEL) AS ADD_BOOK_ID
+                                FROM dual
+                                CONNECT BY REGEXP_SUBSTR(A.MANAGE_ADD_BOOK_ID, '[^#]+', 1, LEVEL) IS NOT NULL
+                        )
                         <if test="add_book_id != null">
                                 <choose>
                                         <when test="add_book_id == 'noGroup'">
@@ -41,8 +46,18 @@
                         </if>
                 ORDER BY 
                         manage_id ASC
+                
         </select>
-
+        <select id="manageAddBookIdList" resultType="AddBookVO" parameterType="map">
+                SELECT 
+                        A.MANAGE_ADD_BOOK_ID
+                FROM 
+                        add_book_manage a
+                WHERE 
+                        a.emp_id = #{empId}
+                ORDER BY 
+                        manage_id ASC
+        </select>
         <select id="addBookStarred" resultType="AddBookVO" parameterType="map">
                 SELECT 
                         manage_id, 
@@ -132,10 +147,10 @@
         <insert id="addBookInsert" parameterType="java.util.Map">
                 INSERT INTO add_book_manage(manage_id, manage_display_name, manage_hp, manage_email, 
                                             manage_remark, manage_company_name,manage_official_name, manage_dept_name, 
-                                            manage_starred,add_book_id,emp_id)
+                                            manage_starred,manage_add_book_id,emp_id)
                 VALUES(add_book_manage_seq.nextval, #{manage_display_name}, #{manage_hp}
                         , #{manage_email},#{manage_remark}, #{manage_company_name},#{manage_official_name}, #{manage_dept_name}
-                        , 0,#{add_book_id},#{empId})
+                        , 0,#{manage_add_book_id},#{empId})
         </insert>
 
         <!-- 주소록 수정 -->
@@ -193,6 +208,13 @@
         <!-- 주소록 그룹 삭제(개인/공유 공용) -->
 
         <!-- 주소록 그룹 수정(개인/공유 공용) -->
+        <update id="addBookGroupUpdate" parameterType="map">
+                UPDATE add_book
+                SET 
+                        add_book_title = #{add_book_title}
+                WHERE emp_id = #{empId}
+                and add_book_id = #{add_book_id}
+        </update>
 
         <select id="addBookGroupDoubleCheck" resultType="map" parameterType="map">
                 SELECT COUNT(*) AS count

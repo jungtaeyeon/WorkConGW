@@ -56,6 +56,14 @@ public class AddBookService {
     return result;
   }
 
+  public int addBookGroupUpdate(Map<String, Object> pmap) {
+    logger.info("addBookGroupUpdate");
+    int result = 0;
+    logger.info(pmap.toString());
+    result = AddBookDAO.addBookGroupUpdate(pmap);
+    return result;
+  }
+
   public List<Map<String, Object>> addBookListUpdate(Map<String, Object> pmap) {
     logger.info("addBookListUpdate");
     logger.info(pmap.toString());

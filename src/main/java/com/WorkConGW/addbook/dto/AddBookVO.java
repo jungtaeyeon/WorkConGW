@@ -26,6 +26,8 @@ public class AddBookVO extends BaseVO{
 	private String manage_official_name; //주소록 직급
 	private String manage_dept_name; //부서명
 	private int manage_starred; //중요 주소록
+	private String manage_add_book_id;
+	
 	
 	
 	private String emp_id;

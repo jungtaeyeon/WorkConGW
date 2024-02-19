@@ -10,7 +10,7 @@ java.util.ArrayList, com.WorkConGW.addbook.dto.AddBookVO" %>
       const serchBtn = () => {
         document.querySelector("#serchForm").submit();
       };
-
+      
     </script>
     <style>
       .table td{
@@ -48,6 +48,10 @@ java.util.ArrayList, com.WorkConGW.addbook.dto.AddBookVO" %>
       }
       .starred {
         margin-left: 5px;
+        cursor: pointer;
+      }
+      .starred.fa-solid{
+        color:#fdc036;
       }
       .listModalBtn{cursor: pointer;}
 
@@ -116,7 +120,23 @@ java.util.ArrayList, com.WorkConGW.addbook.dto.AddBookVO" %>
               검색
             </button>
           </div>
-
+          <c:forEach var="entry" items="${groupedByManageId}">
+            <c:set var="manageId" value="${entry.key}" />
+            <c:set var="addBookList" value="${entry.value}" />
+            
+            <h2>Manage ID: ${manageId}</h2>
+            
+            <c:forEach var="addBook" items="${addBookList}">
+                <p>Manage Display Name: ${addBook.manage_display_name}</p>
+                <p>Manage HP: ${addBook.manage_hp}</p>
+                <p>Manage Email: ${addBook.manage_email}</p>
+                <p>Manage Remark: ${addBook.manage_remark}</p>
+                <p>Manage Company Name: ${addBook.manage_company_name}</p>
+                <p>Manage Official Name: ${addBook.manage_official_name}</p>
+                <p>Manage Dept Name: ${addBook.manage_dept_name}</p>
+                <hr/>
+            </c:forEach>
+        </c:forEach>
           <table class="table table-hover">
             <!-- 부트스트랩 게시판 -->
 
@@ -133,9 +153,9 @@ java.util.ArrayList, com.WorkConGW.addbook.dto.AddBookVO" %>
                 <th>그룹</th>
               </tr>
             </thead>
-
+            
             <tbody>
-              <c:forEach items="${abList}" var="addBook" varStatus="status">
+              <c:forEach items="${groupedByManageId}" var="addBook" varStatus="status">
               <tr>
                 <th class="tableCheckBox"><input type="checkbox" /></th>
                 <td>

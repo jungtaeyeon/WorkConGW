@@ -27,7 +27,33 @@
   #addBookInsert{
     margin: 30px 0 1rem;
   }
-  .insertBtn{ margin-bottom:30px; }
+  .insertBtn{ margin-bottom:30px;}
+  .addBookGroupTagGroup{display: flex; flex-wrap: wrap; margin-top: 0.5rem;}
+  .addBookGroupTag{
+    color: #2985db;
+    background: #eef3fa;
+    border: 1px solid #bfd3f0;
+    font-size: 14px;
+    margin-bottom: 0;
+    padding: 2px 5px;
+
+  }
+  .addBookGroupTag:focus{outline: none;}
+  .addBookGroupTagGroup .input-group-append{
+    color: #2985db;
+    background: #eef3fa;
+    border: 1px solid #bfd3f0;
+    border-left: none;
+    
+  }
+  .addBookGroupTagGroup button{
+    border: none;
+  } 
+  .addBookGroupTagGroup .input-group{
+    margin-right: 1%;
+    width: auto;
+    margin-bottom: 0.3rem;
+  }
 </style>
   <%@ include file="../include/header.jsp"%>
   <section class="subPageContain">
@@ -84,9 +110,11 @@
             </div>
 
             <div class="mb-3 mt-3">
-                <select id="add_book_id" name="add_book_id" class="custom-select" aria-label="그룹">
+                <select id="add_book_id" name="add_book_id_check" class="custom-select" aria-label="그룹">
                     <option value="">그룹</option>
                 </select>
+                <div class="addBookGroupTagGroup">
+                </div>
             </div>
             <div class="input-group mb-3">
               <div class="input-group-prepend">
@@ -105,6 +133,28 @@
     </div>
   </section>
   <script>
+
+    $("#add_book_id").on("change", function(){
+      let add_book_id = $("#add_book_id option:selected").val();
+      let add_book_title = $("#add_book_id option:selected").text();
+      if(add_book_id != ''){
+        let selected_book_ids = $("input[name='add_book_id[]']").map(function(){
+          return $(this).val();
+        }).get();
+        console.log(selected_book_ids);
+        
+        if(add_book_id != null && add_book_title != null && !selected_book_ids.includes(add_book_id)){
+            let html = '<div class="input-group"><input type="hidden" name="add_book_id[]" value='+ add_book_id +'><input type="text" class="addBookGroupTag" value="'+add_book_title+'" aria-describedby="button-addon2" readonly><div class="input-group-append"><button class="btn" type="button" id="addBookGroupTagDeleteBtn"><i class="fa-solid fa-xmark" style="color: rgb(41, 133, 219);"></i></button></div></div>';
+            $('.addBookGroupTagGroup').prepend(html);
+        }else{
+          alert("이미 선택된 그룹입니다.");
+        }
+      }
+    });
+    $(document).on('click', '#addBookGroupTagDeleteBtn', function(){
+      $(this).closest('.input-group').remove();
+    })
+
     function addBookGroupSelect(share_add_book){
       let add_book_id = "${param.add_book_id}";
       $.ajax({

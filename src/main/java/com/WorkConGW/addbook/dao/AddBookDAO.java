@@ -27,6 +27,8 @@ public class AddBookDAO {
     logger.info("addBookList");
     AddBookVO addBookVO = new AddBookVO();
     logger.info(pmap.toString());
+    List<AddBookVO> manageAddBookIdList = sqlSessionTemplate.selectList("manageAddBookIdList", pmap);
+    logger.info(manageAddBookIdList.toString());
     List<AddBookVO> list = sqlSessionTemplate.selectList("addBookList", pmap);
     
     logger.info(list.toString());
@@ -75,6 +77,13 @@ public class AddBookDAO {
     logger.info("addBookGroupInsert");
     int result = 0;
     result = sqlSessionTemplate.insert("addBookGroupInsert", pmap);
+    return result;
+  }
+
+  public int addBookGroupUpdate(Map<String, Object> pmap) {
+    logger.info("addBookGroupUpdate");
+    int result = 0;
+    result = sqlSessionTemplate.update("addBookGroupUpdate", pmap);
     return result;
   }
 
