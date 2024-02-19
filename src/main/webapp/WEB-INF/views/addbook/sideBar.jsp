@@ -92,9 +92,6 @@
     const addBookGroupInsert = () => {
       addBookGroupInsertDoubleCheck(1);
     }
-    const addBookGroupUpdate = () => {
-      addBookGroupUpdateDoubleCheck(1);
-    }
     const addBookGroupInsertDoubleCheck = (num) =>{
       let add_book_title = $("input[name='insert_add_book_title']").val();
 
@@ -140,50 +137,8 @@
         })
       }
     }
-
-    const addBookGroupUpdateDoubleCheck = (num) =>{
-      let add_book_title = $("input[name='update_add_book_title']").val();
-      console.log(add_book_title);
-      
-      let DoubleCheck = $("input[name='DoubleCheck']").val();
-      if(add_book_title == ''){
-        alert("그룹명을 적어주세요.");
-      }else{
-        $.ajax({
-          type : 'get',              
-          url : '/WorkConGW/addBook/addBookGroupDoubleCheck',  
-          data : {
-            add_book_title : add_book_title
-          },
-          success : function(result) {         
-            console.log("result :" +result)
-            console.log("num :" +num) 
-            console.log("DoubleCheck :" +DoubleCheck)
-            if(result == 0 && num == 0){
-              alert("생성가능한 그룹명입니다.");
-              $("input[name='DoubleCheck']").val(1);
-              return;
-            }else if(result == 1 && num == 0){
-              alert("중복된 그룹명입니다.");
-              $("input[name='DoubleCheck']").val(0);
-              return;
-            }else if(result == 1 && DoubleCheck == 1 && num == 1){
-              alert("중복확인을 해주세요.");
-              return;
-            }else if(result == 0 && DoubleCheck == 1 && num == 1){
-              alert("수정되었습니다.");
-              document.querySelector("#addBookGroupUpdate").submit();
-            }else if(result == 1 && DoubleCheck == 0 && num == 1){
-              alert("중복된 그룹명입니다.");
-              return;
-            }
-          },    
-          error : function(request, status, error) {        
-            console.log(error)    
-          }
-        })
-      }
-    }
+   
+    
   </script>
   <div id="left-sidebar" class="sidebar">
     <div class="sidebar-scroll">
@@ -236,12 +191,12 @@
                 <c:forEach var="list" items="${addBookGroupList}" varStatus="status">
                   <c:if test="${list.share_add_book_yn eq '0'}">
                     <li id="li_importantSchedule" class="metismenuLI addBookGroupLi">
-                      <a href="addBookList?add_book_id=${list.add_book_id}" class=""><i class="fa fa-square" id="importantSchedule"></i><span>${list.add_book_title}</span></a>
+                      <a href="addBookList?add_book_id=${list.add_book_id}" class="addBookGroupListLink"><i class="fa fa-square" id="importantSchedule"></i><span data-addbookid="${list.add_book_id}">${list.add_book_title}</span></a>
                       <i class="fa-solid fa-ellipsis" id="dropdownMenuButton" data-toggle="dropdown" aria-expanded="false"></i>
                       <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                        <a class="dropdown-item" href="#" data-toggle="modal" data-target="#addBookGroupUpdateModal${status.index}">수정</a>
+                        <p class="dropdown-item" data-toggle="modal" data-target="#addBookGroupUpdateModal${status.index}">수정</p>
                         <p class="dropdown-item addBookGroupDeleteBtn">삭제</p>
-                        <a class="dropdown-item" href="#">공유</a>
+                        <p class="dropdown-item">공유</p>
                       </div>
                     </li>
                     <!-- 그룹수정 Modal -->
@@ -261,22 +216,19 @@
                                 <input type="hidden" name="DoubleCheck" value="0">
                                 <input type="hidden" name="add_book_id" value="${list.add_book_id}">
                                 <input type="text" name="update_add_book_title" value="${list.add_book_title}" class="form-control">
-                                <button type="button" class="btn btn-primary" onclick="addBookGroupUpdateDoubleCheck(0)">중복확인</button>
+                                <button type="button" class="btn btn-primary update_add_book_btn">중복확인</button>
                               </div>
                             </form>
                           </div>
                           <div class="modal-footer">
                             <button type="button" class="btn btn-secondary" data-dismiss="modal">닫기</button>
-                            <button type="button" class="btn btn-primary" onclick="addBookGroupUpdate()">수정</button>
+                            <button type="button" class="btn btn-primary update_add_book_submit_btn">수정</button>
                           </div>
                         </div>
                       </div>
                     </div>
                   </c:if>
                 </c:forEach>
-                <li id="li_importantSchedule" class="metismenuLI noGroup">
-                    <a href="addBookList?add_book_id=noGroup" class=""><i class="fa fa-square" id="importantSchedule"></i><span>미등록그룹</span></a>
-                </li>
             </ul>
         </div>
         <div class="tab-content p-l-0 p-r-0 subsubmenu">
@@ -288,7 +240,7 @@
               <c:forEach var="list" items="${addBookGroupList}">
                   <c:if test="${list.share_add_book_yn eq '1'}">
                     <li id="li_importantSchedule" class="metismenuLI addBookGroupLi">
-                      <a href="addBookList?add_book_id=${list.add_book_id}" class=""><i class="fa fa-square" id="importantSchedule"></i><span>${list.add_book_title}</span></a>
+                      <a href="addBookShare?add_book_id=${list.add_book_id}" class=""><i class="fa fa-square" id="importantSchedule"></i><span data-addbookid="${list.add_book_id}">${list.add_book_title}</span></a>
                     </li>
                   </c:if>
                 </c:forEach>
@@ -298,3 +250,86 @@
 </div>
 
 
+<script>
+  $(document).ready(function() {
+    // 버튼에 클릭 이벤트 핸들러 추가
+    const addBookGroupUpdateDoubleCheck = (num, update_add_book_title, DoubleCheck) =>{
+      $.ajax({
+          type : 'get',              
+          url : '/WorkConGW/addBook/addBookGroupDoubleCheck',  
+          data : {
+            add_book_title : update_add_book_title
+          },
+          success : function(result) {         
+            console.log("result :" +result)
+            console.log("DoubleCheck :" +DoubleCheck)
+            console.log("num :" +num)
+            if(result == 0 && num == 0){
+              alert("생성가능한 그룹명입니다.");
+              $("input[name='DoubleCheck']").val(1);
+              return;
+              
+            }else if(result == 1 && num == 0){
+              alert("중복된 그룹명입니다");
+              return;
+            }else if(result == 0 && DoubleCheck == 1 && num == 1){
+              alert("수정되었습니다.");
+              document.querySelector("#addBookGroupUpdate").submit();
+            }else if(result == 1 && DoubleCheck == 0 && num == 1){
+              alert("중복된 그룹명입니다.");
+              return;
+            }  
+          },    
+          error : function(request, status, error) {        
+            console.log(error)    
+          }
+        })
+    }
+    $('.update_add_book_btn').on('click', function() {
+      let update_add_book_title = $(this).parent().find('input[name="update_add_book_title"]').val();
+      let DoubleCheck = $(this).parent().find("input[name='DoubleCheck']").val();
+      if(update_add_book_title == ''){
+        alert("그룹명을 적어주세요.");
+      }else{
+        addBookGroupUpdateDoubleCheck(0 ,update_add_book_title, DoubleCheck);
+      }
+    });
+    $('.update_add_book_submit_btn').on('click', function() {
+      let update_add_book_title = $(this).parent().parent().find('.modal-body #addBookGroupUpdate .addBookGroupInput input[name="update_add_book_title"]').val();
+      console.log(update_add_book_title);
+      let DoubleCheck = $(this).parent().parent().find(".modal-body #addBookGroupUpdate .addBookGroupInput input[name='DoubleCheck']").val();
+      if(update_add_book_title == ''){
+        alert("그룹명을 적어주세요.");
+      }else{
+        addBookGroupUpdateDoubleCheck(1 ,update_add_book_title, DoubleCheck);
+      }
+    });
+    $('.addBookGroupDeleteBtn').on('click', function() {
+      let addBookId = $(this).closest('li').find('a.addBookGroupListLink span').data('addbookid');
+      let result = confirm('삭제하시겠습니까?');
+
+        // 확인 버튼을 클릭한 경우
+        if (result) {
+          $.ajax({
+            type : 'get',              
+            url : '/WorkConGW/addBook/addBookGroupDelete',  
+            data : {
+              add_book_id : addBookId
+            },
+            success : function(result) { 
+              if(result == 1){
+                alert('삭제되었습니다');
+                location.reload();
+              }
+            },    
+            error : function(request, status, error) {        
+              console.log(error)    
+            }
+          })
+        } else {
+            
+        }
+    });
+  });
+
+</script>

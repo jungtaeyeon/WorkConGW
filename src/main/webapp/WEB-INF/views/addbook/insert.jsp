@@ -64,6 +64,7 @@
         <div class="subTitleText">
             <h2><i class="fa-solid fa-angles-right"></i>주소록등록</h2>
         </div>
+        
         <form id="addBookInsert" method="get" 
         action="
         <c:choose>
@@ -114,6 +115,19 @@
                     <option value="">그룹</option>
                 </select>
                 <div class="addBookGroupTagGroup">
+                  <c:forEach var="addBookListUpdate" items="${addBookListUpdate}" varStatus="status">
+                    <c:if test="${addBookListUpdate.ADD_BOOK_ID ne '0'}">
+                    <div class="input-group">
+                      <input type="hidden" name="add_book_id[]" value='${addBookListUpdate.ADD_BOOK_ID}'>
+                      <input type="text" class="addBookGroupTag" value="${addBookListUpdate.ADD_BOOK_TITLE}" aria-describedby="button-addon2" readonly>
+                      <div class="input-group-append">
+                        <button class="btn" type="button" id="addBookGroupTagDeleteBtn">
+                          <i class="fa-solid fa-xmark" style="color: rgb(41, 133, 219);"></i>
+                        </button>
+                      </div>
+                    </div>
+                  </c:if>
+                  </c:forEach>
                 </div>
             </div>
             <div class="input-group mb-3">
@@ -151,6 +165,7 @@
         }
       }
     });
+
     $(document).on('click', '#addBookGroupTagDeleteBtn', function(){
       $(this).closest('.input-group').remove();
     })
@@ -166,13 +181,7 @@
           success : function(result) {         
             $("#add_book_id option").remove(".groupOption");    
             for(let i=0; i<result.length; i++){
-              if(add_book_id != null && result[i].add_book_id == add_book_id){
-                $("#add_book_id").append("<option class='groupOption' value='"+result[i].add_book_id+"' selected>"+result[i].add_book_title+"</option>");
-              }
-              else{
                 $("#add_book_id").append("<option class='groupOption' value='"+result[i].add_book_id+"'>"+result[i].add_book_title+"</option>");
-              }
-              
             }
           },    
           error : function(request, status, error) {        

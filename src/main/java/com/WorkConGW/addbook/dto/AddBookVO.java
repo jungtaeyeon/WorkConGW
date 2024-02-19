@@ -30,7 +30,9 @@ public class AddBookVO extends BaseVO{
 	
 	
 	
+	private int share_manage_id;	
 	private String emp_id;
+	private String share_emp_id;
 	private String selectSerch; //주소록 필터
 	private int addBookCount; // 주소록에 속한 주소 개수
 	private String[] manageIdArr; // 체크한 주소록 개수

@@ -27,20 +27,17 @@
                         add_book  b
                 ON 
                         a.emp_id = b.emp_id
+                        AND (b.add_book_id IN (
+                                        SELECT REGEXP_SUBSTR(A.MANAGE_ADD_BOOK_ID, '[^#]+', 1, LEVEL) AS ADD_BOOK_ID
+                                        FROM dual
+                                        CONNECT BY REGEXP_SUBSTR(A.MANAGE_ADD_BOOK_ID, '[^#]+', 1, LEVEL) IS NOT NULL
+                                ) OR b.add_book_id IS NULL)
                 WHERE 
-                        a.emp_id = '00016'
-                        AND b.add_book_id IN (
-                                SELECT REGEXP_SUBSTR(A.MANAGE_ADD_BOOK_ID, '[^#]+', 1, LEVEL) AS ADD_BOOK_ID
-                                FROM dual
-                                CONNECT BY REGEXP_SUBSTR(A.MANAGE_ADD_BOOK_ID, '[^#]+', 1, LEVEL) IS NOT NULL
-                        )
+                        a.emp_id = #{empId}
                         <if test="add_book_id != null">
                                 <choose>
-                                        <when test="add_book_id == 'noGroup'">
-                                        AND b.add_book_id IS NULL
-                                        </when>
                                         <otherwise>
-                                        AND b.add_book_id = #{add_book_id}
+                                        AND A.MANAGE_ADD_BOOK_ID like '%' || #{add_book_id} || '%'
                                         </otherwise>
                                 </choose>
                         </if>
@@ -69,6 +66,7 @@
                         manage_official_name, 
                         manage_dept_name, 
                         manage_starred,
+                        A.MANAGE_ADD_BOOK_ID,
                         NVL(b.add_book_id, '0') AS add_book_id, 
                         NVL(b.add_book_title, ' ') AS add_book_title, 
                         NVL(b.share_add_book_yn, '0') AS share_add_book_yn, 
@@ -79,13 +77,66 @@
                         add_book  b
                 ON 
                         a.emp_id = b.emp_id
-                        and a.add_book_id = b.add_book_id
+                        AND (b.add_book_id IN (
+                                        SELECT REGEXP_SUBSTR(A.MANAGE_ADD_BOOK_ID, '[^#]+', 1, LEVEL) AS ADD_BOOK_ID
+                                        FROM dual
+                                        CONNECT BY REGEXP_SUBSTR(A.MANAGE_ADD_BOOK_ID, '[^#]+', 1, LEVEL) IS NOT NULL
+                                ) OR b.add_book_id IS NULL)
                 WHERE 
                         a.emp_id = #{empId}
                         AND manage_starred = '1'
                 ORDER BY 
                         manage_id ASC
         </select>
+
+        <select id="addBookShare" resultType="AddBookVO" parameterType="map">
+                SELECT 
+                        a.manage_id AS manage_id, 
+                        a.manage_display_name AS manage_display_name, 
+                        a.manage_hp AS manage_hp,  
+                        a.manage_email AS manage_email, 
+                        NVL(a.manage_remark, ' ') AS manage_remark, 
+                        a.manage_company_name AS manage_company_name,
+                        a.manage_official_name AS manage_official_name, 
+                        a.manage_dept_name AS manage_dept_name,  
+                        a.manage_starred AS manage_starred,
+                        A.MANAGE_ADD_BOOK_ID,
+                        NVL(b.add_book_id, '0') AS add_book_id, 
+                        NVL(b.add_book_title, ' ') AS add_book_title, 
+                        NVL(b.share_add_book_yn, '0') AS share_add_book_yn, 
+                        a.emp_id AS emp_id,
+                        s.manage_id AS share_manage_id,
+                        s.emp_id AS share_emp_id
+                FROM 
+                        add_book_manage a
+                LEFT OUTER JOIN 
+                        add_book  b 
+                ON 
+                        a.emp_id = b.emp_id
+                        AND (b.add_book_id IN (
+                                        SELECT REGEXP_SUBSTR(A.MANAGE_ADD_BOOK_ID, '[^#]+', 1, LEVEL) AS ADD_BOOK_ID
+                                        FROM dual
+                                        CONNECT BY REGEXP_SUBSTR(A.MANAGE_ADD_BOOK_ID, '[^#]+', 1, LEVEL) IS NOT NULL
+                                ) OR b.add_book_id IS NULL)
+                LEFT OUTER JOIN
+                        share_add_book s 
+                ON 
+                        a.manage_id = s.manage_id
+                WHERE 
+                        s.emp_id = '00016'
+                        or a.emp_id = '00016'  
+                        AND s.manage_id IS NOT NULL
+                        <if test="add_book_id != null">
+                                <choose>
+                                        <otherwise>
+                                        AND A.MANAGE_ADD_BOOK_ID like '%' || #{add_book_id} || '%'
+                                        </otherwise>
+                                </choose>
+                        </if>
+                ORDER BY 
+                        manage_id ASC
+        </select>
+
         <!-- 주소록 그룹 셀렉(주소록 생성시 필요) -->
         <select id="addBookGroupSelect" resultType="AddBookVO" parameterType="map">
                 SELECT 
@@ -100,28 +151,33 @@
         <!-- 주소록 특정 검색 셀렉(개인/공유 공용) -->
         <select id="addBookSearch" resultType="AddBookVO" parameterType="map">
         SELECT 
-                manage_id, 
-                manage_display_name, 
-                manage_hp, 
-                manage_email, 
-                NVL(a.manage_remark, ' ') AS manage_remark, 
-                manage_company_name,
-                manage_official_name, 
-                manage_dept_name, 
-                manage_starred,
-                NVL(b.add_book_id, '0') AS add_book_id, 
-                NVL(b.add_book_title, '  ') AS add_book_title, 
-                NVL(b.share_add_book_yn, '0') AS share_add_book_yn, 
-                a.emp_id AS emp_id
-        FROM 
-                add_book_manage a
-        LEFT OUTER JOIN 
-                add_book  b
-        ON 
-                a.emp_id = b.emp_id
-                and a.add_book_id = b.add_book_id
-        WHERE 
-                a.emp_id = #{empId}
+                        manage_id, 
+                        manage_display_name, 
+                        manage_hp, 
+                        manage_email, 
+                        NVL(a.manage_remark, ' ') AS manage_remark, 
+                        manage_company_name,
+                        manage_official_name, 
+                        manage_dept_name, 
+                        manage_starred,
+                        A.MANAGE_ADD_BOOK_ID,
+                        NVL(b.add_book_id, '0') AS add_book_id, 
+                        NVL(b.add_book_title, ' ') AS add_book_title, 
+                        NVL(b.share_add_book_yn, '0') AS share_add_book_yn, 
+                        a.emp_id AS emp_id
+                FROM 
+                        add_book_manage a
+                LEFT OUTER JOIN 
+                        add_book  b
+                ON 
+                        a.emp_id = b.emp_id
+                        AND (b.add_book_id IN (
+                                        SELECT REGEXP_SUBSTR(A.MANAGE_ADD_BOOK_ID, '[^#]+', 1, LEVEL) AS ADD_BOOK_ID
+                                        FROM dual
+                                        CONNECT BY REGEXP_SUBSTR(A.MANAGE_ADD_BOOK_ID, '[^#]+', 1, LEVEL) IS NOT NULL
+                                ) OR b.add_book_id IS NULL)
+                WHERE 
+                        a.emp_id = #{empId}
                 <if test="selectSearch != null">
                         <choose>
                                 <when test="selectSearch == 'manage_display_name'">
@@ -136,12 +192,132 @@
                                 <when test="selectSearch == 'manage_dept_name'">
                                 AND manage_dept_name LIKE '%' || #{searchText} || '%'
                                 </when>
+                                <when test="selectSearch == 'all'">
+                                AND (
+                                        manage_display_name LIKE '%' || #{searchText} || '%' OR
+                                        manage_hp LIKE '%' || #{searchText} || '%' OR
+                                        manage_official_name LIKE '%' || #{searchText} || '%' OR
+                                        manage_dept_name LIKE '%' || #{searchText} || '%'
+                                )
+                                </when>
                         </choose>
                 </if>
                 ORDER BY manage_id ASC
         </select>
 
-        
+        <select id="addBookSearchStarred" resultType="AddBookVO" parameterType="map">
+        SELECT 
+                        manage_id, 
+                        manage_display_name, 
+                        manage_hp, 
+                        manage_email, 
+                        NVL(a.manage_remark, ' ') AS manage_remark, 
+                        manage_company_name,
+                        manage_official_name, 
+                        manage_dept_name, 
+                        manage_starred,
+                        A.MANAGE_ADD_BOOK_ID,
+                        NVL(b.add_book_id, '0') AS add_book_id, 
+                        NVL(b.add_book_title, ' ') AS add_book_title, 
+                        NVL(b.share_add_book_yn, '0') AS share_add_book_yn, 
+                        a.emp_id AS emp_id
+                FROM 
+                        add_book_manage a
+                LEFT OUTER JOIN 
+                        add_book  b
+                ON 
+                        a.emp_id = b.emp_id
+                        AND (b.add_book_id IN (
+                                        SELECT REGEXP_SUBSTR(A.MANAGE_ADD_BOOK_ID, '[^#]+', 1, LEVEL) AS ADD_BOOK_ID
+                                        FROM dual
+                                        CONNECT BY REGEXP_SUBSTR(A.MANAGE_ADD_BOOK_ID, '[^#]+', 1, LEVEL) IS NOT NULL
+                                ) OR b.add_book_id IS NULL)
+                WHERE 
+                        a.emp_id = #{empId}
+                        AND manage_starred = '1'
+                <if test="selectSearch != null">
+                        <choose>
+                                <when test="selectSearch == 'manage_display_name'">
+                                AND manage_display_name LIKE '%' || #{searchText} || '%'
+                                </when>
+                                <when test="selectSearch == 'manage_hp'">
+                                AND manage_hp LIKE '%' || #{searchText} || '%'
+                                </when>
+                                <when test="selectSearch == 'manage_official_name'">
+                                AND manage_official_name LIKE '%' || #{searchText} || '%'
+                                </when>
+                                <when test="selectSearch == 'manage_dept_name'">
+                                AND manage_dept_name LIKE '%' || #{searchText} || '%'
+                                </when>
+                                <when test="selectSearch == 'all'">
+                                AND (
+                                        manage_display_name LIKE '%' || #{searchText} || '%' OR
+                                        manage_hp LIKE '%' || #{searchText} || '%' OR
+                                        manage_official_name LIKE '%' || #{searchText} || '%' OR
+                                        manage_dept_name LIKE '%' || #{searchText} || '%'
+                                )
+                                </when>
+                        </choose>
+                </if>
+                ORDER BY manage_id ASC
+        </select>
+
+        <select id="addBookSearchShare" resultType="AddBookVO" parameterType="map"> <!-- 공유주소록  수정해야함 -->
+        SELECT 
+                        manage_id, 
+                        manage_display_name, 
+                        manage_hp, 
+                        manage_email, 
+                        NVL(a.manage_remark, ' ') AS manage_remark, 
+                        manage_company_name,
+                        manage_official_name, 
+                        manage_dept_name, 
+                        manage_starred,
+                        A.MANAGE_ADD_BOOK_ID,
+                        NVL(b.add_book_id, '0') AS add_book_id, 
+                        NVL(b.add_book_title, ' ') AS add_book_title, 
+                        NVL(b.share_add_book_yn, '0') AS share_add_book_yn, 
+                        a.emp_id AS emp_id
+                FROM 
+                        add_book_manage a
+                LEFT OUTER JOIN 
+                        add_book  b
+                ON 
+                        a.emp_id = b.emp_id
+                        AND (b.add_book_id IN (
+                                        SELECT REGEXP_SUBSTR(A.MANAGE_ADD_BOOK_ID, '[^#]+', 1, LEVEL) AS ADD_BOOK_ID
+                                        FROM dual
+                                        CONNECT BY REGEXP_SUBSTR(A.MANAGE_ADD_BOOK_ID, '[^#]+', 1, LEVEL) IS NOT NULL
+                                ) OR b.add_book_id IS NULL)
+                WHERE 
+                        a.emp_id = #{empId}
+                        AND manage_starred = '1'
+                <if test="selectSearch != null">
+                        <choose>
+                                <when test="selectSearch == 'manage_display_name'">
+                                AND manage_display_name LIKE '%' || #{searchText} || '%'
+                                </when>
+                                <when test="selectSearch == 'manage_hp'">
+                                AND manage_hp LIKE '%' || #{searchText} || '%'
+                                </when>
+                                <when test="selectSearch == 'manage_official_name'">
+                                AND manage_official_name LIKE '%' || #{searchText} || '%'
+                                </when>
+                                <when test="selectSearch == 'manage_dept_name'">
+                                AND manage_dept_name LIKE '%' || #{searchText} || '%'
+                                </when>
+                                <when test="selectSearch == 'all'">
+                                AND (
+                                        manage_display_name LIKE '%' || #{searchText} || '%' OR
+                                        manage_hp LIKE '%' || #{searchText} || '%' OR
+                                        manage_official_name LIKE '%' || #{searchText} || '%' OR
+                                        manage_dept_name LIKE '%' || #{searchText} || '%'
+                                )
+                                </when>
+                        </choose>
+                </if>
+                ORDER BY manage_id ASC
+        </select>
 
         <!-- 주소록 추가 -->
         <insert id="addBookInsert" parameterType="java.util.Map">
@@ -153,6 +329,20 @@
                         , 0,#{manage_add_book_id},#{empId})
         </insert>
 
+        <update id="addBookUpdate" parameterType="map">
+                UPDATE add_book_manage
+                SET 
+                        manage_display_name = #{manage_display_name},
+                        manage_hp = #{manage_hp},
+                        manage_email = #{manage_email},
+                        manage_remark = #{manage_remark},
+                        manage_company_name = #{manage_company_name},
+                        manage_official_name = #{manage_official_name},
+                        manage_dept_name = #{manage_dept_name},
+                        manage_add_book_id = #{manage_add_book_id}
+                WHERE emp_id = #{empId}
+                and manage_id = #{manage_id}
+        </update>
         <!-- 주소록 수정 -->
         <select id="addBookListUpdate" resultType="map" parameterType="map">
                 SELECT 
@@ -165,6 +355,7 @@
                         manage_official_name, 
                         manage_dept_name, 
                         manage_starred,
+                        A.MANAGE_ADD_BOOK_ID,
                         NVL(b.add_book_id, '0') AS add_book_id, 
                         NVL(b.add_book_title, ' ') AS add_book_title, 
                         NVL(b.share_add_book_yn, '0') AS share_add_book_yn, 
@@ -175,34 +366,31 @@
                         add_book  b
                 ON 
                         a.emp_id = b.emp_id
-                        and a.add_book_id = b.add_book_id
+                        AND (b.add_book_id IN (
+                                        SELECT REGEXP_SUBSTR(A.MANAGE_ADD_BOOK_ID, '[^#]+', 1, LEVEL) AS ADD_BOOK_ID
+                                        FROM dual
+                                        CONNECT BY REGEXP_SUBSTR(A.MANAGE_ADD_BOOK_ID, '[^#]+', 1, LEVEL) IS NOT NULL
+                                ) OR b.add_book_id IS NULL)
                 WHERE 
                         a.emp_id = #{empId}
                         AND a.manage_id = #{manage_id}
                 ORDER BY 
                         manage_id ASC
         </select>
-        <update id="addBookUpdate" parameterType="map">
-                UPDATE add_book_manage
-                SET 
-                        manage_display_name = #{manage_display_name},
-                        manage_hp = #{manage_hp},
-                        manage_email = #{manage_email},
-                        manage_remark = #{manage_remark},
-                        manage_company_name = #{manage_company_name},
-                        manage_official_name = #{manage_official_name},
-                        manage_dept_name = #{manage_dept_name},
-                        add_book_id = #{add_book_id}
-                WHERE emp_id = #{empId}
-                and manage_id = #{manage_id}
-        </update>
+        
         <!-- 주소록 삭제 -->
-
+        <delete id="addBookDelete" parameterType="java.util.List">
+                DELETE FROM add_book_manage
+                WHERE manage_id IN
+                <foreach collection="list" item="item" open="(" separator="," close=")">
+                #{item}
+                </foreach>
+        </delete>
 
         <!-- 주소록 그룹 추가(개인) -->
         <insert id="addBookGroupInsert" parameterType="java.util.Map">
                 INSERT INTO add_book(add_book_id, add_book_title,share_add_book_yn,emp_id)
-                VALUES(add_book_seq.nextval, #{add_book_title}, 0, #{empId})
+                VALUES(add_book_seq.nextval, #{insert_add_book_title}, 0, #{empId})
         </insert>
 
         <!-- 주소록 그룹 삭제(개인/공유 공용) -->
@@ -211,7 +399,7 @@
         <update id="addBookGroupUpdate" parameterType="map">
                 UPDATE add_book
                 SET 
-                        add_book_title = #{add_book_title}
+                        add_book_title = #{update_add_book_title}
                 WHERE emp_id = #{empId}
                 and add_book_id = #{add_book_id}
         </update>
@@ -239,5 +427,11 @@
                 DELETE FROM add_book_favorites
                 WHERE manage_id = #{manage_id}
         </delete>
+
+        <delete id="addBookGroupDelete" parameterType="map">
+                DELETE FROM add_book
+                WHERE add_book_id = #{add_book_id}
+        </delete>
+        
         
 </mapper>

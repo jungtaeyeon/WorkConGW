@@ -79,5 +79,28 @@ public class RestAddBookController {
         return result;
     }
 
-    
+    @GetMapping("addBookGroupDelete")
+    public int addBookGroupDelete(@RequestParam Map<String, Object> pmap, HttpSession session) {
+        logger.info("addBookGroupDelete");
+        EmpVO empVO = (EmpVO) session.getAttribute("loginUser");
+        String empId = null;
+        if(empVO != null) {
+            empId = empVO.getEmp_Id();
+        }
+        pmap.put("empId", empId);
+        logger.info(pmap.toString());
+        int result = addBookService.addBookGroupDelete(pmap);
+        return result;
+    }
+
+    @GetMapping("addBookDelete")
+    public int addBookDelete(@RequestParam(value = "manage_id[]", required = false) List<Long> manage_id) {
+        int result = 0;
+        logger.info(manage_id.toString());
+        if (manage_id != null && !manage_id.isEmpty()) {
+            result = addBookService.addBookDelete(manage_id);
+        }
+        // 삭제 후 리다이렉트 또는 다른 처리
+        return result;
+    }
 }

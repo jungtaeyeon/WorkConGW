@@ -33,10 +33,31 @@ public class AddBookService {
     return list;
   }
 
+  public List<AddBookVO> addBookShare(Map<String, Object> pmap) {
+    logger.info("addBookShare");
+    List<AddBookVO> list = new ArrayList<>();
+    list = AddBookDAO.addBookShare(pmap);
+    return list;
+  }
+
   public List<AddBookVO> addBookSearch(Map<String, Object> pmap) {
     logger.info("addBookSearch");
     List<AddBookVO> list = new ArrayList<>();
     list = AddBookDAO.addBookSearch(pmap);
+    return list;
+  }
+
+  public List<AddBookVO> addBookSearchStarred(Map<String, Object> pmap) {
+    logger.info("addBookSearchStarred");
+    List<AddBookVO> list = new ArrayList<>();
+    list = AddBookDAO.addBookSearchStarred(pmap);
+    return list;
+  }
+
+  public List<AddBookVO> addBookSearchShare(Map<String, Object> pmap) {
+    logger.info("addBookSearchShare");
+    List<AddBookVO> list = new ArrayList<>();
+    list = AddBookDAO.addBookSearchShare(pmap);
     return list;
   }
 
@@ -109,4 +130,21 @@ public class AddBookService {
     result = AddBookDAO.addBookStarredUpdate(pmap);
     return result;
   }
+
+  public int addBookGroupDelete(Map<String, Object> pmap) {
+    logger.info("addBookGroupDelete");
+    int result = 0;
+    logger.info(pmap.toString());
+    result = AddBookDAO.addBookGroupDelete(pmap);
+    return result;
+  }
+  
+  public int addBookDelete(List<Long> manage_id) {
+    logger.info("addBookDelete");
+    int result = 0;
+    logger.info(manage_id.toString());
+    result = AddBookDAO.addBookDelete(manage_id);
+    return result;
+  }
+
 }
