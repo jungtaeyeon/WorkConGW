@@ -54,6 +54,8 @@ public class EmpService {
         return emp;
     }
 
+
+
     public int findPwCheck(EmpVO empVO)
     {
         return empDAO.findPwCheck(empVO);
@@ -231,5 +233,16 @@ public class EmpService {
          sendMail.setFrom("ohjihwan170@gamil.com", "오지환");
          sendMail.setTo(emp_Email);
          sendMail.send();
+     }
+
+     public int findIdCheck(String emp_Email)
+     {
+         return empDAO.findIdCheck(emp_Email);
+     }
+
+
+     public List<EmpVO> findId(EmpVO empVO)
+     {
+         return empDAO.findId(empVO);
      }
  }

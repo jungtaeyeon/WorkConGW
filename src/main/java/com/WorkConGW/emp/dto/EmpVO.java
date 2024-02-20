@@ -46,7 +46,8 @@ public class EmpVO extends BaseVO{
 
     private int emp_authkey;
 
-    	
+
+
 
 	
     

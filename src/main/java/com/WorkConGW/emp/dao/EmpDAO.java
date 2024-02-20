@@ -84,6 +84,12 @@ public class EmpDAO {
         return sqlSessionTemplate.update("findPw",map); // 성공 1 실패 0 반환
     }
 
+    public int findIdCheck(String emp_Email)
+    {
+
+        return sqlSessionTemplate.selectOne("findIdCheck",emp_Email);
+    }
+
     public int findPwCheck(EmpVO empVO)
     {
         return sqlSessionTemplate.selectOne("findPwCheck",empVO);
@@ -128,5 +134,13 @@ public class EmpDAO {
 
     public List<EmpVO> searchLoginUser(EmpVO empVO) {
        return sqlSessionTemplate.selectList("searchLoginUser", empVO);
+    }
+
+    public List<EmpVO> findId(EmpVO empVO) {
+
+        logger.info(empVO.getEmp_Email());
+        String emp_email = empVO.getEmp_Email();
+        logger.info(emp_email);
+        return sqlSessionTemplate.selectList("findId",empVO);
     }
 }

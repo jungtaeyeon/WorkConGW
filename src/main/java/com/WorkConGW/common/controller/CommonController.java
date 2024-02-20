@@ -11,6 +11,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.WorkConGW.common.dto.*;
 import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -30,10 +31,6 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.WorkConGW.YAMLConfig;
-import com.WorkConGW.common.dto.BaseVO;
-import com.WorkConGW.common.dto.DashboardVO;
-import com.WorkConGW.common.dto.HomeFormVO;
-import com.WorkConGW.common.dto.MenuVO;
 import com.WorkConGW.common.service.HomeService;
 import com.WorkConGW.common.service.MenuService;
 import com.WorkConGW.emp.dto.EmpVO;
@@ -71,6 +68,8 @@ public class CommonController {
 	private MenuService menuService;
 
     protected static Map<String, HttpSession> users = new HashMap<>();
+
+
 
 
     public ResponseEntity<byte[]> getPicture(String picturePath, String picture) throws Exception{
@@ -176,13 +175,14 @@ public class CommonController {
 
 
 
+
     @GetMapping("/loginForm")
 	public String loginForm() {
 		return "common/loginForm";
 	}
 
     @PostMapping("/login")
-    public String login(EmpVO empVO,HttpServletRequest request,Model model)throws SQLException
+    public String login(EmpVO empVO,HttpServletRequest request,HttpServletResponse response,Model model)throws SQLException
     {
 
         String url = null;
@@ -205,6 +205,9 @@ public class CommonController {
             {
                 url = "redirect:/admin/main";
             }
+
+
+
         }catch(NotFoundIDException|InvalidPasswordException e){
             url = "/common/loginForm";
             logger.info("여기서 지금 에러가 발생합니다."); // 이 부분은 postHandle에서 txt 파일로 에러관리 시 사용된다.
@@ -217,6 +220,10 @@ public class CommonController {
         return url;
     }
 
+
+    private boolean rememberId(boolean rememberId) {
+        return rememberId;
+    }
 
 
 

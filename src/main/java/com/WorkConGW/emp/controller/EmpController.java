@@ -30,6 +30,7 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.sql.SQLException;
+import java.util.List;
 import java.util.Map;
 
 import jakarta.servlet.http.HttpServletResponse;
@@ -108,6 +109,46 @@ public class EmpController {
             return "/common/findPw"; // 임시비멀번호 뿌리는 창
         }
 
+    }
+
+    @GetMapping("/findIdView")
+    public String findIdView()
+    {
+        return "/common/findIdView";
+    }
+
+
+
+    @PostMapping("/findId")
+    public ResponseEntity<String> findId(EmpVO empVO,Model model)
+    {
+        ResponseEntity<String> entity = null;
+        String msg = "";
+        logger.info("findId");
+        if(empService.findIdCheck(empVO.getEmp_Email()) == 0)
+        {
+            logger.info("값이 없을 때");
+            msg = "아이디와 이메일을 확인하세요";
+            entity = new ResponseEntity<>(msg,HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+        else
+        {
+            logger.info("여기니?");
+            msg = "아이디를 찾았습니다.";
+            entity = new ResponseEntity<>(msg,HttpStatus.OK);
+        }
+
+        return entity;
+
+
+    }
+    @GetMapping("/findList")
+    public String findList(EmpVO empVO,Model model)
+    {
+        logger.info(empVO.toString());
+        List<EmpVO> empVO1 = empService.findId(empVO);
+        model.addAttribute("empVO", empVO1);
+        return "/common/findList";
     }
 
     @GetMapping("/findPwView")

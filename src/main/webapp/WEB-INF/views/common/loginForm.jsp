@@ -296,7 +296,7 @@ body, input {
             <h5 class="sub-title">업무도 내 회사 생활도 완벽하게</h5>
             <div class="input-field">
               <i class="fas fa-user"></i>
-              <input id = "emp_Id" name="emp_Id" value="${cookie.mid.value}" type="text" placeholder="아이디" required />
+              <input id = "emp_Id" name="emp_Id" value="${cookie.id.value}" type="text" placeholder="아이디" required />
             </div>
             <div class="input-field">
               <i class="fa-solid fa-shield-halved"></i>
@@ -304,11 +304,11 @@ body, input {
             </div>
             <div class="login-info">
               <div class="save-id form-check form-switch">
-                <input name="saveId" id="saveCheck" class="form-check-input" type="checkbox" role="switch" checked />
+                <input name="saveId" id="saveCheck" value = "true" class="form-check-input" type="checkbox" role="switch" ${checked} />
                 <label for="saveCheck" class="form-check-label">아이디 저장</label>
               </div>
               <div class="find-idpwd">
-                <button type="button" class="btn btn-sm" data-bs-toggle="modal" data-bs-target="#modalFindId">아이디 찾기</button> |
+                <button type="button" class="btn btn-sm" onclick="OpenWindow('<%=request.getContextPath()%>/emp/findIdView', 'WorkConGW', 700,700)">아이디 찾기</button>
                 <button type="button" class="btn btn-sm" onclick="OpenWindow('<%=request.getContextPath()%>/emp/findPwView', 'WorkConGW', 700,700)">비밀번호 찾기</button>
 
               </div>
@@ -329,70 +329,9 @@ body, input {
       </div>
     </div>
 
-    <!-- 아이디 찾기 모달 -->
-    <div class="modal fade" tabindex="-1" role="dialog" id="modalFindId">
-      <div class="modal-dialog modal-dialog-centered" role="document">
-        <div class="modal-content rounded-4 shadow">
-          <div class="modal-header p-5 pb-4 border-bottom-0">
-            <!-- <h1 class="modal-title fs-5" >Modal title</h1> -->
-            <h1 class="fw-bold mb-0 fs-2">아이디 찾기</h1>
-            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-          </div>
 
-          <div class="modal-body p-5 pt-0">
-            <form>
-              <div class="form-floating mb-3">
-                <input type="text" class="form-control rounded-4" id="findIdName" placeholder="name@example.com" />
-                <label for="findIdName">성명</label>
-              </div>
-              <div class="form-floating mb-3">
-                <input type="email" class="form-control rounded-4" id="findIdEmail" placeholder="Password" />
-                <label for="findIdEmail">이메일</label>
-              </div>
-              <button class="w-100 mb-2 btn btn-lg rounded-4 btn-secondary" type="button" onclick="findId();">아이디 찾기</button>
-	          <hr id="findid-hr" class="my-4" style="display:none"/>
-              <strong class="text-muted" id="foundId">
-                <div id="findid-spinner" class="spinner-border spinner-border-sm text-primary" style="display: none" role="status">
-                  <span class="visually-hidden">Loading...</span>
-                </div>
-              </strong>
-            </form>
-          </div>
-        </div>
-      </div>
-    </div>
 
-    <!-- 비밀번호 찾기(변경) 모달-->
-<%--    <div class="modal fade" tabindex="-1" role="dialog" id="modalFindPwd">--%>
-<%--      <div class="modal-dialog modal-dialog-centered" role="document">--%>
-<%--        <div class="modal-content rounded-4 shadow">--%>
-<%--          <div class="modal-header p-5 pb-4 border-bottom-0">--%>
-<%--            <!-- <h1 class="modal-title fs-5" >Modal title</h1> -->--%>
-<%--            <h1 class="fw-bold mb-0 fs-2">비밀번호 찾기</h1>--%>
-<%--            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>--%>
-<%--          </div>--%>
 
-<%--            <form id = "find" action="<%=request.getContextPath()%>/emp/findPw" method="post">--%>
-<%--              <div class="form-floating mb-3">--%>
-<%--                <input type="text" class="form-control rounded-4"  name = "emp_Id" placeholder="아이디"/>--%>
-<%--                <label for="emp_Id">아이디</label>--%>
-<%--              </div>--%>
-<%--              <div class="form-floating mb-3">--%>
-<%--                <input type="text" class="form-control rounded-4" id="emp_Name" name = "emp_Name" placeholder="성명"/>--%>
-<%--                <label for="emp_Name">성명</label>--%>
-<%--              </div>--%>
-<%--              <div class="form-floating mb-3">--%>
-<%--                <input type="email" class="form-control rounded-4" id="emp_Email" name = "emp_Email"placeholder="회원가입시 입력한 이메일"/>--%>
-<%--                <label for="emp_Email">이메일주소</label>--%>
-<%--                <p style="margin-left: 5px">--%>
-<%--                  <small class="text-muted me-1"> * 회원가입시 입력한 이메일주소</small>--%>
-<%--                </p>--%>
-<%--              </div>--%>
-<%--              <button class="w-100 mb-2 btn btn-lg rounded-4 btn-secondary" type="button" onclick="tempPwd();">임시 비밀번호 발급</button>--%>
-<%--            </form>--%>
-        </div>
-      </div>
-    </div>
 
 </body>
 </html>

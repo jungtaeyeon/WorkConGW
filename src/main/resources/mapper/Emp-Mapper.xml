@@ -72,6 +72,15 @@ SELECT COUNT(*) FROM EMP WHERE EMP_EMAIL = #{emp_Email} and EMP_ID = #{emp_Id}
 UPDATE EMP SET EMP_PWD = #{emp_Pwd} where EMP_EMAIL = #{emp_Email} and EMP_ID = #{emp_Id}
 </update>
 
+<select id = "findIdCheck" parameterType="String" resultType="int">
+	SELECT COUNT(*) FROM EMP WHERE EMP_EMAIL = #{emp_Email}
+</select>
+
+
+<select id = "findId" parameterType="EmpVO" resultType="EmpVO">
+	SELECT * FROM EMP WHERE EMP_EMAIL = #{emp_Email} and EMP_NAME = #{emp_Name}
+</select>
+
 
 <update id="updateEmpMyPage" parameterType="EmpVO">
  UPDATE EMP
