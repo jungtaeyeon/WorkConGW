@@ -4,6 +4,7 @@ package com.WorkConGW.board.issue.dao;
 import com.WorkConGW.board.issue.dto.IssueReplyVO;
 import com.WorkConGW.board.issue.dto.IssueVO;
 import com.WorkConGW.board.issue.dto.MilestoneVO;
+import com.WorkConGW.board.issue.dto.ProjectVO;
 import com.WorkConGW.emp.dto.EmpVO;
 import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,7 +23,7 @@ public class IssueDAO {
 	}
 	
 	public void updateIssueVO(IssueVO issueVO) throws SQLException{
-
+        sqlSessionTemplate.update("updateIssueVO", issueVO);
 	}
 	
 	public void updateIssueByDeleteMilestone(MilestoneVO milestoneVO) throws SQLException{
@@ -56,8 +57,8 @@ public class IssueDAO {
         return issueVO;
     }
 	
-	public List<IssueVO> selectMyIssueList(EmpVO empVO) throws SQLException{
-        List<IssueVO> myIssueList = sqlSessionTemplate.selectList("selectMyIssueList", empVO);
+	public List<IssueVO> selectMyIssueList(ProjectVO projectVO) throws SQLException{
+        List<IssueVO> myIssueList = sqlSessionTemplate.selectList("selectMyIssueList", projectVO);
         return myIssueList;
     }
 	
@@ -89,4 +90,9 @@ public class IssueDAO {
         List<IssueVO> milestoneIssue = sqlSessionTemplate.selectList("selectIssueListByMilestoneId", milestoneVO);
         return milestoneIssue;
     }
+
+    public List<IssueVO> selectIssueListByProjectId(ProjectVO projectVO) {
+        return sqlSessionTemplate.selectList("selectIssueListByProjectId", projectVO);
+    }
+
 }

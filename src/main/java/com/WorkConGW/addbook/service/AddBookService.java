@@ -98,6 +98,13 @@ public class AddBookService {
     list = AddBookDAO.addBookGroupSelect(pmap);
     return list;
   }
+  
+  public List<AddBookVO> shareAddBookGroupSelect(Map<String, Object> pmap) {
+    logger.info("shareAddBookGroupSelect");
+    List<AddBookVO> list = new ArrayList<>();
+    list = AddBookDAO.shareAddBookGroupSelect(pmap);
+    return list;
+  }
 
   public int addBookUpdate(Map<String, Object> pmap) {
     logger.info("addBookUpdate");

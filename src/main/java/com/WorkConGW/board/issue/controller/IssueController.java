@@ -36,6 +36,16 @@ public class IssueController extends BaseController {
 	}
 
 
+	@ResponseBody
+	@PostMapping("modify")
+	public String modify(BoardFormVO boardFormVO) throws Exception{
+		IssueVO issueVO = boardFormVO.getIssueVO();
+		issueService.modify(issueVO);
+
+		IssueVO resultVO = issueService.getIssue(issueVO);
+		return resultVO.getDuty_Board_Title();
+	}
+
 	@GetMapping("list")
 	public ModelAndView issueList(BoardFormVO boardFormVO, ModelAndView mnv) throws Exception{
 		mnv.setViewName("board/issue/list");

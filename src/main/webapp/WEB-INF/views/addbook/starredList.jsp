@@ -151,6 +151,7 @@ java.util.ArrayList, com.WorkConGW.addbook.dto.AddBookVO" %>
                         <td>
                           ${addBook.manage_display_name}
                           <i class="starred fa-star <c:choose><c:when test='${addBook.manage_starred eq 1}'> fa-solid</c:when><c:otherwise> fa-regular</c:otherwise></c:choose>"></i>
+                          <input type="hidden" class="manage_id" name="manage_id" value="${addBook.manage_id}"/>
                         </td>
                         <td class="listModalBtn" data-toggle="modal" data-target="#staticBackdrop${status.index}">
                           ${addBook.manage_company_name}
@@ -216,37 +217,48 @@ java.util.ArrayList, com.WorkConGW.addbook.dto.AddBookVO" %>
       <!-- 푸터 인클루드 -->
       <%@ include file="../include/footer.jsp"%>
     </body>
-
+    <c:set var="addBookList" value="${addBookList}" />
+    
     <script>
+      let loginUser = "${loginUser.emp_Id}";
+      let addBookList = "${addBookList[0].emp_id}";
       $(".starred").click(function(){
-        $(this).toggleClass("fa-regular");
-        $(this).toggleClass("fa-solid");
-        let manageId = $(this).closest('td').find('.manage_id').val();
-        let starred = $(this).hasClass("fa-solid");
-        let starredNum;
-        if(starred == true){
-          starredNum = 1;
-        }else{
-          starredNum = 0;
-        }
-        $.ajax({
-          type : 'get',              
-          url : '/WorkConGW/addBook/addBookStarredUpdate',  
-          data : {
-            manage_starred : starredNum,
-            manage_id : manageId
-          },
-          success : function(result) {
-            if(starredNum == 1){
-              alert("중요주소록에 등록되었습니다.");
-            }else{
-              alert("중요주소록에 삭제되었습니다.");
-            }         
-            
-          },    
-          error : function(request, status, error) {        
-            console.log(error)    
+        if(loginUser == addBookList){
+          $(this).toggleClass("fa-regular");
+          $(this).toggleClass("fa-solid");
+          let manageId = $(this).closest('td').find('.manage_id').val();
+          let starred = $(this).hasClass("fa-solid");
+          let starredNum;
+          if(starred == true){
+            starredNum = 1;
+          }else{
+            starredNum = 0;
           }
-        })
+          console.log(manageId);
+          console.log(starredNum);
+          $.ajax({
+            type : 'get',              
+            url : '/WorkConGW/addBook/addBookStarredUpdate',  
+            data : {
+              manage_starred : starredNum,
+              manage_id : manageId
+            },
+            success : function(result) {
+              if(starredNum == 1){
+                alert("중요주소록에 등록되었습니다.");
+                location.reload();
+              }else{
+                alert("중요주소록에 삭제되었습니다.");
+                location.reload();
+              }         
+              
+            },    
+            error : function(request, status, error) {        
+              console.log(error)    
+            }
+          })
+        }else{
+          alert("권한이 없습니다.");
+        }
       })
     </script>

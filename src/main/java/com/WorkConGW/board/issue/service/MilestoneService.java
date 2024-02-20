@@ -5,6 +5,7 @@ import com.WorkConGW.board.issue.dao.MilestoneDAO;
 import com.WorkConGW.board.issue.dto.IssueReplyVO;
 import com.WorkConGW.board.issue.dto.IssueVO;
 import com.WorkConGW.board.issue.dto.MilestoneVO;
+import com.WorkConGW.board.issue.dto.ProjectVO;
 import com.WorkConGW.emp.dto.EmpVO;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;

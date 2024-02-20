@@ -48,8 +48,13 @@ public class AddBookController extends BaseController{
         pmap.put("empId", empId);
         List<AddBookVO> abList = null;
         List<AddBookVO> addBookGroupList = null;
-        logger.info(pmap.toString());
+        List<AddBookVO> shareAddBookGroupSelect = null;
+        shareAddBookGroupSelect = addBookService.shareAddBookGroupSelect(pmap);
         addBookGroupList = addBookService.addBookGroupSelect(pmap);
+        if (addBookGroupList != null && shareAddBookGroupSelect != null) {
+            addBookGroupList.addAll(shareAddBookGroupSelect);
+        }
+        logger.info(pmap.toString());
         abList = addBookService.addBookList(pmap);
         Map<String, List<AddBookVO>> groupedByManageId = new HashMap<>();
 
@@ -80,8 +85,12 @@ public class AddBookController extends BaseController{
         pmap.put("empId", empId);
         List<AddBookVO> abList = null;
         List<AddBookVO> addBookGroupList = null;
-        logger.info(pmap.toString());
+        List<AddBookVO> shareAddBookGroupSelect = null;
+        shareAddBookGroupSelect = addBookService.shareAddBookGroupSelect(pmap);
         addBookGroupList = addBookService.addBookGroupSelect(pmap);
+        if (addBookGroupList != null && shareAddBookGroupSelect != null) {
+            addBookGroupList.addAll(shareAddBookGroupSelect);
+        }
         abList = addBookService.addBookShare(pmap);
         Map<String, List<AddBookVO>> groupedByManageId = new HashMap<>();
 
@@ -111,9 +120,14 @@ public class AddBookController extends BaseController{
         pmap.put("empId", empId);
         List<AddBookVO> abList = null;
         List<AddBookVO> addBookGroupList = null;
+        List<AddBookVO> shareAddBookGroupSelect = null;
         logger.info(pmap.toString());
         abList = addBookService.addBookStarred(pmap);
+        shareAddBookGroupSelect = addBookService.shareAddBookGroupSelect(pmap);
         addBookGroupList = addBookService.addBookGroupSelect(pmap);
+        if (addBookGroupList != null && shareAddBookGroupSelect != null) {
+            addBookGroupList.addAll(shareAddBookGroupSelect);
+        }
         Map<String, List<AddBookVO>> groupedByManageId = new HashMap<>();
 
         for (AddBookVO addBook : abList) {
@@ -136,6 +150,12 @@ public class AddBookController extends BaseController{
         logger.info("addBookSearch");
         List<AddBookVO> abList = null;
         List<AddBookVO> addBookGroupList = null;
+        List<AddBookVO> shareAddBookGroupSelect = null;
+        shareAddBookGroupSelect = addBookService.shareAddBookGroupSelect(pmap);
+        addBookGroupList = addBookService.addBookGroupSelect(pmap);
+        if (addBookGroupList != null && shareAddBookGroupSelect != null) {
+            addBookGroupList.addAll(shareAddBookGroupSelect);
+        }
         EmpVO empVO = (EmpVO) session.getAttribute("loginUser");
         String empId = null;
         if(empVO != null) {
@@ -177,6 +197,12 @@ public class AddBookController extends BaseController{
         logger.info(pmap.toString());
         abList = addBookService.addBookSearchStarred(pmap);
         addBookGroupList = addBookService.addBookGroupSelect(pmap);
+        List<AddBookVO> shareAddBookGroupSelect = null;
+        shareAddBookGroupSelect = addBookService.shareAddBookGroupSelect(pmap);
+        addBookGroupList = addBookService.addBookGroupSelect(pmap);
+        if (addBookGroupList != null && shareAddBookGroupSelect != null) {
+            addBookGroupList.addAll(shareAddBookGroupSelect);
+        }
         Map<String, List<AddBookVO>> groupedByManageId = new HashMap<>();
 
         for (AddBookVO addBook : abList) {
@@ -209,6 +235,12 @@ public class AddBookController extends BaseController{
         logger.info(pmap.toString());
         abList = addBookService.addBookSearchShare(pmap);
         addBookGroupList = addBookService.addBookGroupSelect(pmap);
+        List<AddBookVO> shareAddBookGroupSelect = null;
+        shareAddBookGroupSelect = addBookService.shareAddBookGroupSelect(pmap);
+        addBookGroupList = addBookService.addBookGroupSelect(pmap);
+        if (addBookGroupList != null && shareAddBookGroupSelect != null) {
+            addBookGroupList.addAll(shareAddBookGroupSelect);
+        }
         Map<String, List<AddBookVO>> groupedByManageId = new HashMap<>();
 
         for (AddBookVO addBook : abList) {
@@ -236,8 +268,12 @@ public class AddBookController extends BaseController{
         }
         pmap.put("empId", empId);
         List<AddBookVO> addBookGroupList = null;
+        List<AddBookVO> shareAddBookGroupSelect = null;
+        shareAddBookGroupSelect = addBookService.shareAddBookGroupSelect(pmap);
         addBookGroupList = addBookService.addBookGroupSelect(pmap);
-        
+        if (addBookGroupList != null && shareAddBookGroupSelect != null) {
+            addBookGroupList.addAll(shareAddBookGroupSelect);
+        }
         model.addAttribute("addBookGroupList", addBookGroupList);
         String url = "addbook/insert";
         return url;
@@ -370,6 +406,12 @@ public class AddBookController extends BaseController{
         List<Map<String, Object>> addBookListUpdate = addBookService.addBookListUpdate(pmap);
         List<AddBookVO> addBookGroupList = null;
         addBookGroupList = addBookService.addBookGroupSelect(pmap);
+        List<AddBookVO> shareAddBookGroupSelect = null;
+        shareAddBookGroupSelect = addBookService.shareAddBookGroupSelect(pmap);
+        addBookGroupList = addBookService.addBookGroupSelect(pmap);
+        if (addBookGroupList != null && shareAddBookGroupSelect != null) {
+            addBookGroupList.addAll(shareAddBookGroupSelect);
+        }
         model.addAttribute("addBookGroupList", addBookGroupList);
         model.addAttribute("addBookListUpdate", addBookListUpdate);
         String url = "addbook/insert";

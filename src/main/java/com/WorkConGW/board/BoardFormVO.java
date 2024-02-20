@@ -6,11 +6,14 @@ import com.WorkConGW.board.duty.dto.DutyReplyVO;
 import com.WorkConGW.board.duty.dto.DutyVO;
 import com.WorkConGW.board.issue.dto.IssueReplyVO;
 import com.WorkConGW.board.issue.dto.IssueVO;
+import com.WorkConGW.board.issue.dto.ProjectVO;
 import com.WorkConGW.board.notice.dto.NoticeVO;
 import com.WorkConGW.common.command.FileUploadCommand;
 import com.WorkConGW.emp.dto.EmpVO;
 import org.apache.ibatis.type.Alias;
 import org.springframework.web.multipart.MultipartFile;
+
+import java.util.List;
 
 @Alias("boardFormVO")
 public class BoardFormVO {
@@ -38,6 +41,8 @@ public class BoardFormVO {
 	private IssueVO issueVO;
 	private IssueVO searchIssueVO;
 	private IssueReplyVO issueReplyVO;
+
+	private List<ProjectVO> projectVO;
 
 
 
@@ -208,5 +213,12 @@ public class BoardFormVO {
 		this.searchanonyReplyVO = searchanonyReplyVO;
 	}
 
-}
+	public List<ProjectVO> getProjectVO() {
+		return projectVO;
+	}
 
+	public void setProjectVO(List<ProjectVO> projectVO) {
+		this.projectVO = projectVO;
+	}
+
+}

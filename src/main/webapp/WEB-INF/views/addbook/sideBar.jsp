@@ -82,6 +82,7 @@
     text-decoration: none;
     background-color: #eff4fc;
   }
+  .treeview{font-size: 14px;}
   </style>
   <script>
     $('input[type="text"]').keydown(function() {
@@ -196,9 +197,96 @@
                       <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
                         <p class="dropdown-item" data-toggle="modal" data-target="#addBookGroupUpdateModal${status.index}">수정</p>
                         <p class="dropdown-item addBookGroupDeleteBtn">삭제</p>
-                        <p class="dropdown-item">공유</p>
+                        <p class="dropdown-item" data-toggle="modal" data-target="#managerModal">공유</p>
                       </div>
                     </li>
+                    <!-- 공유 Modal -->
+                    <div class="modal fade" id="managerModal" tabindex="-1" role="dialog" style="display: none;" aria-hidden="true">
+                      <div class="modal-dialog modal-lg" role="document">
+                        <div class="modal-content">
+                          <div class="modal-header">
+                            <h4 class="title" id="largeModalLabel">수신자 추가</h4>
+                          </div>
+                          <div class="modal-body" style="display: flex; justify-content: center; align-items: center; ">
+                            <!-- 모달 수신자 등록 폼 -->
+                            <div style="width: 300px; height: 493px; display: inline-block;">
+                              <div class="body" style="padding: 6px;">
+                                <ul class="nav nav-tabs">
+                                  <li class="nav-item"><a class="nav-link show active" data-toggle="tab" href="#org">조직도</a></li>
+                                </ul>
+                                <div class="tab-content" style="padding: 0;">
+                                  <!-- 조직도 -->
+                                  <div class="tab-pane show active" id="org">
+                                    <div class="header" style="height: 60px; margin-top: 15px;">
+                                      <input oninput="searchOrg(this);" type="search" class="form-control" placeholder="이름으로 검색" style="display: inline-block; width: 75%;">
+                                      <button type="button" class="btn btn-dark" onclick="searchOrg(this);">
+                                        <i class="fas fa-search"></i>
+                                      </button>
+                                    </div>
+                                    <div class="body" style="overflow-y: scroll; height: 300px;">
+                                      <div>
+                                        <ul id="codeList" class="treeview">
+                                          <li>
+                                            WorkCon 조직도&nbsp
+                                            <ul id="lvl0"></ul>
+                                          </li>
+                                        </ul>
+                                      </div>
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                            <!-- 수신자 등록 폼 -->
+                            <div style="width: calc(100% - 305px); height: 440px; display: inline-block; top: 0px;">
+                              <div class="body" style="padding: 6px;">
+                                <h4 id="myDutyList">수신자 목록</h4>
+                                <div class="tab-content" style="padding: 0;">
+                                  <!-- 조직도 -->
+                                  <div class="tab-pane show active" id="org">
+                                    <div class="header" style="height: 60px; margin-top: 15px;">
+                                      <input type="search" id="selectemp_Name" class="form-control" readonly="readonly" placeholder="이름/부서/상태" style="display: inline-block; width: 75%;"> <input type="hidden" id="selectemp_Id">
+                                      <button type="button" class="btn btn-dark" onclick="addEmpList();" style="width: 20%;">
+                                        <i class="fa fa-sort-desc"></i>
+                                      </button>
+                                    </div>
+                                    <div class="body" style="overflow-y: scroll; height: 300px;">
+                                      <div class="table-responsive">
+                                        <table class="table table-hover empListTable">
+                                          <thead>
+                                            <tr>
+                                              <th style="width: 130px;">이름/직위</th>
+                                              <th style="width: 120px;">부서</th>
+                                              <th style="text-align: center;">상태</th>
+                                              <th class="deleteAllEmp" style="cursor: pointer; text-align: center;" onclick="removeAllElement();">
+                                                <i class="fa fa-trash-o"></i>
+                                              </th>
+                                            </tr>
+                                          </thead>
+                                          <tbody>
+                                            <tr class="noEmpList" style="text-align: center; display: none;">
+                                              <td colspan="4">선택된 수신자가 없습니다.</td>
+                                            </tr>
+                                            <tr class="noReceptionList" style="text-align: center; display: none;">
+                                              <td colspan="4">선택된 참조자가 없습니다.</td>
+                                            </tr>
+                                          </tbody>
+                                        </table>
+                                      </div>
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                          <div class="modal-footer">
+                            <button type="button" class="btn btn-primary" id="addEmp">추가</button>
+                            <button type="button" class="btn btn-secondary"
+                              data-dismiss="modal" id="closeModal">닫기</button>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
                     <!-- 그룹수정 Modal -->
                     <div class="modal fade" id="addBookGroupUpdateModal${status.index}" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="addBookGroupUpdateModal" aria-hidden="true">
                       <div class="modal-dialog modal-dialog-centered">
@@ -237,18 +325,52 @@
               <a href="addBookShare">공유주소록</a>
             </div>
             <ul class="main-menu metismenu shareAddBook">
-              <c:forEach var="list" items="${addBookGroupList}">
+              <c:forEach var="list" items="${addBookGroupList}" varStatus="status">
                   <c:if test="${list.share_add_book_yn eq '1'}">
                     <li id="li_importantSchedule" class="metismenuLI addBookGroupLi">
                       <a href="addBookShare?add_book_id=${list.add_book_id}" class=""><i class="fa fa-square" id="importantSchedule"></i><span data-addbookid="${list.add_book_id}">${list.add_book_title}</span></a>
+                      <c:if test="${list.emp_id eq loginUser.emp_Id}">
+                        <i class="fa-solid fa-ellipsis" id="dropdownMenuButton" data-toggle="dropdown" aria-expanded="false"></i>
+                        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                          <p class="dropdown-item" data-toggle="modal" data-target="#addBookGroupUpdateModal${status.index}">수정</p>
+                          <p class="dropdown-item addBookGroupDeleteBtn">삭제</p>
+                        </div>
+                      </c:if>
                     </li>
+                    <!-- 그룹수정 Modal -->
+                    <div class="modal fade" id="addBookGroupUpdateModal${status.index}" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="addBookGroupUpdateModal" aria-hidden="true">
+                      <div class="modal-dialog modal-dialog-centered">
+                        <div class="modal-content">
+                          <div class="modal-header">
+                            <h5 class="modal-title" id="staticBackdropLabel">그룹수정</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                              <span aria-hidden="true">&times;</span>
+                            </button>
+                          </div>
+                          <div class="modal-body">
+                            <form id="addBookGroupUpdate" action="addBookGroupUpdate" method="get">
+                              <div class="addBookGroupInput">
+                                <p style="font-size: 18px;">그룹명</p>
+                                <input type="hidden" name="DoubleCheck" value="0">
+                                <input type="hidden" name="add_book_id" value="${list.add_book_id}">
+                                <input type="text" name="update_add_book_title" value="${list.add_book_title}" class="form-control">
+                                <button type="button" class="btn btn-primary update_add_book_btn">중복확인</button>
+                              </div>
+                            </form>
+                          </div>
+                          <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">닫기</button>
+                            <button type="button" class="btn btn-primary update_add_book_submit_btn">수정</button>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
                   </c:if>
                 </c:forEach>
           </ul>
         </div>
     </div>
 </div>
-
 
 <script>
   $(document).ready(function() {
@@ -272,13 +394,7 @@
             }else if(result == 1 && num == 0){
               alert("중복된 그룹명입니다");
               return;
-            }else if(result == 0 && DoubleCheck == 1 && num == 1){
-              alert("수정되었습니다.");
-              document.querySelector("#addBookGroupUpdate").submit();
-            }else if(result == 1 && DoubleCheck == 0 && num == 1){
-              alert("중복된 그룹명입니다.");
-              return;
-            }  
+            } 
           },    
           error : function(request, status, error) {        
             console.log(error)    
@@ -288,20 +404,27 @@
     $('.update_add_book_btn').on('click', function() {
       let update_add_book_title = $(this).parent().find('input[name="update_add_book_title"]').val();
       let DoubleCheck = $(this).parent().find("input[name='DoubleCheck']").val();
+      console.log(update_add_book_title);
       if(update_add_book_title == ''){
         alert("그룹명을 적어주세요.");
       }else{
-        addBookGroupUpdateDoubleCheck(0 ,update_add_book_title, DoubleCheck);
+        let submit = addBookGroupUpdateDoubleCheck(0 ,update_add_book_title, DoubleCheck);
       }
     });
     $('.update_add_book_submit_btn').on('click', function() {
-      let update_add_book_title = $(this).parent().parent().find('.modal-body #addBookGroupUpdate .addBookGroupInput input[name="update_add_book_title"]').val();
-      console.log(update_add_book_title);
-      let DoubleCheck = $(this).parent().parent().find(".modal-body #addBookGroupUpdate .addBookGroupInput input[name='DoubleCheck']").val();
-      if(update_add_book_title == ''){
+      let update_add_book_title_submit = $(this).closest('.modal').find('.modal-body #addBookGroupUpdate .addBookGroupInput input[name="update_add_book_title"]').val();
+      console.log(update_add_book_title_submit);
+      let DoubleCheck = $(this).closest('.modal').find(".modal-body #addBookGroupUpdate .addBookGroupInput input[name='DoubleCheck']").val();
+      
+      if(update_add_book_title_submit == ''){
         alert("그룹명을 적어주세요.");
+      }else if(DoubleCheck == 0){
+        alert("중복확인을 해주세요.");
       }else{
-        addBookGroupUpdateDoubleCheck(1 ,update_add_book_title, DoubleCheck);
+        let modal = $(this).closest('.modal');
+        alert("수정되었습니다.");
+        // 모달 내부의 폼을 찾아 제출
+        modal.find('#addBookGroupUpdate').submit();
       }
     });
     $('.addBookGroupDeleteBtn').on('click', function() {
@@ -331,5 +454,317 @@
         }
     });
   });
+
+  window.onload = function(){
+	deptTrees();
+}
+
+$("#codeList").treeview({collapsed: false});
+
+
+// 게시판 그룹 변경시 입력 폼 설정
+function changeCategory(obj){
+	$('.formGroup').css('display','none');
+	$('.boardTitle').text('제목');
+	$('.'+obj.value+"Form").css("display",'block');
+	
+	if(obj.value=='duty'){
+		$('.boardTitle').text('업무 제목');
+	}
+}
+
+// 입력폼 수신자 삭제
+function deleteElement(obj){
+	console.log($('.'+$(obj).attr('class')));
+	$('.'+$(obj).attr('data-class')).remove();
+	$(obj).closest('div').remove();
+}
+
+//얍시로 숨겨놓기 시작
+$("#addManager").click(function(){
+	
+	$("#largeModalLabel").html("수신자 추가");
+	$("#myDutyList").html("수신자 목록");
+	$("#managerModal").removeClass("receptionModal");
+	$("#managerModal").addClass("managerModal");
+	$(".noReceptionList").css("display","none");
+	$(".noEmpList").css("display","");
+	$(".myReceptioner").css("display","none");
+	$(".myManager").css("display","");
+	$(".fas fa-redo").css("display","none");
+	
+	
+	if($(".myManager").length > 0){
+		$(".noEmpList").css("display","none");
+	}
+
+});
+$("#addReceptioner").click(function(){
+	$("#largeModalLabel").html("참조자 추가");
+	$("#myDutyList").html("참조자 목록");
+	$("#managerModal").removeClass("managerModal");
+	$("#managerModal").addClass("receptionModal");
+	$(".noEmpList").css("display","none");
+	$(".noReceptionList").css("display","");
+	$(".myManager").css("display","none");
+	$(".myReceptioner").css("display","");
+	$(".fas fa-redo").css("display","");
+	
+	if($(".myReceptioner").length > 0){
+		$(".noReceptionList").css("display","none");
+	}
+
+});
+
+$("#addEmp").click(function(){
+	if($(".managerModal").length > 0){//수신자 추가일 시
+		$(".empEnforcerList").remove();
+		
+		var tempTag = "";
+		for(var i = 0; i < $(".myManager").length; i++){
+			tempTag += '<div style="border:1px solid #ced4da;border-radius: 0.25rem;padding:10px 15px;width:150px;display:inline-block;">'
+					+'<span>'+$(".myManager").eq(i).find("td").eq(0).text()+'</span>'
+					+'<div class="hiddenId manager" style="display:none;" value="'+$(".myManager").eq(i).attr("value")+'"></div>'
+					+'<i class="fas fa-times" style="float:right;cursor:pointer;margin-top:5px;" onclick="deleteElement(this);"></i>'
+					+'</div>';
+		}
+		
+		$(".empFinish").html(tempTag);
+		$("tbody").find(".myManager").remove();
+	}else{//참조자 추가일 시
+		$(".empReceptionDeptList").remove();
+		$(".empReceptionList").remove();
+		
+		var tempTag = "";
+		for(var i = 0; i < $(".myReceptioner").length; i++){
+			if($(".myReceptioner").eq(i).hasClass("myReceptionDept")){
+				tempTag += '<div class="l-seagreen" style="border:1px solid #ced4da;border-radius: 0.25rem;padding:10px 15px;width:150px;display:inline-block;">'
+						+'<span>'+$(".myReceptioner").eq(i).find("td").eq(0).text()+'</span>'
+						+'<div class="hiddenId receptionDept" style="display:none;" value="'+$(".myReceptioner").eq(i).attr("value")+'"></div>'
+						+'<i class="fas fa-times" style="float:right;cursor:pointer;margin-top:5px;" onclick="deleteElement(this);"></i>'
+						+'</div>';
+				$(".empReception").html(tempTag);
+			}else{
+				tempTag += '<div style="border:1px solid #ced4da;border-radius: 0.25rem;padding:10px 15px;width:150px;display:inline-block;">'
+						+'<span>'+$(".myReceptioner").eq(i).find("td").eq(0).text()+'</span>'
+						+'<div class="hiddenId receptioner" style="display:none;" value="'+$(".myReceptioner").eq(i).attr("value")+'"></div>'
+						+'<i class="fas fa-times" style="float:right;cursor:pointer;margin-top:5px;" onclick="deleteElement(this);"></i>'
+						+'</div>';
+			}
+		}
+		$(".empReception").html(tempTag);
+		$("tbody").find(".myReceptioner").remove();
+	}
+	
+	$("#closeModal").click();
+	
+});
+////숨겨놓기끝
+
+//조직도 출력
+function deptTrees(){
+	$.ajax({
+		type:"GET",
+		url:"/WorkConGW/orgList",
+		contentType:"application/json",
+	// 	data:dataSet,
+		processData:true,
+		success: function(data) {
+			data.forEach(function(e, i) {
+				var deptId = e.deptId;
+				var deptName = e.deptName;
+			    var deptSupId = e.deptSupId;
+			    var position = e.position;
+			    var empState = e.empState;
+			    var stName = e.empState;
+			    var level = 5;
+			    var deptSupName = $('li[id="'+deptSupId+'"] a').eq(0).text();
+			    var li = "";
+			    if(e.level){
+					level = e.level;
+			    }
+			    if(position){
+					li = '<li onclick="empChecked(this);" data-deptId="'+deptSupId+'" data-name="'+deptName+" "+position+'" data-dept="'+deptSupName+'" data-state="'+(empState==null ? '' : empState)+'" ondblclick="addEmpList();" id="'+ deptId +'" lvl="'+level +'" class="myChecked" style="cursor:pointer" ><img src="<%=request.getContextPath() %>js/treeview/images/emp.png" >'+" "+ deptName + " "+e.position+'</li>';
+			    }else{
+			    	li = '<li id="'+ deptId +'" lvl="'+level +'"><a class="file code" style="cursor: pointer;" onclick="myClick(this);" >'+ deptName +'&nbsp&nbsp<i data-id="'+deptId+'" data-name="'+deptName+'" style="color:#383d41; cursor:pointer;"></i></a></li>';
+			    }
+				
+				// 1레벨은 그냥 추가
+				// 다음 레벨부터는 상위 li의 클래스를 폴더로 바꾸고 자기 자신을 추가
+			    if(level == 1) {
+					$("#lvl0").append(li);
+				} else {
+					  var parentLi = $("li[id='"+ deptSupId +"']");
+					  
+					  parentLi.addClass("expandable lastExpandable");
+				      var bUl = parentLi.children("ul");
+			   		  
+				      // 하위 그룹이 없으면 li로 추가
+				      // 하위 그룹이 있으면 ul로 추가
+				      if(bUl.length == 0) {
+				    	  var div = "<div onclick='plusFromMinus(this);' class='hitarea expandable-hitarea lastExpandable-hitarea'></div>"
+				          li = "<ul class='' style='display: none;'>" + li + "</ul>";
+				          parentLi.append(div);
+				          parentLi.append(li);
+				          
+				          return false;
+				      } else {
+				          if(position){
+				        	  bUl.prepend(li);
+				        	  return false;
+				          }
+				    	  bUl.append(li);
+				      }
+			     }
+			});
+		}
+	});
+}
+
+//조직도 검색을 위한 함수입니다.
+function searchOrg(obj){
+	var keyword = $(obj).val();
+	if(!keyword){//검색조건이 비어있으면 리턴
+		$("#codeList")[0].scrollIntoView();
+		$(".myChecked").css("background-color","");
+		return false;
+	}
+	
+	$("li:contains('"+keyword+"')").eq(2);
+// 	console.log($("li:contains('"+keyword+"')"));
+// 	console.log($("li:contains('"+keyword+"')").eq(2)[0]);
+	
+	var $plusIcon = $("li:contains('"+keyword+"')").eq(2).parent().parent().children("div");//한칸
+	var $plusIcon2 = $("li:contains('"+keyword+"')").eq(3).parent().parent().children("div");//한칸이상
+	
+	if($("li:contains('"+keyword+"')").eq(2).attr("lvl") == 5){
+		
+		$($plusIcon).parent("li").removeClass("expandable lastExpandable");
+		$($plusIcon).parent("li").addClass("collapsable lastCollapsable");
+		$($plusIcon).removeClass("hitarea expandable-hitarea lastExpandable-hitarea");
+		$($plusIcon).addClass("hitarea collapsable-hitarea lastCollapsable-hitarea");
+		$($plusIcon).parent("li").children("ul").css("display","block");
+		
+		$("li:contains('"+keyword+"')").eq(2)[0].scrollIntoView();
+		$("li:contains('"+keyword+"')").eq(2)[0].click();
+	}else{
+		if($("li:contains('"+keyword+"')").eq(3)[0]){
+			$($plusIcon2).parent("li").removeClass("expandable lastExpandable");
+			$($plusIcon2).parent("li").addClass("collapsable lastCollapsable");
+			$($plusIcon2).removeClass("hitarea expandable-hitarea lastExpandable-hitarea");
+			$($plusIcon2).addClass("hitarea collapsable-hitarea lastCollapsable-hitarea");
+			$($plusIcon2).parent("li").children("ul").css("display","block");
+			
+			$("li:contains('"+keyword+"')").eq(3)[0].scrollIntoView();
+			$("li:contains('"+keyword+"')").eq(3)[0].click();
+		}
+		
+	}
+	
+}
+
+//열고 닫는 함수입니다.
+function plusFromMinus(obj){
+	if($(obj).hasClass("expandable-hitarea")){
+		$(obj).parent("li").removeClass("expandable lastExpandable");
+		$(obj).parent("li").addClass("collapsable lastCollapsable");
+		$(obj).removeClass("hitarea expandable-hitarea lastExpandable-hitarea");
+		$(obj).addClass("hitarea collapsable-hitarea lastCollapsable-hitarea");
+		$(obj).parent("li").children("ul").css("display","block");
+	}else{
+		$(obj).parent("li").removeClass("collapsable lastCollapsable");
+		$(obj).parent("li").addClass("expandable lastExpandable");
+		$(obj).removeClass("hitarea collapsable-hitarea lastCollapsable-hitarea");
+		$(obj).addClass("hitarea expandable-hitarea lastExpandable-hitarea");
+		$(obj).parent("li").children("ul").css("display","none");
+	}
+}
+
+function empChecked(obj) {
+	//기존 체크된 css 및 클래스 정보 삭제
+	$(".myChecked").css("background-color","");
+	$("li").removeClass("myChecked");
+	
+	//새로 체크된 css 및 클래스 정보 갱신
+	$(obj).addClass("myChecked");
+	$(".myChecked").css("background-color","#2980b9");
+	
+	$('#selectemp_Name').val($(obj).text().trim());
+}
+
+// 업무 수신자 목록으로 추가
+function addEmpList(){
+	if($('#selectemp_Name').val().trim()==""){
+		alert("수신자를 선택하세요.");
+		return;
+	}
+	
+	var trTag = "";
+	
+	if($(".managerModal").length > 0){//수신자 추가시 조건
+		for(var i = 0; i < $(".myManager").length ; i++){
+			var emp_Id = $(".myManager").eq(i).attr("value");
+			if($('.myChecked').attr('id') === emp_Id){
+				alert("이미 추가된 수신자입니다.");
+				return false;
+			}
+		}
+	
+		trTag += '<tr class="id_'+$('.myChecked').attr('id')+' myManager" value="'+$('.myChecked').attr('id')+'">'
+				+"<td>"+$('.myChecked').attr('data-name')+"</td>"
+				+"<td>"+$('.myChecked').attr('data-dept')+"</td>"
+				+'<td style="text-align: center;">'+$('.myChecked').attr('data-state')+"</td>"
+				+'<td style="text-align: center;cursor:pointer;" onclick="removeElement(this);"><i class="fas fa-times"></i></td>'
+				+"</tr>";
+	}else{//참조자 추가시 조건
+		for(var i = 0; i < $(".myReceptioner").length ; i++){
+			var emp_Id = $(".myReceptioner").eq(i).attr("value");
+			if($('.myChecked').attr('id') === emp_Id){
+				alert("이미 추가된 참조자입니다.");
+				return false;
+			}
+		}
+		
+		trTag +=  '<tr class="id_'+$('.myChecked').attr('id')+' myReceptioner" value="'+$('.myChecked').attr('id')+'">'
+				+"<td>"+$('.myChecked').attr('data-name')+"</td>"
+				+"<td>"+$('.myChecked').attr('data-dept')+"</td>"
+				+'<td style="text-align: center;">'+$('.myChecked').attr('data-state')+"</td>"
+				+'<td style="text-align: center;cursor:pointer;" onclick="removeElement(this);"><i class="fas fa-times"></i></td>'
+				+"</tr>";
+	}
+	$('.empListTable tbody').append(trTag);
+	if($(".myManager").length > 0){
+		$(".noEmpList").css("display","none");
+	}
+	
+	if($(".myReceptioner").length > 0){
+		$(".noReceptionList").css("display","none");
+	}
+}
+
+// 업무 수신자 리스트에서 삭제
+function removeElement(obj){
+	$(obj).closest('tr').remove();
+	
+	if($('.empListTable tbody').children().length==1){
+		$('.noEmpList').css('display','');
+	}
+}
+
+// 업무 수신자 리스트 전체 삭제
+function removeAllElement(){
+	var check = confirm('수신자 목록을 비우시겠습니까?');
+	if(!check){
+		return;
+	}
+	$('form[name="temp"]').children().remove();
+	$('.empListTable tbody').children().each(function(index,item){
+		if(index==0){
+			return true;
+		}
+		$(this).remove();
+	})
+	$('.noEmpList').css('display','');
+}
 
 </script>

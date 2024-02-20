@@ -117,20 +117,24 @@ java.util.ArrayList, com.WorkConGW.addbook.dto.AddBookVO" %>
                   />
                 </div>
               </form>
+
               <!-- 검색 button 클래스 --><button
                 class="btn btn-outline-secondary"
                 onclick="serchBtn()"
                 name="serchBtn"
                 type="button"
               >
-                검색
+              검색
               </button>
             </div>
+
+            <c:if test="${addBookGroupList[0].emp_id eq loginUser.emp_Id}">
             <div class="delectBtnGroup">
               <button class="btn btn-primary delectBtn" onclick="deleteBtn()" name="serchBtn" type="button" >
                 주소록 삭제
               </button>
             </div>
+            </c:if>
           </div>
           <table class="table table-hover">
             <!-- 부트스트랩 게시판 -->
@@ -159,7 +163,7 @@ java.util.ArrayList, com.WorkConGW.addbook.dto.AddBookVO" %>
                 <c:set var="processedIds" value="${processedIds},${manageId}" />
                 <c:forEach var="addBook" items="${addBookList}" varStatus="loop">
                       <c:if test="${loop.index == 0}">
-                        <th class="tableCheckBox"><input type="checkbox" name="manage_id" value="${addBook.manage_id}" class="checkBox" /></th>
+                        <th class="tableCheckBox"><input type="checkbox" name="manage_id" value="${addBook.manage_id}" class="checkBox manage_id" /></th>
                         <td>
                           ${addBook.manage_display_name}
                           <i class="starred fa-star <c:choose><c:when test='${addBook.manage_starred eq 1}'> fa-solid</c:when><c:otherwise> fa-regular</c:otherwise></c:choose>"></i>
@@ -229,37 +233,47 @@ java.util.ArrayList, com.WorkConGW.addbook.dto.AddBookVO" %>
       <%@ include file="../include/footer.jsp"%>
     </body>
 
+
+    
     <script>
+      let loginUser = "${loginUser.emp_Id}";
+      let addBookList = "${addBookGroupList[0].emp_id}";
       $(".starred").click(function(){
-        $(this).toggleClass("fa-regular");
-        $(this).toggleClass("fa-solid");
-        let manageId = $(this).closest('td').find('.manage_id').val();
-        let starred = $(this).hasClass("fa-solid");
-        let starredNum;
-        if(starred == true){
-          starredNum = 1;
-        }else{
-          starredNum = 0;
-        }
-        $.ajax({
-          type : 'get',              
-          url : '/WorkConGW/addBook/addBookStarredUpdate',  
-          data : {
-            manage_starred : starredNum,
-            manage_id : manageId
-          },
-          success : function(result) {
-            if(starredNum == 1){
-              alert("중요주소록에 등록되었습니다.");
-            }else{
-              alert("중요주소록에 삭제되었습니다.");
-            }         
-            
-          },    
-          error : function(request, status, error) {        
-            console.log(error)    
+        if(loginUser == addBookList){
+          $(this).toggleClass("fa-regular");
+          $(this).toggleClass("fa-solid");
+          let manageId = $(this).closest('tr').find('.manage_id').val();
+          let starred = $(this).hasClass("fa-solid");
+          let starredNum;
+          if(starred == true){
+            starredNum = 1;
+          }else{
+            starredNum = 0;
           }
-        })
+          console.log(manageId);
+          console.log(starredNum);
+          $.ajax({
+            type : 'get',              
+            url : '/WorkConGW/addBook/addBookStarredUpdate',  
+            data : {
+              manage_starred : starredNum,
+              manage_id : manageId
+            },
+            success : function(result) {
+              if(starredNum == 1){
+                alert("중요주소록에 등록되었습니다.");
+              }else{
+                alert("중요주소록에 삭제되었습니다.");
+              }         
+              
+            },    
+            error : function(request, status, error) {        
+              console.log(error)    
+            }
+          })
+        }else{
+          alert("권한이 없습니다.");
+        }
       })
       const deleteBtn = () =>{
         let result = confirm('삭제하시겠습니까?');
@@ -269,22 +283,26 @@ java.util.ArrayList, com.WorkConGW.addbook.dto.AddBookVO" %>
                   recordIds.push($(this).val());
           });
           console.log(recordIds);
-          $.ajax({
-            type: "get",
-            url: "/WorkConGW/addBook/addBookDelete",
-            data: { manage_id: recordIds },
-            success: function(response) {
-                // 성공적으로 처리된 후에 수행할 작업
-                if(response == 1){
-                  alert('삭제되었습니다');
-                  location.reload();
-                }
-            },
-            error: function(xhr, status, error) {
-                // 오류 처리
-                console.error(xhr.responseText);
-            }
-          });
+          if(recordIds.length != 0){
+            $.ajax({
+              type: "get",
+              url: "/WorkConGW/addBook/addBookDelete",
+              data: { manage_id: recordIds },
+              success: function(response) {
+                  // 성공적으로 처리된 후에 수행할 작업
+                  if(response == 1){
+                    alert('삭제되었습니다');
+                    location.reload();
+                  }
+              },
+              error: function(xhr, status, error) {
+                  // 오류 처리
+                  console.error(xhr.responseText);
+              }
+            });
+          }else{
+            alert("선택된게 없습니다.");
+          }
         }
       }
       $('#checkAll').change(function() {

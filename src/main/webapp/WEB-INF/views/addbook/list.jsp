@@ -159,7 +159,7 @@ java.util.ArrayList, com.WorkConGW.addbook.dto.AddBookVO" %>
                 <c:set var="processedIds" value="${processedIds},${manageId}" />
                 <c:forEach var="addBook" items="${addBookList}" varStatus="loop">
                       <c:if test="${loop.index == 0}">
-                        <th class="tableCheckBox"><input type="checkbox" name="manage_id" value="${addBook.manage_id}" class="checkBox" /></th>
+                        <th class="tableCheckBox"><input type="checkbox" name="manage_id" value="${addBook.manage_id}" class="checkBox manage_id" /></th>
                         <td>
                           ${addBook.manage_display_name}
                           <i class="starred fa-star <c:choose><c:when test='${addBook.manage_starred eq 1}'> fa-solid</c:when><c:otherwise> fa-regular</c:otherwise></c:choose>"></i>
@@ -233,7 +233,7 @@ java.util.ArrayList, com.WorkConGW.addbook.dto.AddBookVO" %>
       $(".starred").click(function(){
         $(this).toggleClass("fa-regular");
         $(this).toggleClass("fa-solid");
-        let manageId = $(this).closest('td').find('.manage_id').val();
+        let manageId = $(this).closest('tr').find('.manage_id').val();
         let starred = $(this).hasClass("fa-solid");
         let starredNum;
         if(starred == true){
@@ -269,22 +269,26 @@ java.util.ArrayList, com.WorkConGW.addbook.dto.AddBookVO" %>
                   recordIds.push($(this).val());
           });
           console.log(recordIds);
-          $.ajax({
-            type: "get",
-            url: "/WorkConGW/addBook/addBookDelete",
-            data: { manage_id: recordIds },
-            success: function(response) {
-                // 성공적으로 처리된 후에 수행할 작업
-                if(response == 1){
-                  alert('삭제되었습니다');
-                  location.reload();
-                }
-            },
-            error: function(xhr, status, error) {
-                // 오류 처리
-                console.error(xhr.responseText);
-            }
-          });
+          if(recordIds.length != 0){
+            $.ajax({
+              type: "get",
+              url: "/WorkConGW/addBook/addBookDelete",
+              data: { manage_id: recordIds },
+              success: function(response) {
+                  // 성공적으로 처리된 후에 수행할 작업
+                  if(response == 1){
+                    alert('삭제되었습니다');
+                    location.reload();
+                  }
+              },
+              error: function(xhr, status, error) {
+                  // 오류 처리
+                  console.error(xhr.responseText);
+              }
+            });
+          }else{
+            alert("선택된게 없습니다.");
+          }
         }
       }
       $('#checkAll').change(function() {

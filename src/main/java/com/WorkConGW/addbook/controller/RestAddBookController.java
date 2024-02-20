@@ -40,8 +40,12 @@ public class RestAddBookController {
         pmap.put("empId", empId);
         logger.info(pmap.toString());
         List<AddBookVO> addBookGroupList = null;
+        List<AddBookVO> shareAddBookGroupSelect = null;
+        shareAddBookGroupSelect = addBookService.shareAddBookGroupSelect(pmap);
         addBookGroupList = addBookService.addBookGroupSelect(pmap);
-        
+        if (addBookGroupList != null && shareAddBookGroupSelect != null) {
+            addBookGroupList.addAll(shareAddBookGroupSelect);
+        }
         return addBookGroupList;
     }
 

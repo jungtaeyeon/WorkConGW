@@ -82,6 +82,14 @@ public class AddBookDAO {
     return list;
   }
 
+  public List<AddBookVO> shareAddBookGroupSelect(Map<String, Object> pmap) {
+    logger.info("shareAddBookGroupSelect");
+    AddBookVO addBookVO = new AddBookVO();
+    List<AddBookVO> list = sqlSessionTemplate.selectList("shareAddBookGroupSelect", pmap);
+    logger.info(list.toString());
+    return list;
+  }
+
   public List<Map<String, Object>> addBookListUpdate(Map<String, Object> pmap) {
     logger.info("addBookListUpdate");
     List<Map<String, Object>> list = sqlSessionTemplate.selectList("addBookListUpdate", pmap);

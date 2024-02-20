@@ -34,6 +34,8 @@
                                 ) OR b.add_book_id IS NULL)
                 WHERE 
                         a.emp_id = #{empId}
+                        AND (b.share_add_book_yn = '0' OR b.share_add_book_yn IS NULL)
+                        AND (NOT b.add_book_id = '0' OR b.add_book_id IS NULL)
                         <if test="add_book_id != null">
                                 <choose>
                                         <otherwise>
@@ -57,24 +59,26 @@
         </select>
         <select id="addBookStarred" resultType="AddBookVO" parameterType="map">
                 SELECT 
-                        manage_id, 
-                        manage_display_name, 
-                        manage_hp, 
-                        manage_email, 
+                        a.manage_id AS manage_id, 
+                        a.manage_display_name AS manage_display_name, 
+                        a.manage_hp AS manage_hp,  
+                        a.manage_email AS manage_email, 
                         NVL(a.manage_remark, ' ') AS manage_remark, 
-                        manage_company_name,
-                        manage_official_name, 
-                        manage_dept_name, 
-                        manage_starred,
+                        a.manage_company_name AS manage_company_name,
+                        a.manage_official_name AS manage_official_name, 
+                        a.manage_dept_name AS manage_dept_name,  
+                        a.manage_starred AS manage_starred,
                         A.MANAGE_ADD_BOOK_ID,
                         NVL(b.add_book_id, '0') AS add_book_id, 
                         NVL(b.add_book_title, ' ') AS add_book_title, 
                         NVL(b.share_add_book_yn, '0') AS share_add_book_yn, 
-                        a.emp_id AS emp_id
+                        a.emp_id AS emp_id,
+                        s.manage_id AS share_manage_id,
+                        s.emp_id AS share_emp_id
                 FROM 
                         add_book_manage a
                 LEFT OUTER JOIN 
-                        add_book  b
+                        add_book  b 
                 ON 
                         a.emp_id = b.emp_id
                         AND (b.add_book_id IN (
@@ -82,8 +86,12 @@
                                         FROM dual
                                         CONNECT BY REGEXP_SUBSTR(A.MANAGE_ADD_BOOK_ID, '[^#]+', 1, LEVEL) IS NOT NULL
                                 ) OR b.add_book_id IS NULL)
+                LEFT OUTER JOIN
+                        share_add_book s 
+                ON 
+                        a.manage_id = s.manage_id
                 WHERE 
-                        a.emp_id = #{empId}
+                        (s.emp_id = #{empId} OR a.emp_id = #{empId})
                         AND manage_starred = '1'
                 ORDER BY 
                         manage_id ASC
@@ -123,8 +131,8 @@
                 ON 
                         a.manage_id = s.manage_id
                 WHERE 
-                        s.emp_id = '00016'
-                        or a.emp_id = '00016'  
+                        s.emp_id = #{empId}
+                        or a.emp_id = #{empId}  
                         AND s.manage_id IS NOT NULL
                         <if test="add_book_id != null">
                                 <choose>
@@ -140,12 +148,31 @@
         <!-- 주소록 그룹 셀렉(주소록 생성시 필요) -->
         <select id="addBookGroupSelect" resultType="AddBookVO" parameterType="map">
                 SELECT 
-                add_book_id,
-                add_book_title,
-                share_add_book_yn,
-                emp_id
-                FROM add_book
-                WHERE emp_id = #{empId}
+                        a.add_book_id,
+                        a.add_book_title,
+                        a.share_add_book_yn,
+                        a.emp_id
+                FROM 
+                        add_book a
+                WHERE 
+                        a.emp_id = #{empId}
+                        and a.share_add_book_yn = '0'
+        </select>
+
+        <select id="shareAddBookGroupSelect" resultType="AddBookVO" parameterType="map">
+                SELECT 
+                        a.add_book_id,
+                        MAX(a.add_book_title) AS add_book_title,
+                        MAX(a.share_add_book_yn) AS share_add_book_yn,
+                        MAX(a.emp_id) AS emp_id,
+                        MAX(b.emp_id) AS share_emp_id
+                FROM 
+                        add_book a
+                INNER JOIN 
+                        share_add_book b ON a.add_book_id = b.add_book_id 
+                where a.emp_id = #{empId} or b.emp_id = #{empId}
+                GROUP BY 
+                        a.add_book_id
         </select>
 
         <!-- 주소록 특정 검색 셀렉(개인/공유 공용) -->
@@ -171,6 +198,7 @@
                         add_book  b
                 ON 
                         a.emp_id = b.emp_id
+                        AND NOT b.share_add_book_yn = '1'
                         AND (b.add_book_id IN (
                                         SELECT REGEXP_SUBSTR(A.MANAGE_ADD_BOOK_ID, '[^#]+', 1, LEVEL) AS ADD_BOOK_ID
                                         FROM dual
