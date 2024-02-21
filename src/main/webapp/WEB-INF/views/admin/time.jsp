@@ -135,7 +135,24 @@
 
 </body>
 <script>
+
+    let excuted = false;
+
     function modifyTime(){
+
+        let currnetTime = new Date();
+        let executionTime = new Date();
+        executionTime.setHours(22,1,0,0) // 6시 1분 0초
+        if(currnetTime > executionTime && !excuted)
+        {
+            excuted = true;
+        }
+        else{
+            alert('6시 이후에 업데이트하세요')
+            return;
+        }
+
+
         let form = $('form[name="timeForm"]')[0];
         $.ajax({
             url:form.action,
@@ -145,12 +162,19 @@
             processData : false,
             success:function ()
             {
+                alert('변경사항이 완료되었습니다.')
+                location.reload();
             },
             error:function ()
             {
-                alert('변경사항이 완료되었습니다.')
+
             }
         })
     }
+
+
+
+
+
 </script>
 </html>

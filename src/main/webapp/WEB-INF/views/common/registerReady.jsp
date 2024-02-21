@@ -10,6 +10,6 @@
 <script>
 
 alert('메일 인증 하세요.')
-history.go(-1);
+self.location = "<%=request.getContextPath()%>/common/loginForm";
 
 </script>

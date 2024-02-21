@@ -579,41 +579,6 @@
   // 최초 비밀번호 변경 여부
   let flag_empUpdateYn = false;
 
-  checkEmpUdateYn();
-  function checkEmpUpdateYn()
-  {
-    let mst = ""
-
-    $.ajax({
-      type:"post",
-      url:"<%=request.getContextPath()%>/emp/checkEmpUpdateYn",
-      contentType:"html/text",
-      async : false,
-      success : function (data)
-      {
-        msg = data;
-      },
-      error:function (e)
-      {
-        console.log(e)
-      }
-
-    })
-
-    if(msg ==='fail')
-    {
-      $("#emp_Pwd").html("* 변경필요");
-      alert("비밀번호 변경이 필요합니다.");
-      window.open('<%=request.getContextPath()%>/common/password/modifyForm', '비밀번호수정', "width=700,height=650,left=600")
-    }
-
-    if(msg ==='success')
-    {
-      $("#emp_Pwd").html("");
-      flag_empUpdateYn = true;
-    }
-  }
-
 
 
   //수정

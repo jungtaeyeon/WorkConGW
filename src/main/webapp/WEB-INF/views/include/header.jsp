@@ -494,6 +494,27 @@
 	}
 
 
+	function checkSession() {
+		let session = <%=session.getMaxInactiveInterval()%> ;
+		if(session > 300){
+			alert('시간이 만료되었습니다. 로그인해주세요')
+			location.href = "<%=request.getContextPath()%>/common/loginForm"
+			sessionStorage.clear()
+		}
+		else{
+			document.write(session);
+			clearTimeout(orange);
+		}
+	}
+
+	function checkStart() {
+		orange = setInterval(checkSession, 300000);
+		console.log(orange)
+	}
+	checkStart();
+
+
+
 
 </script>
 

@@ -189,6 +189,10 @@ public class CommonController {
         HttpSession session = request.getSession();
         try{
             empVO = empService.login(empVO.getEmp_Id(),empVO.getEmp_Pwd(),session);
+            if(empVO.getEmp_Update_Yn()=="n")
+            {
+                url = "redirect:/common/firstChange";
+            }
             logger.info(empVO.toString());
             users.put(empVO.getEmp_Id(),session); // users에서 관리하는 이유는 로그인 유저 정보를 조회하기 위해서
             if(empVO.getEmp_authkey() == 0)
@@ -219,12 +223,6 @@ public class CommonController {
         
         return url;
     }
-
-
-    private boolean rememberId(boolean rememberId) {
-        return rememberId;
-    }
-
 
 
 

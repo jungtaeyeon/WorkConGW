@@ -292,15 +292,6 @@
                 </select>
             </div>
 
-            <div class="input-field">
-                <label>* 상태설정 : </label>
-                <select id = "attendStId" name="attend_St_Id" class="form-control">
-                    <option value="1">정상출근</option>
-                    <option value="0">퇴근</option>
-                    <option value="2">지각</option>
-                    <option value="3">조퇴</option>
-                </select>
-            </div>
 
             <div class="input-field">
                 <label>* 상태 : </label>

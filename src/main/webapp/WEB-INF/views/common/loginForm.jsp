@@ -303,10 +303,6 @@ body, input {
               <input id = "emp_Pwd"name="emp_Pwd" type="password" placeholder="비밀번호" required />
             </div>
             <div class="login-info">
-              <div class="save-id form-check form-switch">
-                <input name="saveId" id="saveCheck" value = "true" class="form-check-input" type="checkbox" role="switch" ${checked} />
-                <label for="saveCheck" class="form-check-label">아이디 저장</label>
-              </div>
               <div class="find-idpwd">
                 <button type="button" class="btn btn-sm" onclick="OpenWindow('<%=request.getContextPath()%>/emp/findIdView', 'WorkConGW', 700,700)">아이디 찾기</button>
                 <button type="button" class="btn btn-sm" onclick="OpenWindow('<%=request.getContextPath()%>/emp/findPwView', 'WorkConGW', 700,700)">비밀번호 찾기</button>

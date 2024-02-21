@@ -143,4 +143,16 @@ public class EmpDAO {
         logger.info(emp_email);
         return sqlSessionTemplate.selectList("findId",empVO);
     }
+
+    public int modifyEmpPwd(EmpVO empVO) {
+        empVO.setEmp_Update_Yn("y");
+        logger.info(empVO.toString());
+        int cnt = sqlSessionTemplate.update("modifyEmpPwd", empVO);
+        return cnt;
+    }
+
+    public int selectByPwd(EmpVO empVO) {
+
+        return sqlSessionTemplate.selectOne("selectByPwd", empVO);
+    }
 }

@@ -20,6 +20,7 @@ public class TimeDAO {
 
 
     public void modifyTime(TimeVO timeVO) {
+
         sqlSessionTemplate.update("modifyTime",timeVO);
     }
 }

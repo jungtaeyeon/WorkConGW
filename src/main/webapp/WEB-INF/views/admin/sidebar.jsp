@@ -1,9 +1,13 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
          pageEncoding="UTF-8"%>
+<%@ page trimDirectiveWhitespaces="true" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <!DOCTYPE html>
 <html>
 <head>
     <meta charset="UTF-8">
+    <meta http-equiv="refresh" content="5">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <link rel="stylesheet" href="<%=request.getContextPath() %>/js/treeview/jquery.treeview.css" />
@@ -475,6 +479,28 @@
             location.href = '${root}/notice/list';
         }
     }
+
+
+
+    function checkSession() {
+        let session = <%=session.getMaxInactiveInterval()%> ;
+        if(session > 300){
+            alert('시간이 만료되었습니다. 로그인해주세요')
+            location.href = "<%=request.getContextPath()%>/common/loginForm"
+            sessionStorage.clear()
+        }
+        else{
+            document.write(session);
+            clearTimeout(orange);
+        }
+    }
+//300000
+    function checkStart() {
+        orange = setInterval(checkSession, 300000);
+        console.log(orange)
+    }
+    checkStart();
+
 
 
 </script>

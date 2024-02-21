@@ -46,6 +46,7 @@ public class EmpService {
         {
             throw new NotFoundIDException(); // 아이디 자체가 없다는 뜻
         }
+
         if(!BCrypt.checkpw(empPwd,emp.getEmp_Pwd())) // 조회된 emp.getEmp_Pwd()값과 empPwd가 같지 않다면,
         { 
             throw new InvalidPasswordException(); // 비밀번호가 다르다는 에러를 던져라
@@ -53,6 +54,8 @@ public class EmpService {
         session.setAttribute("loginUser", emp);
         return emp;
     }
+
+
 
 
 
@@ -244,5 +247,46 @@ public class EmpService {
      public List<EmpVO> findId(EmpVO empVO)
      {
          return empDAO.findId(empVO);
+     }
+
+     public void modifyEmpPwd(EmpVO empVO) {
+        ServletRequestAttributes servletRequestAttributes = (ServletRequestAttributes)RequestContextHolder.currentRequestAttributes();
+        HttpSession session = servletRequestAttributes.getRequest().getSession();
+        EmpVO emp = (EmpVO)session.getAttribute("loginUser");
+        logger.info(emp.toString());
+        String empId = emp.getEmp_Id();
+        empVO.setEmp_Id(empId);
+        String empPw = BCrypt.hashpw(empVO.getEmp_Pwd(),BCrypt.gensalt());
+        logger.info(empPw);
+
+        emp.setEmp_Pwd(empPw);
+        empDAO.modifyEmpPwd(empVO);
+     }
+
+     public int firstChangeAction(EmpVO empVO) {
+        String empPw = BCrypt.hashpw(empVO.getEmp_Pwd(),BCrypt.gensalt());
+        empVO.setEmp_Pwd(empPw);
+        logger.info(empVO.toString());
+       int cnt =  empDAO.modifyEmpPwd(empVO);
+       logger.info(String.valueOf(cnt));
+       return cnt;
+     }
+
+     public int compareEmpByPwd(EmpVO empVO) {
+        ServletRequestAttributes servletRequestAttributes = (ServletRequestAttributes) RequestContextHolder.currentRequestAttributes();
+        HttpSession session = servletRequestAttributes.getRequest().getSession();
+        EmpVO emp = (EmpVO) session.getAttribute("loginUser");
+        String empId = emp.getEmp_Id();
+        empVO.setEmp_Id(empId);
+        int cnt = empDAO.selectByPwd(empVO);
+        return cnt;
+     }
+
+     public boolean firstCompareEmpPwd(EmpVO empVO) {
+         logger.info(empVO.toString());
+         EmpVO emp = empDAO.selectEmpById(empVO.getEmp_Id());
+         boolean check = BCrypt.checkpw(empVO.getEmp_Pwd(),emp.getEmp_Pwd());
+         logger.info(String.valueOf(check));
+         return check;
      }
  }

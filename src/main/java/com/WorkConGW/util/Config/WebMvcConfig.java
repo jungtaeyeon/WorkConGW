@@ -23,7 +23,7 @@ public class WebMvcConfig implements WebMvcConfigurer {
 
          registry.addInterceptor(new LoginInterceptor())
                  .addPathPatterns("/**")
-                 .excludePathPatterns("/emp/findList","/emp/findIdView","/emp/findId","/emp/findId","/emp/findIdView","/common/login","/emp/findPwView","/emp/findPw","/common/loginForm", "/resources/**","/attend/insertStartWorkQR", "/common/home","/m/home", "/common/join", "/common/saveDashboard");
+                 .excludePathPatterns("/emp/firstCompareEmpPwd","/emp/firstChange","/emp/findList","/emp/findIdView","/emp/findId","/emp/findId","/emp/findIdView","/common/login","/emp/findPwView","/emp/findPw","/common/loginForm", "/resources/**","/attend/insertStartWorkQR", "/common/home","/m/home", "/common/join", "/common/saveDashboard");
 
          registry.addInterceptor(new AdminInterceptor())
                  .addPathPatterns("/admin/**")

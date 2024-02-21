@@ -23,7 +23,7 @@ import java.util.List;
 
 @Controller
 @RequestMapping("/admin/emp/*")
-public class AdminEmpController  {
+public class  AdminEmpController  {
     Logger logger = LoggerFactory.getLogger(AdminEmpController.class);
 
 

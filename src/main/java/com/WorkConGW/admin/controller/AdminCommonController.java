@@ -104,9 +104,10 @@ public class AdminCommonController extends CommonController {
 
 
      @PostMapping("/time/modify")
-    public void modifyTime(TimeVO timeVO) throws Exception{
+    public String modifyTime(TimeVO timeVO) throws Exception{
          logger.info(timeVO.toString());
          timeService.modifyTime(timeVO);
+         return "/admin/time";
      }
 
 

@@ -9,9 +9,8 @@
 <body>
 <script type="text/javascript">
 
-  alert(' 회원가입을 축하합니다. 이제 로그인이 가능 합니다. 확인버튼을 누르면 로그인 페이지로 이동합니다.');
-
-  self.location = "<%=request.getContextPath()%>/common/loginForm";
+  alert(' 회원가입을 축하합니다. 확인버튼을 누르면 최초 비밀번호 설정해주세요.');
+  self.location = "<%=request.getContextPath()%>/emp/firstChange";
 </script>
 </body>
 </html>

@@ -124,11 +124,11 @@ UPDATE EMP SET EMP_SIGN = #{emp_Sign} where EMP_ID = #{emp_Id}
 ]]>
 </select>
 
-<select id = "empIdSquence" resultType="String">
+<select id = "empIdSquence" resultType="String" >
 	SELECT LPAD(EMP_ID_SEQ.NEXTVAL,5,0) FROM DUAL
 </select>
 
-<insert id = "register">
+<insert id = "register" useGeneratedKeys="true" keyProperty="emp_Id">
 INSERT INTO EMP 
 (EMP_ID, EMP_NAME, EMP_PWD, EMP_REGNO,EMP_CREATE_DT ,EMP_REGNO2, EMP_HP,EMP_ST,EMP_ADD1, EMP_ADD2,EMP_ZIPCODE ,EMP_EMAIL, AUTH_ID, DEPT_ID, EMP_SUP_ID, ATTEND_ST_ID,CODE_ID, EMP_AUTHKEY)
 VALUES
@@ -188,6 +188,18 @@ VALUES
 		</if>
 
 	</select>
+
+<select id = "selectByPwd" parameterType="EmpVO" resultType="int">
+SELECT COUNT(EMP_ID)
+FROM EMP
+WHERE EMP_ID = #{emp_Id} AND EMP_PWD = #{emp_Pwd}
+
+</select>
+
+<update id = "modifyEmpPwd" parameterType="EmpVO">
+	UPDATE EMP SET EMP_PWD =#{emp_Pwd},EMP_UPDATE_YN = #{emp_Update_Yn} where EMP_ID = #{emp_Id}
+</update>
+
 
 
 <select id = "selectEmpPagingList" resultType="EmpVO" parameterType="EmpVO">

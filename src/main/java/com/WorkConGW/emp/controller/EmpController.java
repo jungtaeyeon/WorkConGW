@@ -1,5 +1,6 @@
 package com.WorkConGW.emp.controller;
 
+import com.google.api.Http;
 import jakarta.servlet.http.HttpServletRequest;
 import org.json.simple.JSONObject;
 import org.mindrot.jbcrypt.BCrypt;
@@ -165,6 +166,50 @@ public class EmpController {
         return "/common/registerEmail";
     }
 
+
+    @PostMapping("/compareEmpPwd")
+    public ResponseEntity<String> compareEmpPwd(@RequestBody EmpVO empVO)
+    {
+        ResponseEntity<String> entity = null;
+        int cnt = empService.compareEmpByPwd(empVO);
+
+
+        if(cnt < 0)
+        {
+            entity = new ResponseEntity<>("fail", HttpStatus.OK);
+        }
+
+        else{
+            entity = new ResponseEntity<>("success", HttpStatus.OK);
+    }
+        return entity;
+    }
+
+
+
+
+
+    @PostMapping("/firstCompareEmpPwd")
+    public ResponseEntity<String> firstCompareEmpPwd(@RequestBody EmpVO empVO)
+    {
+        logger.info("firstCompareEmpPwd");
+        logger.info(empVO.toString());
+        ResponseEntity<String> entity = null;
+        boolean type = empService.firstCompareEmpPwd(empVO);
+        logger.info(String.valueOf(type));
+
+
+        if(type==false)
+        {
+            entity = new ResponseEntity<>("false", HttpStatus.OK);
+        }
+
+        else{
+            entity = new ResponseEntity<>("true", HttpStatus.OK);
+        }
+        return entity;
+    }
+
     @PostMapping("/empId")
     @ResponseBody
     public ResponseEntity<Map<String,Object>> empId()
@@ -176,6 +221,44 @@ public class EmpController {
         resMap.put("emp_Id",emp_Id);
         return ResponseEntity.ok(resMap);
 
+    }
+
+
+    @GetMapping("/firstChange")
+    public String firstChange()
+    {
+        return "/common/firstChange";
+    }
+
+
+
+
+
+    @ResponseBody
+    @PostMapping("/firstChangeAction")
+    public ResponseEntity<String> firstChangeAction(@RequestBody EmpVO empVO)
+    {
+
+        ResponseEntity<String> entity = null;
+       int cnt = empService.firstChangeAction(empVO);
+
+       if(cnt==0)
+       {
+           entity = new ResponseEntity<String>("fail",HttpStatus.INTERNAL_SERVER_ERROR);
+       }
+       else{
+           entity = new ResponseEntity<String>("success", HttpStatus.OK);
+
+       }
+       return entity;
+
+    }
+
+    @PostMapping("/updateEmpPwd")
+    public void updateEmpPwd(@RequestBody EmpVO empVO)
+    {
+
+        empService.modifyEmpPwd(empVO);
     }
 
 

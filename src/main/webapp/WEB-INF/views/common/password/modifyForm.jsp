@@ -111,22 +111,152 @@
 <script>
 let flag_vaildate = false;
 let flag_compare = false;
-// 2가지를 진행해야함
-/*
-* 1. 유효성 검사
-* 2. 디비 값 비교
-* */
 
 
-</script>
-<script> // 시연용
-function presentationFill(){
+$(document).on("input","#pwd1",function (){
+    //비밀번호는 8자 이상, 20자 이하
+    //적어도 한 개의 알파벳(대소문자 모두)이 포함
+    //적어도 한 개의 숫자가 포함
+    //적어도 한 개의 특수 문자가 포함
+    let pwPattetn =  /^(?=.*[a-zA-z])(?=.*[0-9])(?=.*[$`~!@$!%*#^?&\\(\\)\-_=+])(?!.*[^a-zA-z0-9$`~!@$!%*#^?&\\(\\)\-_=+]).{8,20}$/;
+    let vaildateStr = "";
+    let pwd1 = $('#pwd1').val();
+    let pwd2 = $('#pwd2').val();
+    let str = "";
 
-    $("#oldPwd").val('123456');
-    $("#pwd1").val('ddit406');
-    $("#pwd2").val('ddit406!');
+    if(pwd2)
+    {
+        if(pwd2 === pwd1 && pwd2 != null)
+        {
+            str = "<span></span>"
+            flag_compare = true
+        }
+        if(pwd2 !== pwd1)
+        {
+            str = '<span style="color: red">입력한 비밀번호가 서로 일치하지 않습니다.</span>'
+            flag_compare = true
+        }
+        $("#checkPwd1VsPwd2").html(str);
+    }
+
+
+    if(!pwPattetn.test(pwd1)&&pwd1!="")
+    {
+        vaildateStr = "<span style='color: red'>사용불가</span>"
+        flag_vaildate = false;
+    }
+    else{
+        vaildateStr = "<span style='color: blue'>안전</span>"
+        flag_vaildate = true
+        if(pwd1.length >= 12)
+        {
+            vaildateStr = "<span style='color: green'>매우안전</span>"
+            flag_vaildate = true;
+        }
+    }
+
+
+    if(pwd1=="")
+    {
+        vaildateStr = "<span></span>"
+        flag_vaildate = false;
+    }
+
+    $("#validatePwd").html(vaildateStr);
+
+})
+
+
+$(document).on("input","#pwd2",function (){
+
+    let pwd1 = $("#pwd1").val();
+    let pwd2 = $("#pwd2").val();
+    str = "";
+
+    if(pwd2 === pwd1 && pwd2 != null)
+    {
+        str = "<span style='color: blue'>입력한 비밀번호가 서로 일치합니다.</span>"
+        flag_compare = true;
+    }
+
+    if(pwd2 !== pwd1)
+    {
+        str = "<span style='color: red'>입력한 비밀번호가 서로 일치하지 않습니다.</span>"
+        flag_compare = false;
+    }
+
+    $("#checkPwd1VsPwd2").html(str);
+
+})
+
+
+function updatePwd_go()
+{
+    let msg ="";
+    let emp_Pwd = $("#oldPwd").val();
+    let empVO = {"emp_Pwd":emp_Pwd}
+
+    if(flag_vaildate && flag_compare)
+    {
+        // 둘 다 true 라면
+
+        $.ajax({
+            type : "post",
+            url : '<%=request.getContextPath()%>/emp/compareEmpPwd',
+            contentType : "application/json",
+            async : false,
+            data : JSON.stringify(empVO),
+            success : function (data)
+            {
+                console.log(data)
+                msg = data;
+            },
+            error: function (e){
+                console.log(e)
+            }
+        });
+
+
+        if(msg ==='fail')
+        {
+            alert('기존 비밀번호와 다릅니다. 다시 확인해주세요')
+            return false;
+        }
+
+
+    }else{
+        alert('새로운 비밀번호의 유효성을 확인해주세요.')
+        return false
+    }
+    empVO.emp_Id = $("#emp_Id").val()
+    empVO.emp_Pwd = $("#pwd2").val()
+    $.ajax({
+        type:"post",
+        url: '<%=request.getContextPath()%>/emp/updateEmpPwd',
+        contentType : "application/json",
+        async : false,
+        data:JSON.stringify(empVO),
+        success:function (data)
+        {
+            console.log(data)
+        },
+        error : function (e)
+        {
+            console.log(e);
+        }
+    });
+
+    opener.parent.flag_empUpdate = true;
+    alert('비밀번호가 변경되었습니다.')
+    window.close()
+
+
+
 
 }
+
+
 </script>
+
 </body>
 </html>
