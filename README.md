@@ -46,6 +46,11 @@ https://drive.google.com/file/d/1cKeWUpvTD8EjLoB5c0bL1biyGofqAQZ1/view?usp=drive
 
 https://drive.google.com/file/d/1rGDMJYlF2u-pF5uoDLwvY60jcaqz_HLm/view?usp=drive_link
 
+
+ERD
+
+https://drive.google.com/file/d/1tmVxgWeTPdpik4eZoBsmNUPutNNP-KlE/view?usp=drive_link
+
 ## 시작 가이드
 
 ### Installation
