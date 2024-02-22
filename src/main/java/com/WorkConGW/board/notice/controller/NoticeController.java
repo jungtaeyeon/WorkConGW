@@ -78,6 +78,9 @@ public class NoticeController extends BaseController{
     public String detail(@ModelAttribute("boardFormVO")BoardFormVO boardFormVO, Model model, HttpServletRequest req, HttpServletResponse res) throws Exception {
         String url="/board/notice/detail";
 
+        logger.info(String.valueOf(boardFormVO.getNotice_id()));
+        logger.info(String.valueOf(boardFormVO.getNoticeVO().getNotice_id()));
+
         boardFormVO.setNoticeVO(noticeService.getNotice(boardFormVO.getNoticeVO()));
         NoticeVO noticeVO = boardFormVO.getNoticeVO();
         logger.info(noticeVO.getEmp_writer_id());

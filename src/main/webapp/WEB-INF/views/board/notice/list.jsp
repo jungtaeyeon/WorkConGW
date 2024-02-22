@@ -15,6 +15,10 @@
     text-align: center;
     padding-left: -10px;
   }
+  #tr2{
+      text-align: center;
+      padding-left: -10px;
+  }
 
   tbody{
     text-align: center;"
@@ -25,6 +29,11 @@
   }
   .sidebar-nav .metismenu ul a::before{
     content:'';
+  }
+
+  .scrollable-tbody {
+    max-height: 300px; /* 원하는 높이 지정 */
+    overflow-y: auto; /* 세로 스크롤이 필요한 경우만 스크롤 표시 */
   }
 </style>
 
@@ -101,22 +110,25 @@
                 <div class="table-responsive" style="overflow: hidden;">
                   <table class="table table-hover m-b-0">
                     <thead class="shadow-none p-3 mb-5 bg-light rounded">
-                    <tr id="tr1">
-                      <th style="width:80px;">번호</th>
-                      <th>분류</th>
-                      <th>제목</th>
-                      <th>작성일자</th>
-                      <th>작성자</th>
-                      <th>조회수</th>
-                      <th>첨부파일</th>
-                    </tr>
+                      <tr id="tr1">
+                        <th style="width:80px;">번호</th>
+                        <th>분류</th>
+                        <th>제목</th>
+                        <th>작성일자</th>
+                        <th>작성자</th>
+                        <th>조회수</th>
+                        <th>첨부파일</th>
+                      </tr>
                     </thead>
                     <tbody style="cursor: pointer;">
-                    <c:forEach items="${importantNoticeList }" var="notice">
+                    <c:forEach items="${importantNoticeList }" var="notice" varStatus="loop">
                       <fmt:parseNumber value="${(today.time) - (notice.notice_create_dt.time) }" integerOnly="true" var="defferTime"/>
                       <tr class="xl-pink" onclick="window.location.href='<%=request.getContextPath()%>/board/notice/detail?notice_id=${notice.notice_id}';" >
-                        <td id="notice_id" >${notice.notice_id }</td>
-                        <c:if test="${notice.notice_important_yn eq 'Y'}">
+<%--                        <td id="notice_id" >${notice.notice_id }</td>--%>
+<%--                        <td>${loop.index + boardFormVO.searchNoticeVO.firstIndex +1}</td>--%>
+<%--                          <td>${importantNoticeList.size() - loop.index + boardFormVO.searchNoticeVO.firstIndex}</td>--%>
+                        <td>${importantNoticeList.size() - loop.index}</td>
+                        <c:if test="${notice.notice_important_st eq 1}">
                           <td id="noticeImportantYN"><span class="badge badge-danger">필독</span></td>
                         </c:if>
                         <td id="noticeTitle" style="text-align: left; padding-left: 80px; " >
@@ -136,17 +148,35 @@
                         </td>
                       </tr>
                     </c:forEach>
-<%--                    고정 필독 글과 구분을 위해 구분선 추가 --%>
-                    <tr style="border-bottom: 2px solid black;"></tr>
+                    </tbody>
+                  </table>
 
-                    <c:forEach items="${noticeList}" var="notice">
+                  <div style="margin-top: 50px;"></div>
+
+                    <%--                    일반 공지 + 필독공지 --%>
+                  <table class="table table-hover m-b-0">
+                    <thead class="shadow-none p-3 mb-5 bg-light rounded">
+                      <tr id="tr2">
+                        <th style="width:80px;">번호</th>
+                        <th>분류</th>
+                        <th>제목</th>
+                        <th>작성일자</th>
+                        <th>작성자</th>
+                        <th>조회수</th>
+                        <th>첨부파일</th>
+                      </tr>
+                    </thead>
+                    <tbody style="cursor: pointer;">
+                    <c:forEach items="${noticeList}" var="notice" varStatus="loop">
                       <fmt:parseNumber value="${today.time - notice.notice_create_dt.time }" integerOnly="true" var="defferTime"/>
                       <tr onclick="window.location.href='<%=request.getContextPath()%>/board/notice/detail?notice_id=${notice.notice_id}';" >
-                        <td id="notice_id" >${notice.notice_id }</td>
-                        <c:if test="${notice.notice_important_yn eq 'Y'}">
+<%--                        <td id="notice_id" >${notice.notice_id }</td>--%>
+                        <td>${loop.index + boardFormVO.searchNoticeVO.firstIndex +1}</td>
+
+                        <c:if test="${notice.notice_important_st eq 1}">
                           <td id="noticeImportantYN"><span class="badge badge-danger">필독</span></td>
                         </c:if>
-                        <c:if test="${notice.notice_important_yn eq 'N'}">
+                        <c:if test="${notice.notice_important_st eq 0}">
                           <td id="noticeImportantYN"><span class="badge badge-success">공지</span></td>
                         </c:if>
                         <td id="noticeTitle" style="text-align: left; padding-left: 80px; cursor: pointer;" onclick="window.location.href='<%=request.getContextPath()%>/board/notice/detail?notice_id=${notice.notice_id}';">
@@ -155,12 +185,12 @@
                             &nbsp<span class="badge badge-danger">방금전</span>
                           </c:if>
                         </td>
-                        <td id="notice_Create_Dt"><fmt:formatDate value="${notice.notice_create_dt}" pattern="yyyy-MM-dd:mm:ss"/></td>
+                        <td id="notice_Create_Dt"><fmt:formatDate value="${notice.notice_create_dt}" pattern="yyyy-MM-dd"/></td>
                         <td id="empName">${notice.emp_Name}&nbsp${notice.officialName }</td>
                         <td>${notice.notice_readcnt }</td>
                         <td>
                           <c:if test="${notice.attachCount ne 0}">
-                            <i class="fa fa-file-text fa-2x text-info"></i>
+                            <i class="fa fa-file-text fa-1x text-info"></i>
                           </c:if>
                         </td>
                       </tr>
@@ -171,11 +201,8 @@
                       </tr>
                     </c:if>
                     </tbody>
-
                   </table>
-
                 </div>
-
               </div>
               <!-- Pagination -->
               <div class="col-sm-12 col-md-12" style="text-align:right">

@@ -11,8 +11,6 @@ public class AttachVO  {
 	private String attach_type;
 	private Date attach_create_dt;
 	private Date attach_end_dt;
-	private String emp_attacher_id;
-	private String attach_size;
 	private List<? extends AttachVO> attach_list;
 
 
@@ -62,22 +60,6 @@ public class AttachVO  {
 
 	public void setAttach_end_dt(Date attach_end_dt) {
 		this.attach_end_dt = attach_end_dt;
-	}
-
-	public String getEmp_attacher_id() {
-		return emp_attacher_id;
-	}
-
-	public void setEmp_attacher_id(String emp_attacher_id) {
-		this.emp_attacher_id = emp_attacher_id;
-	}
-
-	public String getAttach_size() {
-		return attach_size;
-	}
-
-	public void setAttach_size(String attach_size) {
-		this.attach_size = attach_size;
 	}
 
 	public List<? extends AttachVO> getAttach_list() {

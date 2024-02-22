@@ -15,11 +15,6 @@
 	padding-left: -10px;
 }
 
-tbody {
-	text-align: center;
-	"
-}
-
 .td2 {
 	text-align: left;
 }
@@ -63,6 +58,7 @@ tbody {
 					<h2>
 						<i class="fa fa-bullhorn"></i>&nbsp;사내공지
 						<button type="button" class="btn btn-secondary float-right" onclick="goBackToList();">목록</button>
+						<button type="button" class="btn btn-primary float-right" data-type="success" onclick="modify_go();" >수정완료</button>
 					</h2>
 					<hr>
 				</div>
@@ -73,7 +69,6 @@ tbody {
 					<form:form modelAttribute="boardFormVO" name="noticeModifyForm" action="${pageContext.request.contextPath }/board/notice/modify" enctype="multipart/form-data">
 						<form:hidden path="noticeVO.notice_id" />
 			          	<form:hidden path="noticeVO.notice_content" id="notice_content"/>
-			          	<form:hidden path="noticeVO.notice_update_id" value="${loginUser.emp_Id }"/>
 			          	<form:hidden path="noticeVO.emp_writer_id" value="${loginUser.emp_Id }"/>
 			          	<div id="fileUploadForm">
 			          	</div>
@@ -159,7 +154,6 @@ tbody {
 																<th style="width:200px;">타입</th>
 																<th style="width:300px;">파일명</th>
 																<th style="width:200px;">확장자</th>
-																<th style="width:200px;">용량</th>
 																<th style="width:100px;"><i class="fas fa-trash-alt" style="cursor: pointer;" onclick="removeAll();"></i>
 																</th>
 															</tr>
@@ -185,9 +179,6 @@ tbody {
 							                                    		<td style="font-weight: normal;">
 																			${noticeAttach.attach_type }
 							                                    		</td>
-							                                    		<td style="font-weight: normal;">
-							                                    			${noticeAttach.attach_size }
-							                                    		</td>
 							                                    		<td>
 																			<i class="fas fa-times" data-id="${status.index }" data-attach_id="${noticeAttach.attach_id }" style="cursor: pointer;" onclick="removeEl(this)"></i>
 							                                    		</td>
@@ -210,9 +201,6 @@ tbody {
 								</tr>
 							</thead>
 						</table>
-							<div class="modifySuccessbutton" style="text-align: center; margin-top: 5px;">
-                           		<button type="button" class="btn btn-primary " data-type="success" onclick="modify_go();" >수정완료</button>
-							</div>
 						</div>
 					</div>
 				</div>
@@ -300,8 +288,14 @@ function myFileChange(){
 	
 	var fileName = inputFileTag.eq(filesLength-1)[0].files[0].name;
 	var extension = getExtensionOfFilename(fileName);
-	var fileSize = (inputFileTag.eq(filesLength-1)[0].files[0].size)/1000 + "KB";
+	var fileSize = (inputFileTag.eq(filesLength-1)[0].files[0].size / 1000) / 1000; // MB
 	var fileType;
+
+	if(fileSize > 50){
+		alert("50MB 이하로 업로드해 주세요.");
+		inputFileTag.eq(filesLength-1).remove();
+		return;
+	}
 	
 	if(!(extension == 'PNG' || extension == 'DOC' || extension == 'DOCX'|| extension == 'EXE' || extension == 'GIF' || extension == 'JAVA' || extension == 'JPG' || extension == 'PDF'|| extension == 'PPT' || extension == 'PPTX'|| extension == 'TXT' || extension == 'XLSX'|| extension == 'ZIP')){
 		alert("지원하지 않는 파일 형식입니다.");
@@ -319,7 +313,6 @@ function myFileChange(){
 				 +'<td>'+fileType+'</td>'
 				 +'<td style="font-weight: normal;">'+fileName+'</td>'
 				 +'<td style="font-weight: normal;">'+extension+'</td>'
-				 +'<td style="font-weight: normal;">'+fileSize+'</td>'
 				 +'<td><i class="fas fa-times" data-id="'+uuid+'" style="cursor: pointer;" onclick="removeEl(this)"></i></td>'
 				 +'</tr>';
 	$('#appendTbody').append(fileTag);

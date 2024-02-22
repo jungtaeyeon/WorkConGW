@@ -405,7 +405,7 @@
 										업무제안 목록
 									</h3>
 									<span class="dd-handle" style="display:none;font-size:1.5em;cursor:pointer;float:right;color: gray;padding: 0px;background-color: white;line-height: 0;height: auto;margin:0px;"><i class="icon-cursor-move"></i></span>
-									<span style="cursor: pointer;font-size: 1.8em;vertical-align: middle;margin-left: 5px;" onclick="location.href='<%=request.getContextPath()%>/board/duty/list'">
+									<span style="cursor: pointer;font-size: 1.8em;vertical-align: middle;margin-left: 5px;" onclick="location.href='<%=request.getContextPath()%>/board/duty/dutyList'">
                              <i class="fa fa-sign-in"></i>
                           </span>
 								</div>

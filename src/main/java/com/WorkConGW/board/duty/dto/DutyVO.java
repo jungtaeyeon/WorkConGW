@@ -1,6 +1,6 @@
 package com.WorkConGW.board.duty.dto;
 
-import com.WorkConGW.board.duty.command.DutyManagerCommand;
+import com.WorkConGW.board.duty.command.DutyEnforcerCommand;
 import com.WorkConGW.board.duty.command.DutyReceptionCommand;
 import com.WorkConGW.board.duty.command.DutyReceptionDeptCommand;
 import com.WorkConGW.common.dto.AttachVO;
@@ -25,13 +25,13 @@ public class DutyVO extends BaseVO {
     private String emp_Writer_Id;
     private int dept_Cnt;
     private int emp_Cnt;
-    private int duty_Board_Security;
+    private int project_Id;
 
 
-    private String[] empManagerList;	// 담당자 아이디 목록
+    private String[] empEnforcerList;	// 담당자 아이디 목록
     private String[] empReceptionList;	// 담당자 아이디 목록
     private String[] empReceptionDeptList;	// 담당자 아이디 목록
-    private List<DutyManagerCommand> dutyManagerList;	// 담당자 목록
+    private List<DutyEnforcerCommand> dutyEnforcerList;	// 담당자 목록
     private List<DutyReceptionCommand> receptionList; //참조자 목록
     private List<DutyReceptionDeptCommand> receptionDeptList; //참조자 목록
 
@@ -144,20 +144,12 @@ public class DutyVO extends BaseVO {
         this.emp_Cnt = emp_Cnt;
     }
 
-    public int getDuty_Board_Security() {
-        return duty_Board_Security;
+    public String[] getEmpEnforcerList() {
+        return empEnforcerList;
     }
 
-    public void setDuty_Board_Security(int duty_Board_Security) {
-        this.duty_Board_Security = duty_Board_Security;
-    }
-
-    public String[] getEmpManagerList() {
-        return empManagerList;
-    }
-
-    public void setEmpManagerList(String[] empManagerList) {
-        this.empManagerList = empManagerList;
+    public void setEmpEnforcerList(String[] empEnforcerList) {
+        this.empEnforcerList = empEnforcerList;
     }
 
     public String[] getEmpReceptionList() {
@@ -176,12 +168,12 @@ public class DutyVO extends BaseVO {
         this.empReceptionDeptList = empReceptionDeptList;
     }
 
-    public List<DutyManagerCommand> getDutyManagerList() {
-        return dutyManagerList;
+    public List<DutyEnforcerCommand> getDutyEnforcerList() {
+        return dutyEnforcerList;
     }
 
-    public void setDutyManagerList(List<DutyManagerCommand> dutyManagerList) {
-        this.dutyManagerList = dutyManagerList;
+    public void setDutyEnforcerList(List<DutyEnforcerCommand> dutyEnforcerList) {
+        this.dutyEnforcerList = dutyEnforcerList;
     }
 
     public List<DutyReceptionCommand> getReceptionList() {
@@ -310,5 +302,13 @@ public class DutyVO extends BaseVO {
 
     public void setModifiable(String modifiable) {
         this.modifiable = modifiable;
+    }
+
+    public int getProject_Id() {
+        return project_Id;
+    }
+
+    public void setProject_Id(int project_Id) {
+        this.project_Id = project_Id;
     }
 }

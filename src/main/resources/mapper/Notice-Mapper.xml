@@ -44,21 +44,20 @@
 								   ,A.notice_readcnt
 								   ,A.notice_create_dt
 								   ,A.notice_update_dt
-								   ,A.notice_update_id
 								   ,A.emp_writer_id
 								   ,A.notice_end_dt
-								   ,A.notice_important_yn
+								   ,A.notice_important_st
 								   ,B.emp_name
 								   ,C.CODE_NAME officialName
 								   ,D.attachCount
-								FROM notice A 
-								     ,emp B 
+								FROM notice A
+								     ,emp B
 								     ,CODE C
 									<!-- 서브쿼리 D => notice_id에 대한 첨부파일 개수 count -->
 								     ,(
                                         SELECT notice_id,
                                                COUNT(*) as attachCount
-                                        FROM notice_attach 
+                                        FROM notice_attach
                                         GROUP BY notice_id
                                        ) D
 								<!-- 작성자 필터링 -->
@@ -71,7 +70,7 @@
 								ORDER BY A.notice_create_dt DESC
 						) D1
 				) D2
-				where seq <![CDATA[ >= ]]> #{firstIndex}
+				where seq <![CDATA[ > ]]> #{firstIndex}
 			) D3
 		where rownum <![CDATA[ <= ]]> #{recordCountPerPage}
 	</select>
@@ -84,10 +83,9 @@
 			 ,T1.notice_readcnt
 			 ,T1.notice_create_dt
 			 ,T1.notice_update_dt
-			 ,T1.notice_update_id
 			 ,T1.emp_writer_id
 			 ,T1.notice_end_dt
-			 ,T1.notice_important_yn
+			 ,T1.notice_important_st
 			 ,T1.emp_name
 			 ,T1.officialName
 			 ,T1.attachCount
@@ -100,10 +98,9 @@
 					  ,A.notice_readcnt
 					  ,A.notice_create_dt
 					  ,A.notice_update_dt
-					  ,A.notice_update_id
 					  ,A.emp_writer_id
 					  ,A.notice_end_dt
-					  ,A.notice_important_yn
+					  ,A.notice_important_st
 					  ,B.emp_name
 					  ,C.CODE_NAME officialName
 					  ,D.attachCount
@@ -118,7 +115,7 @@
 				 ) D
 				 WHERE A.emp_writer_id = B.emp_id
 				   AND B.CODE_ID = C.CODE_ID
-				   AND A.notice_important_yn = 'Y'
+				   AND A.notice_important_st = 1
 				   AND A.notice_id = D.notice_id(+)
 				 ORDER BY A.notice_create_dt DESC ) T1
 		WHERE ROWNUM <![CDATA[ <= ]]> 3
@@ -133,7 +130,6 @@
 			 ,NOTICE_READCNT
 			 ,NOTICE_CREATE_DT
 			 ,NOTICE_UPDATE_DT
-			 ,NOTICE_UPDATE_ID
 			 ,EMP_WRITER_ID
 			 ,NOTICE_END_DT
 			 ,B.EMP_NAME
@@ -150,7 +146,6 @@
 		     ,ATTACH_NAME
 		     ,ATTACH_TYPE
 		     ,ATTACH_CREATE_DT
-		     ,EMP_ATTACHER_ID
 			 ,NOTICE_ID
 		FROM
 			NOTICE_ATTACH
@@ -165,13 +160,6 @@
 			notice_readcnt=notice_readcnt+1
 		where notice_id = #{notice_id}
 	</update>
-
-<!--	긴급공지 삭제-->
-	<delete id="deleteEmergency">
-		DELETE FROM notice
-		WHERE
-			notice_important_yn = 'E'
-	</delete>
 
 <!--	<select id="selectNoticeSeqNext" resultType="int">-->
 <!--		select notice_seq.nextval as notice_id from dual-->
@@ -188,9 +176,8 @@
 		<if test='notice_content != null and notice_content != ""'>
 			notice_content,
 		</if>
-		notice_update_id,
 		emp_writer_id,
-		notice_important_yn,
+		notice_important_st,
 		notice_readcnt,
 		notice_create_dt,
 		notice_update_dt
@@ -200,9 +187,8 @@
 		<if test='notice_content != null and notice_content != ""'>
 			#{notice_content},
 		</if>
-		#{notice_update_id},
 		#{emp_writer_id},
-		#{notice_important_yn},
+		#{notice_important_st},
 		0,
 		sysdate,
 		sysdate
@@ -218,7 +204,6 @@
 									 ,attach_type
 									 ,attach_create_dt
 									 ,notice_id
-									 ,emp_attacher_id
 		) VALUES (
 				   notice_attach_seq.nextval
 				 ,#{attach_path}
@@ -226,7 +211,6 @@
 				 ,#{attach_type}
 				 ,sysdate
 				 ,#{notice_id}
-				 ,#{emp_attacher_id}
 				 )
 	</insert>
 
@@ -253,7 +237,6 @@
 			,notice_content = #{notice_content}
 		</if>
 		,notice_update_dt = sysdate
-		,notice_update_id = #{notice_update_id}
 		WHERE
 		notice_id = #{notice_id}
 	</update>
@@ -265,7 +248,7 @@
 		FROM notice A
 		JOIN emp B
 		ON A.emp_writer_id=B.emp_Id
-		WHERE 1=1
+-- 		WHERE A.NOTICE_IMPORTANT_ST = 0
 		<include refid="search" />
 	</select>
 
@@ -277,7 +260,6 @@
 			 ,attach_name
 			 ,attach_type
 			 ,attach_create_dt
-			 ,emp_attacher_id
 			 ,notice_id
 		FROM
 			notice_attach

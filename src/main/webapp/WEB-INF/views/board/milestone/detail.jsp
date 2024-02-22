@@ -44,7 +44,7 @@ tr:hover{
                         <div class="body project_report">
                         	<button type="button" class="btn btn-light" onclick="window.location.href='${pageContext.request.contextPath}/board/issue/list';" style="font-family: S-CoreDream-6Bold">이슈</button>
                         	<button type="button" class="btn btn-light active" onclick="window.location.href='${pageContext.request.contextPath}/board/milestone/list';" style="font-family: S-CoreDream-6Bold">마일스톤</button>
-                        	<button type="button" class="btn btn-light" onclick="window.location.href='${pageContext.request.contextPath}/board/project';">프로젝트</button>
+                        	<button type="button" class="btn btn-light" onclick="window.location.href='${pageContext.request.contextPath}/board/project/list';">프로젝트</button>
 
                         	<button type="button" class="btn btn-danger float-right m-r-5" onclick="removeMilestone('${milestone.milestoneId}');">삭제</button>
                         	<button type="button" class="btn btn-info float-right m-r-5" onclick="window.location.href='${pageContext.request.contextPath }/board/milestone/modifyForm';">수정</button>
