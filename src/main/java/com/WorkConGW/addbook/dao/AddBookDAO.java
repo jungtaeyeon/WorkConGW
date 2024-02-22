@@ -4,7 +4,7 @@ package com.WorkConGW.addbook.dao;
 
 import java.util.List;
 import java.util.Map;
-
+import java.util.HashMap;
 import org.apache.commons.collections.map.HashedMap;
 import org.mybatis.spring.SqlSessionTemplate;
 import org.slf4j.Logger;
@@ -128,15 +128,15 @@ public class AddBookDAO {
   public int addBookGroupDelete(Map<String, Object> pmap) {
     logger.info("addBookGroupDelete");
     int result = 0;
-    result = sqlSessionTemplate.update("addBookGroupDelete", pmap);
+    result = sqlSessionTemplate.delete("addBookGroupDelete", pmap);
     return result;
   }
 
   public int shareAddBookGroupDelete(Map<String, Object> pmap) {
     logger.info("shareAddBookGroupDelete");
     int result = 0;
-    result = sqlSessionTemplate.update("shareAddBookGroupManageDelete", pmap);
-    result = sqlSessionTemplate.update("shareAddBookGroupDelete", pmap);
+    result = sqlSessionTemplate.delete("shareAddBookGroupManageDelete", pmap);
+    result = sqlSessionTemplate.delete("shareAddBookGroupDelete", pmap);
     logger.info(Integer.toString(result));
     
     logger.info(Integer.toString(result));
@@ -147,7 +147,7 @@ public class AddBookDAO {
     logger.info("addBookDelete");
     int result = 0;
     logger.info(manage_id.toString());
-    result = sqlSessionTemplate.update("addBookDelete", manage_id);
+    result = sqlSessionTemplate.delete("addBookDelete", manage_id);
     return result;
   }
 
@@ -155,7 +155,24 @@ public class AddBookDAO {
     logger.info("addBookShareInsert");
     int result = 0;
     logger.info(pmap.toString());
-    result = sqlSessionTemplate.update("addBookShareInsert", pmap); /* 여기 부터 수정 */
+    
+    // emp_id_list에서 각각의 emp_id를 가져와서 처리합니다.
+    List<String> empIdList = (List<String>) pmap.get("emp_id_list");
+    String addBookId = (String) pmap.get("add_book_id");
+    
+    // 각각의 emp_id를 처리하는데 사용할 Map을 생성합니다
+    Map<String, Object> paramMap = new HashMap<>();
+    paramMap.put("add_book_id", addBookId);
+    
+    // emp_id_list에 있는 각각의 emp_id를 처리합니다.
+    for (String empId : empIdList) {
+        paramMap.put("emp_id", empId);
+        // MyBatis의 insert 쿼리를 실행합니다.
+        logger.info(paramMap.toString());
+        result += sqlSessionTemplate.insert("addBookShareManageInsert", paramMap);
+        result += sqlSessionTemplate.insert("addBookShareInsert", paramMap);
+    }
+    logger.info(Integer.toString(result));
     return result;
   }
 
@@ -186,7 +203,7 @@ public class AddBookDAO {
   public int addBookStarredDelete(Map<String, Object> pmap) {
     logger.info("addBookStarredDelete");
     int result = 0;
-    result = sqlSessionTemplate.update("addBookStarredDelete", pmap);
+    result = sqlSessionTemplate.delete("addBookStarredDelete", pmap);
     logger.info(Integer.toString(result));
     return result;
   }

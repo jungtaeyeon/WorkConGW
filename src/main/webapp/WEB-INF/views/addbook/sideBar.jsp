@@ -196,11 +196,11 @@
                       <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
                         <p class="dropdown-item" data-toggle="modal" data-target="#addBookGroupUpdateModal${status.index}">수정</p>
                         <p class="dropdown-item addBookGroupDeleteBtn">삭제</p>
-                        <p class="dropdown-item" data-toggle="modal" data-target="#managerModal">공유</p>
+                        <p class="dropdown-item" data-toggle="modal" data-target="#managerModal${status.index}" onclick="treeviewON('${status.index}')">공유</p>
                       </div>
                     </li>
                     <!-- 공유 Modal -->
-                    <div class="modal fade" id="managerModal" tabindex="-1" role="dialog" style="display: none;" aria-hidden="true">
+                    <div class="modal fade" id="managerModal${status.index}" tabindex="-1" role="dialog" style="display: none;" aria-hidden="true">
                       <div class="modal-dialog modal-lg" role="document">
                         <div class="modal-content">
                           <div class="modal-header">
@@ -227,7 +227,7 @@
                                         <ul id="codeList" class="treeview">
                                           <li>
                                             WorkCon 조직도&nbsp
-                                            <ul id="lvl0"></ul>
+                                            <ul id="lvl0${status.index}"></ul>
                                           </li>
                                         </ul>
                                       </div>
@@ -280,7 +280,7 @@
                           </div>
                           <div class="modal-footer">
                             <input type="hidden" name="share_add_book_id" value="${list.add_book_id}">
-                            <button type="button" class="btn btn-primary" id="addEmp">추가</button>
+                            <button type="button" class="btn btn-primary" id="addEmp"></button>
                             <button type="button" class="btn btn-secondary"
                               data-dismiss="modal" id="closeModal">닫기</button>
                           </div>
@@ -449,8 +449,8 @@
     });
   });
 
-  window.onload = function(){
-	deptTrees();
+const treeviewON = (status) =>{
+	deptTrees(status);
 }
 
 $("#codeList").treeview({collapsed: false});
@@ -473,42 +473,6 @@ function deleteElement(obj){
 	$('.'+$(obj).attr('data-class')).remove();
 	$(obj).closest('div').remove();
 }
-
-//얍시로 숨겨놓기 시작
-$("#addManager").click(function(){
-	
-	$("#largeModalLabel").html("수신자 추가");
-	$("#myDutyList").html("수신자 목록");
-	$("#managerModal").removeClass("receptionModal");
-	$("#managerModal").addClass("managerModal");
-	$(".noReceptionList").css("display","none");
-	$(".noEmpList").css("display","");
-	$(".myReceptioner").css("display","none");
-	$(".myManager").css("display","");
-	$(".fas fa-redo").css("display","none");
-	
-	
-	if($(".myManager").length > 0){
-		$(".noEmpList").css("display","none");
-	}
-
-});
-$("#addReceptioner").click(function(){
-	$("#largeModalLabel").html("참조자 추가");
-	$("#myDutyList").html("참조자 목록");
-	$("#managerModal").removeClass("managerModal");
-	$("#managerModal").addClass("receptionModal");
-	$(".noEmpList").css("display","none");
-	$(".noReceptionList").css("display","");
-	$(".myManager").css("display","none");
-	$(".myReceptioner").css("display","");
-	$(".fas fa-redo").css("display","");
-	
-	if($(".myReceptioner").length > 0){
-		$(".noReceptionList").css("display","none");
-	}
-
-});
 
 $("#addEmp").click(function(){
   let add_book_id = $(this).closest('.modal-footer').find('input[name="share_add_book_id"]').val();
@@ -537,7 +501,7 @@ $("#addEmp").click(function(){
 ////숨겨놓기끝
 
 //조직도 출력
-function deptTrees(){
+function deptTrees(status){
 	$.ajax({
 		type:"GET",
 		url:"/WorkConGW/orgList",
@@ -563,11 +527,12 @@ function deptTrees(){
 			    }else{
 			    	li = '<li id="'+ deptId +'" lvl="'+level +'"><a class="file code" style="cursor: pointer;" onclick="myClick(this);" >'+ deptName +'&nbsp&nbsp<i data-id="'+deptId+'" data-name="'+deptName+'" style="color:#383d41; cursor:pointer;"></i></a></li>';
 			    }
-				
+        
 				// 1레벨은 그냥 추가
 				// 다음 레벨부터는 상위 li의 클래스를 폴더로 바꾸고 자기 자신을 추가
-			    if(level == 1) {
-					$("#lvl0").append(li);
+			  if(level == 1) {
+          
+					$("#lvl0"+status).append(li);
 				} else {
 					  var parentLi = $("li[id='"+ deptSupId +"']");
 					  
@@ -676,22 +641,6 @@ function addEmpList(){
 	
 	var trTag = "";
 	
-	if($(".managerModal").length > 0){//수신자 추가시 조건
-		for(var i = 0; i < $(".myManager").length ; i++){
-			var emp_Id = $(".myManager").eq(i).attr("value");
-			if($('.myChecked').attr('id') === emp_Id){
-				alert("이미 추가된 수신자입니다.");
-				return false;
-			}
-		}
-	
-		trTag += '<tr class="id_'+$('.myChecked').attr('id')+' myManager" value="'+$('.myChecked').attr('id')+'">'
-				+"<td>"+$('.myChecked').attr('data-name')+"</td>"
-				+"<td>"+$('.myChecked').attr('data-dept')+"</td>"
-				+'<td style="text-align: center;">'+$('.myChecked').attr('data-state')+"</td>"
-				+'<td style="text-align: center;cursor:pointer;" onclick="removeElement(this);"><i class="fas fa-times"></i></td>'
-				+"</tr>";
-	}else{//참조자 추가시 조건
 		for(var i = 0; i < $(".myReceptioner").length ; i++){
 			var emp_Id = $(".myReceptioner").eq(i).attr("value");
 			if($('.myChecked').attr('id') === emp_Id){
@@ -706,7 +655,7 @@ function addEmpList(){
 				+'<td style="text-align: center;">'+$('.myChecked').attr('data-state')+"</td>"
 				+'<td style="text-align: center;cursor:pointer;" onclick="removeElement(this);"><i class="fas fa-times"></i></td>'
 				+"</tr>";
-	}
+	
 	$('.empListTable tbody').append(trTag);
 	if($(".myManager").length > 0){
 		$(".noEmpList").css("display","none");

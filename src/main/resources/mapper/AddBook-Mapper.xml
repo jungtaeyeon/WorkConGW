@@ -398,14 +398,6 @@
                         manage_id ASC
         </select>
         
-        <!-- 주소록 삭제 -->
-        <delete id="addBookDelete" parameterType="java.util.List">
-                DELETE FROM add_book_manage
-                WHERE manage_id IN
-                <foreach collection="list" item="item" open="(" separator="," close=")">
-                #{item}
-                </foreach>
-        </delete>
 
         <!-- 주소록 그룹 추가(개인) -->
         <insert id="addBookGroupInsert" parameterType="java.util.Map">
@@ -446,16 +438,20 @@
         <delete id="addBookStarredDelete" parameterType="map">
                 DELETE FROM add_book_favorites
                 WHERE manage_id = #{manage_id}
+                AND emp_id = #{empId}
         </delete>
 
         <delete id="addBookGroupDelete" parameterType="map">
                 DELETE FROM add_book
                 WHERE add_book_id = #{add_book_id}
+                AND emp_id = #{empId}
         </delete>
 
         <delete id="shareAddBookGroupDelete" parameterType="map">
                 DELETE FROM share_add_book
                 WHERE add_book_id = #{add_book_id}
+                AND emp_id = #{empId}
+
         </delete>
 
         <delete id="shareAddBookGroupManageDelete" parameterType="map">
@@ -467,5 +463,56 @@
                         and emp_id= #{empId}
                 )
         </delete>
+
+        <!-- 주소록 삭제 -->
+        <delete id="addBookDelete" parameterType="java.util.List">
+                DELETE FROM add_book_manage
+                WHERE manage_id IN
+                <foreach collection="list" item="item" open="(" separator="," close=")">
+                #{item}
+                </foreach>
+        </delete>
+
+        <insert id="addBookShareManageInsert" parameterType="java.util.Map">
+                        INSERT INTO add_book_manage (
+                        manage_id, 
+                        manage_display_name, 
+                        manage_hp, 
+                        manage_email, 
+                        manage_remark, 
+                        manage_company_name,
+                        manage_official_name,
+                        manage_dept_name,
+                        manage_starred,
+                        manage_add_book_id,
+                        emp_id
+                        ) 
+                        SELECT 
+                        add_book_manage_seq.nextval,
+                        manage_display_name,
+                        manage_hp, 
+                        manage_email, 
+                        manage_remark, 
+                        manage_company_name,
+                        manage_official_name,
+                        manage_dept_name,
+                        manage_starred,
+                        b.add_book_id as manage_add_book_id,
+                        #{emp_id} AS emp_id
+                        FROM  
+                        add_book_manage a 
+                        LEFT OUTER JOIN 
+                        add_book b ON a.emp_id = b.emp_id 
+                        WHERE 
+                        b.add_book_id = #{add_book_id}
+        </insert>
+
+        <insert id="addBookShareInsert" parameterType="java.util.Map">
+                INSERT INTO share_add_book (emp_id, manage_id,add_book_id)
+                SELECT #{emp_id} AS emp_id,manage_id,b.add_book_id as add_book_id
+                FROM add_book_manage a 
+                LEFT OUTER JOIN add_book b ON a.emp_id = #{emp_id} and a.manage_add_book_id = #{add_book_id}
+                WHERE b.add_book_id = #{add_book_id}
+        </insert>
         
 </mapper>

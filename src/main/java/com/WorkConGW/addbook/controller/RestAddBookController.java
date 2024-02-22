@@ -118,13 +118,13 @@ public class RestAddBookController {
     }
 
     @GetMapping("addBookShareInsert")
-    public List<String> addBookShareInsert(@RequestParam(value = "emp_id[]", required = false) List<String> emp_id, @RequestParam Map<String, Object> pmap) {
+    public int addBookShareInsert(@RequestParam(value = "emp_id[]", required = false) List<String> emp_id, @RequestParam Map<String, Object> pmap) {
         int result = 0;
         logger.info(pmap.toString());
-        pmap.put("emp_id[]", emp_id);
+        pmap.put("emp_id_list", emp_id);
         logger.info(pmap.toString());
         result = addBookService.addBookShareInsert(pmap);
         // 삭제 후 리다이렉트 또는 다른 처리
-        return emp_id;
+        return result;
     }
 }
