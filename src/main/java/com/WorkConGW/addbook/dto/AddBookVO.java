@@ -29,7 +29,7 @@ public class AddBookVO extends BaseVO{
 	private String manage_add_book_id;
 	
 	
-	
+	private int share_add_book_id;	
 	private int share_manage_id;	
 	private String emp_id;
 	private String share_emp_id;

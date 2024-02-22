@@ -145,6 +145,14 @@ public class AddBookService {
     result = AddBookDAO.addBookGroupDelete(pmap);
     return result;
   }
+
+  public int shareAddBookGroupDelete(Map<String, Object> pmap) {
+    logger.info("shareAddBookGroupDelete");
+    int result = 0;
+    logger.info(pmap.toString());
+    result = AddBookDAO.shareAddBookGroupDelete(pmap);
+    return result;
+  }
   
   public int addBookDelete(List<Long> manage_id) {
     logger.info("addBookDelete");
@@ -153,5 +161,14 @@ public class AddBookService {
     result = AddBookDAO.addBookDelete(manage_id);
     return result;
   }
+
+  public int addBookShareInsert(Map<String, Object> pmap) {
+    logger.info("addBookShareInsert");
+    int result = 0;
+    logger.info(pmap.toString());
+    result = AddBookDAO.addBookShareInsert(pmap);
+    return result;
+  }
+
 
 }

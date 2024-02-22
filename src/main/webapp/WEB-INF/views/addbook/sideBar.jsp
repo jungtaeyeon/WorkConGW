@@ -189,8 +189,7 @@
             </div>
           </div>
             <ul class="main-menu metismenu addBook">
-                <c:forEach var="list" items="${addBookGroupList}" varStatus="status">
-                  <c:if test="${list.share_add_book_yn eq '0'}">
+                <c:forEach var="list" items="${addBookGroupSelect}" varStatus="status">
                     <li id="li_importantSchedule" class="metismenuLI addBookGroupLi">
                       <a href="addBookList?add_book_id=${list.add_book_id}" class="addBookGroupListLink"><i class="fa fa-square" id="importantSchedule"></i><span data-addbookid="${list.add_book_id}">${list.add_book_title}</span></a>
                       <i class="fa-solid fa-ellipsis" id="dropdownMenuButton" data-toggle="dropdown" aria-expanded="false"></i>
@@ -280,6 +279,7 @@
                             </div>
                           </div>
                           <div class="modal-footer">
+                            <input type="hidden" name="share_add_book_id" value="${list.add_book_id}">
                             <button type="button" class="btn btn-primary" id="addEmp">추가</button>
                             <button type="button" class="btn btn-secondary"
                               data-dismiss="modal" id="closeModal">닫기</button>
@@ -315,7 +315,6 @@
                         </div>
                       </div>
                     </div>
-                  </c:if>
                 </c:forEach>
             </ul>
         </div>
@@ -325,46 +324,15 @@
               <a href="addBookShare">공유주소록</a>
             </div>
             <ul class="main-menu metismenu shareAddBook">
-              <c:forEach var="list" items="${addBookGroupList}" varStatus="status">
+              <c:forEach var="list" items="${shareAddBookGroupSelect}" varStatus="status">
                   <c:if test="${list.share_add_book_yn eq '1'}">
                     <li id="li_importantSchedule" class="metismenuLI addBookGroupLi">
-                      <a href="addBookShare?add_book_id=${list.add_book_id}" class=""><i class="fa fa-square" id="importantSchedule"></i><span data-addbookid="${list.add_book_id}">${list.add_book_title}</span></a>
-                      <c:if test="${list.emp_id eq loginUser.emp_Id}">
+                      <a href="addBookShare?add_book_id=${list.add_book_id}" class="shareAddBookGroupListLink"><i class="fa fa-square" id="importantSchedule"></i><span data-addbookid="${list.add_book_id}">${list.add_book_title}</span></a>
                         <i class="fa-solid fa-ellipsis" id="dropdownMenuButton" data-toggle="dropdown" aria-expanded="false"></i>
                         <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                          <p class="dropdown-item" data-toggle="modal" data-target="#addBookGroupUpdateModal${status.index}">수정</p>
-                          <p class="dropdown-item addBookGroupDeleteBtn">삭제</p>
+                          <p class="dropdown-item shareAddBookGroupDeleteBtn">삭제</p>
                         </div>
-                      </c:if>
                     </li>
-                    <!-- 그룹수정 Modal -->
-                    <div class="modal fade" id="addBookGroupUpdateModal${status.index}" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="addBookGroupUpdateModal" aria-hidden="true">
-                      <div class="modal-dialog modal-dialog-centered">
-                        <div class="modal-content">
-                          <div class="modal-header">
-                            <h5 class="modal-title" id="staticBackdropLabel">그룹수정</h5>
-                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                              <span aria-hidden="true">&times;</span>
-                            </button>
-                          </div>
-                          <div class="modal-body">
-                            <form id="addBookGroupUpdate" action="addBookGroupUpdate" method="get">
-                              <div class="addBookGroupInput">
-                                <p style="font-size: 18px;">그룹명</p>
-                                <input type="hidden" name="DoubleCheck" value="0">
-                                <input type="hidden" name="add_book_id" value="${list.add_book_id}">
-                                <input type="text" name="update_add_book_title" value="${list.add_book_title}" class="form-control">
-                                <button type="button" class="btn btn-primary update_add_book_btn">중복확인</button>
-                              </div>
-                            </form>
-                          </div>
-                          <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-dismiss="modal">닫기</button>
-                            <button type="button" class="btn btn-primary update_add_book_submit_btn">수정</button>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
                   </c:if>
                 </c:forEach>
           </ul>
@@ -426,7 +394,8 @@
         // 모달 내부의 폼을 찾아 제출
         modal.find('#addBookGroupUpdate').submit();
       }
-    });
+  });
+
     $('.addBookGroupDeleteBtn').on('click', function() {
       let addBookId = $(this).closest('li').find('a.addBookGroupListLink span').data('addbookid');
       let result = confirm('삭제하시겠습니까?');
@@ -444,6 +413,31 @@
                 alert('삭제되었습니다');
                 location.reload();
               }
+            },    
+            error : function(request, status, error) {        
+              console.log(error)    
+            }
+          })
+        } else {
+            
+        }
+    });
+
+  $('.shareAddBookGroupDeleteBtn').on('click', function() {
+      let addBookId = $(this).closest('li').find('a.shareAddBookGroupListLink span').data('addbookid');
+      let result = confirm('삭제하시겠습니까?');
+
+        // 확인 버튼을 클릭한 경우
+        if (result) {
+          $.ajax({
+            type : 'get',              
+            url : '/WorkConGW/addBook/shareAddBookGroupDelete',  
+            data : {
+              add_book_id : addBookId
+            },
+            success : function(result) { 
+              alert('삭제되었습니다');
+              location.reload();
             },    
             error : function(request, status, error) {        
               console.log(error)    
@@ -517,47 +511,28 @@ $("#addReceptioner").click(function(){
 });
 
 $("#addEmp").click(function(){
-	if($(".managerModal").length > 0){//수신자 추가일 시
-		$(".empEnforcerList").remove();
-		
-		var tempTag = "";
-		for(var i = 0; i < $(".myManager").length; i++){
-			tempTag += '<div style="border:1px solid #ced4da;border-radius: 0.25rem;padding:10px 15px;width:150px;display:inline-block;">'
-					+'<span>'+$(".myManager").eq(i).find("td").eq(0).text()+'</span>'
-					+'<div class="hiddenId manager" style="display:none;" value="'+$(".myManager").eq(i).attr("value")+'"></div>'
-					+'<i class="fas fa-times" style="float:right;cursor:pointer;margin-top:5px;" onclick="deleteElement(this);"></i>'
-					+'</div>';
-		}
-		
-		$(".empFinish").html(tempTag);
-		$("tbody").find(".myManager").remove();
-	}else{//참조자 추가일 시
-		$(".empReceptionDeptList").remove();
-		$(".empReceptionList").remove();
-		
-		var tempTag = "";
-		for(var i = 0; i < $(".myReceptioner").length; i++){
-			if($(".myReceptioner").eq(i).hasClass("myReceptionDept")){
-				tempTag += '<div class="l-seagreen" style="border:1px solid #ced4da;border-radius: 0.25rem;padding:10px 15px;width:150px;display:inline-block;">'
-						+'<span>'+$(".myReceptioner").eq(i).find("td").eq(0).text()+'</span>'
-						+'<div class="hiddenId receptionDept" style="display:none;" value="'+$(".myReceptioner").eq(i).attr("value")+'"></div>'
-						+'<i class="fas fa-times" style="float:right;cursor:pointer;margin-top:5px;" onclick="deleteElement(this);"></i>'
-						+'</div>';
-				$(".empReception").html(tempTag);
-			}else{
-				tempTag += '<div style="border:1px solid #ced4da;border-radius: 0.25rem;padding:10px 15px;width:150px;display:inline-block;">'
-						+'<span>'+$(".myReceptioner").eq(i).find("td").eq(0).text()+'</span>'
-						+'<div class="hiddenId receptioner" style="display:none;" value="'+$(".myReceptioner").eq(i).attr("value")+'"></div>'
-						+'<i class="fas fa-times" style="float:right;cursor:pointer;margin-top:5px;" onclick="deleteElement(this);"></i>'
-						+'</div>';
-			}
-		}
-		$(".empReception").html(tempTag);
-		$("tbody").find(".myReceptioner").remove();
-	}
-	
-	$("#closeModal").click();
-	
+  let add_book_id = $(this).closest('.modal-footer').find('input[name="share_add_book_id"]').val();
+  console.log(add_book_id);
+	let recordIds = [];
+    $(this).closest('.modal-content').find('.myReceptioner').each(function() {
+      recordIds.push($(this).data('empid'));
+    });
+  console.log(recordIds);
+
+  $.ajax({
+    type: "get",
+    url: "/WorkConGW/addBook/addBookShareInsert",
+    data: { add_book_id: add_book_id,
+            emp_id : recordIds},
+    success: function(response) {
+      // 성공적으로 처리된 후에 수행할 작업
+      console.log(response);
+    },
+    error: function(xhr, status, error) {
+      // 오류 처리
+      console.error(xhr.responseText);
+    }
+  });
 });
 ////숨겨놓기끝
 
@@ -725,7 +700,7 @@ function addEmpList(){
 			}
 		}
 		
-		trTag +=  '<tr class="id_'+$('.myChecked').attr('id')+' myReceptioner" value="'+$('.myChecked').attr('id')+'">'
+		trTag +=  '<tr class="id_'+$('.myChecked').attr('id')+' myReceptioner" value="'+$('.myChecked').attr('id')+'" data-empid="'+$('.myChecked').attr('id')+'">'
 				+"<td>"+$('.myChecked').attr('data-name')+"</td>"
 				+"<td>"+$('.myChecked').attr('data-dept')+"</td>"
 				+'<td style="text-align: center;">'+$('.myChecked').attr('data-state')+"</td>"

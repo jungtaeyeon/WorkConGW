@@ -132,11 +132,30 @@ public class AddBookDAO {
     return result;
   }
 
+  public int shareAddBookGroupDelete(Map<String, Object> pmap) {
+    logger.info("shareAddBookGroupDelete");
+    int result = 0;
+    result = sqlSessionTemplate.update("shareAddBookGroupManageDelete", pmap);
+    result = sqlSessionTemplate.update("shareAddBookGroupDelete", pmap);
+    logger.info(Integer.toString(result));
+    
+    logger.info(Integer.toString(result));
+    return result;
+  }
+
   public int addBookDelete(List<Long> manage_id) {
     logger.info("addBookDelete");
     int result = 0;
     logger.info(manage_id.toString());
     result = sqlSessionTemplate.update("addBookDelete", manage_id);
+    return result;
+  }
+
+  public int addBookShareInsert(Map<String, Object> pmap) {
+    logger.info("addBookShareInsert");
+    int result = 0;
+    logger.info(pmap.toString());
+    result = sqlSessionTemplate.update("addBookShareInsert", pmap); /* 여기 부터 수정 */
     return result;
   }
 

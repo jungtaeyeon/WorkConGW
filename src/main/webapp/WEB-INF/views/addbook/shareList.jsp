@@ -128,13 +128,11 @@ java.util.ArrayList, com.WorkConGW.addbook.dto.AddBookVO" %>
               </button>
             </div>
 
-            <c:if test="${addBookGroupList[0].emp_id eq loginUser.emp_Id}">
             <div class="delectBtnGroup">
               <button class="btn btn-primary delectBtn" onclick="deleteBtn()" name="serchBtn" type="button" >
                 주소록 삭제
               </button>
             </div>
-            </c:if>
           </div>
           <table class="table table-hover">
             <!-- 부트스트랩 게시판 -->
@@ -166,7 +164,6 @@ java.util.ArrayList, com.WorkConGW.addbook.dto.AddBookVO" %>
                         <th class="tableCheckBox"><input type="checkbox" name="manage_id" value="${addBook.manage_id}" class="checkBox manage_id" /></th>
                         <td>
                           ${addBook.manage_display_name}
-                          <i class="starred fa-star <c:choose><c:when test='${addBook.manage_starred eq 1}'> fa-solid</c:when><c:otherwise> fa-regular</c:otherwise></c:choose>"></i>
                         </td>
                         <td class="listModalBtn" data-toggle="modal" data-target="#staticBackdrop${status.index}">
                           ${addBook.manage_company_name}
