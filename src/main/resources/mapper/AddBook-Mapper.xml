@@ -451,7 +451,6 @@
                 DELETE FROM share_add_book
                 WHERE add_book_id = #{add_book_id}
                 AND emp_id = #{empId}
-
         </delete>
 
         <delete id="shareAddBookGroupManageDelete" parameterType="map">
@@ -485,6 +484,7 @@
                         manage_dept_name,
                         manage_starred,
                         manage_add_book_id,
+                        share_add_book_manage_yn,
                         emp_id
                         ) 
                         SELECT 
@@ -498,13 +498,19 @@
                         manage_dept_name,
                         manage_starred,
                         b.add_book_id as manage_add_book_id,
+                        share_add_book_manage_yn,
                         #{emp_id} AS emp_id
                         FROM  
                         add_book_manage a 
                         LEFT OUTER JOIN 
                         add_book b ON a.emp_id = b.emp_id 
+                        and b.add_book_id IN (
+                                        SELECT REGEXP_SUBSTR(A.MANAGE_ADD_BOOK_ID, '[^#]+', 1, LEVEL) AS ADD_BOOK_ID
+                                        FROM dual
+                                        CONNECT BY REGEXP_SUBSTR(A.MANAGE_ADD_BOOK_ID, '[^#]+', 1, LEVEL) IS NOT NULL
+                                ) OR b.add_book_id IS NULL 
                         WHERE 
-                        b.add_book_id = #{add_book_id}
+                        b.add_book_id = #{add_book_id} and a.share_add_book_manage_yn is null
         </insert>
 
         <insert id="addBookShareInsert" parameterType="java.util.Map">
@@ -512,7 +518,40 @@
                 SELECT #{emp_id} AS emp_id,manage_id,b.add_book_id as add_book_id
                 FROM add_book_manage a 
                 LEFT OUTER JOIN add_book b ON a.emp_id = #{emp_id} and a.manage_add_book_id = #{add_book_id}
-                WHERE b.add_book_id = #{add_book_id}
+                WHERE b.add_book_id = #{add_book_id} and a.share_add_book_manage_yn is null
         </insert>
+
+        <update id="addBookShareManageUpdate" parameterType="map">
+                UPDATE add_book_manage
+                SET share_add_book_manage_yn = '1'
+                WHERE manage_id IN (
+                SELECT a.manage_id               
+                FROM add_book_manage a 
+                LEFT OUTER JOIN add_book b ON a.emp_id = b.emp_id
+                WHERE (b.add_book_id IN (
+                                SELECT REGEXP_SUBSTR(A.MANAGE_ADD_BOOK_ID, '[^#]+', 1, LEVEL) AS ADD_BOOK_ID
+                                FROM dual
+                                CONNECT BY REGEXP_SUBSTR(A.MANAGE_ADD_BOOK_ID, '[^#]+', 1, LEVEL) IS NOT NULL
+                        ) OR b.add_book_id IS NULL)
+                AND a.emp_id = #{empId}
+                AND b.add_book_id = #{add_book_id}
+                )
+        </update>
+
+        <update id="addBookShareManageInsertUpdate" parameterType="map">
+                UPDATE add_book_manage
+                SET 
+                        share_add_book_manage_yn = '1'
+                WHERE 
+                        emp_id = #{emp_id} and manage_add_book_id = #{add_book_id}
+        </update>
+
+        <update id="addBookShareInsertUpdate" parameterType="map">
+                UPDATE add_book
+                SET 
+                        share_add_book_yn = '1'
+                WHERE 
+                        add_book_id = #{add_book_id}
+        </update>
         
 </mapper>

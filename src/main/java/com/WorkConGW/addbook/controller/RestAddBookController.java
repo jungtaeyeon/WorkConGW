@@ -118,9 +118,15 @@ public class RestAddBookController {
     }
 
     @GetMapping("addBookShareInsert")
-    public int addBookShareInsert(@RequestParam(value = "emp_id[]", required = false) List<String> emp_id, @RequestParam Map<String, Object> pmap) {
+    public int addBookShareInsert(@RequestParam(value = "emp_id[]", required = false) List<String> emp_id, @RequestParam Map<String, Object> pmap,HttpSession session) {
         int result = 0;
         logger.info(pmap.toString());
+        EmpVO empVO = (EmpVO) session.getAttribute("loginUser");
+        String empId = null;
+        if(empVO != null) {
+            empId = empVO.getEmp_Id();
+        }
+        pmap.put("empId", empId);
         pmap.put("emp_id_list", emp_id);
         logger.info(pmap.toString());
         result = addBookService.addBookShareInsert(pmap);

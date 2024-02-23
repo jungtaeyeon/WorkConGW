@@ -196,97 +196,9 @@
                       <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
                         <p class="dropdown-item" data-toggle="modal" data-target="#addBookGroupUpdateModal${status.index}">수정</p>
                         <p class="dropdown-item addBookGroupDeleteBtn">삭제</p>
-                        <p class="dropdown-item" data-toggle="modal" data-target="#managerModal${status.index}" onclick="treeviewON('${status.index}')">공유</p>
+                        <p class="dropdown-item" data-toggle="modal" data-target="#managerModal" onclick="treeviewON('${list.add_book_id}')">공유</p>
                       </div>
                     </li>
-                    <!-- 공유 Modal -->
-                    <div class="modal fade" id="managerModal${status.index}" tabindex="-1" role="dialog" style="display: none;" aria-hidden="true">
-                      <div class="modal-dialog modal-lg" role="document">
-                        <div class="modal-content">
-                          <div class="modal-header">
-                            <h4 class="title" id="largeModalLabel">수신자 추가</h4>
-                          </div>
-                          <div class="modal-body" style="display: flex; justify-content: center; align-items: center; ">
-                            <!-- 모달 수신자 등록 폼 -->
-                            <div style="width: 300px; height: 493px; display: inline-block;">
-                              <div class="body" style="padding: 6px;">
-                                <ul class="nav nav-tabs">
-                                  <li class="nav-item"><a class="nav-link show active" data-toggle="tab" href="#org">조직도</a></li>
-                                </ul>
-                                <div class="tab-content" style="padding: 0;">
-                                  <!-- 조직도 -->
-                                  <div class="tab-pane show active" id="org">
-                                    <div class="header" style="height: 60px; margin-top: 15px;">
-                                      <input oninput="searchOrg(this);" type="search" class="form-control" placeholder="이름으로 검색" style="display: inline-block; width: 75%;">
-                                      <button type="button" class="btn btn-dark" onclick="searchOrg(this);">
-                                        <i class="fas fa-search"></i>
-                                      </button>
-                                    </div>
-                                    <div class="body" style="overflow-y: scroll; height: 300px;">
-                                      <div>
-                                        <ul id="codeList" class="treeview">
-                                          <li>
-                                            WorkCon 조직도&nbsp
-                                            <ul id="lvl0${status.index}"></ul>
-                                          </li>
-                                        </ul>
-                                      </div>
-                                    </div>
-                                  </div>
-                                </div>
-                              </div>
-                            </div>
-                            <!-- 수신자 등록 폼 -->
-                            <div style="width: calc(100% - 305px); height: 440px; display: inline-block; top: 0px;">
-                              <div class="body" style="padding: 6px;">
-                                <h4 id="myDutyList">수신자 목록</h4>
-                                <div class="tab-content" style="padding: 0;">
-                                  <!-- 조직도 -->
-                                  <div class="tab-pane show active" id="org">
-                                    <div class="header" style="height: 60px; margin-top: 15px;">
-                                      <input type="search" id="selectemp_Name" class="form-control" readonly="readonly" placeholder="이름/부서/상태" style="display: inline-block; width: 75%;"> <input type="hidden" id="selectemp_Id">
-                                      <button type="button" class="btn btn-dark" onclick="addEmpList();" style="width: 20%;">
-                                        <i class="fa fa-sort-desc"></i>
-                                      </button>
-                                    </div>
-                                    <div class="body" style="overflow-y: scroll; height: 300px;">
-                                      <div class="table-responsive">
-                                        <table class="table table-hover empListTable">
-                                          <thead>
-                                            <tr>
-                                              <th style="width: 130px;">이름/직위</th>
-                                              <th style="width: 120px;">부서</th>
-                                              <th style="text-align: center;">상태</th>
-                                              <th class="deleteAllEmp" style="cursor: pointer; text-align: center;" onclick="removeAllElement();">
-                                                <i class="fa fa-trash-o"></i>
-                                              </th>
-                                            </tr>
-                                          </thead>
-                                          <tbody>
-                                            <tr class="noEmpList" style="text-align: center; display: none;">
-                                              <td colspan="4">선택된 수신자가 없습니다.</td>
-                                            </tr>
-                                            <tr class="noReceptionList" style="text-align: center; display: none;">
-                                              <td colspan="4">선택된 참조자가 없습니다.</td>
-                                            </tr>
-                                          </tbody>
-                                        </table>
-                                      </div>
-                                    </div>
-                                  </div>
-                                </div>
-                              </div>
-                            </div>
-                          </div>
-                          <div class="modal-footer">
-                            <input type="hidden" name="share_add_book_id" value="${list.add_book_id}">
-                            <button type="button" class="btn btn-primary" id="addEmp"></button>
-                            <button type="button" class="btn btn-secondary"
-                              data-dismiss="modal" id="closeModal">닫기</button>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
                     <!-- 그룹수정 Modal -->
                     <div class="modal fade" id="addBookGroupUpdateModal${status.index}" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="addBookGroupUpdateModal" aria-hidden="true">
                       <div class="modal-dialog modal-dialog-centered">
@@ -339,7 +251,93 @@
         </div>
     </div>
 </div>
-
+<!-- 공유 Modal -->
+<div class="modal fade" id="managerModal" tabindex="-1" role="dialog" style="display: none;" aria-hidden="true">
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="title" id="largeModalLabel">수신자 추가</h4>
+      </div>
+      <div class="modal-body" style="display: flex; justify-content: center; align-items: center; ">
+        <!-- 모달 수신자 등록 폼 -->
+        <div style="width: 300px; height: 493px; display: inline-block;">
+          <div class="body" style="padding: 6px;">
+            <ul class="nav nav-tabs">
+              <li class="nav-item"><a class="nav-link show active" data-toggle="tab" href="#org">조직도</a></li>
+            </ul>
+            <div class="tab-content" style="padding: 0;">
+              <!-- 조직도 -->
+              <div class="tab-pane show active" id="org">
+                <div class="header" style="height: 60px; margin-top: 15px;">
+                  <input oninput="searchOrg(this);" type="search" class="form-control" placeholder="이름으로 검색" style="display: inline-block; width: 75%;">
+                  <button type="button" class="btn btn-dark" onclick="searchOrg(this);">
+                    <i class="fas fa-search"></i>
+                  </button>
+                </div>
+                <div class="body" style="overflow-y: scroll; height: 300px;">
+                  <div>
+                    <ul id="codeList" class="treeview">
+                      <li>
+                        WorkCon 조직도&nbsp
+                        <ul id="lvl0"></ul>
+                      </li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- 수신자 등록 폼 -->
+        <div style="width: calc(100% - 305px); height: 440px; display: inline-block; top: 0px;">
+          <div class="body" style="padding: 6px;">
+            <h4 id="myDutyList">수신자 목록</h4>
+            <div class="tab-content" style="padding: 0;">
+              <!-- 조직도 -->
+              <div class="tab-pane show active" id="org">
+                <div class="header" style="height: 60px; margin-top: 15px;">
+                  <input type="search" id="selectemp_Name" class="form-control" readonly="readonly" placeholder="이름/부서/상태" style="display: inline-block; width: 75%;"> <input type="hidden" id="selectemp_Id">
+                  <button type="button" class="btn btn-dark" onclick="addEmpList();" style="width: 20%;">
+                    <i class="fa fa-sort-desc"></i>
+                  </button>
+                </div>
+                <div class="body" style="overflow-y: scroll; height: 300px;">
+                  <div class="table-responsive">
+                    <table class="table table-hover empListTable">
+                      <thead>
+                        <tr>
+                          <th style="width: 130px;">이름/직위</th>
+                          <th style="width: 120px;">부서</th>
+                          <th style="text-align: center;">상태</th>
+                          <th class="deleteAllEmp" style="cursor: pointer; text-align: center;" onclick="removeAllElement();">
+                            <i class="fa fa-trash-o"></i>
+                          </th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr class="noEmpList" style="text-align: center; display: none;">
+                          <td colspan="4">선택된 수신자가 없습니다.</td>
+                        </tr>
+                        <tr class="noReceptionList" style="text-align: center; display: none;">
+                          <td colspan="4">선택된 참조자가 없습니다.</td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary" id="addEmp">공유</button>
+        <button type="button" class="btn btn-secondary"
+          data-dismiss="modal" id="closeModal">닫기</button>
+      </div>
+    </div>
+  </div>
+</div>
 <script>
   $(document).ready(function() {
     // 버튼에 클릭 이벤트 핸들러 추가
@@ -450,9 +448,14 @@
   });
 
 const treeviewON = (status) =>{
-	deptTrees(status);
+  if($("input[name='share_add_book_id']").length !=null){
+    $("#managerModal").find(".modal-footer input[name='share_add_book_id']").remove();
+  }
+  $("#managerModal").find(".modal-footer").append('<input type="hidden" name="share_add_book_id" value="'+status+'">');
 }
-
+window.onload = function(){
+	deptTrees();
+}
 $("#codeList").treeview({collapsed: false});
 
 
@@ -501,7 +504,7 @@ $("#addEmp").click(function(){
 ////숨겨놓기끝
 
 //조직도 출력
-function deptTrees(status){
+function deptTrees(){
 	$.ajax({
 		type:"GET",
 		url:"/WorkConGW/orgList",
@@ -531,8 +534,7 @@ function deptTrees(status){
 				// 1레벨은 그냥 추가
 				// 다음 레벨부터는 상위 li의 클래스를 폴더로 바꾸고 자기 자신을 추가
 			  if(level == 1) {
-          
-					$("#lvl0"+status).append(li);
+					$("#lvl0").append(li);
 				} else {
 					  var parentLi = $("li[id='"+ deptSupId +"']");
 					  

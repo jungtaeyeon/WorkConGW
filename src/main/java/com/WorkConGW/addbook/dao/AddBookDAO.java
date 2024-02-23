@@ -158,20 +158,26 @@ public class AddBookDAO {
     
     // emp_id_list에서 각각의 emp_id를 가져와서 처리합니다.
     List<String> empIdList = (List<String>) pmap.get("emp_id_list");
+    String empId = (String) pmap.get("empId");
     String addBookId = (String) pmap.get("add_book_id");
     
     // 각각의 emp_id를 처리하는데 사용할 Map을 생성합니다
     Map<String, Object> paramMap = new HashMap<>();
     paramMap.put("add_book_id", addBookId);
-    
+    sqlSessionTemplate.update("addBookShareInsertUpdate", paramMap);
     // emp_id_list에 있는 각각의 emp_id를 처리합니다.
-    for (String empId : empIdList) {
-        paramMap.put("emp_id", empId);
+    for (String emp_id : empIdList) {
+        paramMap.put("empId", empId);
+        paramMap.put("emp_id", emp_id);
         // MyBatis의 insert 쿼리를 실행합니다.
         logger.info(paramMap.toString());
         result += sqlSessionTemplate.insert("addBookShareManageInsert", paramMap);
+        logger.info(Integer.toString(result));
         result += sqlSessionTemplate.insert("addBookShareInsert", paramMap);
+        sqlSessionTemplate.insert("addBookShareManageInsertUpdate", paramMap);
+        logger.info(Integer.toString(result));
     }
+    sqlSessionTemplate.insert("addBookShareManageUpdate", paramMap);
     logger.info(Integer.toString(result));
     return result;
   }
