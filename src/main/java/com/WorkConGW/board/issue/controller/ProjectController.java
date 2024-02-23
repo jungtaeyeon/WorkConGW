@@ -1,11 +1,9 @@
 package com.WorkConGW.board.issue.controller;
 
 import com.WorkConGW.board.issue.dto.IssueVO;
-import com.WorkConGW.board.issue.dto.MilestoneVO;
 import com.WorkConGW.board.issue.dto.ProjectVO;
 import com.WorkConGW.board.issue.service.IssueService;
 import com.WorkConGW.board.issue.service.ProjectService;
-import com.WorkConGW.emp.dto.EmpVO;
 import jakarta.servlet.http.HttpSession;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

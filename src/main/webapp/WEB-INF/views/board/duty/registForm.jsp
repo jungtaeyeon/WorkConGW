@@ -34,7 +34,7 @@
 					<div class="col-sm-9" style="font-family: S-CoreDream-4Regular">
 						<div style="float: right;">
 							<button type="button" class="btn btn-primary" style="width: 100px; font-size: 1.2em;" onclick="submit_go();">등록</button>
-							<button type="button" onclick="window.close();" class="btn btn-secondary" style="width: 100px; font-size: 1.2em;">취소</button>
+							<button type="button" onclick="window.location.href='${pageContext.request.contextPath }/board/duty/dutyList'" class="btn btn-secondary" style="width: 100px; font-size: 1.2em;">취소</button>
 						</div>
 					</div>
 				</div>
@@ -308,6 +308,16 @@
 	<script>
 window.onload = function(){
 	deptTrees();
+
+	var tomorrow = new Date();
+	tomorrow.setDate(tomorrow.getDate() + 1); // 내일의 날짜를 가져옴
+	$('.date').datepicker({
+		startDate: tomorrow, // 내일 이후의 날짜만 선택 가능하도록 설정
+	});
+}
+
+function myClick(obj){
+	$(obj).parent().children("div").click();
 }
 
 $("#codeList").treeview({collapsed: false});
@@ -632,6 +642,11 @@ function submit_go(){
 		$('#boardTitle').focus();
 		return;
 	}
+	if($.trim($('#boardEndDt').val())==""){
+		alert('완료 기한을 선택하세요.');
+		$('#boardEndDt').focus();
+		return;
+	}
 
 	// 업무 제안
 	if(boardCategory=='duty'){	
@@ -863,9 +878,7 @@ function removeEl(obj){
 	$('#fileCount').text($('#appendTbody').children().length);
 }
 
-function myClick(obj){
-    $(obj).parent().children("div").click();
-}
+
 </script>
 </div>
 </section>

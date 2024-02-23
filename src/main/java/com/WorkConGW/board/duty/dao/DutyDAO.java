@@ -3,7 +3,9 @@ package com.WorkConGW.board.duty.dao;
 
 
 import com.WorkConGW.board.duty.command.DutyEnforcerCommand;
+import com.WorkConGW.board.duty.command.DutyReceptionCommand;
 import com.WorkConGW.board.duty.dto.DutyAttachVO;
+import com.WorkConGW.board.duty.dto.DutyReplyVO;
 import com.WorkConGW.board.duty.dto.DutyVO;
 import com.WorkConGW.board.issue.dto.ProjectVO;
 import org.mybatis.spring.SqlSessionTemplate;
@@ -29,9 +31,9 @@ public class DutyDAO {
         return duty;
     }
 
-    public void updateDutyByDeleteProject(ProjectVO projectVO) {
-        sqlSessionTemplate.update("updateDutyByDeleteProject", projectVO);
-    }
+//    public void updateDutyByDeleteProject(ProjectVO projectVO) {
+//        sqlSessionTemplate.update("updateDutyByDeleteProject", projectVO);
+//    }
 
     public List<DutyVO> selectDutyList(DutyVO searchDutyVO) {
         return sqlSessionTemplate.selectList("selectDutyList", searchDutyVO);
@@ -76,5 +78,35 @@ public class DutyDAO {
 
     public int selectDutyReceptionListTotalCount(DutyVO searchDutyVO) {
         return sqlSessionTemplate.selectOne("selectDutyReceptionListTotalCount", searchDutyVO);
+    }
+
+    /* 업무에 프로젝트 연결할 때 마다 프로젝트에 DutyCount +1 증가 */
+    public void updateProjectDutyCount(DutyVO dutyVO) {
+        sqlSessionTemplate.update("updateProjectDutyCount", dutyVO);
+    }
+
+
+    public void increaseDutyReadcnt(DutyVO dutyVO) {
+        sqlSessionTemplate.update("increaseDutyReadcnt", dutyVO);
+    }
+
+    public int selectReplyListTotalCount(DutyVO dutyVO) {
+        return sqlSessionTemplate.selectOne("selectReplyListTotalCount", dutyVO);
+    }
+
+    public void updateDutyEnforcer(DutyEnforcerCommand dutyEnforcer) {
+        sqlSessionTemplate.update("updateDutyEnforcer", dutyEnforcer);
+    }
+
+    public List<DutyAttachVO> selectDutyAttachList(DutyVO dutyVO) {
+        return sqlSessionTemplate.selectList("selectDutyAttachList", dutyVO);
+    }
+
+    public List<DutyReplyVO> selectDutyReplyList(DutyVO dutyVO) {
+        return sqlSessionTemplate.selectList("selectDutyReplyList", dutyVO);
+    }
+
+    public List<DutyReceptionCommand> selectReceptionList(DutyVO dutyVO) {
+        return sqlSessionTemplate.selectList("selectReceptionList", dutyVO);
     }
 }

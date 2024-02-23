@@ -15,12 +15,11 @@ public class NoticeVO extends BaseVO{
     private String notice_title;
     private String notice_content;
     private int notice_readcnt;
-    @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss")
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
     private Date notice_create_dt;
     private Date notice_update_dt;
-    private String notice_important_yn;
+    private String notice_important_st;
     private String emp_writer_id;
-    private String notice_update_id;
     private String emp_Name;
     private String officialName;
     private List<AttachVO> noticeAttachList;
@@ -29,16 +28,15 @@ public class NoticeVO extends BaseVO{
 
     public NoticeVO(){}
 
-    public NoticeVO(int notice_id, String notice_title, String notice_content, int notice_readcnt, Date notice_create_dt, Date notice_update_dt, String notice_important_yn, String emp_writer_id, String notice_update_id, String emp_Name, String officialName, List<AttachVO> noticeAttachList, int attachCount, String searchDt) {
+    public NoticeVO(int notice_id, String notice_title, String notice_content, int notice_readcnt, Date notice_create_dt, Date notice_update_dt, String notice_important_st, String emp_writer_id, String emp_Name, String officialName, List<AttachVO> noticeAttachList, int attachCount, String searchDt) {
         this.notice_id = notice_id;
         this.notice_title = notice_title;
         this.notice_content = notice_content;
         this.notice_readcnt = notice_readcnt;
         this.notice_create_dt = notice_create_dt;
         this.notice_update_dt = notice_update_dt;
-        this.notice_important_yn = notice_important_yn;
+        this.notice_important_st = notice_important_st;
         this.emp_writer_id = emp_writer_id;
-        this.notice_update_id = notice_update_id;
         this.emp_Name = emp_Name;
         this.officialName = officialName;
         this.noticeAttachList = noticeAttachList;
@@ -96,12 +94,12 @@ public class NoticeVO extends BaseVO{
         this.notice_update_dt = notice_update_dt;
     }
 
-    public String getNotice_important_yn() {
-        return this.notice_important_yn;
+    public String getNotice_important_st() {
+        return this.notice_important_st;
     }
 
-    public void setNotice_important_yn(String notice_important_yn) {
-        this.notice_important_yn = notice_important_yn;
+    public void setNotice_important_st(String notice_important_st) {
+        this.notice_important_st = notice_important_st;
     }
 
     public String getEmp_writer_id() {
@@ -110,14 +108,6 @@ public class NoticeVO extends BaseVO{
 
     public void setEmp_writer_id(String emp_writer_id) {
         this.emp_writer_id = emp_writer_id;
-    }
-
-    public String getNotice_update_id() {
-        return this.notice_update_id;
-    }
-
-    public void setNotice_update_id(String notice_update_id) {
-        this.notice_update_id = notice_update_id;
     }
 
     public String getEmp_Name() {
@@ -160,8 +150,4 @@ public class NoticeVO extends BaseVO{
         this.searchDt = searchDt;
     }
 
-
-    
- 
-	
 }

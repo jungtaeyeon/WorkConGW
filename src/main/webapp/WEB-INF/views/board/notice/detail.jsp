@@ -66,7 +66,7 @@ tbody {
 						<i class="fas fa-bullhorn"></i>&nbsp;사내공지
 						<button type="button" class="btn btn-secondary float-right" onclick="goBackToList();">목록</button>
 
-						<c:if test="${loginUser.emp_Id == notice.emp_writer_id }">
+						<c:if test="${loginUser.auth_Id == 's' }">
 							<button class="btn btn-danger float-right m-r-5"
 								data-type="confirm" onclick="remove_go();">
 								<i class="fas fa-trash"></i> <span>삭제</span>
@@ -183,7 +183,6 @@ tbody {
    <form:hidden path="noticeVO.noticeAttachList[${status.index }].attach_path" value="${noticeAttach.attach_path }" />
    <form:hidden path="noticeVO.noticeAttachList[${status.index }].attach_name" value="${noticeAttach.attach_name }" />
    <form:hidden path="noticeVO.noticeAttachList[${status.index }].attach_type" value="${noticeAttach.attach_type }" />
-   <form:hidden path="noticeVO.noticeAttachList[${status.index }].attach_size" value="${noticeAttach.attach_size }" />
 </c:forEach>
 </form:form>
 
@@ -227,8 +226,7 @@ function remove_go(){
 		contentType:false,
 		success:function(){
 			alert('글이 삭제되었습니다.');
-			window.opener.location.reload(true);
-			window.close();
+			window.location.href="${pageContext.request.contextPath }/board/notice/noticeList"
 		},
 		error:function(){
 			alert('삭제 실패');

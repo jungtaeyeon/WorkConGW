@@ -29,10 +29,6 @@
 </style>
 
 <body>
-<%--<!-- 헤더인클루드 -->--%>
-<%--<div class="top-bar">--%>
-<%--<%@ include file="./header.jsp"%>--%>
-<%--</div>--%>
 
 
 <section class="subPageContain">

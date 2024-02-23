@@ -1,109 +1,109 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper
-        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
-        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+		PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+		"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.mybatis.mapper.EmpMapper">
 
 
 
-<select id="selectEmpById" parameterType="String" resultType="EmpVO">
-	SELECT   A.EMP_ID					
-			,A.EMP_SUP_ID				
-			,A.EMP_NAME				
-			,A.EMP_PWD				
-			,A.EMP_REGNO
-			,NVL(A.EMP_HP,'없음') 				
-			,A.EMP_SIGN				
-			,A.EMP_PICTURE			
-			,A.EMP_ST
-			,A.EMP_HP
-			,A.EMP_EMAIL				
-			,A.EMP_ADD1	
-            ,A.EMP_ADD2
-	     	,A.EMP_ZIPCODE
-            ,A.ATTEND_ST_ID
-			,A.DEPT_ID								
-			,A.EMP_CREATE_DT			
-			,A.EMP_UPDATE_DT
-			,NVL(A.EMP_EMAIL,'없음') 
-			,A.AUTH_ID
-			,A.CODE_ID
-            ,B.ATTEND_ST_NAME
-						<!-- 출근상태(지각..etc) -->
-            ,A.EMP_UPDATE_YN
-						<!-- 상태수정일 -->
-            ,C.DEPT_NAME
-						<!-- 부서이름 -->
-            ,D.CODE_NAME 
-						<!-- 코드 이름==부서이름-->
+	<select id="selectEmpById" parameterType="String" resultType="EmpVO">
+		SELECT   A.EMP_ID
+		,A.EMP_SUP_ID
+		,A.EMP_NAME
+		,A.EMP_PWD
+		,A.EMP_REGNO
+		,NVL(A.EMP_HP,'없음')
+		,A.EMP_SIGN
+		,A.EMP_PICTURE
+		,A.EMP_ST
+		,A.EMP_HP
+		,A.EMP_EMAIL
+		,A.EMP_ADD1
+		,A.EMP_ADD2
+		,A.EMP_ZIPCODE
+		,A.ATTEND_ST_ID
+		,A.DEPT_ID
+		,A.EMP_CREATE_DT
+		,A.EMP_UPDATE_DT
+		,NVL(A.EMP_EMAIL,'없음')
+		,A.AUTH_ID
+		,A.CODE_ID
+		,B.ATTEND_ST_NAME
+		<!-- 출근상태(지각..etc) -->
+		,A.EMP_UPDATE_YN
+		<!-- 상태수정일 -->
+		,C.DEPT_NAME
+		<!-- 부서이름 -->
+		,D.CODE_NAME
+		<!-- 코드 이름==부서이름-->
 
-							<!-- 부서이름출력 ((개인)팀id=부서(id)) 
-								AND 사원정보까지 같으면(empId)는 객체로 넘겨받아야함
-								부서와 팀 구분❌ -> DEPT_TEAM_YN : 부서 / 팀 구분 처리
-								사원에서 등록 할 때, 팀/부서 나눠서 저장
+		<!-- 부서이름출력 ((개인)팀id=부서(id))
+            AND 사원정보까지 같으면(empId)는 객체로 넘겨받아야함
+            부서와 팀 구분❌ -> DEPT_TEAM_YN : 부서 / 팀 구분 처리
+            사원에서 등록 할 때, 팀/부서 나눠서 저장
 
-							-->
-            ,NVL(E.AUTH_NAME,'없음')
-			,A.EMP_AUTHKEY
-	  FROM EMP A, ATTEND_ST B, DEPT C, CODE D, AUTH E
-	 WHERE A.ATTEND_ST_ID = B.ATTEND_ST_ID(+)
-	 <!-- 사원의 상태코드(fk) = 출근 상태코드(pk) 
-				기준 테이블(emp)의 ATTENS_ST_ID가 대상 테이블(TB_ATTEND_ST)에 존재 할 경우 
-				B.ATTEND_ST_NAME(컬럼) 가져오고 없으면 NULL로 조회된다.
-				->사원의 출근상태를 조회하고 싶어서 (+) 사용 
-			-->
-       AND A.DEPT_ID = C.DEPT_ID
-       AND A.CODE_ID = D.CODE_ID
-			 <!-- 사원의 직급 코드(FK) = 코드의 코드ID -->
-       AND A.AUTH_ID = E.AUTH_ID(+)
-			 <!-- AUTH_ID(+)사용 사원에는 해당 컬럼없어도 출력
-			-->
-       AND A.EMP_ST IN (1, 4)
-       AND EMP_ID = #{emp_Id}
-</select>
+        -->
+		,NVL(E.AUTH_NAME,'없음')
+		,A.EMP_AUTHKEY
+		FROM EMP A, ATTEND_ST B, DEPT C, CODE D, AUTH E
+		WHERE A.ATTEND_ST_ID = B.ATTEND_ST_ID(+)
+		<!-- 사원의 상태코드(fk) = 출근 상태코드(pk)
+                   기준 테이블(emp)의 ATTENS_ST_ID가 대상 테이블(TB_ATTEND_ST)에 존재 할 경우
+                   B.ATTEND_ST_NAME(컬럼) 가져오고 없으면 NULL로 조회된다.
+                   ->사원의 출근상태를 조회하고 싶어서 (+) 사용
+               -->
+		AND A.DEPT_ID = C.DEPT_ID
+		AND A.CODE_ID = D.CODE_ID
+		<!-- 사원의 직급 코드(FK) = 코드의 코드ID -->
+		AND A.AUTH_ID = E.AUTH_ID(+)
+		<!-- AUTH_ID(+)사용 사원에는 해당 컬럼없어도 출력
+       -->
+		AND A.EMP_ST IN (1, 4)
+		AND EMP_ID = #{emp_Id}
+	</select>
 
-<select id = "findPwCheck" resultType="int">
-SELECT COUNT(*) FROM EMP WHERE EMP_EMAIL = #{emp_Email} and EMP_ID = #{emp_Id}
-</select>
+	<select id = "findPwCheck" resultType="int">
+		SELECT COUNT(*) FROM EMP WHERE EMP_EMAIL = #{emp_Email} and EMP_ID = #{emp_Id}
+	</select>
 
-<update id ="findPw">
-UPDATE EMP SET EMP_PWD = #{emp_Pwd} where EMP_EMAIL = #{emp_Email} and EMP_ID = #{emp_Id}
-</update>
+	<update id ="findPw">
+		UPDATE EMP SET EMP_PWD = #{emp_Pwd} where EMP_EMAIL = #{emp_Email} and EMP_ID = #{emp_Id}
+	</update>
 
 
-<update id="updateEmpMyPage" parameterType="EmpVO">
- UPDATE EMP
-    SET EMP_HP = #{emp_Hp}
-       ,EMP_EMAIL = #{emp_Email}
-       ,EMP_ADD1 = #{emp_Add1}
-       ,EMP_ADD2 = #{emp_Add2}
-       ,EMP_ZIPCODE = #{emp_ZipCode}
-       ,ATTEND_ST_ID = #{attend_St_Id}
-  WHERE EMP_ID = #{emp_Id}
-</update>
+	<update id="updateEmpMyPage" parameterType="EmpVO">
+		UPDATE EMP
+		SET EMP_HP = #{emp_Hp}
+		  ,EMP_EMAIL = #{emp_Email}
+		  ,EMP_ADD1 = #{emp_Add1}
+		  ,EMP_ADD2 = #{emp_Add2}
+		  ,EMP_ZIPCODE = #{emp_ZipCode}
+		  ,ATTEND_ST_ID = #{attend_St_Id}
+		WHERE EMP_ID = #{emp_Id}
+	</update>
 
-<update id = "updateSign" parameterType="EmpVO">
-UPDATE EMP SET EMP_SIGN = #{emp_Sign} where EMP_ID = #{emp_Id}
+	<update id = "updateSign" parameterType="EmpVO">
+		UPDATE EMP SET EMP_SIGN = #{emp_Sign} where EMP_ID = #{emp_Id}
 
-</update>
+	</update>
 
-<select id = "idCnt" parameterType = "EmpVO" resultType = "int">
+	<select id = "idCnt" parameterType = "EmpVO" resultType = "int">
 <![CDATA[
-	SELECT COUNT(*) FROM EMP WHERE EMP_EMAIL = #{emp_Email}
-]]>
+		SELECT COUNT(*) FROM EMP WHERE EMP_EMAIL = #{emp_Email}
+		]]>
 </select>
 
-<select id = "empIdSquence" resultType="String">
-	SELECT LPAD(EMP_ID_SEQ.NEXTVAL,5,0) FROM DUAL
-</select>
+	<select id = "empIdSquence" resultType="String">
+		SELECT LPAD(EMP_ID_SEQ.NEXTVAL,5,0) FROM DUAL
+	</select>
 
-<insert id = "register">
-INSERT INTO EMP 
-(EMP_ID, EMP_NAME, EMP_PWD, EMP_REGNO,EMP_CREATE_DT ,EMP_REGNO2, EMP_HP,EMP_ST,EMP_ADD1, EMP_ADD2,EMP_ZIPCODE ,EMP_EMAIL, AUTH_ID, DEPT_ID, EMP_SUP_ID, ATTEND_ST_ID,CODE_ID, EMP_AUTHKEY)
-VALUES
-(#{emp_Id}, #{emp_Name
+	<insert id = "register">
+		INSERT INTO EMP
+		(EMP_ID, EMP_NAME, EMP_PWD, EMP_REGNO,EMP_CREATE_DT ,EMP_REGNO2, EMP_HP,EMP_ST,EMP_ADD1, EMP_ADD2,EMP_ZIPCODE ,EMP_EMAIL, AUTH_ID, DEPT_ID, EMP_SUP_ID, ATTEND_ST_ID,CODE_ID, EMP_AUTHKEY)
+		VALUES
+			(#{emp_Id}, #{emp_Name
 },#{emp_Pwd},#{emp_Regno},sysdate,#{emp_Regno2},#{emp_Hp},#{emp_St},#{emp_Add1},#{emp_Add2},#{emp_ZipCode},#{emp_Email}, #{auth_Id},#{dept_Id}, #{emp_Sup_Id}, #{attend_St_Id}, #{code_Id}, #{emp_authkey})
-</insert>
+	</insert>
 
 
 	<insert id="createAuthKey">

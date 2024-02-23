@@ -32,7 +32,7 @@ tr:hover{
 			<div class="container-fluid">
 					<div class="row clearfix">
 						<div class="col-12" style="margin-top: 2%; font-family: 'S-CoreDream-6Bold">
-							<h2><i class="fas fa-directions"></i> 마일스톤</h2>
+							<h2><i class="fa-solid fa-signs-post"></i> 마일스톤</h2>
 							<hr>
 						</div>
 					</div>
@@ -43,7 +43,7 @@ tr:hover{
 								<div class="body project_report">
 									<button type="button" class="btn btn-light" onclick="window.location.href='${pageContext.request.contextPath}/board/issue/list';">이슈</button>
 									<button type="button" class="btn btn-light active" onclick="window.location.href='${pageContext.request.contextPath}/board/milestone/list';">마일스톤</button>
-									<button type="button" class="btn btn-light" onclick="window.location.href='${pageContext.request.contextPath}/board/project';">프로젝트</button>
+									<button type="button" class="btn btn-light" onclick="window.location.href='${pageContext.request.contextPath}/board/project/list';">프로젝트</button>
 									<button type="button" class="btn btn-primary float-right" onclick="window.location.href='${pageContext.request.contextPath}/board/milestone/registForm';">마일스톤 생성하기</button>
 
 										<div class="table-responsive" style="margin-top:20px;">

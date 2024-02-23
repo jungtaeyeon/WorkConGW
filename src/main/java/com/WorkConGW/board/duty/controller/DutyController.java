@@ -45,9 +45,13 @@ public class DutyController extends BaseController {
     }
 
     @RequestMapping(value="dutyList", method= {RequestMethod.GET, RequestMethod.POST})
-    public String dutyList(BoardFormVO boardFormVO, Model model, HttpSession session, HttpServletRequest request, HttpServletResponse response) throws Exception{
+    public String dutyList(@ModelAttribute("boardFormVO")BoardFormVO boardFormVO, Model model, HttpSession session, HttpServletRequest request, HttpServletResponse response) throws Exception{
         String url="board/duty/list";
+        String dutyType = request.getParameter("dutyType");
         String emp_Id = ((EmpVO)request.getSession().getAttribute("loginUser")).getEmp_Id();
+
+        logger.info(boardFormVO.getDutyVO().getDutyType());
+        logger.info(boardFormVO.getSearchDutyVO().getDutyType());
 
         // 상세페이지 쿠키 삭제
         removeCookieByName(request,response,"duty_Board_Id");
@@ -68,24 +72,23 @@ public class DutyController extends BaseController {
         List<DutyVO> dutyList = new ArrayList<DutyVO>();
         int totCnt = 0;
 
-
-//        if(searchDutyVO.getDutyType()!=null) {
-//            switch(searchDutyVO.getDutyType()) {
-//                case "receive":
-//                case "send":
-//                    dutyList = dutyService.searchMyList(searchDutyVO);
-//                    totCnt = dutyService.searchMyListTotalCount(searchDutyVO);
-//                    break;
-//                case "reception":
-//                    dutyList = dutyService.searchReceptionList(searchDutyVO);
-//                    totCnt = dutyService.searchReceptionListTotalCount(searchDutyVO);
-//            }
-//        }else {
-//            dutyList = dutyService.searchList(searchDutyVO);
-//            totCnt = dutyService.searchListTotalCount(searchDutyVO);
-//        }
-        dutyList = dutyService.searchList(searchDutyVO);
-        totCnt = dutyService.searchListTotalCount(searchDutyVO);
+        searchDutyVO.setDutyType(dutyType);
+        if(searchDutyVO.getDutyType()!=null) {
+            switch(searchDutyVO.getDutyType()) {
+                case "receive":
+                case "send":
+                    logger.info("여기...!");
+                    dutyList = dutyService.searchMyList(searchDutyVO);
+                    totCnt = dutyService.searchMyListTotalCount(searchDutyVO);
+                    break;
+                case "reception":
+                    dutyList = dutyService.searchReceptionList(searchDutyVO);
+                    totCnt = dutyService.searchReceptionListTotalCount(searchDutyVO);
+            }
+        }else {
+            dutyList = dutyService.searchList(searchDutyVO);
+            totCnt = dutyService.searchListTotalCount(searchDutyVO);
+        }
 
         paginationInfo.setTotalRecordCount(totCnt);
         searchDutyVO.setEndDate(paginationInfo.getLastPageNoOnPageList());
@@ -132,6 +135,37 @@ public class DutyController extends BaseController {
         }
 
         return String.valueOf(boardFormVO.getDutyVO().getDuty_Board_Id());
+    }
+
+    @GetMapping("detail")
+    public String detail(@ModelAttribute("boardFormVO")BoardFormVO boardFormVO, Model model, HttpServletRequest request, HttpServletResponse response) throws Exception {
+        String url="board/duty/detail";
+        boardFormVO.getDutyVO().setDuty_Board_Id(Integer.parseInt(request.getParameter("duty_Board_Id")));
+
+        logger.info(String.valueOf(boardFormVO.getDutyVO().getDuty_Board_Id()));
+        logger.info(String.valueOf(boardFormVO.getDuty_Board_Id()));
+
+        DutyVO dutyVO = boardFormVO.getDutyVO();
+
+        // 새로고침시 조회수 증가 방지
+        if(!isCookieExist(request,response,"dutyBoardId",String.valueOf(dutyVO.getDuty_Board_Id()))) {
+            dutyService.increaseDutyReadcnt(dutyVO);
+        }
+
+        PaginationInfo paginationInfo = new PaginationInfo();
+        setUpPaginationInfo(paginationInfo, dutyVO);
+
+        int totCnt = dutyService.replyListTotalCount(dutyVO);
+        paginationInfo.setTotalRecordCount(totCnt);
+
+        DutyVO detailVO = dutyService.getDutyForDetail(dutyVO, request.getSession());
+
+        boardFormVO.setDutyVO(detailVO);
+
+        model.addAttribute("duty", detailVO);
+        model.addAttribute("paginationInfo", paginationInfo);
+
+        return url;
     }
 
 }

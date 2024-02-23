@@ -44,17 +44,18 @@ function summernote_start(content,contextPath){
 
 				//file sending
 				for (var i = files.length - 1; i >= 0; i--) {
-					sendImg(files[i], this,contextPath+'/common/summernote/uploadImg.do');
+					sendImg(files[i], this,'/WorkConGW/common/summernote/uploadImg');
 				}
 			},
 			onMediaDelete : function(target) {
 				//alert(target[0].src);
-				var answer=confirm("정말 이미지를 삭제하시겠습니다.");
+				var answer=confirm("정말 이미지를 삭제하시겠습니까?");
 				if(answer){
-					deleteImg(target[0].src,contextPath+'/common/summernote/deleteImg.do');
+					deleteImg(target[0].src,'/WorkConGW/common/summernote/deleteImg');
 				}
 			}
 		}
+
 	});
 }
 
@@ -70,8 +71,8 @@ function sendImg(file, el,uploadURL) {
 		url: uploadURL,
 		contentType: false,
 		processData: false,
-		success: function(img_url) {
-			$(el).summernote('editor.insertImage', img_url);
+		success: function(imgUrl) {
+			$(el).summernote('editor.insertImage', imgUrl);
 		}
 	});
 }
@@ -134,7 +135,7 @@ function copyClipboard(copyText){
 function cssManager(){
 	var menu = location.href.split('JoinWorkGW/')[1].split('/')[0];
 	// 홈메뉴
-	if(location.href.split('JoinWorkGW/')[1] == 'common/home'){
+	if(location.href.split('WorkConGW/')[1] == 'common/home'){
 		menu = 'home';
 	}
 	// 게시판

@@ -36,7 +36,7 @@ var editEvent = function (event, element, view) {
     modalTitle.html('일정 수정');
     $("#edit-title").val(event.title);
     $("#edit-type").val(event.type);
-    $("#edit-desc").val(event.description);
+    $("#edit-desc").val(event.content);
     $("#edit-color").val(event.backgroundColor).css('color', event.backgroundColor);
     
     if(id==event.username){
@@ -57,7 +57,7 @@ var editEvent = function (event, element, view) {
                 title: $("#edit-title").val(),
                 start: $("#edit-start").val(),
                 end: $("#edit-end").val(),
-                description: $("#edit-desc").val(),
+                content: $("#edit-content").val(),
                 type: $("#edit-type").val(),
                 username: event.username, // controller에서 session에 있는 값으로 넣어줘야 한다.
                 backgroundColor: $("#edit-color").val(),
@@ -106,7 +106,7 @@ var editEvent = function (event, element, view) {
             url: "scheduleupdate",
             data: {
             	"schk":eventData.schk,"username":event.username,
-            	"description":eventData.description,
+            	"content":eventData.content,
             	"start":eventData.start, "end":eventData.end,
             	"type":eventData.type,"calno":event.calno,
             	"backgroundColor":eventData.backgroundColor,

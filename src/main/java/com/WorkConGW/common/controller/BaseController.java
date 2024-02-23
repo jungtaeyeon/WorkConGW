@@ -11,8 +11,10 @@ import java.util.*;
 
 import javax.print.attribute.standard.Media;
 
+import com.WorkConGW.common.PaginationInfo;
 import com.WorkConGW.common.command.FileUploadCommand;
 import com.WorkConGW.common.dto.AttachVO;
+import com.WorkConGW.common.dto.BaseVO;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpSession;
 import org.slf4j.Logger;
@@ -77,7 +79,6 @@ public class BaseController {
 
                 File file = new File(attach.getAttach_path());
                 String attachSize = file.length()/1000 + "KB";
-                attach.setAttach_size(attachSize);
 
                 attachList.add(attach);
             }
@@ -194,5 +195,27 @@ public class BaseController {
         }
     }
 
+    protected void setUpPaginationInfo(PaginationInfo paginationInfo, BaseVO baseVO) {
+
+
+        List<BaseVO> pageUnitSelector = new ArrayList<BaseVO>();
+        BaseVO pageUnitVO = null;
+        for(String unit : BaseVO.PAGE_UNITS) {
+            pageUnitVO = new BaseVO();
+            pageUnitVO.setPageUnitValue(unit);
+            pageUnitVO.setPageUnitLabel(unit+"개씩");
+            pageUnitSelector.add(pageUnitVO);
+        }
+        baseVO.setPageUnitSelector(pageUnitSelector);
+
+        paginationInfo.setCurrentPageNo(baseVO.getPageIndex());
+        paginationInfo.setRecordCountPerPage(baseVO.getPageUnit());
+        paginationInfo.setPageSize(baseVO.getPageSize());
+
+        baseVO.setFirstIndex(paginationInfo.getFirstRecordIndex()+1);
+        baseVO.setLastIndex(paginationInfo.getLastRecordIndex());
+        baseVO.setRecordCountPerPage(paginationInfo.getRecordCountPerPage());
+
+    }
 
 }

@@ -16,6 +16,14 @@
 }
 </style>
 
+
+<body>
+<%--헤더--%>
+<%@ include file="../../include/header.jsp"%>
+<section class="subPageContain">
+    <%--    사이드바--%>
+    <%@ include file="../issueSidebar.jsp"%>
+    <div class="contentConteiner">
 <!-- 메인 content -->
 <a id="viewModal" href="#defaultModal" data-toggle="modal" data-target="#defaultModal" style="display: none;"></a>
 <a id="viewDeptModal" href="#deptModal" data-toggle="modal" data-target="#deptModal" style="display: none;"></a>
@@ -24,39 +32,38 @@
    <div class="container-fluid" >
       <form:form modelAttribute="boardFormVO" name="detailForm" action="${pageContext.request.contextPath }/board/duty/detail">
          <form:hidden path="dutyVO.pageIndex"/>
-         <form:hidden path="dutyVO.dutyBoardId" />
-         <form:hidden path="dutyVO.dutyBoardTitle"/>
-         <form:hidden path="dutyVO.dutyBoardContent"/>
-         <form:hidden path="dutyVO.empName"/>
-         <form:hidden path="dutyVO.dutyBoardReadcnt"/>
+         <form:hidden path="dutyVO.duty_Board_Id" />
+         <form:hidden path="dutyVO.duty_Board_Title"/>
+         <form:hidden path="dutyVO.duty_Board_Content"/>
+         <form:hidden path="dutyVO.emp_Name"/>
+         <form:hidden path="dutyVO.duty_Board_Readcnt"/>
          <form:hidden path="dutyVO.searchDeadline"/>
          <form:hidden path="dutyVO.dutyBoardCreateDtStr"/>
-         <c:forEach items="${duty.dutyManagerList }" var="dutyManager" varStatus="status">
-            <form:hidden path="dutyVO.dutyManagerList[${status.index }].empId" value="${dutyManager.empId }" class="alarmReceiver"/>
-            <form:hidden path="dutyVO.dutyManagerList[${status.index }].empName" value="${dutyManager.empName }"/>
-            <form:hidden path="dutyVO.dutyManagerList[${status.index }].attendStName" value="${dutyManager.attendStName }"/>
-            <form:hidden path="dutyVO.dutyManagerList[${status.index }].deptName" value="${dutyManager.deptName }"/>
-            <form:hidden path="dutyVO.dutyManagerList[${status.index }].officialName" value="${dutyManager.officialName }"/>
+         <c:forEach items="${duty.dutyEnforcerList }" var="dutyEnforcer" varStatus="status">
+            <form:hidden path="dutyVO.dutyEnforcerList[${status.index }].emp_Id" value="${dutyEnforcer.emp_Id }" class="alarmReceiver"/>
+            <form:hidden path="dutyVO.dutyEnforcerList[${status.index }].emp_Name" value="${dutyEnforcer.emp_Name }"/>
+            <form:hidden path="dutyVO.dutyEnforcerList[${status.index }].attend_St_Name" value="${dutyEnforcer.attend_St_Name }"/>
+            <form:hidden path="dutyVO.dutyEnforcerList[${status.index }].dept_Name" value="${dutyEnforcer.dept_Name }"/>
+            <form:hidden path="dutyVO.dutyEnforcerList[${status.index }].officialName" value="${dutyEnforcer.officialName }"/>
          </c:forEach>
          <c:forEach items="${duty.dutyAttachList }" var="dutyAttach" varStatus="status">
-            <form:hidden path="dutyVO.dutyAttachList[${status.index }].attachId" value="${dutyAttach.attachId }" />
-            <form:hidden path="dutyVO.dutyAttachList[${status.index }].attachPath" value="${dutyAttach.attachPath }" />
-            <form:hidden path="dutyVO.dutyAttachList[${status.index }].attachName" value="${dutyAttach.attachName }" />
-            <form:hidden path="dutyVO.dutyAttachList[${status.index }].attachType" value="${dutyAttach.attachType }" />
-            <form:hidden path="dutyVO.dutyAttachList[${status.index }].attachSize" value="${dutyAttach.attachSize }" />
+            <form:hidden path="dutyVO.dutyAttachList[${status.index }].attach_Id" value="${dutyAttach.attachId }" />
+            <form:hidden path="dutyVO.dutyAttachList[${status.index }].attach_Path" value="${dutyAttach.attachPath }" />
+            <form:hidden path="dutyVO.dutyAttachList[${status.index }].attach_Name" value="${dutyAttach.attachName }" />
+            <form:hidden path="dutyVO.dutyAttachList[${status.index }].attach_Type" value="${dutyAttach.attachType }" />
          </c:forEach>
          
          <div class="block-header">
                <div class="row">
                   <div class="col-sm-8">
-                      <h2 style="padding-left:10px;font-size:2em;font-family: S-CoreDream-6Bold"><i class="icon-note"></i>&nbsp;업무 상세 #${duty.dutyBoardId } </h2>
+                      <h2 style="padding-left:10px;font-size:2em;font-family: S-CoreDream-6Bold"><i class="fas fa-sticky-note"></i>&nbsp;업무 상세 #${duty.duty_Board_Id } </h2>
                    </div>
                    <div class="col-sm-4" style="font-family: S-CoreDream-6Bold">
                         <div style="float:right;">
-                           <c:if test="${loginUser.empId == duty.empWriterId }">
-	                           	<c:if test="${duty.modifiable eq 'Y' }">
+                           <c:if test="${loginUser.emp_Id == duty.emp_Writer_Id }">
+<%--	                           	<c:if test="${duty.modifiable eq 'Y' }">--%>
 	                            	<button type="button" class="btn btn-info" style="width:80px;" onclick="modify_go();">수정</button>
-	                           	</c:if>
+<%--	                           	</c:if>--%>
 	                            <button type="button" class="btn btn-danger" style="width:80px;" onclick="remove_go();">삭제</button>
                            </c:if>
                           <button type="button" onclick="window.close();" class="btn btn-secondary" style="width:80px;">닫기</button>
@@ -66,13 +73,13 @@
                <div style="padding:5px 15px 0 15px">
                	<c:set value="0" var="readCount"/>
                	<strong>
-	                 <c:forEach items="${duty.dutyManagerList }" var="dutyManager" varStatus="status">
-	                 	<c:if test="${dutyManager.readSt eq 'Y' }">
-	                 		<c:if test="${readCount eq 0 }">
+	                 <c:forEach items="${duty.dutyEnforcerList }" var="dutyEnforcer" varStatus="status">
+	                 	<c:if test="${dutyEnforcer.read_St eq 'Y' }">
+	                 		<c:if test="${read_Count eq 0 }">
 	                 		[
 	                 		</c:if>
-	                 		${dutyManager.empName }&nbsp;
-	                 		<c:set value="${readCount + 1 }" var="readCount" />
+	                 		${dutyEnforcer.emp_Name }&nbsp;
+	                 		<c:set value="${read_Count + 1 }" var="readCount" />
 	                 	</c:if>
 	                 </c:forEach>
 	                 <c:if test="${readCount ne 0}">
@@ -94,7 +101,7 @@
                               </td>
                               
                               <td colspan="5">
-                                 <div style="padding-left:15px;border-left: 1px dotted gray;">${duty.dutyBoardTitle }</div>
+                                 <div style="padding-left:15px;border-left: 1px dotted gray;">${duty.duty_Board_Title }</div>
                               </td>
                            </tr>
                            <tr>
@@ -103,7 +110,7 @@
                               </td>
                               <td style="width:200px;">
                                  <div style="padding-left:15px;border-left: 1px dotted gray;">
-									<button type="button" class="btn btn-outline-secondary" id="${duty.empWriterId }" onclick="empChecked(this);">${duty.empName }</button>
+									<button type="button" class="btn btn-outline-secondary" id="${duty.emp_Writer_Id }" onclick="empChecked(this);">${duty.emp_Name }</button>
 								 </div>
                               </td>
                               <td style="width:130px;">
@@ -111,8 +118,8 @@
                               </td>
                               <td colspan="3">
                                  <div style="padding-left:15px;border-left: 1px dotted gray;">
-                                    <c:forEach items="${duty.dutyManagerList }" var="dutyManager" varStatus="status">							
-                                       <button type="button" class="btn btn-outline-secondary" id="${dutyManager.empId }" onclick="empChecked(this);">${dutyManager.empName }</button>
+                                    <c:forEach items="${duty.dutyEnforcerList }" var="dutyEnforcer" varStatus="status">
+                                       <button type="button" class="btn btn-outline-secondary" id="${dutyEnforcer.emp_Id }" onclick="empChecked(this);">${dutyEnforcer.emp_Name }</button>
                                     </c:forEach>
                                  </div>
                               </td>
@@ -129,10 +136,10 @@
                                  		</c:when>
                                  		<c:otherwise>
 											<c:forEach items="${duty.receptionDeptList }" var="receptionDept">
-												<button type="button" class="btn btn-outline-dark" onclick="deptChecked(this);" id="${receptionDept.deptId }" >${receptionDept.deptName }</button> 
+												<button type="button" class="btn btn-outline-dark" onclick="deptChecked(this);" id="${receptionDept.dept_Id }" >${receptionDept.dept_Name }</button>
 											</c:forEach>
 											<c:forEach items="${duty.receptionList }" var="receptioner">
-												<button type="button" class="btn btn-outline-secondary" id="${receptioner.empId }" onclick="empChecked(this);">${receptioner.empName }</button>
+												<button type="button" class="btn btn-outline-secondary" id="${receptioner.emp_Id }" onclick="empChecked(this);">${receptioner.emp_Name }</button>
 											</c:forEach>
                                  		</c:otherwise>
                                  	</c:choose>
@@ -147,7 +154,7 @@
                               </td>
                               <td>
                                  <div style="padding-left:15px;border-left: 1px dotted gray;">
-                                    <fmt:formatDate value="${duty.dutyBoardCreateDt }" pattern="yyyy-MM-dd"/>
+                                    <fmt:formatDate value="${duty.duty_Board_Create_Dt }" pattern="yyyy-MM-dd"/>
                                  </div>
                               </td>
                               <td>
@@ -155,10 +162,10 @@
                               </td>
                               <td style="width:200px;">
                                  <div style="padding-left:15px;border-left: 1px dotted gray;" id="searchDeadline">
-                                 	<c:if test="${!empty duty.dutyBoardEndDt }">
-	                                    <fmt:formatDate value="${duty.dutyBoardEndDt }" pattern="yyyy-MM-dd"/>
+                                 	<c:if test="${!empty duty.duty_Board_End_Dt }">
+	                                    <fmt:formatDate value="${duty.duty_Board_End_Dt }" pattern="yyyy-MM-dd"/>
                                  	</c:if>
-                                 	<c:if test="${empty duty.dutyBoardEndDt }">
+                                 	<c:if test="${empty duty.duty_Board_End_Dt }">
                                  		<span>없음</span>
                                  	</c:if>
                                  </div>
@@ -167,7 +174,7 @@
                                  <strong>조회수</strong>
                               </td>
                               <td>
-                                 <div style="padding-left:15px;border-left: 1px dotted gray;">${duty.dutyBoardReadcnt }</div>
+                                 <div style="padding-left:15px;border-left: 1px dotted gray;">${duty.duty_Board_Readcnt }</div>
                               </td>
                            </tr>
                            <tr>
@@ -201,7 +208,7 @@
                            <!-- 내용 -->
                            <tr>
                               <th colspan="6" style="padding:15px;">
-                                 ${duty.dutyBoardContent }
+                                 ${duty.duty_Board_Content }
                               </th>
                            </tr>
                         </thead>
@@ -240,9 +247,9 @@
                       <div class="container-fluid" id="replyList_${dutyReply.replyId }">
                          <div class="row">
                             <div class="col-12">
-                                 <p style="font-weight: bold;margin-bottom:5px;display:inline-block;">${dutyReply.empName }</p>
+                                 <p style="font-weight: bold;margin-bottom:5px;display:inline-block;">${dutyReply.emp_Name }</p>
                                  <span style="color:gray;font-size: revert;padding-left:10px;margin-left:10px;border-left:1px solid gray;"><fmt:formatDate value="${dutyReply.replyUpdateDt }" pattern="yyyy-MM-dd HH:mm:ss"/></span>
-                                 <c:if test="${loginUser.empId == dutyReply.empWriterId }">
+                                 <c:if test="${loginUser.emp_Id == dutyReply.emp_Writer_Id }">
                                     <div class="float-right">
                                         <a href="javascript:void(0);" onclick="modifyReplyForm(${dutyReply.replyId},'${dutyReply.replyContent }');"><i class="fa fa-edit"></i> 수정</a>
                                         <a href="javascript:void(0);" style="margin-left:10px;" onclick="removeReply(${dutyReply.replyId});"><i class="fa fa-trash-o"></i> 삭제</a>
@@ -328,8 +335,8 @@
 </form>
 
 <form name="replyRegistForm">
-   <input type="hidden" name="dutyReplyVO.dutyBoardId" value="${duty.dutyBoardId }" />
-   <input type="hidden" name="dutyReplyVO.empWriterId" value="${loginUser.empId }"/>
+   <input type="hidden" name="dutyReplyVO.dutyBoardId" value="${duty.duty_Board_Id }" />
+   <input type="hidden" name="dutyReplyVO.empWriterId" value="${loginUser.emp_Id }"/>
    <input type="hidden" name="dutyReplyVO.replyContent" />
 </form>
 
@@ -454,8 +461,8 @@ function modify_go(){
    var dutyModifyForm = document.detailForm;
    dutyModifyForm.action = '${pageContext.request.contextPath }/board/duty/modifyForm';
    
-   $('input[name="dutyVO.searchDeadline"]').val('<fmt:formatDate value="${duty.dutyBoardEndDt }" pattern="yyyy-MM-dd"/>');
-   $('input[name="dutyVO.dutyBoardCreateDtStr"]').val('<fmt:formatDate value="${duty.dutyBoardCreateDt }" pattern="yyyy-MM-dd"/>');
+   $('input[name="dutyVO.searchDeadline"]').val('<fmt:formatDate value="${duty.duty_Board_End_Dt }" pattern="yyyy-MM-dd"/>');
+   $('input[name="dutyVO.dutyBoardCreateDtStr"]').val('<fmt:formatDate value="${duty.duty_Board_Create_Dt }" pattern="yyyy-MM-dd"/>');
    
    dutyModifyForm.submit();
 }
@@ -484,7 +491,7 @@ function remove_go(){
             sendMessage('${pageContext.request.contextPath}',
                      empId,
                      '담당 업무가 삭제되었습니다.',
-                     '${duty.dutyBoardTitle } #${duty.dutyBoardId}',
+                     '${duty.duty_Board_Title } #${duty.duty_Board_Id}',
                      '',
                      '업무관리');
          });
@@ -644,4 +651,6 @@ function presentationFill_1(){
 }	
 
 </script>
-
+        </div>
+</section>
+</body>

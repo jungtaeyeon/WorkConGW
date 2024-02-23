@@ -3,11 +3,8 @@ package com.WorkConGW.board.issue.service;
 import com.WorkConGW.board.duty.dao.DutyDAO;
 import com.WorkConGW.board.issue.dao.IssueDAO;
 import com.WorkConGW.board.issue.dao.ProjectDAO;
-import com.WorkConGW.board.issue.dto.IssueReplyVO;
 import com.WorkConGW.board.issue.dto.IssueVO;
 import com.WorkConGW.board.issue.dto.ProjectVO;
-import com.WorkConGW.emp.dto.EmpVO;
-import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -53,10 +50,11 @@ public class ProjectService {
 
     public void remove(ProjectVO projectVO) throws SQLException{
 
-        // 이슈 마일스톤 업데이트
-        dutyDAO.updateDutyByDeleteProject(projectVO);
+        // 이슈 프로젝트 업데이트
+//        dutyDAO.updateDutyByDeleteProject(projectVO);
 
-        // 마일스톤 삭제
+        // 프로젝트 삭제
         projectDAO.deleteProject(projectVO);
     }
+
 }

@@ -101,14 +101,14 @@
         where rownum <![CDATA[ <= ]]> #{recordCountPerPage}
     </select>
 
-    <select id="selectMyIssueList" parameterType="EmpVO" resultType="IssueVO">
+    <select id="selectMyIssueList" parameterType="ProjectVO" resultType="IssueVO">
         SELECT
             A.issue_board_id
              ,A.issue_board_title
              ,A.issue_board_content
              ,A.issue_board_readcnt
-             ,to_char(A.issue_board_create_dt, 'yyyy.mm.dd HH24:MI:SS') as issueBoardCreateDt
-             ,to_char(A.issue_board_update_dt, 'yyyy.mm.dd HH24:MI:SS') as issueBoardUpdateDt
+             ,A.issue_board_create_dt
+             ,A.issue_board_update_dt
              ,A.issue_board_updater_id
              ,A.emp_id
              ,A.duty_board_id
@@ -117,11 +117,16 @@
              ,A.issue_project_st
              ,A.issue_open_st
              ,B.duty_board_title
+             ,C.PROJECT_ID
         FROM
-            issue_board A, duty B
-        WHERE A.duty_board_id = B.duty_board_id(+)
-          AND emp_id = #{emp_Id}
-        ORDER BY issueBoardUpdateDt DESC
+            issue_board A
+                JOIN
+            duty B ON A.duty_board_id = B.duty_board_id
+                JOIN
+            PROJECT C ON B.PROJECT_ID = C.PROJECT_ID
+        WHERE A.duty_board_id = B.duty_board_id
+          AND C.PROJECT_ID = #{project_Id}
+        ORDER BY A.issue_board_update_dt DESC
     </select>
 
     <select id="selectIssueListByMilestoneId" parameterType="MilestoneVO" resultType="IssueVO">
@@ -135,7 +140,7 @@
         ,A.emp_id
         ,A.duty_board_id
         ,A.milestone_id
-        ,A.issue_board_st
+        ,A.ISSUE_OPEN_ST
         ,B.milestone_name
         ,C.emp_name
         ,NVL(D.oppListCount,0) oppIssueCount
@@ -149,10 +154,10 @@
         WHERE 1=1
         <choose>
             <when test='isOpen == "open"'>
-                AND issue_board_st='N'
+                AND ISSUE_OPEN_ST=2
             </when>
             <otherwise>
-                AND issue_board_st='Y'
+                AND ISSUE_OPEN_ST=1
             </otherwise>
         </choose>
         GROUP BY milestone_id
@@ -172,13 +177,101 @@
         AND A.milestone_id = #{milestone_Id}
         <choose>
             <when test='isOpen == "open"'>
-                AND A.issue_board_st='Y'
+                AND A.ISSUE_OPEN_ST=1
             </when>
             <otherwise>
-                AND A.issue_board_st='N'
+                AND A.ISSUE_OPEN_ST=2
             </otherwise>
         </choose>
         ORDER BY issue_board_update_dt DESC
     </select>
+
+    <select id="selectIssueListByProjectId" parameterType="ProjectVO" resultType="IssueVO">
+        SELECT
+        A.issue_board_id,
+        A.issue_board_title,
+        A.issue_board_content,
+        A.issue_board_readcnt,
+        A.issue_board_create_dt,
+        A.issue_board_update_dt,
+        A.issue_board_updater_id,
+        A.emp_id,
+        A.duty_board_id,
+        D.PROJECT_ID,
+        A.ISSUE_OPEN_ST,
+        B.PROJECT_TITLE,
+        C.emp_name,
+        NVL(E.oppListCount,0) AS opp_Issue_Count,
+        NVL(F.reply_Count,0) AS reply_Count,
+        G.duty_board_title
+        FROM
+        issue_board A
+        INNER JOIN (
+        SELECT DISTINCT PROJECT_ID, DUTY_BOARD_ID
+        FROM DUTY
+        ) D ON A.duty_board_id = D.DUTY_BOARD_ID
+        INNER JOIN PROJECT B ON D.PROJECT_ID = B.PROJECT_ID
+        INNER JOIN emp C ON A.emp_id = C.emp_id
+        LEFT JOIN (
+        SELECT COUNT(*) AS oppListCount, PROJECT_ID
+        FROM (
+        SELECT a.PROJECT_ID
+        FROM DUTY a
+        INNER JOIN ISSUE_BOARD b ON a.DUTY_BOARD_ID = b.DUTY_BOARD_ID
+        )
+        GROUP BY PROJECT_ID
+        ) E ON D.PROJECT_ID = E.PROJECT_ID
+        LEFT JOIN (
+        SELECT issue_board_id, COUNT(*) AS reply_Count
+        FROM issue_reply
+        WHERE reply_group_code = 1
+        GROUP BY issue_board_id
+        ) F ON A.issue_board_id = F.issue_board_id
+        LEFT JOIN duty G ON A.duty_board_id = G.duty_board_id
+        WHERE
+        D.PROJECT_ID = #{project_Id}
+        <choose>
+            <when test='isOpen == "open"'>
+                AND ISSUE_OPEN_ST=2
+            </when>
+            <otherwise>
+                AND ISSUE_OPEN_ST=1
+            </otherwise>
+        </choose>
+        ORDER BY
+        A.issue_board_update_dt DESC
+    </select>
+
+    <update id="updateIssueVO" parameterType="IssueVO">
+        UPDATE issue_board
+        SET
+        issue_board_title = #{issue_Board_Title}
+        <if test="issue_Open_St != 0">
+            ,issue_open_st = #{issue_Open_St}
+        </if>
+        <if test="issue_Project_St != null and issue_Project_St != ''">
+            ,ISSUE_PROJECT_ST = #{issue_Project_St}
+        </if>
+        <if test="issue_Board_Content != null and issue_Board_Content != ''">
+            ,issue_board_content = #{issue_Board_Content}
+        </if>
+        <if test="duty_Board_Id != null and duty_Board_Id != ''">
+            ,duty_board_id = #{duty_Board_Id}
+        </if>
+            ,issue_board_update_dt = sysdate
+        <if test="issue_Board_St != 0">
+            ,issue_board_st = #{issue_Board_St}
+        </if>
+        <choose>
+            <when test="milestone_Id != 0">
+                ,milestone_id = #{milestone_Id}
+            </when>
+            <otherwise>
+                ,milestone_id = 0
+            </otherwise>
+        </choose>
+        WHERE
+        issue_board_id = #{issue_Board_Id}
+    </update>
 
 </mapper>

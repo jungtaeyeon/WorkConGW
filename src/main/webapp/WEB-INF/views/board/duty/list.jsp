@@ -9,6 +9,10 @@
 <head>
     <title>업무관리</title>
 <style>
+    .pagination{
+        text-align: center;
+        justify-content: center;
+    }
     .noList:hover{
         background-color: white;
         cursor: default;
@@ -92,12 +96,11 @@
                                     <form:option value="N">종료</form:option>
                                 </form:select>
 
-<%--                                백단 끝나면 form태그 사용 select는 임시로 화면만 짜놓은것--%>
                                 <form:select path="searchDutyVO.searchCondition" class="form-control selectSearch" style="width:130px;font-size: 1.2em;float:left;">
                                     <form:option value="tcmn">전체</form:option>
                                     <form:option value="t">제목</form:option>
                                     <form:option value="c">내용</form:option>
-                                    <form:option value="m">담당자</form:option>
+                                    <form:option value="m">수신자</form:option>
                                     <form:option value="n">업무번호</form:option>
                                 </form:select>
 
@@ -110,9 +113,6 @@
                                     <div style="display: inline-block;float:left;font-size: 1.2em;margin:6px 20px 0 0">
                                         <span>${paginationInfo.currentPageNo} </span>/<span> ${totalPageCnt} 페이지 중</span>
                                     </div>
-<%--                                    <form:select path="searchDutyVO.pageUnit" class="form-control" style="width:130px;font-size: 1.2em;" onchange="searchDutyList(1);">--%>
-<%--                                        <form:options items="${boardFormVO.searchDutyVO.pageUnitSelector}" itemValue="pageUnitValue" itemLabel="pageUnitLabel"/>--%>
-<%--                                    </form:select>--%>
                                 </div>
                             </div>
 
@@ -136,7 +136,7 @@
                                     <c:if test="${dutyList.size() > 0 }">
                                         <c:forEach items="${dutyList }" var="duty">
 <%--                                            <fmt:parseNumber value="${myToday.time - duty.duty_Board_Create_Dt.time }" integerOnly="true" var="defferTime"/>--%>
-                                            <tr role="row" onclick="OpenWindow('<%=request.getContextPath()%>/board/duty/detail?duty_Board_Id=${duty.duty_Board_Id }', 'JoinWorkGW', 1000, 700);">
+                                            <tr role="row" onclick="window.location.href='<%=request.getContextPath()%>/board/duty/detail?duty_Board_Id=${duty.duty_Board_Id }'">
                                                 <td style="text-align:center;">${duty.duty_Board_Id }</td>
                                                 <td class="project-title sorting_1">
                                                     <span>${duty.duty_Board_Title }</span>
@@ -161,7 +161,7 @@
                                                     <fmt:parseNumber value="${myToday.time / (1000*60*60*24)}" integerOnly="true" var="strDate"></fmt:parseNumber>
                                                     <fmt:parseNumber value="${duty.duty_Board_End_Dt.time / (1000*60*60*24)}" integerOnly="true" var="endDate"></fmt:parseNumber>
                                                     <c:if test="${(endDate-strDate) < 3 && (endDate-strDate) >= 0 && duty.duty_Board_End_Dt.getTime() >= today}">
-                                                        <span class="badge badge-danger">마감임박</span>
+                                                        <br><span class="badge badge-danger">마감임박</span>
                                                     </c:if>
                                                 </td>
                                                 <td>

@@ -2,7 +2,7 @@
          pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <link rel="stylesheet" href="<%=request.getContextPath() %>/resources/vendor/css/fullcalendar.min.css" />
-<link rel="stylesheet" href="<%=request.getContextPath() %>/resources/vendor/css/bootstrap.min.css">
+<%--<link rel="stylesheet" href="<%=request.getContextPath() %>/resources/vendor/css/bootstrap.min.css">--%>
 <link rel="stylesheet" href='<%=request.getContextPath() %>/resources/vendor/css/select2.min.css' />
 <link rel="stylesheet" href='<%=request.getContextPath() %>/resources/vendor/css/bootstrap-datetimepicker.min.css' />
 
@@ -40,9 +40,11 @@
         padding: 0px 10px 10px;
         margin-top: 20px;
     }
+
     body, div#main-content,.container-fluid, form{
-        max-width: 49em;
     }
+
+
     body{
         padding: 0px 30px 30px 30px;
         background-color: rgba(0,0,0,.03);
@@ -69,22 +71,25 @@
 
 </style>
 <body>
+<%@ include file="../include/header.jsp"%>
+<section class="subPageContain">
+
 <div id="main-content" style="font-family: S-CoreDream-4Regular">
     <div class="container-fluid">
         <div class="">
             <div class="form-header container-fluid-header" style="font-family: S-CoreDream-6Bold">
                 <h3 class="form-title">일정 상세조회</h3>
                 <div>
-<%--                    <c:if test="${loginUser.empId eq schedule.username }">--%>
+                    <c:if test="${loginUser.emp_Id eq schedule.username}">
                         <button type="button" class="btn btn-info" onclick="location.href='<%=request.getContextPath() %>/schedule/modifyForm?schedule_Id=${param.schedule_Id }';">수정</button>
                         <button type="button" class="btn btn-danger" onclick="removeSchedule();">삭제</button>
-<%--                    </c:if>--%>
+                    </c:if>
                     <button type="button" class="btn btn-secondary" onclick="location.href='main';" style="border: 1px solid gray">닫기</button>
                 </div>
             </div>
             <hr>
             <!-- 로그인 사용자로 대체할 것 -->
-            <input type="hidden" id="shceduleId" value="${schedule.id}"/>
+            <input type="hidden" id="scheduleId" value="${schedule.id}"/>
             <c:if test="${schedule.imp == 'true'}">
                 <div class="row">
                     <div class="col-xs-12">
@@ -131,6 +136,7 @@
         </div>
     </div>
 </div>
+</section>
 
 <!-- fullCalendar 기본 js -->
 <script src="<%=request.getContextPath() %>/resources/vendor/js/jquery.min.js"></script>
@@ -145,18 +151,18 @@
 <%--<script src="<%=request.getContextPath() %>/resources/js/script.js"></script>--%>
 
 <!-- fullCalendar 커스텀 js -->
-<script src="<%=request.getContextPath() %>/resources/js/main.js"></script>
+<%--<script src="<%=request.getContextPath() %>/resources/js/main.js"></script>--%>
 <script src="<%=request.getContextPath() %>/resources/js/addEvent.js"></script>
 <script src="<%=request.getContextPath() %>/resources/js/etcSetting.js"></script>
 
 <script>
     //삭제
     function removeSchedule(){
-        var fixedScheduleId = $('#schedule_Id').val();
+        var fixedScheduleId = $('#scheduleId').val();
         console.log(fixedScheduleId);
         if(confirm('${schedule.title } 일정을 삭제하시겠습니까?')){
             var sendData = {
-                scheduleId:fixedScheduleId
+                schedule_Id:fixedScheduleId
             }
             console.log(sendData);
             $.ajax({
@@ -168,7 +174,7 @@
                     if(response > 0){
                         alert("일정이 삭제되었습니다.");
                         if(window.opener)  window.opener.location.reload(true);
-                        window.close();
+                        window.location.href = '${pageContext.request.contextPath}' + '/schedule/main';
                     }
                 }
                 ,error:function(request, status, error){
