@@ -487,7 +487,7 @@
         if(session > 300){
             alert('시간이 만료되었습니다. 로그인해주세요')
             location.href = "<%=request.getContextPath()%>/common/loginForm"
-            sessionStorage.clear()
+
         }
         else{
             document.write(session);

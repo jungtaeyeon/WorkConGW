@@ -49,7 +49,6 @@
 
 <body>
 
-<button>부서추가</button>
 
 <ul id="codeList" name = "child">
     <ul id="lvl0"><!-- 자식 노드가 들어올 공간--></ul>

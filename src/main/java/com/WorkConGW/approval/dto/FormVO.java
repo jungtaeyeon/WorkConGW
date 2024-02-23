@@ -4,58 +4,44 @@ import org.apache.ibatis.type.Alias;
 
 @Alias("FormVO")
 public class FormVO {
-    private int formId;
-    private int formSupId;
-    private String formSupName;
-    private String formName;
-    private String formContent;
-    private String formPeriod;
-    private int level;
+
+    private int form_Id;
+    private String form_Name;
+    private String form_Content;
 
 
+    public int getForm_Id() {
+        return form_Id;
+    }
 
-    public String getFormPeriod() {
-        return formPeriod;
+    public void setForm_Id(int form_Id) {
+        this.form_Id = form_Id;
     }
-    public void setFormPeriod(String formPeriod) {
-        this.formPeriod = formPeriod;
+
+    public String getForm_Name() {
+        return form_Name;
     }
-    public int getLevel() {
-        return level;
+
+    public void setForm_Name(String form_Name) {
+        this.form_Name = form_Name;
     }
-    public void setLevel(int level) {
-        this.level = level;
+
+    public String getForm_Content() {
+        return form_Content;
     }
-    public int getFormId() {
-        return formId;
+
+    public void setForm_Content(String form_Content) {
+        this.form_Content = form_Content;
     }
-    public void setFormId(int formId) {
-        this.formId = formId;
+
+
+    public FormVO(int form_Id, String form_Name, String form_Content) {
+        this.form_Id = form_Id;
+        this.form_Name = form_Name;
+        this.form_Content = form_Content;
     }
-    public int getFormSupId() {
-        return formSupId;
-    }
-    public void setFormSupId(int formSupId) {
-        this.formSupId = formSupId;
-    }
-    public String getFormSupName() {
-        return formSupName;
-    }
-    public void setFormSupName(String formSupName) {
-        this.formSupName = formSupName;
-    }
-    public String getFormName() {
-        return formName;
-    }
-    public void setFormName(String formName) {
-        this.formName = formName;
-    }
-    public String getFormContent() {
-        return formContent;
-    }
-    public void setFormContent(String formContent) {
-        this.formContent = formContent;
-    }
+
+
 
 
 }
