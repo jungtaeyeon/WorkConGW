@@ -135,7 +135,7 @@ function copyClipboard(copyText){
 function cssManager(){
 	var menu = location.href.split('JoinWorkGW/')[1].split('/')[0];
 	// 홈메뉴
-	if(location.href.split('JoinWorkGW/')[1] == 'common/home'){
+	if(location.href.split('WorkConGW/')[1] == 'common/home'){
 		menu = 'home';
 	}
 	// 게시판

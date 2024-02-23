@@ -403,15 +403,15 @@
 
 
 </script>
-<script> // 시연용
-function presentationFill(){
-// 	alert('클릭');
+<%--<script> // 시연용--%>
+<%--function presentationFill(){--%>
+<%--// 	alert('클릭');--%>
 
-    $(".roomName").val("분임토의 5실");
-    $(".roomNo").val("406호");
-    $(".roomCapacity").val("25");
-    $(".roomContent").val("노트북/모니터/키보드/마우스/빔프로젝터/에어컨");
+<%--    $(".roomName").val("분임토의 5실");--%>
+<%--    $(".roomNo").val("406호");--%>
+<%--    $(".roomCapacity").val("25");--%>
+<%--    $(".roomContent").val("노트북/모니터/키보드/마우스/빔프로젝터/에어컨");--%>
 
-}
-</script>
+<%--}--%>
+<%--</script>--%>
 </html>
