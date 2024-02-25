@@ -77,13 +77,13 @@
         <!--큰버튼이 필요한 페이지에 쓰임-->
 
         <div class="tab-content p-l-0 p-r-0 subsubmenu">
-          <button type="button" class="btn btn-success">출근</button>
+          <button type="button" class="btn btn-success attendStartBtn">출근</button>
           <button type="button" class="btn btn-danger">퇴근</button>
         </div>
 
         <div class="tab-content p-l-0 p-r-0 subsubmenu">
           <!--서브메뉴 타이틀-->
-          <a href="attentMyList">내 근태조회</a>
+          <a href="main">내 근태조회</a>
         </div>
         <div class="tab-content p-l-0 p-r-0 subsubmenu">
           <!--서브메뉴 타이틀-->  
@@ -91,3 +91,9 @@
         </div>
     </div>
 </div>
+
+<script>
+  $('.attendStartBtn').click(function(){
+    alert('a');
+  })
+</script>

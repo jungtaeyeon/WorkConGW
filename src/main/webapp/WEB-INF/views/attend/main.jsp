@@ -66,7 +66,7 @@
 			width: 30%;
 			margin-left: 2%;
 		}
-		.attendStatisticsGroup{display: flex; justify-content: space-between;}
+		.attendStatisticsGroup{display: flex; justify-content: space-between; margin-bottom: 5%;}
 		.attendStatisticTextGroup{
 			width: 50%;
 		}
@@ -171,10 +171,9 @@
 			<div class="lateReasonGroup">
 				<form>
 					<div class="attendStatisticsGroup">
-						<p class="lateReasonTit">지각 사유 작성</p>
+						<p class="lateReasonTit">근태 사유 작성</p>
 						<button type="button" class="btn btn-primary">제출</button>
 					</div>
-					<p class="lateReasonSubTit">*각 부서장이 확인할 수 있습니다</p>
 					<input type="date" class="form-control" name="" aria-label="입사날짜" aria-describedby="">
 					<textarea rows="10" class="form-control" name="manage_remark" aria-label="메모"></textarea>
 				</form>
