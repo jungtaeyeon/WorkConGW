@@ -72,13 +72,13 @@
 
         <div class="attendTextGroup">
           <p class="attendTimeTitle">근무시간</p>
-          <p class="attendTimeContent">00:00:00</p>
+          <p id="attendTimeContent" class="attendTimeContent">00:00:00</p>
         </div>
         <!--큰버튼이 필요한 페이지에 쓰임-->
 
         <div class="tab-content p-l-0 p-r-0 subsubmenu">
           <button type="button" class="btn btn-success attendStartBtn">출근</button>
-          <button type="button" class="btn btn-danger">퇴근</button>
+          <button type="button" class="btn btn-danger attendEndBtn">퇴근</button>
         </div>
 
         <div class="tab-content p-l-0 p-r-0 subsubmenu">
@@ -92,9 +92,25 @@
     </div>
 </div>
 
-<script>
-  let history_Attend_Time = '${loginUser.history_Attend_Time}';
-  
+<script>  
+let history_Attend_Time = "${loginUser.history_Attend_Time}";
+let history_Leaving_Time = "${loginUser.history_Leaving_Time}";
+let startTime;
+let now;
+let stopboolean = "${loginUser.attend_St_Id}"; 
+let timerId;
+// 공백을 기준으로 문자열을 나누고, 각 부분을 '-'와 ':'로 다시 나누어서 배열로 만듭니다.
+let parts = history_Attend_Time.split(/[\s-:]/);
+let parts1 = history_Leaving_Time.split(/[\s-:]/);
+// parts 배열의 원소들을 숫자로 변환하여 Date 객체 생성자에 넣습니다.
+startTime = new Date(parts[0], parts[1] - 1, parts[2], parts[3], parts[4], parts[5]);
+now = new Date(parts1[0], parts1[1] - 1, parts1[2], parts1[3], parts1[4], parts1[5]);
+  // 타이머를 표시할 요소
+let timerElement = document.getElementById("attendTimeContent");
+
+// 타이머 갱신 주기 (1초)
+let timerInterval = 1000;
+
   $('.attendStartBtn').click(function(){
     if(history_Attend_Time == ""){
       $.ajax({
@@ -104,15 +120,82 @@
         },
         success : function(result) { 
           alert('출근체크되었습니다.');
+          startTimer();
         },    
         error : function(request, status, error) {        
-          console.log(error)    
+          console.log(error);
         }
       })
     }else{
       alert('이미출근하셨습니다.');
       return;
     }
-    
   })
+  $('.attendEndBtn').click(function(){
+    if(history_Leaving_Time != ""){
+      alert('이미퇴근하셨습니다.');
+      return;
+    }
+    else if(history_Attend_Time != ""){
+      $.ajax({
+        type : 'get',              
+        url : '/WorkConGW/attend/attendEnd',  
+        data : {
+        },
+        success : function(result) { 
+          alert('퇴근체크되었습니다.');
+          updateTimer();
+          clearInterval(timerId);
+        },    
+        error : function(request, status, error) {        
+          console.log(error);
+        }
+      })
+    }else{
+      alert('출근부터해주세요');
+      return;
+    }
+  })
+
+if(stopboolean == '1' || stopboolean == '2'){
+  timerId = setInterval(updateTimer, timerInterval);
+}else{
+  updateTimer();
+}
+// 타이머 갱신 함수
+function updateTimer() {
+    if (!startTime) return;
+    // 현재 시간
+    if(history_Leaving_Time == ''){
+      now = new Date().getTime();
+    }
+    // 경과 시간 (밀리초)
+    let elapsedTime = now - startTime;
+    // 시, 분, 초 계산
+    let hours = Math.floor(elapsedTime / (1000 * 60 * 60));
+    let minutes = Math.floor((elapsedTime % (1000 * 60 * 60)) / (1000 * 60));
+    let seconds = Math.floor((elapsedTime % (1000 * 60)) / 1000);
+    // 시간 형식 맞추기
+    hours = padTime(hours);
+    minutes = padTime(minutes);
+    seconds = padTime(seconds);
+    if(hours == "NaN"){
+      hours = '00';
+      minutes = '00';
+      seconds = '00';
+    }
+    // 타이머 업데이트
+    timerElement.textContent = hours + ":" + minutes + ":" + seconds;
+}
+
+// 타이머 시작 함수
+function startTimer() {
+    startTime = new Date().getTime(); // 현재 시간 설정
+    timerId = setInterval(updateTimer, timerInterval); // 주기적으로 타이머 업데이트
+}
+// 시간 형식 맞추기 (한 자리 숫자일 경우 앞에 0 붙이기)
+function padTime(time) {
+    return (time < 10 ? "0" : "") + time;
+}
+
 </script>

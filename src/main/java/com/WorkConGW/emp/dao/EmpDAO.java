@@ -35,19 +35,12 @@ public class EmpDAO {
         pmap.put("attendStartTime", attendStartTime);
         pmap.put("emp", emp);
         String history_attend_time = sqlSessionTemplate.selectOne("attend_time", pmap);
-        Date parsedDate = null;
-        if(history_attend_time != null){
-            SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-            formatter.setTimeZone(TimeZone.getTimeZone("Asia/Seoul"));
-            try {
-                parsedDate = formatter.parse(history_attend_time);
-            } catch (Exception e) {
-                logger.error("Error parsing date: " + e.getMessage());
-            }
-        }
+        String history_leaving_time = sqlSessionTemplate.selectOne("leaving_time", pmap);
+        logger.info(history_attend_time);
         if(empvo != null && !empvo.isEmpty()) {
             EmpVO empvo2 = empvo.get(0);
-            empvo2.setHistory_Attend_Time(parsedDate);
+            empvo2.setHistory_Attend_Time(history_attend_time);
+            empvo2.setHistory_Leaving_Time(history_leaving_time);
             logger.info(empvo.toString());
             return empvo2;
         } else {

@@ -19,7 +19,7 @@ import lombok.NoArgsConstructor;
 @Alias("AttendenceVO")
 public class AttendenceVO extends BaseVO{
   private Date history_attend_time;
-  private Date history_leaving_Time;
+  private Date history_leaving_time;
   private int attend_st_id;
   private String attend_st_name;
   private int history_id;

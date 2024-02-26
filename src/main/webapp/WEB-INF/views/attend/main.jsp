@@ -1,5 +1,9 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%> 
+<%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%> 
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%> 
     <style>
 	
         .subTitleText{
@@ -30,37 +34,36 @@
 			border-radius: 6px;
 		}
 		.goWork{
-			background: green;
 			color: #fff;
 			padding: 5px 10px;
 			border-radius: 6px;
 		}
-		.donut {
-			width: 50%;
-			padding-bottom: 50%;
-			border-radius: 50%;
-			position: relative;
-			text-align: center;
-			transition: background .3s ease-in-out;
-			background: conic-gradient(#3F8BC9 0% 72%, #F2F2F2 72% 100%);
-		}
+		.goWork0{background-color: #77af9c;}
+		.goWork1{background: green;}
+		.goWork2{background-color: #ce6d39;}
+		.goWork3{background-color: #c82333;}
+		.goWork4{background-color: #6aafe6;}
+		.goWork5{background-color: #ff5f2e;}
 
-		.donut::before {
-			color: #fff;
-			width: 70%;
-			padding: calc(35% - .64vw) 0;
-			background: #264057;
+		.pie-chart {
+			position: relative;
+			display:inline-block;
+			width: 150px;
+			height: 150px;
 			border-radius: 50%;
+			transition: 0.3s;
+		}
+		span.center{
+			background: #fff;
+			display : block;
 			position: absolute;
-			left: 15%;
-			top: 13%;
-			display: block;
-			content: attr(data-percent)'%';
-			transform: skew(-0.03deg);
-			margin: auto;
-			font-size: 1.1vw;
-			font-size: 2vw;
-			padding: calc(35% - 1.3vw) 0;
+			top:50%; left:50%;
+			width:100px; height:100px;
+			border-radius: 50%;
+			text-align:center; 
+			line-height: 100px;
+			font-size:30px;
+			transform: translate(-50%, -50%);
 		}
 		.attendStatistics{
 			width: 30%;
@@ -111,21 +114,20 @@
 		<!--컨텐츠 영역-->
 		<div class="contentConteiner">
 			<div class="subTitleText"> <!--컨텐츠 부분 타이틀 클래스(이건 부트스트랩 클래스 아니고 임의로 만든 클래스)--> 
-				<h2><i class="fa-solid fa-angles-right"></i> <!--왼쪽 아이콘 폰트어썸-->근태관리</h2>
+				<h2><i class="fa-solid fa-angles-right"></i> <!--왼쪽 아이콘 폰트어썸-->내 근태관리</h2>
 			</div>
 
-			<div class="serchContain">  <!--셀렉/검색/버튼 묶는 div클래스 (이건 부트스트랩 클래스 아니고 임의로 만든 클래스)-->
+			<!-- <div class="serchContain">
 				<form action="addBookSearch" id="serchForm">
-					<div class="serchSelect"> <!--select 길이조절 클래스 (이건 부트스트랩 클래스 아니고 임의로 만든 클래스)-->
+					<div class="serchSelect">
 						<input type="date" name="searchText" class="form-control" placeholder="입력해주세요" aria-label="입력해주세요"> 
 					</div>
-					<div class="serchTextGroup"> <!--input 길이조절 클래스 (이건 부트스트랩 클래스 아니고 개별 클래스)-->
-						<!-- 검색명 input 클래스 --> <input type="text" name="searchText" class="form-control" placeholder="입력해주세요" aria-label="입력해주세요"> 
+					<div class="serchTextGroup">
+						<input type="text" name="searchText" class="form-control" placeholder="입력해주세요" aria-label="입력해주세요"> 
 					</div>
 				</form>
-				<!-- 검색 button 클래스 --><button class="btn btn-outline-secondary" onclick="serchBtn()" name="serchBtn" type="button">검색</button>
-			</div>
-
+				<button class="btn btn-outline-secondary" onclick="serchBtn()" name="serchBtn" type="button">검색</button>
+			</div> -->
 			<table class="table table-hover"> <!-- 부트스트랩 게시판 -->
 
 				<thead class="thead-light"> <!-- 게시판 맨위 색변경 클래스-->
@@ -134,80 +136,122 @@
 						<th>출근시간</th>
 						<th>퇴근시간</th>
 						<th>출근상태</th>
-            			<th>지각사유</th>
+            			<th>근태사유</th>
 					</tr>
 				</thead>
 
 				<tbody>
-					<tr class="modalBtn" data-toggle="modal" data-target="#staticBackdrop">
-						<td>날짜</td>
-						<td>출근시간</td>
-						<td>퇴근시간</td>
-						<td><span class="goWork">정상출근</span></td>
-						<td>지각사유.....</td>
-					</tr>
-					<tr class="modalBtn" data-toggle="modal" data-target="#staticBackdrop">
-						<td>날짜</td>
-						<td>출근시간</td>
-						<td>퇴근시간</td>
-						<td><span class="tardy">지각</span></td>
-						<td>지각사유.....</td>
-					</tr>
-
+					<c:forEach var="attendenceList" items="${attendenceList}" varStatus="status">
+						<tr class="modalBtn" data-toggle="modal" data-target="#staticBackdrop${status.index}">
+							<td><fmt:formatDate value="${attendenceList.history_attend_time}" pattern="yyyy-MM-dd" /></td>
+							<td><fmt:formatDate value="${attendenceList.history_attend_time}" pattern="HH:mm" /></td>
+							<td><fmt:formatDate value="${attendenceList.history_leaving_time}" pattern="HH:mm" /></td>
+							<td><span class="goWork goWork${attendenceList.attend_st_id}">${attendenceList.attend_st_name}</span></td>
+							<td>${attendenceList.history_reason}</td>
+						</tr>
+						<!-- Modal -->
+						<div class="modal fade" id="staticBackdrop${status.index}" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+							<div class="modal-dialog modal-dialog-centered">
+							<div class="modal-content">
+								<div class="modal-header">
+								<h5 class="modal-title" id="staticBackdropLabel"><fmt:formatDate value="${attendenceList.history_attend_time}" pattern="yyyy-MM-dd" /></h5>
+								<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+									<span aria-hidden="true">&times;</span>
+								</button>
+								</div>
+								<div class="modal-body">
+								<p>출근시간<span><fmt:formatDate value="${attendenceList.history_attend_time}" pattern="HH:mm" /></span></p>
+								<p>퇴근시간<span><fmt:formatDate value="${attendenceList.history_leaving_time}" pattern="HH:mm" /></span></p>
+								<p>출근상태<span class="goWork goWork${attendenceList.attend_st_id}">${attendenceList.attend_st_name}</span></p>
+								<p>지각사유<span>${attendenceList.history_reason}</span></p>
+								</div>
+								<div class="modal-footer">
+								<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+								</div>
+							</div>
+							</div>
+						</div>	
+					</c:forEach>
 				</tbody>
 			</table>
 
 		</div>
 		<div class="attendStatistics">
 			<div class="attendStatisticsGroup">
-				<div class="donut" data-percent="85.4"></div>
+				<div class="pie-chart pie-chart2"><span class="center">50%</span></div>
 				<div class="attendStatisticTextGroup">
 					<p class="attendStatisticTit">이달의 근태통계</p>
-					<p class="attendStatisticText">정상출근 일수 <span>15</span></p>
-					<p class="attendStatisticText">지각 일수 <span>3</span></p>
-					<p class="attendStatisticText">정상 출근율 <span>72%</span></p>
+					<p class="attendStatisticText">정상출근 일수 <span>${attendenceCountList.attendenceNormalCountList}</span></p>
+					<p class="attendStatisticText">지각 일수 <span>${attendenceCountList.attendenceTardyCountList}</span></p>
+					<p class="attendStatisticText">정상 출근율 <span class="attendStatisticPercentText">72%</span></p>
 				</div>
 			</div>
 			<div class="lateReasonGroup">
-				<form>
+				<form id="historyReasonInsert" method="get" action="historyReasonInsert">
 					<div class="attendStatisticsGroup">
 						<p class="lateReasonTit">근태 사유 작성</p>
-						<button type="button" class="btn btn-primary">제출</button>
+						<button type="button" class="btn btn-primary" onclick="historyReasonInsert()">제출</button>
 					</div>
-					<input type="date" class="form-control" name="" aria-label="입사날짜" aria-describedby="">
-					<textarea rows="10" class="form-control" name="manage_remark" aria-label="메모"></textarea>
+					<input type="date" class="form-control" name="history_reason_date" aria-label="날짜" aria-describedby="">
+					<textarea rows="10" class="form-control" name="history_reason" aria-label="메모"></textarea>
 				</form>
 			</div>
 		</div>
 	</section>
-	  
-	  <!-- Modal -->
-	  <div class="modal fade" id="staticBackdrop" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
-		<div class="modal-dialog modal-dialog-centered">
-		  <div class="modal-content">
-			<div class="modal-header">
-			  <h5 class="modal-title" id="staticBackdropLabel">날짜출력</h5>
-			  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-				<span aria-hidden="true">&times;</span>
-			  </button>
-			</div>
-			<div class="modal-body">
-			  <p>출근시간<span>09:30</span></p>
-			  <p>퇴근시간<span>18:30</span></p>
-			  <p>출근상태<span>정상출근</span></p>
-			  <p>지각사유<span>텍스트텍스트텍스트텍스트텍스트<br>텍스트텍스트텍스트텍스트</span></p>
-			</div>
-			<div class="modal-footer">
-			  <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-			</div>
-		  </div>
-		</div>
-	  </div>
 	<!-- 푸터 인클루드 -->
 	<%@ include file="../include/footer.jsp"%>
 
 	<script>
-		const donut = document.querySelector(".donut")
-		donut.dataset.percent = totalMinwon
-		donut.style.background = `conic-gradient(#3F8BC9 0% ${totalMinwon}%, #F2F2F2 ${totalMinwon}% 100%)`
+		let currentDate = new Date();
+		let year = currentDate.getFullYear(); // 현재 연도 가져오기 (네 자릿수)
+		let month = currentDate.getMonth() + 1
+
+		let weekdays = getWeekdaysInMonth(year, month);
+		let attendenceNormalCountList = "${attendenceCountList.attendenceNormalCountList}";
+		console.log("평일 수: " + weekdays);
+		let percentage = (attendenceNormalCountList / weekdays) * 100;
+		let roundedPercentage = percentage.toFixed(0);
+		console.log(roundedPercentage + "%"); // 결과 출력
+
+		$(window).ready(function(){
+			draw(roundedPercentage, '.pie-chart2', '#8b22ff');
+			$('span.center').text(roundedPercentage + "%");
+			$('.attendStatisticPercentText').text(roundedPercentage + "%");
+		});
+
+		function draw(max, classname, colorname){
+			let i=1;
+			let func1 = setInterval(function(){
+			if(i<max){
+				color1(i,classname,colorname);
+				i++;
+			} else{
+				clearInterval(func1);
+			}
+			},10);
+		}
+		function color1(i, classname,colorname){
+		$(classname).css({
+				"background":"conic-gradient("+colorname+" 0% "+i+"%, #ffffff "+i+"% 100%)"
+		});
+		}
+
+		function historyReasonInsert(){
+			document.querySelector('#historyReasonInsert').submit();
+		}
+
+		function getWeekdaysInMonth(year, month) {
+			let countWeekdays = 0;
+			let date = new Date(year, month - 1, 1);
+			let endDate = new Date(year, month, 0);
+
+			while (date <= endDate) {
+				if (date.getDay() !== 0 && date.getDay() !== 6) {
+					countWeekdays++;
+				}
+				date.setDate(date.getDate() + 1);
+			}
+
+			return countWeekdays;
+		}
 	</script>
