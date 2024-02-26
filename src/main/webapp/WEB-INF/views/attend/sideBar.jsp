@@ -72,7 +72,7 @@
 
         <div class="attendTextGroup">
           <p class="attendTimeTitle">근무시간</p>
-          <p class="attendTimeContent">12:28:24</p>
+          <p class="attendTimeContent">00:00:00</p>
         </div>
         <!--큰버튼이 필요한 페이지에 쓰임-->
 
@@ -93,7 +93,26 @@
 </div>
 
 <script>
+  let history_Attend_Time = '${loginUser.history_Attend_Time}';
+  
   $('.attendStartBtn').click(function(){
-    alert('a');
+    if(history_Attend_Time == ""){
+      $.ajax({
+        type : 'get',              
+        url : '/WorkConGW/attend/attendStart',  
+        data : {
+        },
+        success : function(result) { 
+          alert('출근체크되었습니다.');
+        },    
+        error : function(request, status, error) {        
+          console.log(error)    
+        }
+      })
+    }else{
+      alert('이미출근하셨습니다.');
+      return;
+    }
+    
   })
 </script>

@@ -13,7 +13,7 @@ import com.WorkConGW.common.controller.CommonController;
 @RequestMapping("/attend")
 public class AttendenceController extends CommonController{
 
-    @RequestMapping(value="/main",method = RequestMethod.GET)
+  @RequestMapping(value="/main",method = RequestMethod.GET)
 	public String attendMain() {
 		return "attend/main";
 	}

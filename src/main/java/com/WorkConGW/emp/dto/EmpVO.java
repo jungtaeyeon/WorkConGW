@@ -46,7 +46,6 @@ public class EmpVO extends BaseVO{
 
     private int emp_authkey;
     
-    @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss")
     private Date history_Attend_Time;
 
 	
@@ -339,7 +338,7 @@ public class EmpVO extends BaseVO{
     }
 
     public void setHistory_Attend_Time(Date history_Attend_Time) {
-        this.emp_Update_Dt = emp_Update_Dt;
+        this.history_Attend_Time = history_Attend_Time;
     }
 
 }

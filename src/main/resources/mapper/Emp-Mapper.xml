@@ -62,6 +62,10 @@
 		AND EMP_ID = #{emp_Id}
 	</select>
 
+	<select id = "attend_time" resultType="String" parameterType="map">
+		select TO_CHAR(history_attend_time, 'YYYY-MM-DD HH:MM:SS') from attend_history where emp_id = #{emp} AND TO_CHAR(history_attend_time, 'YYYY-MM-DD') = #{attendStartTime}
+	</select>
+
 	<select id = "findPwCheck" resultType="int">
 		SELECT COUNT(*) FROM EMP WHERE EMP_EMAIL = #{emp_Email} and EMP_ID = #{emp_Id}
 	</select>
