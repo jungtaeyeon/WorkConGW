@@ -158,6 +158,7 @@ let timerInterval = 1000;
   })
 
 if(stopboolean == '1' || stopboolean == '2'){
+  console.log(timerInterval);
   timerId = setInterval(updateTimer, timerInterval);
 }else{
   updateTimer();
