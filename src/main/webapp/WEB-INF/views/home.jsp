@@ -11,9 +11,6 @@
 
 
 <style>
-
-
-
 	#calendar {
 		width: 300px;
 		margin: 0 auto;
@@ -131,7 +128,13 @@
 		height: auto;
 	}
 
-
+	.attendTimeContent{
+		font-size: 33px;
+		text-align: center;
+		font-weight: bold;
+		color: #0069d9;
+		margin-bottom: 0;
+	}
 
 </style>
 <body>
@@ -233,13 +236,7 @@
 						<h2>근태관리</h2>
 						<span></span>
 						<h4 style="margin-top: 10px;"><i class="fa  fa-clock-o fa-1x"></i> 근무 시간</h4>
-						<div class="body" style="margin: 0;padding: 0;">
-							<div class="content" style="text-align: center;">
-								<div><h3 class=" align-center" style="font-size:2.3em;  color:#3672ff; font-family: S-CoreDream-6Bold" id="worked"></h3></div>
-								<small style="color: red;" id="endWorked"></small>
-							</div>
-						</div>
-
+						<p id="attendTimeContent" class="attendTimeContent">00:00:00</p>
 					</div>
 					<div class="body">
 						<div class="text-center">
@@ -247,17 +244,17 @@
 								<strong></strong>
 							</h4>
 						</div>
-						<div class="m-t-25">
+						<div class="m-t-25" style="margin-bottom: 20px;">
 							<div class="row clearfix">
 								<div class="col-lg-6" id="startWork">
-									<button onclick="insertStartWork(this);" type="button" class="btn btn-primary" style="width: 100%;"><i class="fa fa-check-circle"></i>출근하기</button>
+									<button type="button" class="btn btn-primary attendStartBtn" style="width: 100%;"><i class="fa fa-check-circle"></i>출근하기</button>
 								</div>
 								<div class="col-lg-6" id="endWork">
-									<button onclick="insertEndWork(this);" type="button" class="btn btn-secondary" style="width: 100%;"><i class="fa fa-home"></i>퇴근하기</button>
+									<button type="button" class="btn btn-secondary attendEndBtn" style="width: 100%;"><i class="fa fa-home"></i>퇴근하기</button>
 								</div>
 							</div>
 						</div>
-						<div class="m-t-15"  style="font-family: GoyangDeogyang;">
+						<!-- <div class="m-t-15"  style="font-family: GoyangDeogyang;">
 							<div class="row clearfix" style="margin-bottom: 5px; ">
 								<div class="col-lg-6">
 									<span>출근시간</span>
@@ -286,7 +283,7 @@
 									<br><span class="badge badge-info" style="margin: 0;">초과근무 중</span><br><span class="excessTime"></span>
 								</div>
 							</div>
-						</div>
+						</div> -->
 					</div>
 				</div>
 				<!-- //////////////////////////////날씨///////////////////////////////////// -->
@@ -1067,88 +1064,107 @@
 		tellMonth();
 		getAttendence();
 	}
+	let history_Attend_Time = "${loginUser.history_Attend_Time}";
+	let history_Leaving_Time = "${loginUser.history_Leaving_Time}";
+	let startTime;
+	let now;
+	let stopboolean = "${loginUser.attend_St_Id}"; 
+	let timerId;
+	// 공백을 기준으로 문자열을 나누고, 각 부분을 '-'와 ':'로 다시 나누어서 배열로 만듭니다.
+	let parts = history_Attend_Time.split(/[\s-:]/);
+	let parts1 = history_Leaving_Time.split(/[\s-:]/);
+	// parts 배열의 원소들을 숫자로 변환하여 Date 객체 생성자에 넣습니다.
+	startTime = new Date(parts[0], parts[1] - 1, parts[2], parts[3], parts[4], parts[5]);
+	now = new Date(parts1[0], parts1[1] - 1, parts1[2], parts1[3], parts1[4], parts1[5]);
+	// 타이머를 표시할 요소
+	let timerElement = document.getElementById("attendTimeContent");
 
-	/*근무 시간을 밀리세컨즈로 가져온다*/
-	let workStartTime =  Date();
-	function showStaus(){
+	// 타이머 갱신 주기 (1초)
+	let timerInterval = 1000;
+
+	$('.attendStartBtn').click(function(){
+		if(history_Attend_Time == ""){
 		$.ajax({
-			url : "<%=request.getContextPath()%>/attend/getStartTime",
-			type : "get",
-			success : function (data) {
-				let millis = parseInt(data.milllis)
-				let endMillis = data.endMilllis;
-				if ('N'!== endMillis) {
-					parseInt(endMillis);
-				}
-				sessionStorage.setItem("endMillis", endMillis);
-				sessionStorage.setItem("millis", millis);
+			type : 'get',              
+			url : '/WorkConGW/attend/attendStart',  
+			data : {
 			},
-			error : function (data) {
+			success : function(result) { 
+			alert('출근체크되었습니다.');
+			startTimer();
+			},    
+			error : function(request, status, error) {        
+			console.log(error);
 			}
-		});
-	}
-
-	/*받은 밀리세컨즈를 조건에 맞게 계산해서 시간으로 출력*/
-	setInterval(getTime, 1000);
-
-	function getTime(){
-		let mill = sessionStorage.getItem("millis");
-		let endMillis = sessionStorage.getItem("endMillis");
-		if (endMillis ==='N' && mill > 0) {
-			let time = ((Date.now() - mill)/1000);
-			let hour = dateFormat(Math.floor(time/3600));
-			let minute = dateFormat(Math.floor(time%3600/60));
-			let second = dateFormat(Math.floor(time%3600%60));
-			$('#worked').text(hour+":"+minute+":"+second);
-		}else if(endMillis !=='N'){
-			let time = ((endMillis - mill)/1000);
-			let hour = dateFormat(Math.floor(time/3600));
-			let minute = dateFormat(Math.floor(time%3600/60));
-			let second = dateFormat(Math.floor(time%3600%60));
-			$('#worked').text(hour+":"+minute+":"+second);
-			$('#endWorked').text("근무중이 아닙니다");
-		}else {
-			$('#worked').text("00"+":"+"00"+":"+"00");
+		})
+		}else{
+		alert('이미출근하셨습니다.');
+		return;
 		}
-	}
-	function dateFormat(time){
-		return time < 10 ? "0"+time : time;
-	}
-
-	//출근
-	/*근무 시간 입력*/
-	function insertStartWork(obj){
+	})
+	$('.attendEndBtn').click(function(){
+		if(history_Attend_Time != ""){
 		$.ajax({
-			url : "<%=request.getContextPath()%>/attend/insertStartWork",
-			type : "get",
-			dataType:"text",
-			success : function (result) {
-				alert(result);
-				location.reload();
+			type : 'get',              
+			url : '/WorkConGW/attend/attendEnd',  
+			data : {
 			},
-			error : function (data) {
-				alert("실패");
+			success : function(result) { 
+			alert('퇴근체크되었습니다.');
+			updateTimer();
+			clearInterval(timerId);
+			},    
+			error : function(request, status, error) {        
+			console.log(error);
 			}
-		});
+		})
+		}else{
+		alert('출근부터해주세요');
+		return;
+		}
+	})
 
+	if(stopboolean == '1' || stopboolean == '2'){
+	timerId = setInterval(updateTimer, timerInterval);
+	}else{
+	updateTimer();
+	}
+	// 타이머 갱신 함수
+	function updateTimer() {
+		if (!startTime) return;
+		// 현재 시간
+		if(history_Leaving_Time == ''){
+		now = new Date().getTime();
+		}
+		// 경과 시간 (밀리초)
+		let elapsedTime = now - startTime;
+		// 시, 분, 초 계산
+		let hours = Math.floor(elapsedTime / (1000 * 60 * 60));
+		let minutes = Math.floor((elapsedTime % (1000 * 60 * 60)) / (1000 * 60));
+		let seconds = Math.floor((elapsedTime % (1000 * 60)) / 1000);
+		// 시간 형식 맞추기
+		hours = padTime(hours);
+		minutes = padTime(minutes);
+		seconds = padTime(seconds);
+		if(hours == "NaN"){
+		hours = '00';
+		minutes = '00';
+		seconds = '00';
+		}
+		// 타이머 업데이트
+		timerElement.textContent = hours + ":" + minutes + ":" + seconds;
 	}
 
-
-	//퇴근
-	/*퇴근시간 입력*/
-	function insertEndWork(){
-		$.ajax({
-			url : "<%=request.getContextPath()%>/attend/insertEndWork",
-			type : "get",
-			success : function (data) {
-				alert("퇴근 시간이 입력되었습니다");
-				location.reload();
-			},
-			error : function (data) {
-				alert("실패");
-			}
-		});
+	// 타이머 시작 함수
+	function startTimer() {
+		startTime = new Date().getTime(); // 현재 시간 설정
+		timerId = setInterval(updateTimer, timerInterval); // 주기적으로 타이머 업데이트
 	}
+	// 시간 형식 맞추기 (한 자리 숫자일 경우 앞에 0 붙이기)
+	function padTime(time) {
+		return (time < 10 ? "0" : "") + time;
+	}
+	
 
 	// 대시보드 설정탭 클릭시
 	function changeSettingMode(obj){

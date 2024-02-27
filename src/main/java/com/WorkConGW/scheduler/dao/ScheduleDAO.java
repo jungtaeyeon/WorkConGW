@@ -22,7 +22,18 @@ public class ScheduleDAO {
      * 일정 조회를 위한 일정 리스트 조회
      */
     public List<ScheduleVO> selectScheduleListByDate(ScheduleVO scheduleVO) {
+        log.info("scheduleDao연결");
         return sqlSessionTemplate.selectList("selectScheduleListByDate", scheduleVO);
+    }
+
+    /**
+     * 부서장 일정 조회를 위한 리스트
+     * @param scheduleVO
+     * @return
+     */
+    public List<ScheduleVO> selectScheduleAllList(ScheduleVO scheduleVO) {
+        log.info("부서장리스트dao연결");
+         return sqlSessionTemplate.selectList("selectScheduleAllList", scheduleVO);
     }
 
     /**
@@ -43,6 +54,9 @@ public class ScheduleDAO {
      */
     public void insertSchedule(ScheduleVO scheduleVO) {
         log.info("insertDao");
+        log.info(scheduleVO.getCode_Id());
+        log.info(scheduleVO.getDept_Id());
+        log.info(scheduleVO.getTeam_Id());
         sqlSessionTemplate.insert("insertSchedule", scheduleVO);
         log.info("성공");
     }

@@ -177,12 +177,15 @@ public class EmpService {
         HttpSession session = servletRequestAttribute.getRequest().getSession(true);
 
         if("dept".equals(empVO.getFlag())) {
+            logger.info("emp부서");
             EmpVO emp = (EmpVO)session.getAttribute("loginUser");
             String deptId = emp.getDept_Id();
             empVO.setDept_Id(deptId);
         }else if("team".equals(empVO.getFlag())) {
+            logger.info("emp팀");
             EmpVO emp = (EmpVO)session.getAttribute("loginUser");
             String teamId = emp.getTeam_Id();
+            logger.info(teamId);
             empVO.setTeam_Id(teamId);
 
         }

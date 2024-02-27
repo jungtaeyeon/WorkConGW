@@ -29,6 +29,14 @@ public class DeptDAO {
         return deptList;
     }
 
+    /** 부서장일 경우 전체 조회 **/
+    public List<DeptVO> selectAllList(DeptVO deptVO) {
+        List<DeptVO> selectAllList = sqlSessionTemplate.selectList("selectAllList", deptVO);
+        log.info(selectAllList.toString());
+        return selectAllList;
+    }
+
+
     /**페이징이 적용된 모든 부서 리스트 조회*/
     //public List<DeptVO> selectDeptPagingList(DeptVO searchDeptVO) throws SQLException;
 

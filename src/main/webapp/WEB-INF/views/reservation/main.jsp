@@ -6,14 +6,14 @@
 <!DOCTYPE html>
 <html>
 <head>
-<script src="https://cdn.bootcss.com/noUiSlider/8.5.1/nouislider.js"></script>
     <link href="https://cdn.bootcss.com/noUiSlider/8.5.1/nouislider.min.css" rel="stylesheet">
+<script src="https://cdn.bootcss.com/noUiSlider/8.5.1/nouislider.js"></script>
 
     <link rel="stylesheet" href="<%=request.getContextPath()%>/resources/vendor/css/fullcalendar.min.css" />
     <link rel="stylesheet" href="<%=request.getContextPath()%>/resources/vendor/css/select2.min.css" />
     <link rel="stylesheet" href="<%=request.getContextPath()%>/resources/vendor/css/bootstrap-datetimepicker.min.css" />
     <link rel="stylesheet" href="<%=request.getContextPath()%>/resources/vendor/css/fullcalendar.min.css" />
-    <link rel="stylesheet" href="<%=request.getContextPath()%>/resources/css/main.css" />
+<%--    <link rel="stylesheet" href="<%=request.getContextPath()%>/resources/css/main.css" />--%>
 
 
 
@@ -136,7 +136,7 @@
     .com {
         color: #999;
     }
-    . alignCenter{
+    .alignCenter{
         text-align: center;
     }
     #hiddenFillBtn:hover{
@@ -148,7 +148,7 @@
 
 <body>
 <!-- 헤더인클루드 -->
-<%@ include file="./header.jsp"%>
+<%@ include file="../include/header.jsp"%>
 
 <section class="subPageContain">
 
@@ -176,7 +176,7 @@
         <!--                         <h2 class="class2" style="font-family: S-CoreDream-6Bold; font-size: 30px;"><a href="#" class="btn btn-xs btn-link btn-toggle-fullwidth"></a><i class="icon-home"></i>&nbsp; 예약 </h2> -->
         <!--                     </div>             -->
         <!--                     <div class="col-lg-7 col-md-4 col-sm-12 text-right"> -->
-        <!-- <!--                         <h4>빈칸은 허전해</h4> -->
+        <!--                          <h4>빈칸은 허전해</h4> -->
         <!--                     </div> -->
         <!--                 </div> -->
         <!--             </div> -->

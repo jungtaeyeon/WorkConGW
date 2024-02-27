@@ -1,6 +1,17 @@
 var draggedEventIsAllDay;
 var activeInactiveWeekends = true;
 var inputDate = moment();
+var url = window.location.pathname + "/schedule/modify";
+
+	$('.filterCheck').on('change',function(){
+		filtering();
+	});
+
+	function popoverSchedule(event){
+// 	alert('렌더링 발생')
+
+	}
+
 
 var g_code = $("#hidden").val();
 
@@ -31,12 +42,13 @@ var calendar = $('#calendar').fullCalendar({
 	  eventLimitClick           : 'week', //popover
 	  navLinks                  : true,
 	  defaultDate               : inputDate, //실제 사용시 현재 날짜로 수정
-	  timeFormat                : 'HH:mm',
+	  // timeFormat                : 'HH:mm',
+	  timeFormat                : 'HH:mm:a',
 	  defaultTimedEventDuration : '01:00:00',
 	  editable                  : true,
 	  minTime                   : '00:00:00',
 	  maxTime                   : '24:00:00',
-	  slotLabelFormat           : 'HH:mm',
+	  slotLabelFormat           : 'HH:mm:a',
 	  weekends                  : true,
 	  nowIndicator              : true,
 	  dayPopoverFormat          : 'MM/DD dddd',
@@ -137,7 +149,6 @@ var calendar = $('#calendar').fullCalendar({
 
 		  var dateData;
 
-		  /** 이상하게 이거때문에 달력 출력이 안됨 ...
 		  if(searchStart){
 			  dateData = {
 				  // 화면이 바뀌면 Date 객체인 start, end 가 들어옴
@@ -163,19 +174,18 @@ var calendar = $('#calendar').fullCalendar({
 
 			  };
 		  } //end of if, else
-			  */
+		  console.log(JSON.stringify(dateData));
+
 
 		  $.ajax({
 	      type: "post",
 	      url: "list",
 			//data:JSON.stringify(dateData),// {"g_code" : g_code}
 	      dataType:"json",
-			  data: JSON.stringify({
-			  	// start: moment(start).format('YYYY-MM-DD'),
-			  	// end: moment(end).format('YYYY-MM-DD'),
-			  }),
+			  data: JSON.stringify(dateData),
 			  contentType:"application/json;charset=utf-8",
 	      success: function (response){
+			  console.log(JSON.stringify(dateData));
 			  var fixedDate = response.map(function (array) {
 				  //만약 AllDay 일정이면서 시작 날짜와 종료 날짜가 다르다면, 종료 날짜에 하루를 더함
 				  if (array.allDay && array.start !== array.end) {
@@ -202,34 +212,7 @@ var calendar = $('#calendar').fullCalendar({
 	  },
 
 
-	  // // 일정 리사이즈 삭제 예정
-	  // eventResize: function (event, delta, revertFunc, jsEvent, ui, view) {
-	  //   $(".popover.fade.top").remove();
-	  //
-	  //
-	  //   /** 리사이즈시 수정된 날짜반영
-	  //    * 하루를 빼야 정상적으로 반영됨.
-	  //  */
-	  //   var newDates = calDateWhenResize(event);
-	  //
-	  //   //리사이즈한 일정 업데이트
-	  //   $.ajax({
-	  //     type: "get",
-	  //     url: "dragupdate",
-	  //     data: {
-	  //   	  "calno":event.calno,
-	  //   	  "start":newDates.startDate, "end":newDates.endDate
-	  //     },
-	  //     success: function (response) {
-	  //       alert('수정: ' + newDates.startDate + ' ~ ' + newDates.endDate);
-	  //     }
-	  //   });
-	  //
-	  // },
-	  //
-	  // eventDragStart: function (event, jsEvent, ui, view) {
-	  //   draggedEventIsAllDay = event.allDay;
-	  //  },
+
 
 
 	//일정 드래그앤드롭
@@ -257,74 +240,33 @@ var calendar = $('#calendar').fullCalendar({
 				 case '개인일정':
 					 selectGroup = 'S01';
 					 break;
-				 case '회사일정':
+				 case '부서일정':
 					 selectGroup = 'S02';
 					 break;
-				 case '부서일정':
-					 selectGroup = 'S03';
-					 break;
 				 case '팀일정':
-					 selectGroup = 'S04';
+					 selectGroup = 'S03';
 					 break;
 			 }
 
 			 var eventData = {
-				 _id:event._id
+				 id:event.id
 				 ,start:newDates.startDate
 				 ,end:newDates.endDate
 				 ,type:selectGroup
 			 }
 
+
 			 if(confirm(newDates.startDate + ' ~ ' + newDates.endDate + ' 일자로\n일정을 수정 하시겠습니까?')){
+
 
 				 //드롭한 일정 업데이트
 				 $.ajax({
 					 type:"post"
-					 ,url:"<%=request.getContextPath()%>/schedule/modify"
+					 ,url:"modify"
 					 ,data:JSON.stringify(eventData)
 					 ,dataType:"json"
 					 ,contentType:"application/json;charset=utf-8"
 					 ,success:function(response){
-						 if(selectGroup == 'S02'){
-							 $(response.empList).each(function(index, item){
-								 var empId = item.empId;
-// 							console.log(empId);
-								 (function(index, item){
-									 sendMessage('${pageContext.request.contextPath}',
-										 empId,
-										 '회사 일정이 수정되었습니다. 확인해주세요.',
-										 event.title,
-										 '${pageContext.request.contextPath}/schedule/detail?schedule_Id='+response.schedule_Id,
-										 '일정관리');
-								 })(index, item);
-							 });
-						 }else if(selectGroup == 'S03'){
-							 $(response.empList).each(function(index, item){
-								 var empId = item.empId;
-								 // 					console.log(empId);
-								 (function(index, item){
-									 sendMessage('${pageContext.request.contextPath}',
-										 empId,
-										 '부서 일정이 수정되었습니다. 확인해주세요.',
-										 event.title,
-										 '${pageContext.request.contextPath}/schedule/detail?scheduleId='+response.scheduleId,
-										 '일정관리');
-								 })(index, item);
-							 });
-						 }else if(selectGroup == 'S04'){
-							 $(response.empList).each(function(index, item){
-								 var empId = item.empId;
-// 							console.log(empId);
-								 (function(index, item){
-									 sendMessage('${pageContext.request.contextPath}',
-										 empId,
-										 '팀 일정이 수정되었습니다. 확인해주세요.',
-										 event.title,
-										 '${pageContext.request.contextPath}/schedule/detail?scheduleId='+response.scheduleId,
-										 '일정관리');
-								 })(index, item);
-							 });
-						 }
 
 						 alert('일정이 수정되었습니다.');
 						 // 				window.location.reload(true);

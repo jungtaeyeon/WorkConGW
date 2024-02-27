@@ -4,10 +4,10 @@ package com.WorkConGW.scheduler.dto;
 import com.WorkConGW.common.dto.BaseVO;
 import com.WorkConGW.scheduler.command.ScheduleCommand;
 import org.apache.ibatis.type.Alias;
+import org.springframework.util.StringUtils;
 
 
 @Alias("ScheduleVO")
-
 public class ScheduleVO extends BaseVO {
 
     private int schedule_Id;
@@ -23,10 +23,17 @@ public class ScheduleVO extends BaseVO {
     private String code_Id;
     private String dept_Id;
     private String schedule_Background_Color;
-    private String str_Code_ScheduleId; //분류코드를 문자로 변환하기 위함
     private String team_Id;
 
-    public ScheduleVO(int schedule_Id, String schedule_Title, String schedule_Content, String schedule_Create_Dt, String schedule_Start_Dt, String schedule_End_Dt, int schedule_Imp, int schedule_St, String schedule_Writer_Id, String schedule_Location, String code_Id, String dept_Id, String schedule_Background_Color, String str_Code_ScheduleId, String team_Id, String search_Type, int search_Important) {
+
+
+
+
+    //검색조건 추가
+    private String searchType; // 일정그룹별 검색을 위함
+    private int searchImportant; //중요일정
+
+    public ScheduleVO(int schedule_Id, String schedule_Title, String schedule_Content, String schedule_Create_Dt, String schedule_Start_Dt, String schedule_End_Dt, int schedule_Imp, int schedule_St, String schedule_Writer_Id, String schedule_Location, String code_Id, String dept_Id, String schedule_Background_Color, String str_Code_ScheduleId, String team_Id) {
         this.schedule_Id = schedule_Id;
         this.schedule_Title = schedule_Title;
         this.schedule_Content = schedule_Content;
@@ -40,10 +47,7 @@ public class ScheduleVO extends BaseVO {
         this.code_Id = code_Id;
         this.dept_Id = dept_Id;
         this.schedule_Background_Color = schedule_Background_Color;
-        this.str_Code_ScheduleId = str_Code_ScheduleId;
         this.team_Id = team_Id;
-        this.search_Type = search_Type;
-        this.search_Important = search_Important;
     }
 
     public ScheduleVO() {
@@ -53,6 +57,21 @@ public class ScheduleVO extends BaseVO {
         return schedule_Id;
     }
 
+    public String getSearchType() {
+        return searchType;
+    }
+
+    public void setSearchType(String searchType) {
+        this.searchType = searchType;
+    }
+
+    public int getSearchImportant() {
+        return searchImportant;
+    }
+
+    public void setSearchImportant(int searchImportant) {
+        this.searchImportant = searchImportant;
+    }
     public void setSchedule_Id(int schedule_Id) {
         this.schedule_Id = schedule_Id;
     }
@@ -153,13 +172,8 @@ public class ScheduleVO extends BaseVO {
         this.schedule_Background_Color = schedule_Background_Color;
     }
 
-    public String getStr_Code_ScheduleId() {
-        return str_Code_ScheduleId;
-    }
 
-    public void setStr_Code_ScheduleId(String str_Code_ScheduleId) {
-        this.str_Code_ScheduleId = str_Code_ScheduleId;
-    }
+
 
     public String getTeam_Id() {
         return team_Id;
@@ -169,27 +183,9 @@ public class ScheduleVO extends BaseVO {
         this.team_Id = team_Id;
     }
 
-    public String getSearch_Type() {
-        return search_Type;
-    }
 
-    public void setSearch_Type(String search_Type) {
-        this.search_Type = search_Type;
-    }
 
-    public int getSearch_Important() {
-        return search_Important;
-    }
 
-    public void setSearch_Important(int search_Important) {
-        this.search_Important = search_Important;
-    }
-
-    /**
-     * 검색조건
-     */
-    private String search_Type; //일정그룹별 검색을 위해
-    private int search_Important; //중요일정
 
 
     //command변경 (입력 날짜-문자열 변환에 필요함)
@@ -198,23 +194,21 @@ public class ScheduleVO extends BaseVO {
 
 
         String type = null;
-        switch (code_Id) {
-            case "S01" :
-                type = "개인일정";
-                schedule_Background_Color = "#74c0fc";
-                break;
-            case "S02" :
-                type = "회사일정";
-                schedule_Background_Color = "#a9e34b";
-                break;
-            case "S03" :
-                type = "부서일정";
-                schedule_Background_Color = "#b070db";
-                break;
-            case "S04":
-                type = "팀일정";
-                schedule_Background_Color = "#ffa94d";
-                break;
+        if(StringUtils.hasText(code_Id)) {
+            switch (code_Id) {
+                case "S01":
+                    type = "개인일정";
+                    schedule_Background_Color = "#74c0fc";
+                    break;
+                case "S02":
+                    type = "부서일정";
+                    schedule_Background_Color = "#a9e34b";
+                    break;
+                case "S03":
+                    type = "팀일정";
+                    schedule_Background_Color = "#b070db";
+                    break;
+            }
         }
 
         //imp(중요도) int -> String 변환

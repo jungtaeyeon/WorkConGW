@@ -4,9 +4,33 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.mybatis.mapper.ScheduleMapper">
 
+    <sql id="search">
+        <if test="searchKeyword != null and searchKeyword != ''">
+            <choose>
+                <when test='searchCondition == "tc"'>
+                    AND     (schedule_title			LIKE '%' || #{searchKeyword} || '%'
+                    OR schedule_content		LIKE '%' || #{searchKeyword} || '%'
+                    )
+                </when>
+                <when test='searchCondition == "t"'>
+                    AND     schedule_title 		LIKE '%' || #{searchKeyword} || '%'
+                </when>
+                <when test='searchCondition == "c"'>
+                    AND     schedule_content 	LIKE '%' || #{searchKeyword} || '%'
+                </when>
+            </choose>
+        </if>
+        <if test="searchType != null and searchType != ''">
+            AND		CODE_ID = #{searchType}
+        </if>
+        <if test="searchImportant != null and searchImportant == true">
+            AND     SCHEDULE_IMP = 1
+        </if>
+    </sql>
+
     <insert id="insertSchedule" parameterType="ScheduleVO">
         <selectKey resultType="int" keyProperty="schedule_Id" order="BEFORE">
-            SELECT SEQ_SCHEDULE_ID.NEXTVAL FROM DUAL
+            SELECT SCHEDULE_ID_SEQ.NEXTVAL FROM DUAL
         </selectKey>
         insert into SCHEDULE (
               SCHEDULE_ID
@@ -26,18 +50,25 @@
                 ,#{schedule_Title}
                 ,#{schedule_Content}
         ,SYSDATE
-        ,to_date(#{schedule_Start_Dt},'yyyy-MM-dd HH24:mi')
-        ,to_date(#{schedule_End_Dt},'yyyy-MM-dd HH24:mi')
+        ,to_date(#{schedule_Start_Dt},'yyyy-MM-ddHH24:mi')
+        ,to_date(#{schedule_End_Dt},'yyyy-MM-ddHH24:mi')
         ,#{schedule_Imp}
         ,1
         ,#{schedule_Location}
         ,#{schedule_Writer_Id}
-        ,#{code_Id}
-        ,#{dept_Id}
+            ,#{code_Id}
+        <if test="code_Id == 'S02' or code_Id == 'S01'">
+            ,#{dept_Id}
+        </if>
+        <if test="code_Id == 'S03'">
+            ,#{team_Id}
+        </if>
         )
     </insert>
+
     <select id="selectScheduleListByDate" resultType="ScheduleVO" parameterType="ScheduleVO">
-        SELECT		SCHEDULE_ID
+        SELECT
+            SCHEDULE_ID
         ,SCHEDULE_TITLE
         ,SCHEDULE_CONTENT
         ,SCHEDULE_CREATE_DT
@@ -50,6 +81,63 @@
         ,CODE_ID
         ,DEPT_ID
         FROM		SCHEDULE
+        where 1=1
+        AND SCHEDULE_START_DT <![CDATA[ >= ]]>  TO_DATE(#{schedule_Start_Dt},'yyyy-mm-dd HH24:mi')
+        AND SCHEDULE_START_DT  <![CDATA[ >= ]]> TO_DATE(#{schedule_Start_Dt},'yyyy-mm-dd HH24:mi') + INTERVAL '1' HOUR
+        AND SCHEDULE_ST IN(1)
+        AND(
+        (SCHEDULE_WRITER_ID = #{schedule_Writer_Id}
+        AND      CODE_ID IN ('S01','S02','S03')) /*3개중에 하나만 있어도 참*/
+
+        OR      (CODE_ID = 'S02'
+        AND DEPT_ID = (SELECT	DEPT_ID
+        FROM	EMP
+        WHERE	EMP_ID = #{schedule_Writer_Id})
+        )
+
+        OR (CODE_ID = 'S03'
+        AND dept_id = (SELECT dept_id
+        FROM EMP
+        WHERE EMP_ID = #{schedule_Writer_Id})
+        )
+            )
+
+        <include refid="search"/>
+        ORDER BY SCHEDULE_START_DT
+    </select>
+
+    <select id="selectScheduleAllList" parameterType="ScheduleVO" resultType="ScheduleVO">
+        select
+            SCHEDULE_ID
+             ,SCHEDULE_TITLE
+             ,SCHEDULE_CONTENT
+             ,SCHEDULE_CREATE_DT
+             ,SCHEDULE_START_DT
+             ,SCHEDULE_END_DT
+             ,SCHEDULE_IMP
+             ,SCHEDULE_ST
+             ,SCHEDULE_WRITER_ID
+             ,SCHEDULE_LOCATION
+             ,CODE_ID
+             ,DEPT_ID
+        from SCHEDULE s
+        where DEPT_ID IN (select a.DEPT_ID
+
+                          from dept a
+                                   inner join dept b on a.dept_sup_id = b.dept_id
+                                   INNER JOIN emp e ON b.dept_id = e.dept_id
+                          where e.emp_id = #{schedule_Writer_Id}
+                          union
+
+                          select a.DEPT_ID
+
+                          from dept a
+                                   inner join dept b on a.dept_id = b.dept_sup_id
+                                   INNER JOIN emp e ON a.dept_id = e.dept_id
+                          where e.emp_id = #{schedule_Writer_Id})
+                        and s.CODE_ID != 'S01'
+        <include refid="search"/>
+        ORDER BY SCHEDULE_START_DT
     </select>
 
     <select id="selectScheduleById" resultType="ScheduleVO" parameterType="int">
@@ -70,6 +158,31 @@
         WHERE 	SCHEDULE_ID =#{schedule_Id}
 --           AND		SCHEDULE_ST IN (1,2)
     </select>
+
+    <update id="updateSchedule" parameterType="ScheduleVO">
+        UPDATE  SCHEDULE
+        <set>
+            <if test='schedule_Title != null and !"".equals(schedule_Title)'>
+                SCHEDULE_TITLE = #{schedule_Title}
+            </if>
+            <if test='schedule_Content != null and !"".equals(schedule_Content)'>
+                ,SCHEDULE_CONTENT = #{schedule_Content},
+            </if>
+            SCHEDULE_START_DT = to_date(#{schedule_Start_Dt},'yyyy-MM-ddHH24:mi'),
+            SCHEDULE_END_DT = to_date(#{schedule_End_Dt},'yyyy-MM-ddHH24:mi'),
+            <if test='schedule_Imp != null and !"".equals(schedule_Imp)'>
+                SCHEDULE_IMP = #{schedule_Imp},
+            </if>
+            <if test='schedule_St != 0'>
+                SCHEDULE_ST = #{schedule_St},
+            </if>
+            <if test='schedule_Location != null and !"".equals(schedule_Location)'>
+                SCHEDULE_LOCATION = #{schedule_Location},
+            </if>
+        </set>
+        WHERE   SCHEDULE_ID = #{schedule_Id}
+        AND		SCHEDULE_WRITER_ID = #{schedule_Writer_Id}
+    </update>
 
     <update id="deleteSchedule" parameterType="ScheduleVO">
         UPDATE schedule

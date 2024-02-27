@@ -26,6 +26,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import javax.lang.model.type.IntersectionType;
 import java.sql.SQLException;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -56,7 +57,6 @@ public class ScheduleController extends BaseController {
      * 메인 페이지
      *
      * @param model
-     * @param from
      * @return View
      */
     @RequestMapping("/main")
@@ -91,15 +91,19 @@ public class ScheduleController extends BaseController {
      * @return
      */
     @GetMapping("/registForm")
-    public String registForm(Model model,  HttpSession session) {
+    public String registForm(Model model,  HttpSession session) throws Exception {
         log.info("등록 컨트롤러 호출");
 
 
             LocalDateTime nowTime = LocalDateTime.now(); //현재시간
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
             String strNowTime = nowTime.format(formatter); //현재시간을 문자열로 변환
+//        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm");
+//        String strNowTime = nowTime.format(formatter);
+        log.info("날짜형식" + strNowTime);
 
-            LocalDateTime oneHourTime = nowTime.plusHours(1); //현재시간+1시간
+
+        LocalDateTime oneHourTime = nowTime.plusHours(1); //현재시간+1시간
             String strOneHourTime = oneHourTime.format(formatter); //현재시간+1시간 문자열 변환
 
             model.addAttribute("sendStart", strNowTime);
@@ -108,26 +112,42 @@ public class ScheduleController extends BaseController {
 
         List<DeptVO> deptList = new ArrayList<>();
         List<DeptVO> teamList = new ArrayList<>();
+        List<DeptVO> allList = new ArrayList<>();
 
-        try {
+        // 부서장인지 아닌지 구분하는 코드 필요함
+        EmpVO user = (EmpVO)session.getAttribute("loginUser");
+        log.info(user.toString());
+        log.info(user.getCode_Id());
+        if(user.getCode_Id().equals("c01")) {
+            log.info("부서장임");
             DeptVO deptVO = new DeptVO();
-            deptVO.setDept_Team_Yn("N"); //N이면 부서
-            deptList = deptService.selectDeptListByTeamYn(deptVO);
-            log.info(deptList.toString());
-
-
-            deptVO.setDept_Team_Yn("Y"); //Y이면 팀
-            teamList = deptService.selectDeptListByTeamYn(deptVO); //팀리스트 담음
-            log.info(teamList.toString());
-
-        } catch (Exception e) {
-            e.printStackTrace();
+            allList = deptService.selectAllList(deptVO);
         }
+
+            try {
+                log.info("일반사원임");
+                DeptVO deptVO = new DeptVO();
+                deptVO.setDept_Team_Yn(0); //0이면 부서
+                deptList = deptService.selectDeptListByTeamYn(deptVO);
+                log.info(deptList.toString());
+
+
+                deptVO.setDept_Team_Yn(1); //1이면 팀
+                teamList = deptService.selectDeptListByTeamYn(deptVO); //팀리스트 담음
+                log.info(teamList.toString());
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+
         ScheduleCommand scheduleCommand = new ScheduleCommand();
+        log.info(allList.toString());
 
         model.addAttribute("scheduleCommand", scheduleCommand);
         model.addAttribute("deptList", deptList);
         model.addAttribute("teamList", teamList);
+        model.addAttribute("allList", allList);
 
 
         return "schedule/regist";
@@ -146,32 +166,37 @@ public class ScheduleController extends BaseController {
 
         HttpSession session = request.getSession();
 //        scheduleCommand = (ScheduleCommand)session.getAttribute("loginUser");
-        log.info(scheduleCommand.toString());
+        log.info(scheduleCommand.getType());
+        log.info(scheduleCommand.getTeam_Id());
+        log.info(scheduleCommand.getDept_Id());
 
 
         try {
             ScheduleVO schedule = scheduleCommand.toScheduleVO();
             EmpVO empVO = new EmpVO();
 
-                scheduleService.insertSchedule(schedule);
+            log.info("여기가터짐");
+            scheduleService.insertSchedule(schedule);
+            log.info("여기가터짐");
                 int scheduleId = schedule.getSchedule_Id();
                 dataMap.put("scheduleId", scheduleId);
 
-            if ("S02".equals(schedule.getCode_Id())) {
+            if ("S01".equals(schedule.getCode_Id())) {
                 log.info("개인일정");
                 List<EmpVO> empList = empService.selectEmpList();
                 log.info(empList.toString());
                 dataMap.put("empList", empList);
-            } else if ("S03".equals(schedule.getCode_Id())) {
+            } else if ("S02".equals(schedule.getCode_Id())) {
                 log.info("부서일정");
                 empVO.setFlag("dept");
                 List<EmpVO> empList = empService.selectEmpIdListByDeptId(empVO);
                 dataMap.put("empList", empList);
-            } else if ("S04".equals(schedule.getCode_Id())) {
+            } else if ("S03".equals(schedule.getCode_Id())) {
                 log.info("팀일정");
                 empVO.setFlag("team");
+                log.info(schedule.getTeam_Id());
                 List<EmpVO> empList = empService.selectEmpIdListByDeptId(empVO);
-                dataMap.put("empList", empList);
+                dataMap.put("teamList", empList);
             }
         } catch (Exception e) {
             log.info("예외처리 발생");
@@ -191,6 +216,7 @@ public class ScheduleController extends BaseController {
     public ResponseEntity<String> remove(ScheduleVO scheduleVO) {
         log.info("삭제 컨트롤러 호출");
         log.info(Integer.toString(scheduleVO.getSchedule_St()));
+        log.info(Integer.toString(scheduleVO.getSchedule_Id()));
         ResponseEntity<String> entity = null;
 
         try {
@@ -214,66 +240,32 @@ public class ScheduleController extends BaseController {
      */
     @PostMapping(value="/list", produces="application/json;charset=utf-8")
     @ResponseBody
-    public List<ScheduleCommand> list(@RequestBody ScheduleCommand scheduleCommand) {
+    public List<ScheduleCommand> list(@RequestBody ScheduleCommand scheduleCommand, HttpSession session) {
         log.info("List컨트롤러호출");
+        log.info(scheduleCommand.toString());
         ScheduleVO schedule = scheduleCommand.toScheduleVO();
+        log.info("schedule" + schedule);
 
         List<ScheduleCommand> scheduleList = new ArrayList<>();
 
-        try {
-            scheduleList = scheduleService.selectScheduleList(schedule);
-            log.info(scheduleList.toString());
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return scheduleList;
-    }
-        /** get 방식 - 개발자가 쿼리스트링 start,end를 입력하지 않아도 풀캘린더 내부에서 자동으로 넘긴다
-         * 풀캘린더는 내부적으로 현재 화면에 보이는 기간(start와 end)을 파악하고,
-         * 이를 서버로 전송하여 해당 기간에 해당하는 이벤트를 요청합니다.
-         * 이를 통해 개발자가 별도로 쿼리스트링을 생성하고 추가하지 않아도 풀캘린더는 필요한 정보를 서버에게 전달할 수 있습니다.
-         * 이는 일반적으로 풀캘린더의 기본 동작입니다.
-        log.info("리스트 컨트롤러 호출");
-        log.info(start);
-        log.info(end);
-        ScheduleVO schedule = new ScheduleVO();
-        schedule.setSchedule_Start_Dt(start);
-        schedule.setSchedule_End_Dt(end);
-
-        List<ScheduleCommand> scheduleList = new ArrayList<>();
-            scheduleList = scheduleService.selectScheduleList(schedule);
+        //부서장인지 확인 필요함(팀 일정을 전부 조회 가능해야함)
+        EmpVO user = (EmpVO)session.getAttribute("loginUser");
+        if(user.getCode_Id().equals("c01")) {
+            log.info("부서장 일정조회");
+            scheduleList = scheduleService.selectScheduleAllList(schedule);
             return scheduleList;
-         **/
-
-        /** 값 테스트(DB X)
-        List<Map<String,Object>> mList = new ArrayList<>();
-        Map<String, Object> rmap = new HashMap<>();
-
-        rmap.put("title", "휴가");
-        rmap.put("start", "2024-01-02");
-        rmap.put("end", "2024-01-05");
-        mList.add(rmap);
-
-        rmap = new HashMap<>();
-        rmap.put("title", "게시판구현");
-        rmap.put("start", "2024-01-06");
-        rmap.put("end", "2024-01-07");
-        mList.add(rmap);
-
-        rmap = new HashMap<>();
-        rmap.put("title", "공지사항구현");
-        rmap.put("start", "2024-01-08");
-        rmap.put("end", "2024-01-11");
-        mList.add(rmap);
-
-        Gson gson = new Gson();
-        String temp = gson.toJson(mList);
-        return temp;
-        **/
-
-
-
-
+        } else {
+            try {
+                log.info("일반사원 일정조회");
+                scheduleList = scheduleService.selectScheduleList(schedule);
+                log.info(scheduleList.toString());
+            } catch (Exception e) {
+                log.info("리스트에러발생");
+                e.printStackTrace();
+            }
+            return scheduleList;
+        }
+    }
 
     /**
      * 일정 상세보기
@@ -281,12 +273,13 @@ public class ScheduleController extends BaseController {
     @RequestMapping("/detail")
     public String detail(ScheduleVO scheduleVO,  Model model) {
         log.info("id={}",scheduleVO.getSchedule_Id() + "=" + Integer.toString(scheduleVO.getSchedule_St()));
-        log.info(scheduleVO.getSchedule_Create_Dt());
+        log.info(scheduleVO.getCode_Id());
         ScheduleCommand schedule = null;
 
             int schedule_Id = scheduleVO.getSchedule_Id();
 
             schedule = scheduleService.selectScheduleById(schedule_Id);
+            log.info(schedule.getType());
 
 
         model.addAttribute("schedule", schedule);
@@ -304,10 +297,38 @@ public class ScheduleController extends BaseController {
         return "schedule/modify";
     }
 
-    /**
-     * modify 미구현
-     * emp, dept 필요
-     */
+    @ResponseBody
+    @PostMapping(value="/modify", produces="application/json;charset=utf-8")
+    public Object modify(@RequestBody ScheduleCommand scheduleCommand, HttpServletRequest request) throws Exception{
+        log.info("수정컨트롤러 호출");
+        log.info(scheduleCommand.getId());
+        Map<String, Object> dataMap = new HashMap<String,Object>();
+
+        ScheduleVO schedule = scheduleCommand.toScheduleVO();
+        EmpVO empVO = new EmpVO(); // 부서 또는 팀 이용 직원 조회를 위한 vo 생성. service에서 loginUser의 deptId 심어줄 예정
+        schedule.setSchedule_St(1);
+        scheduleService.updateSchedule(schedule);
+        int scheduleId = schedule.getSchedule_Id();
+        log.info(Integer.toString(scheduleId));
+        dataMap.put("scheduleId", scheduleId);
+
+
+        if("S01".equals(schedule.getCode_Id())) {
+            List<EmpVO> empList = empService.selectEmpList();
+            dataMap.put("empList", empList);
+        }else if("S02".equals(schedule.getCode_Id())) {
+            empVO.setFlag("dept");
+            List<EmpVO> empList = empService.selectEmpIdListByDeptId(empVO);
+            dataMap.put("empList", empList);
+        }else if("S03".equals(schedule.getCode_Id())) {
+            empVO.setFlag("team");
+            List<EmpVO> empList = empService.selectEmpIdListByDeptId(empVO);
+            dataMap.put("empList", empList);
+        }
+
+
+        return dataMap;
+    }
 
 
 

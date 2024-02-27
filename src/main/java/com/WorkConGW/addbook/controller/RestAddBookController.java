@@ -41,9 +41,96 @@ public class RestAddBookController {
         logger.info(pmap.toString());
         List<AddBookVO> addBookGroupList = null;
         addBookGroupList = addBookService.addBookGroupSelect(pmap);
-        Gson gson = new Gson();
-        String temp = gson.toJson(addBookGroupList);
-
         return addBookGroupList;
+    }
+
+    @GetMapping("addBookGroupDoubleCheck")
+    public String addBookGroupDoubleCheck(@RequestParam Map<String, Object> pmap, HttpSession session) {
+        logger.info("addBookGroupDoubleCheck");
+        EmpVO empVO = (EmpVO) session.getAttribute("loginUser");
+        String empId = null;
+        if(empVO != null) {
+            empId = empVO.getEmp_Id();
+        }
+        pmap.put("empId", empId);
+        logger.info(pmap.toString());
+        String countVal = null;
+        List<Map<String, Object>> result = addBookService.addBookGroupDoubleCheck(pmap);
+        for (Map<String, Object> map : result) {
+            Object countValue = map.get("COUNT");
+            countVal = countValue.toString();
+        }
+        logger.info(countVal);
+        return countVal;
+    }
+
+    @GetMapping("addBookStarredUpdate")
+    public int addBookStarredUpdate(@RequestParam Map<String, Object> pmap, HttpSession session) {
+        logger.info("addBookStarredUpdate");
+        EmpVO empVO = (EmpVO) session.getAttribute("loginUser");
+        String empId = null;
+        if(empVO != null) {
+            empId = empVO.getEmp_Id();
+        }
+        pmap.put("empId", empId);
+        logger.info(pmap.toString());
+        int result = addBookService.addBookStarredUpdate(pmap);
+        return result;
+    }
+
+    @GetMapping("addBookGroupDelete")
+    public int addBookGroupDelete(@RequestParam Map<String, Object> pmap, HttpSession session) {
+        logger.info("addBookGroupDelete");
+        EmpVO empVO = (EmpVO) session.getAttribute("loginUser");
+        String empId = null;
+        if(empVO != null) {
+            empId = empVO.getEmp_Id();
+        }
+        pmap.put("empId", empId);
+        logger.info(pmap.toString());
+        int result = addBookService.addBookGroupDelete(pmap);
+        return result;
+    }
+
+    @GetMapping("shareAddBookGroupDelete")
+    public int shareAddBookGroupDelete(@RequestParam Map<String, Object> pmap, HttpSession session) {
+        logger.info("shareAddBookGroupDelete");
+        EmpVO empVO = (EmpVO) session.getAttribute("loginUser");
+        String empId = null;
+        if(empVO != null) {
+            empId = empVO.getEmp_Id();
+        }
+        pmap.put("empId", empId);
+        logger.info(pmap.toString());
+        int result = addBookService.shareAddBookGroupDelete(pmap);
+        return result;
+    }
+
+    @GetMapping("addBookDelete")
+    public int addBookDelete(@RequestParam(value = "manage_id[]", required = false) List<Long> manage_id) {
+        int result = 0;
+        logger.info(manage_id.toString());
+        if (manage_id != null && !manage_id.isEmpty()) {
+            result = addBookService.addBookDelete(manage_id);
+        }
+        // 삭제 후 리다이렉트 또는 다른 처리
+        return result;
+    }
+
+    @GetMapping("addBookShareInsert")
+    public int addBookShareInsert(@RequestParam(value = "emp_id[]", required = false) List<String> emp_id, @RequestParam Map<String, Object> pmap,HttpSession session) {
+        int result = 0;
+        logger.info(pmap.toString());
+        EmpVO empVO = (EmpVO) session.getAttribute("loginUser");
+        String empId = null;
+        if(empVO != null) {
+            empId = empVO.getEmp_Id();
+        }
+        pmap.put("empId", empId);
+        pmap.put("emp_id_list", emp_id);
+        logger.info(pmap.toString());
+        result = addBookService.addBookShareInsert(pmap);
+        // 삭제 후 리다이렉트 또는 다른 처리
+        return result;
     }
 }
