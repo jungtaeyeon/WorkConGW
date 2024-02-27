@@ -4,22 +4,20 @@
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
-<link rel="stylesheet" href="<%=request.getContextPath() %>/resources/js/treeview/jquery.treeview.css" />
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7/jquery.min.js"></script>
-<script src="<%=request.getContextPath() %>/resources/js/treeview/jquery.cookie.js"></script>
-<script src="<%=request.getContextPath() %>/resources/js/treeview/jquery.treeview.js"></script>
-<script src="<%=request.getContextPath() %>/resources/js/treeview/jquery.treeview.edit.js"></script>
-<script src="<%=request.getContextPath() %>/resources/js/treeview/jquery.treeview.async.js"></script>
-
-<link rel="stylesheet" href="<%=request.getContextPath() %>/resources/templates/light/assets/fonts/font.css">
-
+<body>
+<%--헤더--%>
+<%@ include file="../../include/header.jsp"%>
+<section class="subPageContain">
+	<%--    사이드바--%>
+	<%@ include file="../issueSidebar.jsp"%>
+	<div class="contentConteiner">
 <!-- 메인 content -->
 <div id="main-content">
 	<div class="container-fluid">
 		<div class="block-header">
             <div class="row">
             	<div class="col-sm-5">
-                	<h2 style="padding-left:10px;font-size:2em; font-family: S-CoreDream-6Bold"><i class="icon-note"></i>&nbsp;업무 상세 #${boardFormVO.dutyVO.dutyBoardId } </h2>
+                	<h2 style="padding-left:10px;font-size:2em; font-family: S-CoreDream-6Bold"><i class="fas fa-sticky-note"></i>&nbsp;업무 상세 #${boardFormVO.dutyVO.duty_Board_Id } </h2>
                 </div>
                 <div class="col-sm-7 " style="font-family: S-CoreDream-6Bold">
                		<div style="float:right;">
@@ -32,10 +30,11 @@
         <div class="row clearfix" style="font-family: S-CoreDream-4Regular">
             <div class="col-lg-12 col-md-12 col-sm-12">
             	<form:form modelAttribute="boardFormVO" name="dutyModifyForm" action="${pageContext.request.contextPath }/board/duty/modify" enctype="multipart/form-data">
-		          	<form:hidden path="dutyVO.dutyBoardId" />
-		          	<form:hidden path="dutyVO.dutyBoardContent" id="dutyBoardContent"/>
-		          	<form:hidden path="dutyVO.dutyUpdaterId" value="${loginUser.empId }"/>
-		          	<form:hidden path="dutyVO.empWriterId" value="${loginUser.empId }"/>
+		          	<form:hidden path="dutyVO.duty_Board_Id" />
+		          	<form:hidden path="dutyVO.duty_Board_Content" id="dutyBoardContent"/>
+		          	<form:hidden path="dutyVO.project_Id" id="dutyProjectId"/>
+		          	<form:hidden path="dutyVO.new_Project_Id" id="newProjectId"/>
+		          	<form:hidden path="dutyVO.emp_Writer_Id" value="${loginUser.emp_Id }"/>
 		          	<div id="fileUploadForm">
 		          	</div>
 		          	<div id="deleteFile">
@@ -53,7 +52,24 @@
 									</td>
 									<td colspan="5">
 										<div style="padding-left:15px;border-left: 1px dotted gray;">
-											<form:textarea path="dutyVO.dutyBoardTitle" style="width:100%;"/>
+											<form:textarea path="dutyVO.duty_Board_Title" style="width:100%;"/>
+										</div>
+									</td>
+								</tr>
+								<tr>
+									<td style="width:130px;">
+										<strong>프로젝트 이름</strong>
+									</td>
+									<td colspan="5">
+										<div class="col-sm-6" style="padding-left:15px;border-left: 1px dotted gray;">
+												<select id="selectProject" class="form-control show-tick">
+													<option value="${boardFormVO.dutyVO.project_Id}">${boardFormVO.dutyVO.project_Title}</option>
+													<c:forEach items="${projectList}" var="project">
+														<c:if test="${project.project_Title ne boardFormVO.dutyVO.project_Title}">
+															<option style="padding:5px;" value="${project.project_Id}">${project.project_Title}</option>
+														</c:if>
+													</c:forEach>
+												</select>
 										</div>
 									</td>
 								</tr>
@@ -62,7 +78,7 @@
 										<strong>작성자</strong>
 									</td>
 									<td style="width:200px;">
-										<div style="padding-left:15px;border-left: 1px dotted gray;">${boardFormVO.dutyVO.empName }</div>
+										<div style="padding-left:15px;border-left: 1px dotted gray;">${boardFormVO.dutyVO.emp_Name }</div>
 									</td>
 									<td style="width:160px;">
 										<strong>수신자</strong>
@@ -70,9 +86,9 @@
 									</td>
 									<td colspan="3">
 										<div class="empFinish" style="padding-left:15px;border-left: 1px dotted gray;">
-											<c:forEach items="${boardFormVO.dutyVO.dutyManagerList }" var="dutyManager" varStatus="status">
-												<span id="${dutyManager.empId }" data-name="${dutyManager.empName }" data-pos="${dutyManager.officialName }" data-dept="${dutyManager.deptName }" data-state="${dutyManager.attendStName }">${dutyManager.empName }</span>
-												<c:if test="${status.index < boardFormVO.dutyVO.dutyManagerList.size()-1 }">
+											<c:forEach items="${boardFormVO.dutyVO.dutyEnforcerList }" var="dutyEnforcer" varStatus="status">
+												<span id="${dutyEnforcer.emp_Id }" data-name="${dutyEnforcer.emp_Name }" data-pos="${dutyEnforcer.officialName }" data-dept="${dutyEnforcer.dept_Name }" data-state="${dutyEnforcer.attend_St_Name }">${dutyEnforcer.emp_Name }</span>
+												<c:if test="${status.index < boardFormVO.dutyVO.dutyEnforcerList.size()-1 }">
 												,&nbsp;
 												</c:if>
 											</c:forEach>
@@ -94,12 +110,9 @@
 									<td style="width:200px;">
 										<div style="padding-left:15px;border-left: 1px dotted gray;">
 											<div class="input-group date" data-date-autoclose="true" data-provide="datepicker">
-			                                 	<input type="text" name="dutyVO.dutyBoardEndDt" class="form-control" id="boardEndDt" placeholder="완료일자 선택" readonly="readonly"
-			                                 	<c:if test="${!empty boardFormVO.dutyVO.searchDeadline }">
-				                                 	value="${boardFormVO.dutyVO.searchDeadline }"
-			                                 	</c:if> 
-			                                 	>
-				                                <div class="input-group-append">                                            
+												<form:input path="dutyVO.duty_Board_End_Dt" id="dutyBoardEndDt" class="form-control" placeholder="마감기한 선택" readonly="true"/>
+
+												<div class="input-group-append">
 				                                    <button class="btn btn-outline-secondary" type="button"><i class="fa fa-calendar"></i></button>
 				                                </div>
 			                                </div>
@@ -109,7 +122,7 @@
 										<strong>조회수</strong>
 									</td>
 									<td>
-										<div style="padding-left:15px;border-left: 1px dotted gray;">${boardFormVO.dutyVO.dutyBoardReadcnt }</div>
+										<div style="padding-left:15px;border-left: 1px dotted gray;">${boardFormVO.dutyVO.duty_Board_Readcnt }</div>
 									</td>
 								</tr>
 								<tr>
@@ -127,14 +140,14 @@
 														<!-- 파일 입력 -->
 						                                <span class="attach_${status.index }" style="font-weight: normal; margin-right:15px;">
 						                                	<c:choose>
-						                                		<c:when test="${dutyAttach.attachType eq 'JPG' || dutyAttach.attachType eq 'PNG' || dutyAttach.attachType eq 'GIF'}">
+						                                		<c:when test="${dutyAttach.attach_type eq 'JPG' || dutyAttach.attach_type eq 'PNG' || dutyAttach.attach_type eq 'GIF'}">
 							                                		<i class="fa fa-file-photo-o"></i>
 						                                		</c:when>
 						                                		<c:otherwise>
 							                                		<i class="fa fa-file-text-o"></i>
 						                                		</c:otherwise>
 						                                	</c:choose>
-															&nbsp;${dutyAttach.attachName }
+															&nbsp;${dutyAttach.attach_name }
 														</span>   
 													</c:forEach>
 												</c:if>
@@ -152,7 +165,6 @@
 																<th style="width:200px;">타입</th>
 																<th style="width:300px;">파일명</th>
 																<th style="width:200px;">확장자</th>
-																<th style="width:200px;">용량</th>
 																<th style="width:100px;"><i class="fa fa-trash-o" style="cursor: pointer;" onclick="removeAll();"></i></th>
 															</tr>
 														</thead>
@@ -163,7 +175,7 @@
 							                                    	<tr>
 							                                    		<td>
 							                                    			<c:choose>
-							                                    				<c:when test="${dutyAttach.attachType eq 'JPG' || dutyAttach.attachType eq 'PNG' || dutyAttach.attachType eq 'GIF'}">
+							                                    				<c:when test="${dutyAttach.attach_type eq 'JPG' || dutyAttach.attach_type eq 'PNG' || dutyAttach.attach_type eq 'GIF'}">
 								                                    				이미지
 							                                    				</c:when>
 							                                    				<c:otherwise>
@@ -172,16 +184,13 @@
 							                                    			</c:choose>
 							                                    		</td>
 							                                    		<td style="font-weight: normal;">
-																			${dutyAttach.attachName }
+																			${dutyAttach.attach_name }
 							                                    		</td>
 							                                    		<td style="font-weight: normal;">
-																			${dutyAttach.attachType }
-							                                    		</td>
-							                                    		<td style="font-weight: normal;">
-							                                    			${dutyAttach.attachSize }
+																			${dutyAttach.attach_type }
 							                                    		</td>
 							                                    		<td>
-																			<i class="icon-close" data-id="${status.index }" data-attachId="${dutyAttach.attachId }" style="cursor: pointer;" onclick="removeEl(this)"></i>
+																			<i class="fas fa-times" data-id="${status.index }" data-attachId="${dutyAttach.attach_id }" style="cursor: pointer;" onclick="removeEl(this)"></i>
 							                                    		</td>
 							                                    	</tr>
 																</c:forEach>
@@ -229,14 +238,14 @@
 							<!-- 조직도 -->
 		                    <div class="tab-pane show active" id="org">
 		                    	<div class="header" style=" height: 60px;margin-top:15px;">
-				                    <input type="search" class="form-control" placeholder="이름/아이디/부서" style="display: inline-block; width: 75%;">
-				                    <button type="button" class="btn btn-dark"><i class="icon-magnifier"></i></button>
+									<input oninput="searchOrg(this);" type="search" class="form-control" placeholder="이름으로 검색" style="display: inline-block; width: 75%;">
+				                    <button type="button" class="btn btn-dark"><i class="fas fa-search"></i></button>
 			               		</div>
 		                		<div class="body" style="overflow-y: scroll; height: 300px;">
 		                			<div>
 										<ul id="codeList" class="treeview">
-											<li>JoinWork조직도
-												<ul id="lvl0"></ul> 
+											<li>WorkCon조직도
+												<ul id="lvl0"></ul>
 											</li>
 										</ul>
 									</div>
@@ -297,14 +306,16 @@
 
 <script type="text/javascript">
 window.onload=function(){
-	if($('input#boardEndDt').val() != ''){
-		var endDate = $('input#boardEndDt').val().split('-');
-		$('input#boardEndDt').val(endDate[1]+"/"+endDate[2]+"/"+endDate[0]);
-	}
-	$('div.note-editable').html('${boardFormVO.dutyVO.dutyBoardContent}');
-	
+	var tomorrow = new Date();
+	tomorrow.setDate(tomorrow.getDate() + 1); // 내일의 날짜를 가져옴
+	$('.date').datepicker({
+		startDate: tomorrow, // 내일 이후의 날짜만 선택 가능하도록 설정
+	});
+
+	$('div.note-editable').html('${boardFormVO.dutyVO.duty_Board_Content}');
+
 	deptTrees();
-	
+	console.log('aaa');
 	// 수신자 데이터 추가
 	var tempForm = $('form[name="temp"] input');
 	
@@ -315,16 +326,20 @@ window.onload=function(){
 					+"<td>"+$(this).attr('data-name')+'('+$(this).attr('data-pos')+')'+"</td>"
 					+"<td>"+$(this).attr('data-dept')+"</td>"
 					+'<td style="text-align: center;">'+$(this).attr('data-state')+"</td>"
-					+'<td style="text-align: center;cursor:pointer;" onclick="removeElement(this);"><i class="icon-close"></i></td>'
+					+'<td style="text-align: center;cursor:pointer;" onclick="removeElement(this);"><i class="fas fa-times"></i></td>'
 					+"</tr>";
 					
 		$('.empListTable tbody').append(trTag);
 		
-		// temp form에 empId 추가
-		var inputTag = '<input type="hidden" class="id_'+$(this).attr('id')+'" data-name="'+$(this).attr('data-name')+'" name="empId" value="'+$(this).attr('id')+'">';
+		// temp form에 emp_Id 추가
+		var inputTag = '<input type="hidden" class="id_'+$(this).attr('id')+'" data-name="'+$(this).attr('data-name')+'" name="emp_Id" value="'+$(this).attr('id')+'">';
 		$('form[name="temp"]').append(inputTag);
 	});
 	
+}
+
+function myClick(obj){
+	$(obj).parent().children("div").click();
 }
 
 $("#codeList").treeview({collapsed: false});
@@ -336,58 +351,100 @@ function deptTrees(){
 		type:"GET",
 		url:"<c:url value='/orgList' />",
 		contentType:"application/json",
-	// 	data:dataSet,
+		// 	data:dataSet,
 		processData:true,
 		success: function(data) {
 			data.forEach(function(e, i) {
 				var deptId = e.deptId;
 				var deptName = e.deptName;
-			    var deptSupId = e.deptSupId;
-			    var position = e.position;
-			    var empState = e.empState;
-			    var level = 5;
-			    var deptSupName = $('li[id="'+deptSupId+'"] a').eq(0).text();
-			    var li = "";
-			    if(e.level){
+				var deptSupId = e.deptSupId;
+				var position = e.position;
+				var empState = e.empState;
+				var stName = e.empState;
+				var level = 5;
+				var deptSupName = $('li[id="'+deptSupId+'"] a').eq(0).text();
+				var li = "";
+				if(e.level){
 					level = e.level;
-			    } 
-			    if(position){
-				    li = '<li onclick="empChecked(this);" data-deptId="'+deptSupId+'" data-name="'+deptName+" "+position+'" data-dept="'+deptSupName+'" data-state="'+(empState==null ? '' : empState)+'" ondblclick="addEmpList();" id="'+ deptId +'" lvl="'+level +'" class="myChecked" style="cursor:pointer" ><img src="<%=request.getContextPath() %>/resources/js/treeview/images/emp.png" >'+" "+ deptName + " "+e.position+'</li>';
-			    }else{
-			    	li = '<li id="'+ deptId +'" lvl="'+level +'"><a class="file code">'+ deptName +'</a></li>';
-			    }
-				
-				
+				}
+				if(position){
+					li = '<li onclick="empChecked(this);" data-deptId="'+deptSupId+'" data-name="'+deptName+" "+position+'" data-dept="'+deptSupName+'" data-state="'+(empState==null ? '' : empState)+'" ondblclick="addEmpList();" id="'+ deptId +'" lvl="'+level +'" class="myChecked" style="cursor:pointer" ><img src="<%=request.getContextPath() %>js/treeview/images/emp.png" >'+" "+ deptName+ " "+e.position+'</li>';
+				}else{
+					li = '<li id="'+ deptId +'" lvl="'+level +'"><a class="file code" style="cursor: pointer;" onclick="myClick(this);" >'+ deptName +'&nbsp&nbsp<i data-id="'+deptId+'" data-name="'+deptName+'" style="color:#383d41; cursor:pointer;"></i></a></li>';
+				}
+
 				// 1레벨은 그냥 추가
 				// 다음 레벨부터는 상위 li의 클래스를 폴더로 바꾸고 자기 자신을 추가
-			    if(level == 1) {
+				if(level == 1) {
 					$("#lvl0").append(li);
 				} else {
-					  var parentLi = $("li[id='"+ deptSupId +"']");
-					  
-					  parentLi.addClass("expandable lastExpandable");
-				      var bUl = parentLi.children("ul");
-			   		  
-				      // 하위 그룹이 없으면 li로 추가
-				      // 하위 그룹이 있으면 ul로 추가
-				      if(bUl.length == 0) {
-				    	  var div = "<div onclick='plusFromMinus(this);' class='hitarea expandable-hitarea lastExpandable-hitarea'></div>"
-				          li = "<ul class='' style='display: none;'>" + li + "</ul>";
-				          parentLi.append(div);
-				          parentLi.append(li);
-				          
-				          return false;
-				      } else {
-				          if(position){
-				        	  bUl.prepend(li);
-				        	  return false;
-				          }
-				    	  bUl.append(li);
-				      }
-			     }
+					var parentLi = $("li[id='"+ deptSupId +"']");
+
+					parentLi.addClass("expandable lastExpandable");
+					var bUl = parentLi.children("ul");
+
+					// 하위 그룹이 없으면 li로 추가
+					// 하위 그룹이 있으면 ul로 추가
+					if(bUl.length == 0) {
+						var div = "<div onclick='plusFromMinus(this);' class='hitarea expandable-hitarea lastExpandable-hitarea'></div>"
+						li = "<ul class='' style='display: none;'>" + li + "</ul>";
+						parentLi.append(div);
+						parentLi.append(li);
+
+						return false;
+					} else {
+						if(position){
+							bUl.prepend(li);
+							return false;
+						}
+						bUl.append(li);
+					}
+				}
 			});
 		}
 	});
+}
+
+//조직도 검색을 위한 함수입니다.
+function searchOrg(obj){
+	var keyword = $(obj).val();
+	if(!keyword){//검색조건이 비어있으면 리턴
+		$("#codeList")[0].scrollIntoView();
+		$(".myChecked").css("background-color","");
+		return false;
+	}
+
+	$("li:contains('"+keyword+"')").eq(2);
+// 	console.log($("li:contains('"+keyword+"')"));
+// 	console.log($("li:contains('"+keyword+"')").eq(2)[0]);
+
+	var $plusIcon = $("li:contains('"+keyword+"')").eq(2).parent().parent().children("div");//한칸
+	var $plusIcon2 = $("li:contains('"+keyword+"')").eq(3).parent().parent().children("div");//한칸이상
+
+	if($("li:contains('"+keyword+"')").eq(2).attr("lvl") == 5){
+
+		$($plusIcon).parent("li").removeClass("expandable lastExpandable");
+		$($plusIcon).parent("li").addClass("collapsable lastCollapsable");
+		$($plusIcon).removeClass("hitarea expandable-hitarea lastExpandable-hitarea");
+		$($plusIcon).addClass("hitarea collapsable-hitarea lastCollapsable-hitarea");
+		$($plusIcon).parent("li").children("ul").css("display","block");
+
+		$("li:contains('"+keyword+"')").eq(2)[0].scrollIntoView();
+		$("li:contains('"+keyword+"')").eq(2)[0].click();
+	}else{
+		if($("li:contains('"+keyword+"')").eq(3)[0]){
+			$($plusIcon2).parent("li").removeClass("expandable lastExpandable");
+			$($plusIcon2).parent("li").addClass("collapsable lastCollapsable");
+			$($plusIcon2).removeClass("hitarea expandable-hitarea lastExpandable-hitarea");
+			$($plusIcon2).addClass("hitarea collapsable-hitarea lastCollapsable-hitarea");
+			$($plusIcon2).parent("li").children("ul").css("display","block");
+
+			$("li:contains('"+keyword+"')").eq(3)[0].scrollIntoView();
+			$("li:contains('"+keyword+"')").eq(3)[0].click();
+		}
+
+	}
+
 }
 
 //열고 닫는 함수입니다.
@@ -411,11 +468,11 @@ function empChecked(obj) {
 	//기존 체크된 css 및 클래스 정보 삭제
 	$(".myChecked").css("background-color","");
 	$("li").removeClass("myChecked");
-	
+
 	//새로 체크된 css 및 클래스 정보 갱신
 	$(obj).addClass("myChecked");
 	$(".myChecked").css("background-color","#17a2b8");
-	
+
 	$('#selectEmpName').val($(obj).text().trim());
 }
 
@@ -433,27 +490,27 @@ function addEmpList(){
 				alert('이미 수신자로 등록된 직원입니다.');
 				check = true;
 				return false;
-			} 
+			}
 		});
 		if(check){
 			return;
 		}
 	}
-	
+
 	$('.noEmpList').css('display','none');
-	
+
 	// 이름(직위) 분할
 	var empName = $('.myChecked').attr('data-name').split(' ')[0];
 	var empPos = $('.myChecked').attr('data-name').split(' ')[1];
-	
+
 	var trTag =  '<tr class="id_'+$('.myChecked').attr('id')+'">'
-				+"<td>"+empName+'('+empPos+')'+"</td>"
-				+"<td>"+$('.myChecked').attr('data-dept')+"</td>"
-				+'<td style="text-align: center;">'+$('.myChecked').attr('data-state')+"</td>"
-				+'<td style="text-align: center;cursor:pointer;" onclick="removeElement(this);"><i class="icon-close"></i></td>'
-				+"</tr>";
+			+"<td>"+empName+'('+empPos+')'+"</td>"
+			+"<td>"+$('.myChecked').attr('data-dept')+"</td>"
+			+'<td style="text-align: center;">'+$('.myChecked').attr('data-state')+"</td>"
+			+'<td style="text-align: center;cursor:pointer;" onclick="removeElement(this);"><i class="fas fa-times"></i></td>'
+			+"</tr>";
 	$('.empListTable tbody').append(trTag);
-	
+
 	// temp form에 empId 추가
 	var inputTag = '<input type="hidden" class="id_'+$('.myChecked').attr('id')+'" data-name="'+empName+'" name="empId" value="'+$('.myChecked').attr('id')+'">';
 	$('form[name="temp"]').append(inputTag);
@@ -491,14 +548,14 @@ function finish(){
 		return;
 	}
 	$('.empFinish').text("");
-	
+
 	$('form[name="temp"]').children().each(function(index,item){
 		var spanTag = '<span id="'+$(this).val()+'">'+$(this).attr('data-name')+'</span>';
 		if(index < $('form[name="temp"]').children().length-1)
 			spanTag += ", ";
 		$('.empFinish').append(spanTag);
 	});
-	
+
 	$('button[data-dismiss="modal"]').click();
 }
 
@@ -509,14 +566,14 @@ function toggleFileContent() {
 	if($("#hideFileWindow").css("display") == "none"){	// 수정창 열기
 		$("#showFileWindow").css("display","none");
 		$("#hideFileWindow").css("display","");
-		
+
 		$('#attachInline').css('display','none');
 		$('#attachBox').css('display','');
 	}
 	else{	// 수정창 닫기
 		$("#hideFileWindow").css("display","none");
 		$("#showFileWindow").css("display","");
-		
+
 		$('#attachInline').css('display','');
 		$('#attachBox').css('display','none');
 	}
@@ -530,13 +587,13 @@ function myFileUpload() {
 		alert('파일은 5개까지만 첨부할 수 있습니다.');
 		return;
 	}
-	
+
 	// 선택 안된 파일 지우기
 	$('.attach_'+uuid).remove();
-	
+
 	var input = $('<input>').attr({"type":"file",'class':'attach_'+uuid,"name":"fileUploadCommand.uploadFile",'onchange':'myFileChange();'}).css('display','none');
 	$("#fileUploadForm").append(input);
-	
+
 	// 파일 선택
 	var inputFileTag = $("input[name='fileUploadCommand.uploadFile']");
 	inputFileTag.eq(inputFileTag.length-1).click();
@@ -546,12 +603,12 @@ function myFileUpload() {
 function myFileChange(){
 	var inputFileTag = $("input[name='fileUploadCommand.uploadFile']");
 	var filesLength = inputFileTag.length;
-	
+
 	var fileName = inputFileTag.eq(filesLength-1)[0].files[0].name;
 	var extension = getExtensionOfFilename(fileName);
 	var fileSize = (inputFileTag.eq(filesLength-1)[0].files[0].size)/1000 + "KB";
 	var fileType;
-	
+
 	if(!(extension == 'PNG' || extension == 'DOC' || extension == 'EXE' || extension == 'GIF' || extension == 'JAVA' || extension == 'JPG' || extension == 'PDF'|| extension == 'PPT'|| extension == 'TXT' || extension == 'XLSX'|| extension == 'ZIP')){
 		alert("지원하지 않는 파일 형식입니다.");
 		inputFileTag.eq(filesLength-1).remove();
@@ -562,50 +619,49 @@ function myFileChange(){
 	}else{
 		fileType = '파일';
 	}
-	
+
 	// 파일 업로드 창에 표시하기
 	var fileTag = '<tr>'
-				 +'<td>'+fileType+'</td>'
-				 +'<td style="font-weight: normal;">'+fileName+'</td>'
-				 +'<td style="font-weight: normal;">'+extension+'</td>'
-				 +'<td style="font-weight: normal;">'+fileSize+'</td>'
-				 +'<td><i class="icon-close" data-id="'+uuid+'" style="cursor: pointer;" onclick="removeEl(this)"></i></td>'
-				 +'</tr>';
+			+'<td>'+fileType+'</td>'
+			+'<td style="font-weight: normal;">'+fileName+'</td>'
+			+'<td style="font-weight: normal;">'+extension+'</td>'
+			+'<td><i class="fas fa-times" data-id="'+uuid+'" style="cursor: pointer;" onclick="removeEl(this)"></i></td>'
+			+'</tr>';
 	$('#appendTbody').append(fileTag);
-	
+
 	// 닫기상태 창에 표시하기
 	var sumnail = '<span class="attach_'+uuid+'" style="font-weight: normal; margin-right:15px;">'
-				 +(fileType=='이미지' ? '<i class="fa fa-file-photo-o"></i>' : '<i class="fa fa-file-text-o"></i>') 
-			 	 +'&nbsp;'+fileName
-				 +'</span>';
+			+(fileType=='이미지' ? '<i class="fa fa-file-photo-o"></i>' : '<i class="fa fa-file-text-o"></i>')
+			+'&nbsp;'+fileName
+			+'</span>';
 	$('#attachInline').append(sumnail);
-	
+
 	// 파일개수 수정
 	$('#fileCount').text($('#appendTbody').children().length);
-	
+
 	$('#noFile').remove();
-	
+
 	uuid++;
 }
 //파일 확장자 추출 함수
 function getExtensionOfFilename(filename) {
-	 
-    var _fileLen = filename.length;
- 
-    var _lastDot = filename.lastIndexOf('.');
- 
-    var _fileExt = filename.substring(_lastDot+1, _fileLen).toUpperCase();
- 
-    return _fileExt;
+
+	var _fileLen = filename.length;
+
+	var _lastDot = filename.lastIndexOf('.');
+
+	var _fileExt = filename.substring(_lastDot+1, _fileLen).toUpperCase();
+
+	return _fileExt;
 }
 
 // 파일 전체 삭제
 function removeAll(){
 	if($('#appendTbody').children().length == 0) return;
-	
+
 	var check = confirm('파일을 전부 삭제하시겠습니까?');
 	if(!check) return;
-	
+
 	$("input[name='fileUploadCommand.uploadFile']").remove();
 	$('#appendTbody').children().each(function(){
 		if($(this).find('i').attr('data-attachId')){
@@ -613,10 +669,10 @@ function removeAll(){
 		}
 		$(this).remove();
 	});
-	
+
 	$('#attachInline').children().remove();
 	$('#attachInline').append('<span id="noFile" style="font-weight: normal;">없음</span>');
-	
+
 	// 파일개수 수정
 	$('#fileCount').text(0);
 }
@@ -629,10 +685,10 @@ function removeEl(obj){
 	if($(obj).attr('data-attachId')){
 		$('#deleteFile').append('<input type="hidden" name="fileUploadCommand.deleteFileIds" style="display:none;" value="'+$(obj).attr('data-attachId')+'"/>');
 	}
-	
+
 	$(obj).closest('tr').remove();
 	$(".attach_"+$(obj).attr('data-id')).remove();
-	
+
 	// 파일개수 수정
 	$('#fileCount').text($('#appendTbody').children().length);
 }
@@ -640,32 +696,35 @@ function removeEl(obj){
 // 수정
 function modify_go(){
 	var modifyForm = $('form[name="dutyModifyForm"]')[0];
-	
-	if($.trim($('textarea[name="dutyVO.dutyBoardTitle"]').val())==""){
+
+	if($.trim($('textarea[name="dutyVO.duty_Board_Title"]').val())==""){
 		alert('제목을 입력하세요.');
-		$('textarea[name="dutyVO.dutyBoardTitle"]').focus();
+		$('textarea[name="dutyVO.duty_Board_Title"]').focus();
 		return;
 	}
-	
+
 	if($.trim($('.note-editable').text())==""){
 		alert('업무 내용을 입력하세요.');
 		$('.note-editable').focus();
 		return;
 	}
 	$('#dutyBoardContent').val($('.note-editable').html());
-	$('input[name="dutyVO.dutyBoardEndDt"]').val($('#dutyBoardEndDt').val());
+	$('input[name="dutyVO.duty_Board_End_Dt"]').val($('#dutyBoardEndDt').val());
+
+	$('#dutyProjectId').val(${boardFormVO.dutyVO.project_Id});
+	$('#newProjectId').val($('#selectProject').val());
 
 	// 수신자 추가
 	$('.empFinish span').each(function(index,item){
 		var empId = $(this).attr('id');
-		var inputTag = $('<input>').attr({'type':'hidden','name':'dutyVO.empManagerList','value':empId});
-		
+		var inputTag = $('<input>').attr({'type':'hidden','name':'dutyVO.empEnforcerList','value':empId});
+
 		$(modifyForm).append(inputTag);
 	});
-	
+
 	// 선택 안된 파일 지우기
 	$('.attach_'+uuid).remove();
-	
+
 	var formData = new FormData(modifyForm);
 	$.ajax({
 		url:modifyForm.action,
@@ -675,25 +734,16 @@ function modify_go(){
 		contentType:false,
 		success:function(){
 			alert("글이 수정되었습니다.");
-			
-			$('input[name="dutyVO.empManagerList"]').each(function(){
-				var empId = $(this).val();
-				sendMessage('${pageContext.request.contextPath}',
-							empId,
-							'담당 업무가 수정되었습니다. 확인해주세요.',
-							'${boardFormVO.dutyVO.dutyBoardTitle} #${boardFormVO.dutyVO.dutyBoardId}',
-							'<c:url value="/board/duty/detail?dutyBoardId=${boardFormVO.dutyVO.dutyBoardId}"/>',
-							'업무관리');
-			});
-			
-			window.opener.location.reload(true);
-			window.location.href='<c:url value="/board/duty/detail?dutyBoardId=${boardFormVO.dutyVO.dutyBoardId}"/>';
+			window.location.href='<c:url value="/board/duty/detail?duty_Board_Id=${boardFormVO.dutyVO.duty_Board_Id}"/>';
 		},
 		error:function(){
 			alert("글 수정에 실패했습니다.");
-			window.location.href='<c:url value="/board/duty/detail?dutyBoardId=${boardFormVO.dutyVO.dutyBoardId}" />';	
+			window.location.href='<c:url value="/board/duty/detail?duty_Board_Id=${boardFormVO.dutyVO.duty_Board_Id}" />';
 		}
 	});
 }
 
 </script>
+	</div>
+</section>
+</body>

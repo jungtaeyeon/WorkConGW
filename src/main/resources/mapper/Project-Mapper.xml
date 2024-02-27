@@ -15,20 +15,26 @@
         ,A.EMP_ID
         ,A.EMP_NAME
         ,A.DUTY_Count
-        ,NVL(B.openIssueCount,0) as openIssueCount
-        ,NVL(C.closedIssueCount,0) as closedIssueCount
+        ,NVL(B.todoIssueCount,0) as todoIssueCount
+        ,NVL(C.inprogressIssueCount,0) as inprogressIssueCount
+        ,NVL(D.doneIssueCount,0) as doneIssueCount
         FROM
         PROJECT A
-        ,(SELECT a.PROJECT_ID, count(*) as openIssueCount
+        ,(SELECT a.PROJECT_ID, count(*) as todoIssueCount
         FROM DUTY a, ISSUE_BOARD b
-        WHERE b.ISSUE_OPEN_ST = 1 and a.DUTY_BOARD_ID = b.DUTY_BOARD_ID
+        WHERE b.ISSUE_PROJECT_ST = 'todo' and a.DUTY_BOARD_ID = b.DUTY_BOARD_ID
         GROUP BY a.PROJECT_ID
         ORDER BY a.PROJECT_ID) B
-        ,(SELECT a.PROJECT_ID, count(*) as closedIssueCount
+        ,(SELECT a.PROJECT_ID, count(*) as inprogressIssueCount
         FROM DUTY a, ISSUE_BOARD b
-        WHERE b.ISSUE_OPEN_ST = 2 and a.DUTY_BOARD_ID = b.DUTY_BOARD_ID
+        WHERE b.ISSUE_PROJECT_ST = 'inprogress' and a.DUTY_BOARD_ID = b.DUTY_BOARD_ID
         GROUP BY a.PROJECT_ID
         ORDER BY a.PROJECT_ID) C
+        ,(SELECT a.PROJECT_ID, count(*) as doneIssueCount
+        FROM DUTY a, ISSUE_BOARD b
+        WHERE b.ISSUE_PROJECT_ST = 'done' and a.DUTY_BOARD_ID = b.DUTY_BOARD_ID
+        GROUP BY a.PROJECT_ID
+        ORDER BY a.PROJECT_ID) D
         WHERE 1=1
         <choose>
             <when test='isOpen == "open"'>
@@ -40,6 +46,7 @@
         </choose>
         AND A.PROJECT_ID = B.PROJECT_ID(+)
         AND A.PROJECT_ID = C.PROJECT_ID(+)
+        AND A.PROJECT_ID = D.PROJECT_ID(+)
         ORDER BY PROJECT_UPDATE_DT DESC
     </select>
 
@@ -94,22 +101,29 @@
              ,A.EMP_ID
              ,A.EMP_NAME
              ,A.DUTY_Count
-             ,NVL(B.openIssueCount,0) as openIssueCount
-             ,NVL(C.closedIssueCount,0) as closedIssueCount
+             ,NVL(B.todoIssueCount,0) as todoIssueCount
+             ,NVL(C.inprogressIssueCount,0) as inprogressIssueCount
+             ,NVL(D.doneIssueCount,0) as doneIssueCount
         FROM
             PROJECT A
-           ,(SELECT a.PROJECT_ID, count(*) as openIssueCount
+           ,(SELECT a.PROJECT_ID, count(*) as todoIssueCount
              FROM DUTY a, ISSUE_BOARD b
-             WHERE b.ISSUE_OPEN_ST = 1 and a.DUTY_BOARD_ID = b.DUTY_BOARD_ID
+             WHERE b.ISSUE_PROJECT_ST = 'todo' and a.DUTY_BOARD_ID = b.DUTY_BOARD_ID
              GROUP BY a.PROJECT_ID
              ORDER BY a.PROJECT_ID) B
-           ,(SELECT a.PROJECT_ID, count(*) as closedIssueCount
+           ,(SELECT a.PROJECT_ID, count(*) as inprogressIssueCount
              FROM DUTY a, ISSUE_BOARD b
-             WHERE b.ISSUE_OPEN_ST = 2 and a.DUTY_BOARD_ID = b.DUTY_BOARD_ID
+             WHERE b.ISSUE_PROJECT_ST = 'inprogress' and a.DUTY_BOARD_ID = b.DUTY_BOARD_ID
              GROUP BY a.PROJECT_ID
              ORDER BY a.PROJECT_ID) C
+           ,(SELECT a.PROJECT_ID, count(*) as doneIssueCount
+             FROM DUTY a, ISSUE_BOARD b
+             WHERE b.ISSUE_PROJECT_ST = 'done' and a.DUTY_BOARD_ID = b.DUTY_BOARD_ID
+             GROUP BY a.PROJECT_ID
+             ORDER BY a.PROJECT_ID) D
         WHERE A.PROJECT_ID = B.PROJECT_ID(+)
           AND A.PROJECT_ID = C.PROJECT_ID(+)
+          AND A.PROJECT_ID = D.PROJECT_ID(+)
           AND A.PROJECT_ID = #{project_Id}
     </select>
 

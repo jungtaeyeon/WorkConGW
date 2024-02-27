@@ -21,8 +21,9 @@ public class ProjectVO {
 	private String emp_Name;
 	private int duty_Count;
 	private String isOpen = "open";	// 탭 체크
-	private int openIssueCount;	// 진행중 이슈 개수
-	private int closedIssueCount;	// 종료된 이슈 개수
+	private int todoIssueCount;	// todo 이슈 개수
+	private int inprogressIssueCount;	// inprogress 이슈 개수
+	private int doneIssueCount;	// done 이슈 개수
 	private int oppListCount;	// 진행/종료된 이슈 개수(반대)
 
 	private List<IssueVO> issueList;	// 프로젝트의 이슈리스트
@@ -104,20 +105,29 @@ public class ProjectVO {
 		this.isOpen = isOpen;
 	}
 
-	public int getOpenIssueCount() {
-		return openIssueCount;
+
+	public int getTodoIssueCount() {
+		return todoIssueCount;
 	}
 
-	public void setOpenIssueCount(int openIssueCount) {
-		this.openIssueCount = openIssueCount;
+	public void setTodoIssueCount(int todoIssueCount) {
+		this.todoIssueCount = todoIssueCount;
 	}
 
-	public int getClosedIssueCount() {
-		return closedIssueCount;
+	public int getInprogressIssueCount() {
+		return inprogressIssueCount;
 	}
 
-	public void setClosedIssueCount(int closedIssueCount) {
-		this.closedIssueCount = closedIssueCount;
+	public void setInprogressIssueCount(int inprogressIssueCount) {
+		this.inprogressIssueCount = inprogressIssueCount;
+	}
+
+	public int getDoneIssueCount() {
+		return doneIssueCount;
+	}
+
+	public void setDoneIssueCount(int doneIssueCount) {
+		this.doneIssueCount = doneIssueCount;
 	}
 
 	public int getOppListCount() {

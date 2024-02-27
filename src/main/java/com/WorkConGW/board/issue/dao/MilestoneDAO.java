@@ -38,7 +38,8 @@ public class MilestoneDAO {
         return milestoneDetail;
     }
 
+    /* 이슈 디테일에서 사용 */
     public List<MilestoneVO> selectMilestoneListSimple(EmpVO empVO) throws SQLException {
-        return null;
+        return sqlSessionTemplate.selectList("selectMilestoneListSimple", empVO);
     }
 }

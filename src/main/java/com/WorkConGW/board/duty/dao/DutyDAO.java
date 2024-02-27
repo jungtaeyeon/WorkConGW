@@ -5,6 +5,7 @@ package com.WorkConGW.board.duty.dao;
 import com.WorkConGW.board.duty.command.DutyEnforcerCommand;
 import com.WorkConGW.board.duty.command.DutyReceptionCommand;
 import com.WorkConGW.board.duty.dto.DutyAttachVO;
+import com.WorkConGW.board.duty.dto.DutyProgressVO;
 import com.WorkConGW.board.duty.dto.DutyReplyVO;
 import com.WorkConGW.board.duty.dto.DutyVO;
 import com.WorkConGW.board.issue.dto.ProjectVO;
@@ -81,8 +82,8 @@ public class DutyDAO {
     }
 
     /* 업무에 프로젝트 연결할 때 마다 프로젝트에 DutyCount +1 증가 */
-    public void updateProjectDutyCount(DutyVO dutyVO) {
-        sqlSessionTemplate.update("updateProjectDutyCount", dutyVO);
+    public void plusProjectDutyCount(int project_Id) {
+        sqlSessionTemplate.update("plusProjectDutyCount", project_Id);
     }
 
 
@@ -108,5 +109,57 @@ public class DutyDAO {
 
     public List<DutyReceptionCommand> selectReceptionList(DutyVO dutyVO) {
         return sqlSessionTemplate.selectList("selectReceptionList", dutyVO);
+    }
+
+    public void insertDutyReply(DutyReplyVO dutyReplyVO) {
+        sqlSessionTemplate.insert("insertDutyReply", dutyReplyVO);
+    }
+
+    public void deleteDutyReply(DutyReplyVO dutyReplyVO) {
+        sqlSessionTemplate.delete("deleteDutyReply", dutyReplyVO);
+    }
+
+    public void updateDutyReply(DutyReplyVO dutyReplyVO) {
+        sqlSessionTemplate.update("updateDutyReply", dutyReplyVO);
+    }
+
+    public void deleteDutyEnforcer(DutyVO dutyVO) {
+        sqlSessionTemplate.delete("deleteDutyEnforcer", dutyVO);
+    }
+
+    public void deleteDutyReceiver(DutyVO dutyVO) {
+        sqlSessionTemplate.delete("deleteDutyReceiver", dutyVO);
+    }
+
+    public void deleteDutyFile(DutyVO dutyVO) {
+        sqlSessionTemplate.delete("deleteDutyFile", dutyVO);
+    }
+
+    public void deleteDutyReplyAll(DutyVO dutyVO) {
+        sqlSessionTemplate.delete("deleteDutyReplyAll", dutyVO);
+    }
+
+    public void deleteDuty(DutyVO dutyVO) {
+        sqlSessionTemplate.delete("deleteDuty", dutyVO);
+    }
+
+    public void minusProjectDutyCount(int project_Id) {
+        sqlSessionTemplate.update("minusProjectDutyCount", project_Id);
+    }
+
+    public void updateDuty(DutyVO dutyVO) {
+        sqlSessionTemplate.update("updateDuty", dutyVO);
+    }
+
+    public DutyAttachVO selectDutyAttachById(DutyAttachVO removeFile) {
+        return sqlSessionTemplate.selectOne("selectDutyAttachById", removeFile);
+    }
+
+    public void deleteDutyFileById(DutyAttachVO dutyAttach) {
+        sqlSessionTemplate.delete("deleteDutyFileById", dutyAttach);
+    }
+
+    public DutyProgressVO dutyProgressPercent(DutyVO dutyVO) {
+        return sqlSessionTemplate.selectOne("dutyProgressPercent", dutyVO);
     }
 }

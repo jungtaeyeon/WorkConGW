@@ -175,7 +175,12 @@ public class EmpController {
     }
 
 
-
+    @ResponseBody
+    @PostMapping("/getEmp")
+    public EmpVO getEmpFromId(@RequestBody String emp_Id) throws SQLException {
+        EmpVO emp = empService.getEmp(emp_Id);
+        return emp;
+    }
 
 
 	

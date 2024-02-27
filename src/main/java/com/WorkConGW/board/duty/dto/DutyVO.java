@@ -7,6 +7,7 @@ import com.WorkConGW.common.dto.AttachVO;
 import com.WorkConGW.common.dto.BaseVO;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import org.apache.ibatis.type.Alias;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import java.util.Date;
 import java.util.List;
@@ -20,12 +21,16 @@ public class DutyVO extends BaseVO {
     private Date duty_Board_Create_Dt;
     private Date duty_Board_Update_Dt;
     private String duty_Updater_Id;
-    @JsonFormat(pattern = "MM/dd/yyyy")
+//    @JsonFormat(pattern = "MM/dd/yyyy")
+    @DateTimeFormat(pattern = "MM/dd/yyyy")
     private Date duty_Board_End_Dt;
     private String emp_Writer_Id;
     private int dept_Cnt;
     private int emp_Cnt;
     private int project_Id;
+    // 업무에 프로젝트 변경 시, 사용
+    private int new_Project_Id;
+    private String project_Title;
 
 
     private String[] empEnforcerList;	// 담당자 아이디 목록
@@ -310,5 +315,21 @@ public class DutyVO extends BaseVO {
 
     public void setProject_Id(int project_Id) {
         this.project_Id = project_Id;
+    }
+
+    public String getProject_Title() {
+        return project_Title;
+    }
+
+    public void setProject_Title(String project_Title) {
+        this.project_Title = project_Title;
+    }
+
+    public int getNew_Project_Id() {
+        return new_Project_Id;
+    }
+
+    public void setNew_Project_Id(int new_Project_Id) {
+        this.new_Project_Id = new_Project_Id;
     }
 }

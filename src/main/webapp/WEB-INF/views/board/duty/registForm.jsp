@@ -84,10 +84,10 @@
 										</div>
 									</div>
 									<div class="col-md-3 col-sm-12 formGroup issueForm">
-										<label>공개 여부 설정</label> <select id="issueOpenStForIssue"
+										<label>공개 여부 설정</label> <select id="issueBoardStForIssue"
 											class="form-control show-tick">
-											<option value="Y">공개</option>
-											<option value="N">비공개</option>
+											<option value=1>공개</option>
+											<option value=2>비공개</option>
 										</select>
 									</div>
 									<div class="col-md-3  col-sm-12 formGroup dutyForm">
@@ -297,16 +297,21 @@
 
 	<!-- 업무 이슈 -->
 	<form name="issueRegistForm" method="post">
-		<input type="hidden" name="issueBoardTitle" />
-		<input type="hidden" name="issueBoardContent" />
-		<input type="hidden" name="issueBoardUpdaterId" value="${loginUser.emp_Id }" />
+		<input type="hidden" name="issue_Board_Title" />
+		<input type="hidden" name="issue_Board_Content" />
+		<input type="hidden" name="issue_Board_Updater_Id" value="${loginUser.emp_Id }" />
 		<input type="hidden" name="emp_Id" value="${loginUser.emp_Id }" />
 		<input type="hidden" name="duty_Board_Id" />
-		<input type="hidden" name="issueOpenSt" />
+		<input type="hidden" name="issue_Board_St" />
 	</form>
 
 	<script>
 window.onload = function(){
+	var tomorrow = new Date();
+	tomorrow.setDate(tomorrow.getDate() + 1); // 내일의 날짜를 가져옴
+	$('.date').datepicker({
+		startDate: tomorrow, // 내일 이후의 날짜만 선택 가능하도록 설정
+	});
 	deptTrees();
 
 	var tomorrow = new Date();
@@ -445,7 +450,7 @@ function deptTrees(){
 					level = e.level;
 			    }
 			    if(position){
-					li = '<li onclick="empChecked(this);" data-deptId="'+deptSupId+'" data-name="'+deptName+" "+position+'" data-dept="'+deptSupName+'" data-state="'+(empState==null ? '' : empState)+'" ondblclick="addEmpList();" id="'+ deptId +'" lvl="'+level +'" class="myChecked" style="cursor:pointer" ><img src="<%=request.getContextPath() %>js/treeview/images/emp.png" >'+" "+ deptName + " "+e.position+'</li>';
+					li = '<li onclick="empChecked(this);" data-deptId="'+deptSupId+'" data-name="'+deptName+" "+position+'" data-dept="'+deptSupName+'" data-state="'+(empState==null ? '' : empState)+'" ondblclick="addEmpList();" id="'+ deptId +'" lvl="'+level +'" class="myChecked" style="cursor:pointer" ><img style ="width:20px; height:20px" src="<%=request.getContextPath() %>/js/treeview/images/emp.png" >'+" "+ deptName + " "+e.position+'</li>';
 			    }else{
 			    	li = '<li id="'+ deptId +'" lvl="'+level +'"><a class="file code" style="cursor: pointer;" onclick="myClick(this);" >'+ deptName +'&nbsp&nbsp<i data-id="'+deptId+'" data-name="'+deptName+'" style="color:#383d41; cursor:pointer;"></i></a></li>';
 			    }
@@ -642,11 +647,6 @@ function submit_go(){
 		$('#boardTitle').focus();
 		return;
 	}
-	if($.trim($('#boardEndDt').val())==""){
-		alert('완료 기한을 선택하세요.');
-		$('#boardEndDt').focus();
-		return;
-	}
 
 	// 업무 제안
 	if(boardCategory=='duty'){	
@@ -660,8 +660,10 @@ function submit_go(){
 			return;
 		}
 	
-		if($('#boardEndDt').val()==""){
-			$('#duty_Board_End_Dt').remove();
+		if($.trim($('#boardEndDt').val())==""){
+			alert('완료 기한을 선택하세요.');
+			$('#boardEndDt').focus();
+			return;
 		}
 		$('#duty_Board_Title').val($('#boardTitle').val());
 		$('#duty_Board_Content').val($('.note-editable').html());
@@ -673,15 +675,6 @@ function submit_go(){
 			var emp_Id = $(".manager").eq(i).attr('value');
 			var inputTag1 = '<input class="empEnforcerList" type="hidden" name="dutyVO.empEnforcerList" value="'+emp_Id+'"/>'
 			$(form).append(inputTag1);
-		}
-		
-		// 참조부서 추가
-		if($('.receptionDept').length > 0){
-			for(var i = 0; i < $(".receptionDept").length; i++){
-				var deptId = $(".receptionDept").eq(i).attr('value');
-				var inputTag2 = '<input class="empReceptionDeptList" type="hidden" name="dutyVO.empReceptionDeptList" value="'+deptId+'"/>'
-				$(form).append(inputTag2);
-			}
 		}
 		
 		// 참조자 추가
@@ -698,10 +691,16 @@ function submit_go(){
 	}
 	// 업무 이슈 게시판
 	else if(boardCategory=='issue'){
+		if($.trim($('#dutyBoardIdForIssue').val())==""){
+			alert('업무 번호를 입력해주세요.');
+			$('#dutyBoardIdForIssue').focus();
+			return;
+		}
 		if($.trim($('#dutyBoardIdForIssue').val())!=""){
-			var checkNum = /[0-9]/;
-			if(!checkNum.test($('#dutyBoardIdForIssue').val())){
-				alert('업무 번호는 숫자만 입력 가능합니다.');
+			var dutyBoardIdForIssue = $('#dutyBoardIdForIssue').val();
+			// 숫자가 아닌 경우 얼럿 띄우기
+			if (!$.isNumeric(dutyBoardIdForIssue)) {
+				alert('업무 번호는 숫자만 입력가능합니다.');
 				$('#dutyBoardIdForIssue').focus();
 				return;
 			}
@@ -713,9 +712,9 @@ function submit_go(){
 			return;
 		}
 		
-		$('input[name="issueBoardTitle"]').val($('#boardTitle').val());
-		$('input[name="issueBoardContent"]').val($('.note-editable').html());
-		$('input[name="issueOpenSt"]').val($('#issueOpenStForIssue').val());
+		$('input[name="issue_Board_Title"]').val($('#boardTitle').val());
+		$('input[name="issue_Board_Content"]').val($('.note-editable').html());
+		$('input[name="issue_Board_St"]').val($('#issueBoardStForIssue').val());
 		
 		if($.trim($('#dutyBoardIdForIssue').val())==""){
 			$('input[name="duty_Board_Id"]').remove();
@@ -752,7 +751,6 @@ function submit_go(){
 		error:function(){
 			alert("글 등록에 실패했습니다.");
 			window.opener.location.reload(true);
-			window.close();
 		}
 	});
 }

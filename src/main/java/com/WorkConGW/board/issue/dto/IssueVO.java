@@ -29,7 +29,7 @@ public class IssueVO extends BaseVO {
 	private int issue_Open_St;
 	private String project_Title;
 	private String emp_Name;
-	private String empPicture;
+	private String emp_Picture;
 	private String officialName;
 	private String dept_Name;
 	private String teamName;
@@ -171,12 +171,12 @@ public class IssueVO extends BaseVO {
 		this.emp_Name = emp_Name;
 	}
 
-	public String getEmpPicture() {
-		return empPicture;
+	public String getEmp_Picture() {
+		return emp_Picture;
 	}
 
-	public void setEmpPicture(String empPicture) {
-		this.empPicture = empPicture;
+	public void setEmp_Picture(String emp_Picture) {
+		this.emp_Picture = emp_Picture;
 	}
 
 	public String getOfficialName() {

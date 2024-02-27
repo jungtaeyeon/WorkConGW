@@ -71,7 +71,7 @@ tr:hover{
 																<td class="project-title" style="padding:30px;width:50%;">
 																	<div>
 																		<h6>
-						                                                	<span data-openIssueCount="${project.openIssueCount }" data-closedIssueCount="${project.closedIssueCount }" data-project_Id="${project.project_Id }"
+						                                                	<span
 																				  style="margin-bottom:5px;display:inline-block;font-weight: bold;max-width: 500px; overflow: hidden; white-space: nowrap; text-overflow: ellipsis;vertical-align: middle;cursor:pointer;margin-left:5px;font-size:1.1em;" onclick="detailPage('${project.project_Id}')">${project.project_Title }</span>
 																		</h6>
 																	</div>
@@ -88,11 +88,14 @@ tr:hover{
 																</td>
 																<td class="project-title" style="padding:5px 30px;width:50%;">
 																	<!-- 진행률 -->
-																	<c:if test="${project.openIssueCount + project.closedIssueCount eq 0 }">
+																	<c:if test="${project.todoIssueCount + project.inprogressIssueCount + project.doneIssueCount eq 0 }">
 																		<c:set var="percentage" value="0"></c:set>
 																	</c:if>
-																	<c:if test="${project.openIssueCount + project.closedIssueCount ne 0 }">
-																		<fmt:parseNumber var="percentage" value="${project.closedIssueCount/(project.openIssueCount + project.closedIssueCount)*100 }" integerOnly="true" />
+																	<c:if test="${project.todoIssueCount + project.inprogressIssueCount + project.doneIssueCount ne 0 }">
+																		<c:set var="totalWeight" value="${project.todoIssueCount * 0 + project.inprogressIssueCount * 0.5 + project.doneIssueCount * 1 }" />
+																		<c:set var="totalIssueCount" value="${project.todoIssueCount + project.inprogressIssueCount + project.doneIssueCount }" />
+																		<c:set var="percentage" value="${(totalWeight / totalIssueCount) * 100 }" />
+																		<fmt:parseNumber var="percentage" value="${percentage}" integerOnly="true" />
 																	</c:if>
 																	<div class="progress progress-xs" style="height:10px;margin-top:5px;background-color:rgb(0,0,0,0.2);">
 																		<div class="progress-bar" role="progressbar" aria-valuenow="${percentage }" aria-valuemin="0" aria-valuemax="100" style="width: ${percentage }%; height:10px;">
@@ -100,8 +103,9 @@ tr:hover{
 																	</div>
 																	<div style="margin-top: 5px;font-size:1.1em;">
 																		<span><strong style="font-size:1.1em;">${percentage }%</strong> 진행됨</span>
-																		<span style="margin-left:10px;"><strong style="font-size:1.1em;">${project.openIssueCount }</strong> Open</span>
-																		<span style="margin-left:10px;"><strong style="font-size:1.1em;">${project.closedIssueCount }</strong> Closed</span>
+																		<span style="margin-left:10px;"><strong style="font-size:1.1em;">${project.todoIssueCount }</strong> Todo</span>
+																		<span style="margin-left:10px;"><strong style="font-size:1.1em;">${project.inprogressIssueCount }</strong> Inprogress</span>
+																		<span style="margin-left:10px;"><strong style="font-size:1.1em;">${project.doneIssueCount }</strong> Done</span>
 																	</div>
 																	<div style="margin-top: 10px;">
 																		<span class="btn btn-info" style="height: 25px;padding: 0px 10px;font-size:1.1em;" onclick="window.location.href='${pageContext.request.contextPath }/board/project/modifyForm?project_Id=${project.project_Id }';">수정</span>
@@ -146,8 +150,8 @@ tr:hover{
 			<input type="hidden" name="project_St" />
 			<input type="hidden" name="isOpen" id ="isOpenForModify" />
 			<!-- detail 페이지 용 -->
-			<input type="hidden" name="openIssueCount" />
-			<input type="hidden" name="closedIssueCount" />
+<%--			<input type="hidden" name="openIssueCount" />--%>
+<%--			<input type="hidden" name="closedIssueCount" />--%>
 		</form>
 
 		<script>
@@ -170,8 +174,8 @@ tr:hover{
 				$('input[name="project_Id"]').val(project_Id);
 				$('input[name="project_St"]').val(project_St);
 
-				$('input[name="openIssueCount"]').remove();
-				$('input[name="closedIssueCount"]').remove();
+				// $('input[name="openIssueCount"]').remove();
+				// $('input[name="closedIssueCount"]').remove();
 
 				$('#isOpenForModify').val(project_St == 1 ? 'open' : 'closed');
 
@@ -186,8 +190,8 @@ tr:hover{
 
 				$('input[name="project_Id"]').val(project_Id);
 				$('input[name="project_St"]').remove(); // 이 부분 추가
-				$('input[name="openIssueCount"]').remove();
-				$('input[name="closedIssueCount"]').remove();
+				// $('input[name="openIssueCount"]').remove();
+				// $('input[name="closedIssueCount"]').remove();
 
 				document.modifyForm.action = '<c:url value="/board/project/remove"/>';
 				document.modifyForm.submit();

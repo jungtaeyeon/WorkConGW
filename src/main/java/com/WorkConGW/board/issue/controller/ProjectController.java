@@ -83,7 +83,8 @@ public class ProjectController {
 		return "redirect:/board/project/list";
 	}
 
-	@PostMapping("detail")
+//	@PostMapping("detail")
+	@RequestMapping(value = "detail", method = {RequestMethod.GET, RequestMethod.POST})
 	public String detail(ProjectVO projectVO, Model model) throws Exception {
 		String url = "board/project/detail";
 		ProjectVO project = projectService.getProject(projectVO);

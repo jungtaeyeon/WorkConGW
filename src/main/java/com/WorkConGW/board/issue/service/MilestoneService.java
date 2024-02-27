@@ -25,4 +25,9 @@ public class MilestoneService {
 		this.milestoneDAO = milestoneDAO;
 		this.issueDAO = issueDAO;
 	}
+
+	/* 이슈 디테일에서 사용 */
+	public List<MilestoneVO> getMilestoneListAll(EmpVO empVO) throws SQLException{
+		return milestoneDAO.selectMilestoneListSimple(empVO);
+	}
 }

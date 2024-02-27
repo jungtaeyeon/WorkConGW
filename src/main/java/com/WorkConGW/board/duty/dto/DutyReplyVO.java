@@ -12,7 +12,7 @@ public class DutyReplyVO {
     private Date reply_Create_Dt;
     private Date reply_Update_Dt;
     private int duty_Board_Id;
-    private String emp_Writer_Id;
+    private String emp_Id;
     private String emp_Name;
 
     public int getReply_Id() {
@@ -55,12 +55,12 @@ public class DutyReplyVO {
         this.duty_Board_Id = duty_Board_Id;
     }
 
-    public String getEmp_Writer_Id() {
-        return emp_Writer_Id;
+    public String getEmp_Id() {
+        return emp_Id;
     }
 
-    public void setEmp_Writer_Id(String emp_Writer_Id) {
-        this.emp_Writer_Id = emp_Writer_Id;
+    public void setEmp_Id(String emp_Id) {
+        this.emp_Id = emp_Id;
     }
 
     public String getEmp_Name() {

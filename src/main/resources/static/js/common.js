@@ -515,7 +515,7 @@ function readAlarm(contextPath,loginUserId,alarmId,returnUrl){
 }
 
 // 시간 차이 계산하고 텍스트 출력
-function getTimeDefferFromCurrent(tempDt){
+function  getTimeDefferFromCurrent(tempDt){
 	var year = tempDt.getFullYear();
 	var month = tempDt.getMonth()
 	var date = tempDt.getDate();
@@ -558,25 +558,6 @@ function getTimeDefferFromCurrent(tempDt){
 	return Math.floor(differentDay)+"일 전";
 }
 
-//긴급공지창 보이기
-function showEmergency(contextPath){
-	$.ajax({
-		url:contextPath+'/common/emergency',
-		type:'post',
-		success:function(emergency){
-			if(emergency && sessionStorage.getItem('emergency') != 'emergencyId_'+emergency.noticeId){
-				$('.emergencyArea').css('display','');
-				$('#emergencyText').append('<MARQUEE class="emergency" id="emergencyId_'+emergency.noticeId+'" style="font-weight: bold;">'+emergency.noticeTitle+'</MARQUEE>');
-			}
-		}
-	});
-}
-
-//긴급공지창 닫기
-function closeEmergency(){
-	$('.emergencyArea').css('display','none');
-	sessionStorage.setItem('emergency',$('.emergency').attr('id'));
-}
 
 // 채팅 내용 추가
 function addChatHistory(senderId, content){
