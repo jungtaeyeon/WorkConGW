@@ -372,8 +372,8 @@
             <div class="input-field">
               <label>*필수 서명 &nbsp&nbsp(png만 가능)</label>
               <div class = "input-group">
-                <input id="myFileName" type="text" class="form-control" name="myEmpSign" style="cursor: pointer;" value="${loginUser.emp_Sign}" onclick="addEmpSign();" required readonly>
-                <input type="file" id = "myEmpSign"class="myEmpSign" onchange="myAddSignFile(this);" name="myEmpSign" style="display: none;">
+                <input id="myFileName" type="text" class="form-control" name="emp_Sign" style="cursor: pointer;" value="${loginUser.emp_Sign}" onclick="addEmpSign();" required readonly>
+                <input type="file" id ="myEmpSign" class="myEmpSign" onchange="myAddSignFile(this);" name="myEmpSign" style="display: none;">
                 <div class="input-group-prepend">
                   <span class="input-group-text"><i class="fa fa-file-o" ></i> </span>
                 </div>
@@ -581,6 +581,7 @@
 
 
 
+  //수정
   //수정
   function modify_go(){
     let msg = "";

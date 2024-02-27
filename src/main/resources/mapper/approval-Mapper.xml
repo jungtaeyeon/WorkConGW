@@ -4,4 +4,150 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.mybatis.mapper.approvalMapper">
 
+
+    <select id = "registDocForm" resultType="FormVO">
+
+        select *
+
+        from approval_form
+
+
+    </select>
+
+
+    <select id = "selectFormById" parameterType="String" resultType="FormVO">
+        select form_id,
+               form_name,
+               form_content,
+               form_sup_id
+
+        from approval_form
+
+
+        where form_id = #{form_id}
+    </select>
+
+    <select id = "selectApprovalLineSeqNext" resultType="int">
+        SELECT APPROVAL_LINE_SEQ.NEXTVAL AS lineId FROM DUAL
+    </select>
+
+    <select id = "selectMaxDocId" resultType="int">
+        select max(doc_Id)
+        from approval
+
+    </select>
+
+    <select id = "selectApprovalLineByEmpId" resultType="ApprovalLineVO" parameterType="string">
+        SELECT LINE_ID,
+               LINE_NAME
+        FROM APPROVAL_LINE
+        WHERE EMP_ID = #{emp_Id}
+    </select>
+
+
+    <select id = "selectApprovalLineRegistByLineId" parameterType="int" resultType="ApprovalLineVO">
+
+        select A.EMP_ID, A.LINE_TYPE,B.EMP_NAME, C.DEPT_NAME, D.ATTEND_ST_NAME, E.CODE_NAME
+
+        from approval_line_regist A, emp B, DEPT C , ATTEND_ST D ,CODE E
+
+        where B.EMP_ID = A.EMP_ID(+) AND C.DEPT_ID = B.DEPT_ID(+) AND B.ATTEND_ST_ID = D.ATTEND_ST_ID(+) AND B.CODE_ID = E.CODE_ID AND A.LINE_ID =#{line_Id}
+
+        ORDER BY A.LINE_TYPE
+
+    </select>
+
+    <insert id="insertApprovalLineRegister" parameterType="ApprovalLineVO">
+        INSERT INTO APPROVAL_LINE_REGIST(
+                                         LINE_ID,
+                                         EMP_ID,
+                                         LINE_TYPE
+        )
+        VALUES(
+                                        #{line_Id},
+                                        #{emp_Id},
+                                        #{line_Type}
+              )
+
+    </insert>
+
+    <insert id="insertApprovalHistory" parameterType="map">
+INSERT INTO APPROVAL_HISTORY ( EMP_ID,
+                               DOC_ID,
+                              HISTORY_ALLOW_DT,
+                              HISTORY_TURN, HISTORY_STEP )
+VALUES( #{emp_Id},#{doc_Id} ,sysdate,  #{history_Turn}, #{history_Step} )
+
+    </insert>
+
+
+    <update id = "updateApproval" parameterType="ApprovalVO">
+        UPDATE APPROVAL
+        SET APPROVAL_TITLE = #{approval_Title},
+            APPROVAL_CONTENT = #{approval_Content},
+            APPROVAL_ST = #{approval_St},
+            <if test="approval_St == 1">
+                 APPROVAL_RECOMMAND_DT = sysdate
+            </if>
+        WHERE DOC_ID = #{doc_Id}
+    </update>
+
+    <insert id = "insertApprovalLine" parameterType="ApprovalLineVO">
+        INSERT INTO APPROVAL_LINE(
+                                  LINE_ID,
+                                  LINE_NAME,
+                                  EMP_ID
+        )VALUES(
+                #{line_Id},
+                #{line_Name},
+                #{emp_Id}
+                       )
+    </insert>
+
+    <insert id = "insertApproval" parameterType="ApprovalVO">
+        INSERT INTO APPROVAL(
+                             FORM_ID,
+                             APPROVAL_CONTENT,
+                             APPROVAL_RECOMMAND_DT,
+                             APPROVAL_ST,
+                             EMP_DRAFTER_ID,
+                             DOC_ID)
+
+        VALUES(
+               #{form_Id},
+               #{approval_Content},
+               sysdate,
+               5,
+               #{emp_Drafter_Id},
+               APPROVAL_DOC_SEQ.NEXTVAL
+              )
+    </insert>
+
+    <insert id = "insertApprovalAttach" parameterType="ApprovalAttach">
+        INSERT INTO APPROVAL_ATTACH(
+                                    ATTACH_ID,
+                                    ATTACH_PATH,
+                                    ATTACH_NAME,
+                                    ATTACH_CREATE_DT,
+                                    DOC_ID
+        )VALUES (
+                                    APPROVAL_ATTACH_SEQ.NEXTVAL,
+                                    #{attach_path},
+                                    #{attach_name},
+                                    sysdate,
+                                    #{doc_Id}
+                        )
+    </insert>
+
+
+    <update id = "updateApprovalTemp" parameterType="ApprovalVO">
+        UPDATE APPROVAL
+        SET APPROVAL_ST = 4,
+            APPROVAL_CONTENT = #{approval_Content},
+            APPROVAL_TITLE = #{approval_Title}
+
+        WHERE DOC_ID = #{doc_Id}
+        and EMP_DRAFTER_ID = #{emp_Drafter_Id}
+    </update>
+
 </mapper>

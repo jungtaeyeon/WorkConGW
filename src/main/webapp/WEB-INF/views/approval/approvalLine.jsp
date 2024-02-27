@@ -54,12 +54,14 @@
     }
     .approvalLineEmpTableGroup{
         width: 100%;
+        margin-left: 20px;
     }
     .approvalLineTreeview{
-        width: 100%;
-        height: 600px;
-        border: 1px solid #000;
-        margin:3% 0 5%;
+        text-align: center; /* 가운데 정렬 */
+        border: 1px solid #ccc; /* 테두리 스타일 */
+        border-radius: 5px; /* 테두리 둥글게 처리 */
+        padding: 10px; /* 내부 여백 */
+        margin-bottom: 20px; /* 하단 여백 */
     }
     .tableCheckBox{text-align: center; vertical-align: middle !important;}
     .approvalLineResult{
@@ -84,6 +86,25 @@
         height: 200px;
         border: 1px solid #000;
     }
+
+    #myLine {
+        text-align: center; /* 가운데 정렬 */
+        border: 1px solid #ccc; /* 테두리 스타일 */
+        border-radius: 5px; /* 테두리 둥글게 처리 */
+        padding: 10px; /* 내부 여백 */
+        margin-bottom: 20px; /* 하단 여백 */
+    }
+
+    .header {
+        height: 60px;
+        padding: 10px 0; /* 상하 여백 */
+    }
+
+    .body {
+        overflow-y: scroll;
+        height: 360px;
+        padding: 10px; /* 내부 여백 */
+    }
 </style>
 <section class="subPageContain">
 
@@ -91,15 +112,13 @@
 
     <!--컨텐츠 영역-->
     <div class="contentConteiner">
+        <a id="viewModal" href="#defaultModal" data-toggle="modal" data-target="#defaultModal" style="display: none;"></a>
+
         <div class="subTitleText"> <!--컨텐츠 부분 타이틀 클래스(이건 부트스트랩 클래스 아니고 임의로 만든 클래스)--> 
             <h2><i class="fa-solid fa-angles-right"></i> <!--왼쪽 아이콘 폰트어썸-->결재라인 설정</h2>
         </div>
         <div class="subContentConteiner">
             <div class="approvalLineTreeviewGroup">
-                <select id="add_book_id" name="add_book_id" class="custom-select" aria-label="그룹">
-                    <option value="0" selected>-직접선택-</option>
-                </select>
-
                 <div class="approvalLineTreeview">
                     <li> WorkConGW 조직도
                         <ul id="codeList" name = "child">
@@ -108,13 +127,52 @@
                     </li>
                 </div>
             </div>
+
+            <div class="tab-pane" id="myLine">
+                <div class="header" style=" height: 60px;">
+                    <span style="font-weight: bold">나의 결재선</span>
+                </div>
+                <div class="body" >
+                    <div class="table-responsive">
+                        <table class="table table-hover m-b-0 c_list">
+                            <tbody id="approvalLines" style="cursor: pointer;">
+
+                            <!-- 나의결재선 들어가는 곳 -->
+
+
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <div class="modal fade" id="defaultModal" tabindex="-1" role="dialog">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h4 class="title" id="defaultModalLabel"></h4>
+                        </div>
+                        <div class="modal-body">
+
+
+                        </div>
+                        <div class="modal-footer">
+                            <button onclick="moveApprovalLine();" type="button" class="btn btn-primary">결재선으로 추가</button>
+                            <button id="closeModal" type="button" class="btn btn-danger" data-dismiss="modal">X</button>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
             <div class="approvalLineEmpTableGroup">
                 <div class="serchContain">
                         <div class="serchTextGroup">
                             <input type="search" oninput="searchOrg(this)"  name="searchText" class="form-control" placeholder="사원명을 입력해주세요" aria-label="입력해주세요">
                         </div>
                     <button type="button" class="btn btn-dark" onclick="addLine_go()" style="float:right">결재라인 저장</button> &nbsp&nbsp&nbsp&nbsp&nbsp
-                    <button type="button" class="btn btn-dark" onclick="addLine_go()" style="float:right">현재결재라인 저장</button> &nbsp&nbsp&nbsp&nbsp&nbsp
+                    <button type="button" class="btn btn-dark" onclick="saveApprovalLine();" style="float:right">개인 결재선으로 추가</button> &nbsp&nbsp&nbsp&nbsp&nbsp
                     <button type="button" onclick = "window.close();" class="btn btn-dark" style="float:right">취소</button>
 
                 </div>
@@ -139,15 +197,15 @@
                     <tr style="background-color: #f4f7f6;">
                         <td colspan="9">기안자</td>
                     </tr>
-                    <tr style="color: #D8D8D8;">
+                    <tr >
                         <td style="width: 48px;background-color: #F2F2F2; text-align: center; color:black;">
                             <i class="fa fa-caret-right"></i>
                         </td>
                         <td></td>
-                        <td>${emp.empName } ${emp.officialName }</td>
-                        <td>${emp.deptName }</td>
+                        <td>${emp.emp_Name} ${emp.code_Name}</td>
+                        <td>${emp.dept_Name}</td>
                         <td></td>
-                        <td></td>
+                        <td><span class ="badge badge-primary">${emp.attend_St_Name}</span></td>
                         <td></td>
                     </tr>
                     <%--//////////////////////////////////////결재자/////////////////////////////////////////////////--%>
@@ -196,7 +254,7 @@
             return false;
         }
 
-        if(empId === '${loginUser.empId}') // 자기 자신일 떄
+        if(empId === '${loginUser.emp_Id}') // 자기 자신일 떄
         {
             alert('자기 자신을 추가할 수 없습니다.')
             return false;
@@ -316,7 +374,7 @@
                 approvalObj.empId = $('option:selected').eq(i).parent().parent().parent().find(".empTd").attr("value")
                 approvalObj.st = $('option:selected').eq(i).parent().parent().parent().find(".st").children().text()
 
-                approvalArr.push(approvalObj);
+                approvalArr.push({...approvalObj})
 
 
             }
@@ -346,8 +404,11 @@
         }
         let approvalLineContent = $(".approvalLineBoxContent");
 
+
+
+
         let str = "";
-        for(let i = 0; i<approvalArr.length; i++)
+        for(let i = 0; i<approvalArr.length+1; i++)
         {
             let empId = ""
             let name = ""
@@ -356,41 +417,40 @@
             let type = ""
 
 
-
             if(i == 0)
             {
-                empId = approvalObj.empId;
-                name = approvalObj.name;
-                official = approvalObj.official;
-                type = '결재'
+                empId = '${emp.emp_Id}';
+                name = '${emp.emp_Name}';
+                official = '${emp.code_Name}';
+                type = '신청'
             }
 
-            if(i == 1)
-            {
-                empId = approvalObj.empId;
-                name = approvalObj.name;
-                official = approvalObj.official;
-                type = '결재'
+
+            else {
+                empId = approvalArr[i - 1].empId;
+                name = approvalArr[i - 1].name;
+                official = approvalArr[i - 1].official;
+                type = '결재';
             }
 
             str +='<table border="1" style="display: inline-block; border-collapse: collapse; background: white;" class="lineTable">'
             str +='	<tbody >'
             str +='		<tr>'
             str +='			<td style="width: 40px; text-align: center;">직급</td>'
-            str +='			<td style="width: 90px; text-align: center;">'+approvalArr[i].official+'</td>'
+            str +='			<td style="width: 90px; text-align: center;">'+official+'</td>'
             str +='		</tr>'
             str +='		<tr>'
             str +='			<td style="width: 40px; text-align: center;">'+type+'</td>'
             str +='			<td style="width: 90px; height: 95px; text-align: center;">'
 
 
-            str +='				<div id="d'+approvalArr[i].empId+'" style="width: 90px; height: 56px;"></div>'
+            str +='				<div id="d'+empId+'" style="width: 90px; height: 56px;"></div>'
             str +='			</td>'
             str +='		</tr>'
             str +='		<tr>'
             str +='			<td style="width: 40px; text-align: center;">성명</td>'
 
-            str +='			<td id="'+tempArr[i].type+'" class="'+tempArr[i].type+'" contenteditable="false" style="width: 90px; text-align: center; cursor:pointer;" value="'+approvalArr[i].empId+'"><span class="badge badge-default">'+approvalArr[i].name+'</span></td>'
+            str +='			<td id="'+type+'" class="'+type+'" contenteditable="false" style="width: 90px; text-align: center; cursor:pointer;" value="'+empId+'"><span class="badge badge-default">'+name+'</span></td>'
             str +='		</tr>'
 
             str +='	</tbody>'
@@ -418,6 +478,13 @@
         console.log(prettyDate)
 
         opener.document.querySelector("#recommandDate").innerHTML=prettyDate
+
+        opener.document.querySelector("#empName").innerHTML = '${emp.emp_Name}'
+        opener.document.querySelector("#deptName").innerHTML = '${emp.dept_Name}'
+        opener.document.querySelector("#docId").innerHTML = '${docId}'
+
+        window.close()
+
 
     }
 
@@ -657,6 +724,323 @@
         }///////////////////////end of moveRight
 
 
+
+    function saveApprovalLine()
+    {
+
+        let tempArr = []
+        let referArr = []
+        let approvalArr = []
+        let selectBoxCnt = $("select").length; // 드롭다운 메뉴의 개수
+        let referObj = {}
+        let approvalObj = {}
+        let str1 = "";
+
+        for(let i = 0; i< selectBoxCnt; i++)
+        {
+            let type = $("option:selected").eq(i).val(); // 선택된 메뉴의 타입을 가져온다. '결재' || '검토'
+            tempArr.push(type); // 만약에 '결재'가 type 라면, tempArr = ['결재']
+            console.log(type)
+
+            if(type === '결재')
+            {
+                let approvalObj = {};
+                approvalObj.name = $('option:selected').eq(i).parent().parent().parent().find(".firTd.myName").text().split(" ")[0]
+                approvalObj.official = $('option:selected').eq(i).parent().parent().parent().find(".firTd").text().split(" ")[1]
+                approvalObj.empId = $('option:selected').eq(i).parent().parent().parent().find(".firTd.empTd").attr("value")
+                approvalObj.st = $('option:selected').eq(i).parent().parent().parent().find(".firTd.st").children().text()
+
+
+
+                approvalObj.name = $('option:selected').eq(i).parent().parent().parent().find(".myName").text().split(" ")[0]
+                approvalObj.official = $('option:selected').eq(i).parent().parent().parent().find(".myName").text().split(" ")[1] // 부장 << 이렇게 나옴
+                approvalObj.empId = $('option:selected').eq(i).parent().parent().parent().find(".empTd").attr("value")
+                approvalObj.st = $('option:selected').eq(i).parent().parent().parent().find(".st").children().text()
+
+                approvalArr.push(approvalObj);
+
+
+            }
+
+            if(type === '참조')
+            {
+                referObj.name = $("option:selected").eq(i).parent().parent().parent().find(".myName").text().split(" ")[0] // 이름출력
+                referObj.official = $("option:selected").eq(i).parent().parent().parent().find(".myName").text().split(" ")[1] // 직책출력
+                referObj.empId = $('option:selected').eq(i).parent().parent().parent().find(".empTd").attr("value") // 사번 출력
+                referObj.st = $('option:selected').eq(i).parent().parent().parent().find(".st").children().text() // 상태 출력
+                referArr.push(referObj);
+                referObj = {}; // 여기서 초기화 시켜야함. 그래야 다음에 사용할 때 반영이 된다.
+            }
+        }
+
+
+        let approvalCnt = tempArr.filter(element => '결재' === element).length
+        if(approvalCnt == 0)
+        {
+            alert('적어도 결재자가 최소 한 명씩은 있어야 합니다.')
+            return false;
+        }
+
+        let result = prompt("결재선의 이름을 입력해주세요")
+
+
+        if(!result)
+        {
+            return false;
+
+        }
+
+        let dataMap = {}
+        dataMap.referArr = referArr;
+        dataMap.approvalObj = approvalObj;
+        dataMap.approvalArr = approvalArr;
+        dataMap.lineName = result;
+
+        console.log(dataMap);
+
+
+        $.ajax({
+            type:"post",
+            url:"<%=request.getContextPath()%>/approval/registApprovalLine",
+            contentType: "application/json",
+            data:JSON.stringify(dataMap),
+            success:function (data)
+            {
+                console.log(data)
+            }, error:function (e)
+            {
+                console.log(e)
+            }
+        });
+
+        alert('결재선이 추가되었습니다.')
+        getApprovalLines();
+
+
+    }
+    getApprovalLines();
+
+    function  getApprovalLines(){
+        $.ajax({
+            type:"post",
+            url:"<%=request.getContextPath()%>/approval/getApprovalLines",
+            contentType:"application/json",
+            success:function (data){
+                let line = ""
+                let lineEmp = ""
+                let approvalNames = Object.keys(data); // 키로 배열을 얻어옴. 이 값을 통해서 몇개의 결재선이 있는지 확인 가능함.
+                console.log(approvalNames)
+                let selectBox = $("#add_book_id");
+
+                for (let approvalName in data) {
+                    if (data.hasOwnProperty(approvalName)) {
+                        let option = $("<option>").text(approvalName); // 옵션 생성
+                        selectBox.append(option); // select 박스에 옵션 추가
+                    }
+                }
+
+                // 그 길이만큼 돌리면서 값을 꽂아주졈 됨
+                for(let i = 0; i < approvalNames.length; i++)
+                {
+                    let approvalLine = data[approvalNames[i]]; // 이렇게 돌면 --> 쭉쭉돈다.
+
+                    line += '<tr onclick="viewLineEmp(this);">'
+                    line += '<td class = "approvalName">'+approvalNames[i]+'</td>'
+
+
+                    for(let j = 0; j < approvalLine.length; j++)
+                    {
+                        let empId = approvalLine[j].emp_Id;
+                        let lineType = approvalLine[j].line_Type;
+                        let empName = approvalLine[j].emp_Name;
+                        let deptName = approvalLine[j].dept_Name;
+                        let attendStName = approvalLine[j].attend_St_Name;
+                        let officialName = approvalLine[j].code_Name;
+                        line +=	 '<td style="display:none;" class="empId">'+empId+'</td>';
+                        line +=	 '<td style="display:none;" class="lineType">'+lineType+'</td>';
+                        line +=	 '<td style="display:none;" class="empName">'+empName+'</td>';
+                        line +=	 '<td style="display:none;" class="deptName">'+deptName+'</td>';
+                        line +=	 '<td style="display:none;" class="attendStName">'+attendStName+'</td>';
+                        line +=	 '<td style="display:none;" class="officialName">'+officialName+'</td>';
+
+
+                    }
+                    line += '</tr>'
+
+                    $("#approvalLines").html(line).trigger("create");
+
+
+
+                }
+
+
+            }
+
+
+        })
+
+
+    }
+
+
+
+    let lineEmpObj;
+
+    function viewLineEmp(obj)
+    {
+        let empCnt = ($(obj).children("td").length -1)/6;
+        let lineName = $(obj).children(".approvalName").text()
+        let lineEmp = ""
+        lineEmpObj = obj;
+        lineEmp += '<div class="card" style="margin-bottom: 0; overflow-y: scroll; height: 407px; "> ';
+        lineEmp += '<div class="body" style="padding: 0;">                                           ';
+        lineEmp += '	<div class="table-responsive" style="box-sizing: content-box;">                 ';
+        lineEmp += '        <table class="table center-aligned-table" style="margin-bottom: 0;">     ';
+        lineEmp += '                    <thead>                                                      ';
+        lineEmp += '                <tr>                                                             ';
+        lineEmp += '                    <th></th>                                                    ';
+        lineEmp += '                    <th>타입</th>                                                ';
+        lineEmp += '                    <th>이름</th>                                                ';
+        lineEmp += '                     <th>부서</th>                                               ';
+        lineEmp += '                     <th></th>                                                   ';
+        lineEmp += '                    <th >상태</th>                                               ';
+        lineEmp += '                     <th></th>                                                   ';
+        lineEmp += '                 </tr>                                                           ';
+        lineEmp += '            </thead>                                                             ';
+        lineEmp += '            <tbody style="overflow: scroll;">                                    ';
+
+        for(let i = 0; i < empCnt; i++)
+        {
+            let empId = $(obj).children(".empId").eq(i).html();
+            let lineType = $(obj).children(".lineType").eq(i).html();
+            let empName = $(obj).children(".empName").eq(i).html();
+            let deptName = $(obj).children(".deptName").eq(i).html();
+            let attendStName = $(obj).children(".attendStName").eq(i).html();
+            let officialName = $(obj).children(".officialName").eq(i).html();
+
+            lineEmp += '                <tr>                                     ';
+            lineEmp += '                    <td></td>                                                    ';
+            lineEmp += '                    <td>'+lineType+'</td>                                                ';
+            lineEmp += '                    <td>'+empName+' '+officialName+'</td>                ';
+            lineEmp += '                    <td>'+deptName+'</td>                                    ';
+            lineEmp += '                    <td></td>                                                    ';
+            lineEmp += '                    <td class="firTd st"><span class ="badge badge-primary">'+attendStName+'</td>                                                    ';
+            lineEmp += '                    <td></td>                                                    ';
+            lineEmp += '                </tr>                                                            ';
+
+
+        }
+
+        lineEmp += '             	</tbody>                                                            ';
+        lineEmp += '                </table>                                                         ';
+        lineEmp += '            </div>                                                               ';
+        lineEmp += '        </div>                                                                   ';
+        lineEmp += '	</div>    '
+
+        $("defaultModalLabel").html(lineName).trigger("create");
+        $(".modal-body").html(lineEmp).trigger("create");
+        $("#viewModal").click()
+
+    }
+
+
+    function moveApprovalLine()
+    {
+        let str1 = ""
+        let str2 = ""
+        let empCnt = ($(lineEmpObj).children("td").length -1)/6;
+        let lineName = ($(lineEmpObj).children(".approvalName").text())
+
+        for(let i=0; i < empCnt; i++)
+        {
+            let empId = $(lineEmpObj).children(".empId").eq(i).html();
+            let lineType = $(lineEmpObj).children(".lineType").eq(i).html();
+            let empName = $(lineEmpObj).children(".empName").eq(i).html();
+            let deptName = $(lineEmpObj).children(".deptName").eq(i).html();
+            let attendStName = $(lineEmpObj).children(".attendStName").eq(i).html();
+            let officialName = $(lineEmpObj).children(".officialName").eq(i).html();
+
+
+            if($("td").hasClass(empId))
+            {
+                alert('결재선에 이미 중복된 직원이 있습니다. 중복된 직원을 삭제하고 다시 시도하세요.')
+                return false;
+            }
+
+            if(!$("td").hasClass("firTd") && i == 0)
+            {
+                str1 +='<td class="firTd style="padding-right: 0;">';
+                str1 +='<select style="width: 65px;">';
+
+                if(lineType === '결재')
+                {
+                    str1 +='<option selected>결재</option>';
+                    str1 +='<option>참조</option>';
+                }
+
+                else if(lineType === '참조')
+                {
+                    str1 +='<option>결재</option>';
+                    str1 +='<option selected>참조</option>';
+                }
+
+                str1 +='</select>';
+                str1 +='</td>';
+                str1 +='<td class="firTd myName">'+empName+' '+officialName+'</td>';
+                str1 +='<td class="firTd myDeptName">'+deptName+'</td>';
+                str1 +='<td class="firTd empTd '+empId+'" style="display:none" value="'+empId+'"></td>';
+                str1 +='<td class="firTd"></td>';
+                str1 +='<td class="firTd"><span class ="badge badge-primary">'+attendStName+'</td>';
+                str1 +='<td class="firTd deleteEmp" style="cursor: pointer;" ><i class="fa fa-trash-o"></i></td>';
+                str1 +='<td class="firTd"></td>';
+            }
+            else{
+                str2 +='<tr>';
+                str2 +='<input value="'+empId+'" style="display:none;">';
+                str2 +='<td class="myTd style="padding-right: 0;">';
+                str2 +='<select style="width: 65px;">';
+                if(lineType === '결재')
+                {
+                    str2 +='<option selected>결재</option>';
+                    str2 +='<option>참조</option>';
+                }
+
+                else if(lineType === '참조')
+                {
+                    str2 +='<option>결재</option>';
+                    str2 +='<option selected>참조</option>';
+                }
+
+                str2 +='</select>';
+                str2 +='</td>';
+                str2 +='<td class="myTd myName">'+empName+' '+officialName+'</td>';
+                str2 +='<td class="myTd myDeptName">'+deptName+'</td>';
+                str2 +='<td class="myTd empTd '+empId+'" style="display:none" value="'+empId+'"></td>';
+                str2 +='<td class="myTd"></td>';
+                str2 +='<td class="myTd"><span class ="badge badge-primary">'+attendStName+'</td>';
+                str2 +='<td class="myTd deleteEmp" style="cursor: pointer;" ><i class="fa fa-trash-o"></i></td>';
+                str2 +='<td class="myTd"></td>';
+                str2 +='</tr>';
+            }
+
+
+
+
+        }
+
+        $("#appendTr").append(str1);
+        $("#appendTr").trigger("create")
+
+        $("#appendTbody").append(str2);
+        $("#appendTbody").trigger("create");
+
+        $("#closeModal").click();
+    }
+
+
+
+
+
     $(document).on("click",".deleteEmp",function (){
         console.log($(this).parent().attr('id'))
         if($(this).parent().attr('id')=="appendTr"){ //여기서 this는?
@@ -716,6 +1100,17 @@
         });
         $("#codeList").treeview({
             collapsed: true
+        });
+    });
+
+    $(document).ready(function() {
+        // select 요소의 값이 변경될 때(change 이벤트 발생) 호출되는 함수
+        $('#add_book_id').change(function() {
+            // 선택된 옵션의 값을 가져옴
+            var selectedOption = $(this).val();
+
+            // 선택된 옵션의 값을 기반으로 viewLineEmp 함수 호출
+            viewLineEmp(selectedOption);
         });
     });
 

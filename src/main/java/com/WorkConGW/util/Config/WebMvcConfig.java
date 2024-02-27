@@ -16,20 +16,20 @@ public class WebMvcConfig implements WebMvcConfigurer {
 
 
 
-    public void addInterceptors(InterceptorRegistry registry) {
-         registry.addInterceptor(new LoginUserLogInterceptor())
-                 .addPathPatterns("/common/login")
-                 .excludePathPatterns("/resources/**");
-
-         registry.addInterceptor(new LoginInterceptor())
-                 .addPathPatterns("/**")
-                 .excludePathPatterns("/emp/firstCompareEmpPwd","/emp/firstChange","/emp/findList","/emp/findIdView","/emp/findId","/emp/findId","/emp/findIdView","/common/login","/emp/findPwView","/emp/findPw","/common/loginForm", "/resources/**","/attend/insertStartWorkQR", "/common/home","/m/home", "/common/join", "/common/saveDashboard");
-
-         registry.addInterceptor(new AdminInterceptor())
-                 .addPathPatterns("/admin/**")
-                 .excludePathPatterns("/admin/access_denied");
-
-     }
+//    public void addInterceptors(InterceptorRegistry registry) {
+//         registry.addInterceptor(new LoginUserLogInterceptor())
+//                 .addPathPatterns("/common/login")
+//                 .excludePathPatterns("/resources/**");
+//
+//         registry.addInterceptor(new LoginInterceptor())
+//                 .addPathPatterns("/**")
+//                 .excludePathPatterns("/emp/firstCompareEmpPwd","/emp/firstChange","/emp/findList","/emp/findIdView","/emp/findId","/emp/findId","/emp/findIdView","/common/login","/emp/findPwView","/emp/findPw","/common/loginForm", "/resources/**","/attend/insertStartWorkQR", "/common/home","/m/home", "/common/join", "/common/saveDashboard");
+//
+//         registry.addInterceptor(new AdminInterceptor())
+//                 .addPathPatterns("/admin/**")
+//                 .excludePathPatterns("/admin/access_denied");
+//
+//     }
 
 
 

@@ -29,6 +29,7 @@
                     <div class="col-12">
 
                         <div class="card">
+                            <form:form modelAttribute="approvalFormVO" id = "listForm" name = "listForm">
                                 <div class="body">
                                     <!-- 검색 조건 설정 -->
                                     <h5 style="display:inline-block; font-weight: bold;">검색 조건</h5>
@@ -54,13 +55,29 @@
                                     <!-- 설정된 검색 조건 입력 폼 표시 -->
                                     <div>
                                         <div class="input-group date searchCri searchDt selectDt myConditions" data-date-autoclose="true" data-provide="datepicker" style="font-size:1.2em;width:200px;margin-right:15px;float:left;display:none;">
+                                            <form:input path="searchApprovalVO.searchDt" id="inputSearchDt" type="text" class="form-control" placeholder="완료날짜 선택" readonly="true"/>
                                             <div class="input-group-append">
                                                 <button class="btn btn-outline-secondary" type="button"><i class="fa fa-calendar"></i></button>
                                             </div>
                                         </div>
+                                        <form:select path ="searchApprovalVO.searchState" id = "selectSearchState" class="form-control selectState myConditions" style="width:200px;font-size: 1.2em;margin-right:15px;float:left;">
+                                        <form:option value="">결재상태선택</form:option>
+                                        <form:option value="1">결재 진행중</form:option>
+                                        <form:option value="2">결재 완료</form:option>
+                                        <form:option value="3">결재 반려</form:option>
+                                        </form:select>
+
+                                        <form:select path = "searchApprovalVO.searchCondition" class="form-control selectSearch" style="width:130px;font-size: 1.2em;float:left;">
+                                            <form:option value="ftd">전체</form:option>
+                                            <form:option value="f">양식</form:option>
+                                            <form:option value="t">제목</form:option>
+                                            <form:option value="d">문서번호</form:option>
+                                        </form:select>
+
 
 
                                         <div id="navbar-search" class="navbar-form search-form selectSearch" style="float:left;">
+                                            <form:input path = "searchApprovalVO.searchKeyword" class="form-control" placeholder="Search here..." type="text" style="width: 218px;height:36px;padding-right: 40px;" onkeypress="checkEnter(searchList);"/>
                                             <button type="button" class="btn btn-default" onclick="searchList();"><i class="icon-magnifier"></i></button>
                                         </div>
 
@@ -96,8 +113,8 @@
                                                     <td>&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp${doc.docId}</td>
 
                                                         <td><span class="badge badge-success">결재진행중</span></td>
-                                                        <td><span class="badge badge-default">결재완료</span></td>
-                                                        <td><span class="badge-purple badge">결재반려</span></td>
+<%--                                                        <td><span class="badge badge-default">결재완료</span></td>--%>
+<%--                                                        <td><span class="badge-purple badge">결재반려</span></td>--%>
 
                                                 </tr>
                                                 <tr>
@@ -113,7 +130,7 @@
                                     <ul class="pagination" style="display: inline-block;">
                                     </ul>
                                 </nav>
-
+                            </form:form>
                         </div>
                     </div>
                 </div>
@@ -124,5 +141,29 @@
 </section>
 <!-- 푸터 인클루드 -->
 <%@ include file="/WEB-INF/views/include/footer.jsp"%>
+
+<script>
+    function searchList(pageNo)
+    {
+        if(!pageNo)
+        {
+            pageNo = 1
+        }
+        let listForm = $('form[name="listForm"]');
+        $('input[name="searchApprovalVO.pageIndex"]').val(pageNo)
+        listForm.submit();
+    }
+
+function conditionReset()
+{
+    $("#resetBtn").click()
+    $(".myConditions").css('display','none')
+    $("input:checkbox:checked").click()
+    $("#inputSearchDt").val("")
+}
+
+
+</script>
+
 </body>
 </html>

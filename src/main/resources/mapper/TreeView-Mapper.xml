@@ -37,15 +37,16 @@
 
 
 <!--    전자결재 폼에 들어갈 데이터 -->
-        <select id="selectSearchForm" parameterType="FormVO" resultType="FormVO">
-            select FORM_ID
-                 ,FORM_NAME
-                 ,FORM_SUP_ID
-                 ,level
+        <select id="selectSearchForm"  resultType="FormVO">
+            select form_id  ,
+                   form_name   ,
+                   form_sup_id   ,
+                   level
 
-            from APPROVAL_FORM
-            start with FORM_SUP_ID is null
-            connect by prior FORM_ID = FORM_SUP_ID
-            order by FORM_ID
+            from approval_form
+
+            start with form_sup_id IS NULL
+
+            connect by prior  form_id = form_sup_id
         </select>
 </mapper>

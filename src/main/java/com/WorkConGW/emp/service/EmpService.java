@@ -5,12 +5,14 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.WorkConGW.common.command.FileUploadCommand;
 import com.WorkConGW.mail.MailUtils;
 import com.WorkConGW.mail.TempKey;
 import org.mindrot.jbcrypt.BCrypt;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -35,6 +37,9 @@ public class EmpService {
     private HomeService homeService;
     @Autowired
     private JavaMailSender mailSender;
+
+     @Value("${SignPath}")
+     private String SignPath;
 
     @Autowired
     private EmpDAO empDAO;
@@ -84,32 +89,32 @@ public class EmpService {
     }
 
 
-    public int updateSign(MultipartFile signImage, String webPath, EmpVO empVO) throws IOException, IllegalStateException{
-        String temp = empVO.getEmp_Sign(); // 사인 값을 가져옴
-        String rename = null; //  변경 시 이름을 담을 변수
-        if(signImage.getSize()>0) //업로드 된 사인 이미지가 있을 경우
-        {
-            rename = fileRename(signImage.getOriginalFilename(), empVO);
-            empVO.setEmp_Sign(rename);
-        }
-        else{ // 없는 경우
-            empVO.setEmp_Sign(null); // null값을 주지 않으면 NullPointerException이 발생함.
-        }
-        int result = empDAO.updateSign(empVO); // temp나 rename을 넘기는 것이 아니라, VO자체를 넘긴다.
-        
-        if(result>0) // 성공했다는 의미
-        {if(rename!=null)
-        {
-            if(empVO.getEmp_Sign()!=null)
-            {
-                signImage.transferTo(new File(rename)); 
-            }
-        }}
-        else{ //실패함
-            empVO.setEmp_Sign(temp); // 이전 이미지로 저장
-        }
-        return result;
-    }
+     public int updateSign(MultipartFile signImage,String SignPath ,EmpVO empVO) throws IOException, IllegalStateException{
+         String temp = empVO.getEmp_Sign(); // 사인 값을 가져옴
+         String rename = null; //  변경 시 이름을 담을 변수
+         if(signImage.getSize()>0) //업로드 된 사인 이미지가 있을 경우
+         {
+             rename = fileRename(signImage.getOriginalFilename(), empVO);
+             empVO.setEmp_Sign(rename);
+         }
+         else{ // 없는 경우
+             empVO.setEmp_Sign(null); // null값을 주지 않으면 NullPointerException이 발생함.
+         }
+         int result = empDAO.updateSign(empVO); // temp나 rename을 넘기는 것이 아니라, VO자체를 넘긴다.
+
+         if(result>0) // 성공했다는 의미
+         {if(rename!=null)
+         {
+             if(empVO.getEmp_Sign()!=null)
+             {
+                 signImage.transferTo(new File(rename));
+             }
+         }}
+         else{ //실패함
+             empVO.setEmp_Sign(temp); // 이전 이미지로 저장
+         }
+         return result;
+     }
 
     private String fileRename(String originalFilename, EmpVO empVO) {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd-HH-mm-ss");
@@ -120,8 +125,7 @@ public class EmpService {
 		String str = "_" + String.format("%05d", ranNum);
 		
 		String ext = originalFilename.substring(originalFilename.lastIndexOf("."));
-        String sign = "Empsign/";
-		return sign+empVO.getEmp_Id()+empVO.getEmp_Name()+date + str + ext;
+		return empVO.getEmp_Id()+ext;
     }
 
 
@@ -288,5 +292,27 @@ public class EmpService {
          boolean check = BCrypt.checkpw(empVO.getEmp_Pwd(),emp.getEmp_Pwd());
          logger.info(String.valueOf(check));
          return check;
+     }
+
+     public void registSign(EmpVO empVO) throws IOException{
+        logger.info("registSign");
+         FileUploadCommand fileUploadCommand = empVO.getFileUploadCommand();
+         String fileUploadPath = fileUploadCommand.getFileUploadPath();
+         List<MultipartFile> files = (List<MultipartFile>)fileUploadCommand.getUploadFile();
+
+         logger.info(files.toString());
+         for(MultipartFile file : files)
+         {
+             File target  =  new File(fileUploadPath,empVO.getEmp_Id()+".png");
+             if (!target.exists()) {
+                 target.mkdirs();
+                 // 상위디렉토리가 존재하지 않는경우 상위 디렉토리까지 생성
+                 // https://froginpot.tistory.com/51
+                 file.transferTo(target);
+                 //디비에 정보 입력
+                 empDAO.updateSign(empVO);
+             }
+         }
+
      }
  }

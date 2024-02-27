@@ -1,6 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
-    pageEncoding="UTF-8"%>
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %> 
+         pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ include file="../include/header.jsp"%>
 
@@ -71,23 +71,69 @@
         color: red;
     }
 </style>
+<a id="previewModal" href="#defaultModal" data-toggle="modal" data-target="#preModal" style="display: none;"></a>
+
 <section class="subPageContain">
 
     <!-- 사이드바 -->
     <%@ include file="./sideBar.jsp"%>
-    
+
     <!--컨텐츠 영역-->
     <div class="contentConteiner">
-        <div class="subTitleText"> <!--컨텐츠 부분 타이틀 클래스(이건 부트스트랩 클래스 아니고 임의로 만든 클래스)--> 
+        <div class="subTitleText"> <!--컨텐츠 부분 타이틀 클래스(이건 부트스트랩 클래스 아니고 임의로 만든 클래스)-->
             <h2><i class="fa-solid fa-angles-right"></i> <!--왼쪽 아이콘 폰트어썸-->기안하기</h2>
             <div class="btnGroup">
-                <button type="button" class="btn btn-primary" onclick="OpenWindow('<%=request.getContextPath()%>/approval/line', 'WorkConGW', 1100,790)">결제라인</button>
+                <button type="button" class="btn btn-primary" onclick="OpenWindow('<%=request.getContextPath()%>/approval/approvalLine?doc_Id=${approval.doc_Id}', 'WorkConGW', 1200,790)">결제라인</button>
                 &nbsp
-                <button type="button" class="btn btn-primary">결제요청</button>
+                <button type="button" class="btn btn-primary" onclick="approval_go()">결제요청</button>
                 &nbsp
-                <button type="button" class="btn btn-primary">임시저장</button>
+                <button type="button" class="btn btn-primary" onclick="approvalTemp_go()">임시저장</button>
+
             </div>
         </div>
+
+        <div class="inside-wrapper" style="border: 1px solid black; padding: 20px; border-radius: 1%;">
+            <!--미리보기 모달창 -->
+            <div class="modal fade" id="preModal" tabindex="-1" role="dialog">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content" style="width:900px; height:900px; overflow-y:scroll " >
+                        <div class="modal-header" style="display: block; text-align: center;">
+                            <h4 class="" id="">미리보기</h4>
+                        </div>
+                        <div class="modal-body">
+                            <div class="body text-center" id="previewInnerHtml">
+
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-primary" data-dismiss="modal">확인</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!--직원상세 모달창 -->
+            <div class="modal fade" id="defaultModal" tabindex="-1" role="dialog">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content" style="width:290px;">
+                        <div class="modal-header" style="display: block; text-align: center;">
+                            <h4 class="title" id="defaultModalLabel"></h4>
+                        </div>
+                        <div class="modal-body">
+                            <div class="body text-center">
+                                <div class="chart easy-pie-chart-1 user-photo" id="empPicture" style="width: 100px;height: 100px; border-radius: 50%;"></div>
+                                <h5 id="modalName"></h5>
+                                <h5 id="modalEmail"></h5>
+                                <h5 id="modalSt"></h5>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-primary" data-dismiss="modal">확인</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
         <form>
 
             <div class="formWriter">
@@ -216,7 +262,7 @@
                         </td>
                     </tr>
                     <tr>
-                        <td contenteditable="true" style="box-sizing: inherit; text-align: left; background-color: rgb(255, 255, 255); padding: 0.09%; border: 1px solid black; height: 100px; color: rgb(0, 0, 0); font-size: 14px; font-weight: normal; vertical-align: middle; background-position: initial initial; background-repeat: initial initial; border-top:none;" colspan="2" class="dext_table_border_t">
+                        <td id = "contents" contenteditable="true" style="box-sizing: inherit; text-align: left; background-color: rgb(255, 255, 255); padding: 0.09%; border: 1px solid black; height: 100px; color: rgb(0, 0, 0); font-size: 14px; font-weight: normal; vertical-align: middle; background-position: initial initial; background-repeat: initial initial; border-top:none;" colspan="2" class="dext_table_border_t">
                         </td>
                     </tr>
                     </tbody>
@@ -241,7 +287,7 @@
                         <td colspan="4">
                             <div class="row clearfix">
                                 <!-- 파일 입력 -->
-                                <div class="col-12 formGroup noticeForm">
+                                <div class="col-12 formGroup" id = "fileContent">
                                     <input type="file" id="fileInput" style="display: none;" />
                                     <button type="button"  style="float:left;" onclick="myFileUpload();">파일 추가</button>
                                     <span class="float-right" style="margin:15px 10px 0 0;">파일 개수 <span id="fileCount"></span>/5</span>
@@ -252,44 +298,17 @@
                                         <table class="table table-hover center-aligned-table" style="margin-bottom: 0;">
                                             <thead style="height:50px;">
                                             <tr>
-                                                <th style="width:200px;">타입</th>
-                                                <th style="width:300px;">파일명</th>
-                                                <th style="width:200px;">확장자</th>
-                                                <th style="width:200px;">용량</th>
-                                                <th style="width:100px;"><i class="fas fa-trash-alt" style="cursor: pointer;" onclick="removeAll();"></i>
+                                                <th>파일명</th>
+                                                <th>확장자</th>
+                                                <th class="deleteAllFile" style="cursor: pointer;">
+                                                    <i class="fa fa-trash-o"></i>
                                                 </th>
+                                                <th></th>
                                             </tr>
                                             </thead>
                                             <tbody id="appendTbody">
                                             <!-- 파일 입력 -->
-                                            <c:if test="${!empty boardFormVO.noticeVO.noticeAttachList }">
-                                                <c:forEach items="${boardFormVO.noticeVO.noticeAttachList }" var="noticeAttach" varStatus="status">
-                                                    <tr>
-                                                        <td>
-                                                            <c:choose>
-                                                                <c:when test="${noticeAttach.attach_type eq 'JPG' || noticeAttach.attach_type eq 'PNG' || noticeAttach.attach_type eq 'GIF'}">
-                                                                    이미지
-                                                                </c:when>
-                                                                <c:otherwise>
-                                                                    파일
-                                                                </c:otherwise>
-                                                            </c:choose>
-                                                        </td>
-                                                        <td style="font-weight: normal;">
-                                                                ${noticeAttach.attach_name }
-                                                        </td>
-                                                        <td style="font-weight: normal;">
-                                                                ${noticeAttach.attach_type }
-                                                        </td>
-                                                        <td style="font-weight: normal;">
-                                                                ${noticeAttach.attach_size }
-                                                        </td>
-                                                        <td>
-                                                            <i class="fas fa-times" data-id="${status.index }" data-attach_id="${noticeAttach.attach_id }" style="cursor: pointer;" onclick="removeEl(this)"></i>
-                                                        </td>
-                                                    </tr>
-                                                </c:forEach>
-                                            </c:if>
+
                                             </tbody>
                                         </table>
                                     </div>
@@ -314,14 +333,26 @@
 
             </div>
         </form>
+            <div id="docContent">
+                ${approval.approval_Content }
+            </div>
     </div>
 </section>
 
+<form id="fileUploadForm" name="registForm" enctype="multipart/form-data" style="display: none;">
+    <input type="text" id="fileDocId" name = "docId" style="display: none;">
+    <input type="file" name="fileUploadCommand.uploadFile" class="myFile" value="0" readonly="readonly">
+</form>
+
+<%--<form:form model="approval" method="POST" id="fileUploadForm" name="registForm" enctype="multipart/form-data" style="display: none;">--%>
+<%--    <form:input path="docId" type="text" id="fileDocId" style="display: none;" />--%>
+<%--</form:form>--%>
 <!-- 푸터 인클루드 -->
 <%@ include file="../include/footer.jsp"%>
 
 
 <script>
+
     function OpenWindow(UrlStr, WinTitle, WinWidth, WinHeight){
         winleft = (screen.width - WinWidth) / 2;
         wintop = (screen.height - WinHeight) / 2;
@@ -336,17 +367,286 @@
             + winleft +", resizable=yes, status=yes");
         win.focus();
     }
+    $(".startDt").change(function(){
+        var startDt = $(".startDt").val();
+        $(".startDt").attr("value",startDt);
+    });
 
-    function  myFileUpload()
+    $(".endDt").change(function(){
+        var startDt = $(".endDt").val();
+        $(".endDt").attr("value",startDt);
+    });
+
+
+    function getSign()
     {
-        if($('#appendTbody').children().length == 5)
+        let imageURL = "<%=request.getContextPath()%>/pds/Sign/${loginUser.emp_Id}.png"
+        console.log(imageURL)
+        $('div#d${loginUser.emp_Id}').css({'background-image':'url('+imageURL+')',
+            'background-position':'center',
+            'background-size':'contain',
+            'background-repeat':'no-repeat'
+        }).trigger("create");
+
+        let tempDt = new Date()
+        let year = tempDt.getFullYear();
+        let month = ("0"+(tempDt.getMonth()+1)).slice(-2)
+        let date = ("0"+tempDt.getDate()).slice(-2);
+        let hours = ("0"+tempDt.getHours()).slice(-2);
+        let minutes = ("0"+tempDt.getMinutes()).slice(-2);
+
+        let sysDt  = "<div style='height: 36px;'>"+year+"-"+month+"-"+date+" ["+hours+":"+minutes+"]</div>";
+        $('div#d${loginUser.emp_Id}').parent().append(sysDt);
+    }
+
+    function approval_go(){
+        if(!$("#title").text().trim())
         {
-            alert('파일은 5개까지만 저장할 수 있습니다.')
-            return;
+            alert('결재 제목을 입력해주세요')
+            return false
         }
 
+        if(!confirm("정말 결재요청을 하시겠습니까?"))
+        {
+            return false;
+        }
+
+        let jsonData = {};
+
+        getSign();
+
+        $("td").attr("contenteditable",false);
+        $("div").attr("contenteditable",false);
+        $("#vacationType").attr("disabled",true);
+        $(".startDt").attr("readonly",true);
+        $(".endDt").attr("readonly",true);
+        $("input").attr("readonly",true);
+        $("textarea").attr("readonly",true);
+
+
+        jsonData.apply = $("#신청").attr("value");
+        //jsonData.approval = $("#결재").attr("value")
+        let approvalArray = [];
+        $("#결재").each(function() {
+            let value = $(this).attr("value");
+            if (value) {
+                approvalArray.push(value);
+            }
+        });
+        jsonData.approval = approvalArray;
+        jsonData.docId = $("#docId").text();
+        jsonData.title = $("#title").text();
+        jsonData.content = $("#contents").text()
+        jsonData.startDt =$(".startDt").val();
+        jsonData.endDt = $(".endDt").val();
+
+
+
+
+// jsonData에 배열로 추가
+        jsonData.approval = approvalArray;
+
+        console.log(jsonData)
+
+        let docId = ""
+        let empId = ""
+        let myData = ""
+
+
+        $.ajax({
+            type:"post",
+            url : "<%=request.getContextPath()%>/approval/registApproval",
+            contentType: "application/json",
+            async:false,
+            data : JSON.stringify(jsonData),
+            success : function (data){
+                docId = data.docId;
+                empId = data.empDrafterId;
+                myData = data;
+            }, error:function (e)
+            {
+                console.log(e)
+            }
+        })
+
+
+        ////////////////////////안되는 부분///////////////////////////////////////////
+        for(let i = 0; i< $("input[name='fileUploadCommand.uploadFile']").length; i++)
+        {
+            if(!$("input[name='fileUploadCommand.uploadFile']").eq(i)[0].files[0]){
+                $("input[name='fileUploadCommand.uploadFile']").eq(i).remove();
+            }
+        }
+
+        let form = $('#fileUploadForm')[0] // 올바른 ID를 사용하여 폼 엘리먼트를 가져옴
+        console.log(form)
+        let uploadFiles = new FormData(form); // FormData를 생성할 때 폼 엘리먼트를 전달
+        $("#fileDocId").val($("#docId").text())
+        uploadFiles.append('docId',$("#docId").text());
+        console.log(uploadFiles)
+
+        if($('#fileUploadForm').find("input").length  > 1){
+            $.ajax({
+                type:"post",
+                url : "<%=request.getContextPath()%>/approval/registApprovalAttach",
+                data : uploadFiles,
+                contentType:false,
+                processData:false,
+                success : function (data)
+                {
+                    console.log(data)
+                    alert('기안이 완료되었습니다.')
+                    location.href="<%=request.getContextPath()%>/approval/registDocForm"
+                },
+                error: function (e)
+                {
+                    console.log(e)
+                }
+
+            })
+        }
+       ////////////////////////안되는 부분///////////////////////////////////////////
 
 
     }
+
+    function approvalTemp_go()
+    {
+        let jsonData = {}
+        jsonData.doc_Id = '${approval.doc_Id}'
+        jsonData.approval_Content = $("#contents").text();
+        jsonData.approval_Title = $("#title").text();
+        console.log(jsonData)
+        console.log($("#title").text())
+        console.log($("#contents").text())
+
+        if(!$("#title").text().trim())
+        {
+            alert('제목을 입력하세요.')
+            return false;
+        }
+
+        $.ajax({
+            type:"post",
+            url:"<%=request.getContextPath()%>/approval/modifyApprovalTemp",
+            contentType:"application/json",
+            data:JSON.stringify(jsonData),
+            success:function (data){
+                console.log(data)
+            },
+            error:function (e)
+            {
+                console.log(e)
+            }
+
+        });
+
+        alert('임시저장이 완료되었습니다.')
+        location.reload();
+    }
+
+
+
+    function preview(){
+        $("#previewInnerHtml").html("");
+        $("#previewInnerHtml").html($("#docContent").html());
+
+        $("#previewModal").click();
+
+        $("#previewInnerHtml #title").attr("id","");
+        $("#previewInnerHtml td").attr("contenteditable",false);
+        $("#previewInnerHtml div").attr("contenteditable",false);
+        $("#previewInnerHtml #vacationType").attr("disabled",true);
+        $("#previewInnerHtml .startDt").attr("readonly",true);
+        $("#previewInnerHtml .endDt").attr("readonly",true);
+        $("#previewInnerHtml input").prop("disabled",true);
+        $("#previewInnerHtml textarea").prop("disabled",true);
+
+        $(".startDt").val("2021-05-11");
+        $(".endDt").val("2021-05-12");
+
+
+    }
+
+    var fileLength = 0;
+    var fileValue = 0;
+    function myFileUpload() {
+        $("#fileContent").css("display","block");
+        //빈 파일 테그면 사쿠죠
+        for(var i = 0; i < $("input[name='fileUploadCommand.uploadFile']").length; i++){
+
+            if(!$("input[name='fileUploadCommand.uploadFile']").eq(i)[0].files[0]){
+                $("input[name='fileUploadCommand.uploadFile']").eq(i).remove();
+            }
+        }
+
+        var input = $('<input>').attr({"type":"file","name":"fileUploadCommand.uploadFile","class":"myFile","value":fileValue+""});
+        $("#fileUploadForm").append(input);
+
+        fileLength = $("input[name='fileUploadCommand.uploadFile']").length;
+
+        $("input[name='fileUploadCommand.uploadFile']").eq(fileLength-1).click();
+    }
+
+    $(document).on("change",".myFile",function(){
+        var _fileLen = $("input[name='fileUploadCommand.uploadFile']").eq(fileLength-1)[0].files[0].name.length;
+        var _lastDot = $("input[name='fileUploadCommand.uploadFile']").eq(fileLength-1)[0].files[0].name.lastIndexOf('.');
+
+
+        var name = $("input[name='fileUploadCommand.uploadFile']").eq(fileLength-1)[0].files[0].name.substring(0, _lastDot);
+        var extension = getExtensionOfFilename($("input[name='fileUploadCommand.uploadFile']").eq(fileLength-1)[0].files[0].name);
+        var size = ($("input[name='fileUploadCommand.uploadFile']").eq(fileLength-1)[0].files[0].size)/1000 + "KB";
+
+
+        setTimeout(function(){
+            if(!(extension == 'png' || extension == 'doc' || extension == 'exe' || extension == 'gif' || extension == 'java' || extension == 'jpg' || extension == 'pdf'|| extension == 'ppt'|| extension == 'txt' || extension == 'xlsx'|| extension == 'zip')){
+                alert("지원하지 않는 파일 형식입니다.");
+                $("input[name='fileUploadCommand.uploadFile']").eq(fileLength-1).remove();
+                return false;
+            }
+
+            var fileLabel = "";
+
+            fileLabel += '<tr class="myFileLabels">';
+            fileLabel += '    <td>'+name+'</td>';
+            fileLabel += '    <td>'+extension+'</td>';
+            fileLabel += '    <td class="deleteFile" value="'+fileValue+'" style="cursor: pointer;"><i class="fa fa-trash-o"></i></td>';
+            fileLabel += '</tr>';
+            fileValue++;
+            $("#appendTbody").append(fileLabel);
+            $("#appendTbody").trigger("create");
+
+        },50);
+
+    });
+
+    //파일 확장자 추출 함수
+    function getExtensionOfFilename(filename) {
+
+        let _fileLen = filename.length;
+
+        let _lastDot = filename.lastIndexOf('.');
+
+        let _fileExt = filename.substring(_lastDot+1, _fileLen).toLowerCase();
+
+        return _fileExt;
+    }
+
+    $(".deleteAllFile").click(function(){
+        $(".myFileLabels").remove();
+        $(".myFile").remove();
+    })
+
+    $(document).on("click",".deleteFile",function(){
+        var fileNumber = parseInt($(this).attr("value"));
+        console.log(fileNumber);
+        console.log($(".myFile[value="+fileNumber+"]"));
+        $(".myFile[value="+fileNumber+"]").remove();
+        $(this).parent().remove();
+
+    });
+
+
+
 
 </script>

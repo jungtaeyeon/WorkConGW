@@ -7,6 +7,7 @@ import org.mindrot.jbcrypt.BCrypt;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -52,6 +53,11 @@ public class EmpController {
     @Autowired
     private YAMLConfig Config;
 
+    @Value("${uploadPath}")
+    private String fileUploadPath;
+
+    @Value("${SignPath}")
+    private String SignPath;
 
 
 
@@ -290,8 +296,8 @@ public class EmpController {
     @PostMapping("registSign")
     public ResponseEntity<String> updateSign(@RequestParam(value = "myEmpSign" , required=false) MultipartFile SignImage, @SessionAttribute("loginUser")EmpVO empVO,RedirectAttributes attr) throws IOException,IllegalStateException
     {
-        String webPath = "C:/Users/Ohjihwan/Desktop/ProjectTest/마이페이지/WorkConGW/src/main/webapp/pds/sign";
-        int result = empService.updateSign(SignImage,webPath,empVO);
+
+        int result = empService.updateSign(SignImage,SignPath,empVO);
         String msg = "";
         ResponseEntity<String> entity = null;
         if(result > 0)
@@ -311,7 +317,6 @@ public class EmpController {
 
 
     }
-
    @GetMapping("/registerAuth")
     public String loginView(HttpServletRequest request, Model model, String emp_Email, String emp_Id){
         logger.info("loginView");

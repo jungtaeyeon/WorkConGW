@@ -254,7 +254,7 @@ public class CommonController {
     @PostMapping("/mypage/modify")
 	public String mypageModify(EmpVO empVO) throws SQLException {
 		empService.modifyEmp(empVO);
-        String url ="redirect:/common/home";
+        String url ="redirect:/common/mypage/modifyform";
 		return url;
 	}
 
@@ -264,7 +264,6 @@ public class CommonController {
     {
         String url = "common/mypage/modifyform";
         EmpVO empVO = (EmpVO)request.getSession().getAttribute("loginUser");
-        empVO = empService.getEmp(empVO.getEmp_Id());
         HttpSession session = request.getSession();
         session.setAttribute("loginUser", empVO);
         model.addAttribute("empVO", empVO);

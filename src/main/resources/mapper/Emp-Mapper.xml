@@ -24,7 +24,7 @@
             ,A.EMP_ADD2
 	     	,A.EMP_ZIPCODE
             ,A.ATTEND_ST_ID
-			,A.DEPT_ID								
+			,A.DEPT_ID
 			,A.EMP_CREATE_DT
 			,A.EMP_UPDATE_DT
 			,NVL(A.EMP_EMAIL,'없음') 
@@ -82,6 +82,25 @@ UPDATE EMP SET EMP_PWD = #{emp_Pwd} where EMP_EMAIL = #{emp_Email} and EMP_ID = 
 </select>
 
 
+<select id = "selectOfficialById" parameterType="string" resultType="string">
+	select
+
+		c.code_name
+
+	from emp e, code c
+
+	where e.emp_id =#{emp_Id} and e.code_id = c.code_id(+)
+</select>
+
+<select id ="selectDeptNameById" parameterType="string" resultType="string">
+	select d.dept_name
+
+	from emp e, dept d
+
+	where e.emp_id = #{emp_Id}  and e.dept_id = d.dept_id(+)
+
+</select>
+
 <update id="updateEmpMyPage" parameterType="EmpVO">
  UPDATE EMP
     SET EMP_HP = #{emp_Hp}
@@ -130,10 +149,10 @@ UPDATE EMP SET EMP_SIGN = #{emp_Sign} where EMP_ID = #{emp_Id}
 
 <insert id = "register" useGeneratedKeys="true" keyProperty="emp_Id">
 INSERT INTO EMP 
-(EMP_ID, EMP_NAME, EMP_PWD, EMP_REGNO,EMP_CREATE_DT ,EMP_REGNO2, EMP_HP,EMP_ST,EMP_ADD1, EMP_ADD2,EMP_ZIPCODE ,EMP_EMAIL, AUTH_ID, DEPT_ID, EMP_SUP_ID, ATTEND_ST_ID,CODE_ID, EMP_AUTHKEY)
+(EMP_ID, EMP_NAME, EMP_PWD, EMP_REGNO,EMP_CREATE_DT ,EMP_REGNO2, EMP_HP,EMP_ST,EMP_ADD1, EMP_ADD2,EMP_ZIPCODE ,EMP_EMAIL, AUTH_ID, DEPT_ID, EMP_SUP_ID, CODE_ID, EMP_AUTHKEY)
 VALUES
 (#{emp_Id}, #{emp_Name
-},#{emp_Pwd},#{emp_Regno},sysdate,#{emp_Regno2},#{emp_Hp},#{emp_St},#{emp_Add1},#{emp_Add2},#{emp_ZipCode},#{emp_Email}, #{auth_Id},#{dept_Id}, #{emp_Sup_Id}, #{attend_St_Id}, #{code_Id}, #{emp_authkey})
+},#{emp_Pwd},#{emp_Regno},sysdate,#{emp_Regno2},#{emp_Hp},#{emp_St},#{emp_Add1},#{emp_Add2},#{emp_ZipCode},#{emp_Email}, #{auth_Id},#{dept_Id}, #{emp_Sup_Id},  #{code_Id}, #{emp_authkey})
 </insert>
 
 

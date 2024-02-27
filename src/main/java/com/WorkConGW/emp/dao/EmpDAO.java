@@ -155,4 +155,12 @@ public class EmpDAO {
 
         return sqlSessionTemplate.selectOne("selectByPwd", empVO);
     }
+
+    public String selectOfficialById(String empId) {
+        return sqlSessionTemplate.selectOne("selectOfficialById", empId);
+    }
+
+    public String selectDeptNameById(String empId) {
+        return sqlSessionTemplate.selectOne("selectDeptNameById", empId);
+    }
 }

@@ -2,6 +2,7 @@ package com.WorkConGW.emp.dto;
 
 import java.util.Date;
 
+import com.WorkConGW.common.command.FileUploadCommand;
 import org.apache.ibatis.type.Alias;
 
 import com.WorkConGW.common.dto.BaseVO;
@@ -47,6 +48,9 @@ public class EmpVO extends BaseVO{
     private int emp_authkey;
 
 
+    private FileUploadCommand fileUploadCommand;
+
+
 
 
 	
@@ -86,8 +90,16 @@ public class EmpVO extends BaseVO{
     }
     
     public EmpVO(){
+        this.fileUploadCommand = new FileUploadCommand();
     }
 
+    public FileUploadCommand getFileUploadCommand() {
+        return fileUploadCommand;
+    }
+
+    public void setFileUploadCommand(FileUploadCommand fileUploadCommand) {
+        this.fileUploadCommand = fileUploadCommand;
+    }
     public String getEmp_ZipCode() {
         return emp_ZipCode;
     }
