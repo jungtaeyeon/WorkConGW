@@ -272,7 +272,7 @@ public class ApprovalService{
             ApprovalAttachVO attachVO = new ApprovalAttachVO();
             attachVO.setAttach_name(originalFileName);
             attachVO.setAttach_path(filePath);
-            attachVO.setEmp_attacher_id(empId);
+            //attachVO.setEmp_attacher_id(empId);
             attachVO.setDoc_Id(docId);
 
 

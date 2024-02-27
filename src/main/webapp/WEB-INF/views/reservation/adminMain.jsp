@@ -67,7 +67,7 @@
 
 <body>
 <!-- 헤더인클루드 -->
-<%@ include file="./header.jsp"%>
+<%@ include file="../include/header.jsp"%>
 <section class="subPageContain">
 
 <button type="button" class="btn btn-outline-light" id="hiddenFillBtn" onclick="presentationFill();" style="position:absolute;right:25px;top:160px;color:#ffffff; z-index: 100; border: 0px;width:100px;height:50px;"></button>
@@ -403,15 +403,15 @@
 
 
 </script>
-<script> // 시연용
-function presentationFill(){
-// 	alert('클릭');
+<%--<script> // 시연용--%>
+<%--function presentationFill(){--%>
+<%--// 	alert('클릭');--%>
 
-    $(".roomName").val("분임토의 5실");
-    $(".roomNo").val("406호");
-    $(".roomCapacity").val("25");
-    $(".roomContent").val("노트북/모니터/키보드/마우스/빔프로젝터/에어컨");
+<%--    $(".roomName").val("분임토의 5실");--%>
+<%--    $(".roomNo").val("406호");--%>
+<%--    $(".roomCapacity").val("25");--%>
+<%--    $(".roomContent").val("노트북/모니터/키보드/마우스/빔프로젝터/에어컨");--%>
 
-}
-</script>
+<%--}--%>
+<%--</script>--%>
 </html>

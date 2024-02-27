@@ -29,11 +29,19 @@
 	<link href="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote.min.css" rel="stylesheet">
 	<script src="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote.min.js"></script>
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.18/lang/summernote-ko-KR.min.js"></script>
+
+
+
 	<!-- Bootstrap Datepicker CSS, JS CDN -->
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.10.0/css/bootstrap-datepicker.min.css" integrity="sha512-34s5cpvaNG3BknEWSuOncX28vz97bRI59UnVtEEpFX536A7BtZSJHsDyFoCl8S7Dt2TPzcrCEoHBGeM4SUBDBw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.10.0/js/bootstrap-datepicker.min.js" integrity="sha512-LsnSViqQyaXpD4mBBdRYeP6sRwJiJveh2ZIbW41EBrNmKxgr/LFZIiWT6yr+nycvhvauz8c2nYMhrP80YhG7Cw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+
 	<!-- common.js -->
 	<script src="<%=request.getContextPath() %>/js/common.js"></script>
+
+
+
 
 
 
@@ -142,11 +150,11 @@
 		.btn.focus, .btn:focus{
 			box-shadow: 0 0 0 0px;
 		}
-		.commonModal-content{
-			width: 290px;
-			right: 89.4%;
-			margin-top: 60%;
-		}
+		/*.commonModal-content{*/
+		/*	width: 290px;*/
+		/*	right: 89.4%;*/
+		/*	margin-top: 60%;*/
+		/*}*/
 		.modal-backdrop.show {
 			opacity: .01;
 		}
@@ -272,24 +280,28 @@
 </nav>
 
 <!--직원상세 모달창 -->
-<div class="modal fade commonModal" id="defaultModal" tabindex="-1" role="dialog" style="font-family: InfinitySans-RegularA1">
-	<div class="modal-dialog" role="document">
-		<div class="modal-content commonModal-content" style="width:290px;">
+<div class="modal fade commonModal" id="defaultModal" tabindex="-1" role="dialog">
+	<div class="modal-dialog modal-dialog-centered" style="max-width: 290px;" role="document">
+		<div class="modal-content commonModal-content">
 			<div class="modal-header" style="display: block; text-align: center;">
 				<h4 class="title" id="defaultModalLabel">직원 상세조회</h4>
 			</div>
 			<div class="modal-body">
 				<div class="body text-center" style="margin-bottom: 10px;">
-					<div class="chart easy-pie-chart-1 user-photo" id="emp_Picture" style="width: 100px;height: 100px; border-radius: 50%;"></div>
+					<div class="chart easy-pie-chart-1 user-photo" id="emp_Picture" style="width: 100px;height: 100px; border-radius: 50%; margin: 0 auto"></div>
 					<h5 id="modalName"></h5>
 					<h5 id="modalEmail"></h5>
 					<h5 id="modalHp"></h5>
-					<button class="btn btn-primary" style="width: 76%;" onclick="dutyIndication(this);">업무제안</button>
+				</div>
+				<div class="modal-footer justify-content-center">
+					<button type="button" class="btn btn-primary" data-dismiss="modal">확인</button>
 				</div>
 			</div>
 		</div>
 	</div>
 </div>
+
+
 <!-- 알림 목록 -->
 <div class="modal fade" id="alarmModal" tabindex="-1" role="dialog" style="display: none;" aria-hidden="true">
 	<div class="modal-dialog" role="document">

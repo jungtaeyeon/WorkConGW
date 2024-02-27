@@ -3,5 +3,127 @@
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.mybatis.mapper.AttendenceMapper">
+        <select id="attendenceList" resultType="AttendenceVO" parameterType="String">
+                select 
+                        history_id,
+                        emp_id,
+                        a.attend_st_id,
+                        b.attend_st_name, 
+                        history_leaving_time, 
+                        history_attend_time, 
+                        history_reason 
+                from 
+                        attend_history a 
+                left outer join 
+                        attend_st b 
+                on 
+                        a.attend_st_id = b.attend_st_id  
+                where 
+                        emp_id = #{empId}
+                order by history_attend_time desc
+        </select>
 
+        <select id="attendenceNormalCountList" resultType="int" parameterType="String">
+                select 
+                        count(attend_st_id) as attendenceNormalCountList
+                from 
+                        attend_history a 
+                where 
+                        emp_id = #{empId} and attend_st_id IN (0,1,4) and TO_CHAR(history_attend_time, 'YYYY-MM') = #{attendDay}
+        </select>
+
+        <select id="attendenceTardyCountList" resultType="int" parameterType="String">
+                select 
+                        count(attend_st_id) as attendenceTardyCountList 
+                from 
+                        attend_history a 
+                where 
+                        emp_id = #{empId} and attend_st_id IN (2,3) and TO_CHAR(history_attend_time, 'YYYY-MM') = #{attendDay}
+        </select>
+
+        <select id="attendTimeSerch" resultType="String" parameterType="map">
+                select attend_time from attend_setting
+        </select>
+
+        <select id="leavingTimeSerch" resultType="String" parameterType="map">
+                select leaving_time from attend_setting
+        </select>
+
+        <insert id="attendStart" parameterType="java.util.Map">
+                INSERT INTO attend_history(history_id, emp_id, attend_st_id, history_attend_time)
+                VALUES(ATTEND_HISTORY_SEQ.nextval, #{empId}, #{attend_st_id}, #{history_attend_time})
+        </insert>
+
+        <select id="attendStSelect" resultType="java.util.Map" parameterType="map">
+                SELECT attend_st_id, attend_st_name FROM attend_st WHERE attend_st_id = #{attend_st_id}
+        </select>
+        <update id="attendEnd" parameterType="map">
+                UPDATE attend_history
+                SET 
+                        history_leaving_time = #{history_leaving_time},
+                        attend_st_id = #{attend_st_id}
+                WHERE emp_id = #{empId}
+                and TO_CHAR(history_attend_time, 'YYYY-MM-DD') = #{attendStartTime}
+        </update>
+
+        <update id="attendEmpUpdate" parameterType="map">
+                UPDATE emp
+                SET 
+                        attend_st_id = #{attend_st_id}
+                WHERE emp_id = #{empId}
+        </update>
+
+        <update id="historyReasonInsert" parameterType="java.util.Map">
+                UPDATE attend_history
+                SET 
+                        history_reason = #{history_reason}
+                WHERE emp_id = #{empId}
+                and TO_CHAR(history_attend_time, 'YYYY-MM-DD') = #{history_reason_date}
+        </update>
+
+        <select id="attendDeptHistorySelect" resultType="map" parameterType="java.util.Map">
+                select 
+                        a.emp_id,
+                        a.emp_name,
+                        c.history_reason,
+                        TO_CHAR(c.history_attend_time, 'YYYY-MM-DD') AS history_attend_day,
+                        TO_CHAR(c.history_attend_time, 'HH24:MI') AS history_attend_time,
+                        TO_CHAR(c.history_leaving_time, 'HH24:MI') AS history_leaving_time,
+                        c.attend_st_id,
+                        d.attend_st_name,
+                        e.code_name,
+                        b.dept_name
+                from 
+                        emp a 
+                        left outer join dept b on b.dept_id = a.dept_id
+                        left outer join attend_history c on a.emp_id = c.emp_id
+                        left outer join attend_st d on c.attend_st_id = d.attend_st_id
+                        left outer join code e on e.code_id = a.code_id
+                where 
+                        a.dept_id = #{dept_id} or b.dept_sup_id = #{dept_id}
+                order by c.history_attend_time desc
+        </select>
+
+        <select id="attendSelect" resultType="map" parameterType="java.util.Map">
+                select 
+                        a.emp_id,
+                        a.emp_name,
+                        c.history_reason,
+                        TO_CHAR(c.history_attend_time, 'YYYY-MM-DD') AS history_attend_day,
+                        TO_CHAR(c.history_attend_time, 'HH24:MI') AS history_attend_time,
+                        TO_CHAR(c.history_leaving_time, 'HH24:MI') AS history_leaving_time,
+                        c.attend_st_id,
+                        d.attend_st_name,
+                        e.code_name,
+                        b.dept_name
+                from 
+                        emp a 
+                        left outer join dept b on b.dept_id = a.dept_id
+                        left outer join attend_history c on a.emp_id = c.emp_id
+                        left outer join attend_st d on c.attend_st_id = d.attend_st_id
+                        left outer join code e on e.code_id = a.code_id
+                where 
+                        a.emp_id = #{emp_id}
+                order by c.history_attend_time desc
+        </select>
 </mapper>

@@ -72,4 +72,33 @@
           AND A.milestone_id = #{milestone_Id}
     </select>
 
+    <select id="selectMilestoneListSimple" parameterType="EmpVO" resultType="MilestoneVO">
+        SELECT
+            A.milestone_id
+             ,A.milestone_name
+             ,A.milestone_create_dt
+             ,A.milestone_end_dt
+             ,A.milestone_update_dt
+             ,A.milestone_st
+             ,A.emp_id
+             ,A.emp_name
+             ,NVL(B.openIssueCount,0) as openIssueCount
+             ,NVL(C.closedIssueCount,0) as closedIssueCount
+        FROM
+            milestone A
+           ,(SELECT milestone_id, count(*) as openIssueCount
+             FROM issue_board
+             WHERE issue_open_st = 1
+             GROUP BY milestone_id
+             ORDER BY milestone_id) B
+           ,(SELECT milestone_id, count(*) as closedIssueCount
+             FROM issue_board
+             WHERE issue_open_st = 2
+             GROUP BY milestone_id
+             ORDER BY milestone_id) C
+        WHERE A.milestone_id = B.milestone_id(+)
+          AND A.milestone_id = C.milestone_id(+)
+          AND A.emp_id = #{emp_Id}
+    </select>
+
 </mapper>

@@ -1,32 +1,37 @@
 package com.WorkConGW.common.controller;
 
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
+import java.net.URLDecoder;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
-import com.WorkConGW.common.dto.*;
+import com.WorkConGW.common.command.FileUploadCommand;
+import com.WorkConGW.common.dto.DashboardVO;
+import com.WorkConGW.common.dto.HomeFormVO;
+import com.WorkConGW.common.dto.MenuVO;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.gson.JsonObject;
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
+import org.json.simple.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpRequest;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.SessionAttribute;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
@@ -42,10 +47,10 @@ import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
+import org.springframework.web.util.UriUtils;
 
 
-
-/* 
+/*
 * @작성자 : 오지환
 * @내용 : 마이페이지 및 홈 화면 공통코드 작성 
 */
@@ -66,6 +71,12 @@ public class CommonController {
 	
 	@Autowired
 	private MenuService menuService;
+
+    @Value("${uploadPath}")
+    private String fileUploadPath;
+
+    @Value("${summernotePath}")
+    private String summernotePath;
 
     protected static Map<String, HttpSession> users = new HashMap<>();
 
@@ -271,6 +282,35 @@ public class CommonController {
     }
 
 
+    @ResponseBody
+    @PostMapping("/getFile")
+    public ResponseEntity<byte[]> getFile(FileUploadCommand fileUploadCommand) throws Exception{
+
+        InputStream in = null;
+        ResponseEntity<byte[]> entity = null;
+
+        String fileUploadPath = fileUploadCommand.getFileUploadPath();
+
+        try {
+            in = new FileInputStream(fileUploadPath);
+
+            String fileName = fileUploadPath.substring(fileUploadPath.indexOf("$$") + 2);
+            HttpHeaders headers = new HttpHeaders();
+            headers.setContentType(MediaType.APPLICATION_OCTET_STREAM);
+            headers.add("Content-Disposition", "attachment;filename=\"" + new String(fileName.getBytes("utf-8"), "ISO-8859-1") + "\"");
+
+            entity = new ResponseEntity<byte[]>(IOUtils.toByteArray(in), headers, HttpStatus.CREATED);
+        }catch(IOException e) {
+            e.printStackTrace();
+            entity = new ResponseEntity<byte[]>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }finally {
+            if(in!=null) in.close();
+        }
+
+        return entity;
+    }
+
+
 
 
     @PostMapping("/password/pswmodifyForm")
@@ -342,4 +382,103 @@ public class CommonController {
 	}
     /* 쿠키가 존재하면 true / 없으면 */
 
+
+    @PostMapping("/summernote/uploadImg")
+    public ResponseEntity<String> uploadImage(@RequestParam("file") MultipartFile file) {
+        // 여기에 이미지를 저장하고 저장된 이미지의 URL을 생성합니다.
+        String imgUrl = saveImage(file);
+        return ResponseEntity.ok(imgUrl);
+    }
+
+    private String saveImage(MultipartFile file) {
+        try {
+            // 저장할 디렉토리 경로를 지정합니다. 여기에서는 임시 디렉토리로 저장합니다.
+            String uploadDir = summernotePath+"/";
+
+            // 저장할 파일명을 생성합니다.
+            String fileName = UUID.randomUUID().toString() + "_" + file.getOriginalFilename();
+
+            // 저장할 경로를 설정합니다.
+            Path uploadPath = Paths.get(uploadDir);
+
+            // 디렉토리가 없으면 생성합니다.
+            if (!Files.exists(uploadPath)) {
+                Files.createDirectories(uploadPath);
+            }
+
+            // 파일을 저장합니다.
+            Path filePath = uploadPath.resolve(fileName);
+            Files.copy(file.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
+
+            // 저장된 이미지의 URL을 생성하여 반환합니다.
+            String imgUrl = "/WorkConGW/pds/summernoteImage/"+fileName;
+            return imgUrl;
+        } catch (IOException e) {
+            // 예외 처리
+            e.printStackTrace();
+            return null;
+        }
+    }
+    @PostMapping("/summernote/deleteImg")
+    public ResponseEntity<Void> deleteImage(@RequestBody String fileName) {
+        try {
+            logger.info(fileName);
+            // 파일 명을 변환기 위해 메서드 호출
+            String extractFileName = extractFileName(fileName);
+            logger.info(extractFileName);
+
+            // 파일 삭제를 위해 deleteImageFile 메서드 호출
+            deleteImageFile(extractFileName);
+
+            return ResponseEntity.ok().build();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+    }
+
+    // 사진 삭제를 위해 변환 메서드
+    private String extractFileName(String fileName) {
+        try {
+            // URL 디코딩을 수행합니다.
+            String decodedFileName = UriUtils.decode(fileName, StandardCharsets.UTF_8);
+
+            // JSON 형식의 문자열을 Map으로 변환합니다.
+            ObjectMapper objectMapper = new ObjectMapper();
+            Map<String, String> jsonMap = objectMapper.readValue(decodedFileName, Map.class);
+
+            // Map에서 fileName 키에 해당하는 값을 가져옵니다.
+            String actualFileName = jsonMap.get("fileName");
+
+            // 파일 이름 부분만 추출하여 반환합니다.
+            return actualFileName.substring(actualFileName.lastIndexOf("/") + 1);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    private void deleteImageFile(String fileName) {
+        try {
+            // 삭제할 파일의 절대 경로를 생성합니다.
+            String filePath = summernotePath+"/"+fileName;
+
+            // 파일 객체를 생성합니다.
+            File file = new File(filePath);
+
+            // 파일이 존재하면 삭제합니다.
+            if (file.exists()) {
+                if (file.delete()) {
+                    System.out.println("파일 삭제 성공: " + filePath);
+                } else {
+                    System.out.println("파일 삭제 실패: " + filePath);
+                }
+            } else {
+                System.out.println("삭제할 파일이 존재하지 않습니다: " + filePath);
+            }
+        } catch (Exception e) {
+            // 예외 처리
+            e.printStackTrace();
+        }
+    }
 }

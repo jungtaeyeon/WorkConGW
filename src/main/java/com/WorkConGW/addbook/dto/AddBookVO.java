@@ -14,8 +14,7 @@ public class AddBookVO extends BaseVO{
   // add_book
 	private int add_book_id;		// PK 주소록 코드. 시퀀스로 계속 올리는 숫자 (자리수 제한X)
 	private String add_book_title;	// 주소록 그룹명
-	private String code_add_id;		// 주소록 코드 아이디( A + 숫자 2자리 : 코드그룹 참고.. )
-	private int share_add_book; //공유주소록 판별
+	private int share_add_book_yn; //공유주소록 판별
 					
 	// add_book_manage
 	private int manage_id;		// PK 주소록관리번호
@@ -27,9 +26,13 @@ public class AddBookVO extends BaseVO{
 	private String manage_official_name; //주소록 직급
 	private String manage_dept_name; //부서명
 	private int manage_starred; //중요 주소록
+	private String manage_add_book_id;
 	
 	
+	private int share_add_book_id;	
+	private int share_manage_id;	
 	private String emp_id;
+	private String share_emp_id;
 	private String selectSerch; //주소록 필터
 	private int addBookCount; // 주소록에 속한 주소 개수
 	private String[] manageIdArr; // 체크한 주소록 개수

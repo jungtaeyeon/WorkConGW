@@ -10,7 +10,7 @@ public class IssueReplyVO {
 	private String reply_Update_Dt;
 	private int reply_Id;
 	private int issue_Board_Id;
-	private String emp_Writer_Id;
+	private String emp_Id;
 	private String reply_Group_Code;
 	private String emp_Name;
 	private String emp_Picture;
@@ -55,12 +55,12 @@ public class IssueReplyVO {
 		this.issue_Board_Id = issue_Board_Id;
 	}
 
-	public String getEmp_Writer_Id() {
-		return emp_Writer_Id;
+	public String getEmp_Id() {
+		return emp_Id;
 	}
 
-	public void setEmp_Writer_Id(String emp_Writer_Id) {
-		this.emp_Writer_Id = emp_Writer_Id;
+	public void setEmp_Id(String emp_Id) {
+		this.emp_Id = emp_Id;
 	}
 
 	public String getReply_Group_Code() {

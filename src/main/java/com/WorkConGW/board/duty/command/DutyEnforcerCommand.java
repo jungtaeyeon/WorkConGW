@@ -1,6 +1,9 @@
 package com.WorkConGW.board.duty.command;
 
-public class DutyManagerCommand {
+import org.apache.ibatis.type.Alias;
+
+@Alias("DutyEnforcerCommand")
+public class DutyEnforcerCommand {
 
 	private int duty_Board_Id;
 	private String emp_Id;
@@ -10,7 +13,7 @@ public class DutyManagerCommand {
 	private String dept_Name;
 	private String dept_Id;
 	private String officialName;
-	private String readSt;
+	private String read_St;
 
 	public int getDuty_Board_Id() {
 		return duty_Board_Id;
@@ -76,12 +79,12 @@ public class DutyManagerCommand {
 		this.officialName = officialName;
 	}
 
-	public String getReadSt() {
-		return readSt;
+	public String getRead_St() {
+		return read_St;
 	}
 
-	public void setReadSt(String readSt) {
-		this.readSt = readSt;
+	public void setRead_St(String readSt) {
+		this.read_St = readSt;
 	}
 	
 }

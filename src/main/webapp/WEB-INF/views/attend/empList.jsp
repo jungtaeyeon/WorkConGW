@@ -29,11 +29,16 @@
 			border-radius: 6px;
 		}
 		.goWork{
-			background: green;
 			color: #fff;
 			padding: 5px 10px;
 			border-radius: 6px;
 		}
+		.goWork0{background-color: #77af9c;}
+		.goWork1{background: green;}
+		.goWork2{background-color: #ce6d39;}
+		.goWork3{background-color: #c82333;}
+		.goWork4{background-color: #6aafe6;}
+		.goWork5{background-color: #ff5f2e;}
 		/* 모달 css */
 		.show{background-color: rgba(0, 0, 0, 0.7);}
 		.modalBtn{cursor: pointer;}
@@ -63,7 +68,7 @@
             background-color: #2985db;
             color: #fff;
         }
-        .treeviewGroup{width: 100%; height: 500px; border:1px solid #000;}
+        .treeviewGroup{width: 300px; height: 500px; border:1px solid #000; overflow-y: scroll;}
         .subContentContainer{display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 5%;}
         .serchContainer{margin-right: 2%;}
     </style>
@@ -81,19 +86,26 @@
 			</div>
             <div class="subContentContainer">
                 <div class="serchContainer">
-                    <div class="share_add_book_btn_contain">
-                        <div class="share_add_book_btn share_add_book_btn_on" data-sharecond="0">부서별</div>
-                        <div class="share_add_book_btn" data-sharecond="1">직원별</div>
-                    </div>
-                    <div class="serchContain">  <!--셀렉/검색/버튼 묶는 div클래스 (이건 부트스트랩 클래스 아니고 임의로 만든 클래스)-->
+                    <!-- <div class="serchContain">
                         <form action="addBookSearch" id="serchForm">
-                            <div class="serchTextGroup"> <!--input 길이조절 클래스 (이건 부트스트랩 클래스 아니고 개별 클래스)-->
-                                <!-- 검색명 input 클래스 --> <input type="text" name="searchText" class="form-control" placeholder="입력해주세요" aria-label="입력해주세요"> 
+                            <div class="serchTextGroup">
+                                <input type="text" name="searchText" class="form-control" placeholder="입력해주세요" aria-label="입력해주세요"> 
                             </div>
                         </form>
-                        <button class="btn btn-outline-secondary" onclick="serchBtn()" name="serchBtn" type="button">검색</button>
+                        <button class="btn btn-outline-secondary" style="width: 60px;" onclick="serchBtn()" name="serchBtn" type="button">검색</button>
+                    </div> -->
+                    <div class="treeviewGroup">
+                        <div class="body">
+                            <div>
+                              <ul id="codeList" class="treeview">
+                                <li>
+                                  WorkCon 조직도&nbsp
+                                  <ul id="lvl0"></ul>
+                                </li>
+                              </ul>
+                            </div>
+                          </div>
                     </div>
-                    <div class="treeviewGroup">조직도 출력</div>
                 </div>
                 <table class="table table-hover"> <!-- 부트스트랩 게시판 -->
 
@@ -105,61 +117,20 @@
                             <th>출근시간</th>
                             <th>퇴근시간</th>
                             <th>상태</th>
-                            <th>지각사유</th>
+                            <th>근태사유</th>
                         </tr>
                     </thead>
 
                     <tbody>
-
-                        <tr class="modalBtn" data-toggle="modal" data-target="#staticBackdrop">
-                            <td>날짜</td>
-                            <td>홍길동</td>
-                            <td>대리</td>
-                            <td>출근시간</td>
-                            <td>퇴근시간</td>
-                            <td><span class="goWork">정상출근</span></td>
-                            <td>지각사유.....</td>
-                        </tr>
-                        <tr class="modalBtn" data-toggle="modal" data-target="#staticBackdrop">
-                            <td>날짜</td>
-                            <td>홍길동</td>
-                            <td>대리</td>
-                            <td>출근시간</td>
-                            <td>퇴근시간</td>
-                            <td><span class="tardy">지각</span></td>
-                            <td>지각사유.....</td>
-                        </tr>
                     </tbody>
-
                 </table>
             </div>
 		</div>
 	</section>
+    <div class="modalContainer">
 
-	<!-- Modal -->
-	<div class="modal fade" id="staticBackdrop" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
-		<div class="modal-dialog modal-dialog-centered">
-		  <div class="modal-content">
-			<div class="modal-header">
-			  <h5 class="modal-title" id="staticBackdropLabel">홍길동</h5>
-			  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-				<span aria-hidden="true">&times;</span>
-			  </button>
-			</div>
-			<div class="modal-body">
-                <p><span class="modalSubTit">날짜</span>09:30</p>
-                <p><span class="modalSubTit">직급</span>대리</p>
-                <p><span class="modalSubTit">출근시간</span>09:30</p>
-                <p><span class="modalSubTit">퇴근시간</span>18:30</p>
-                <p><span class="modalSubTit">출근상태</span>정상출근</p>
-                <p><span class="modalSubTit">지각사유</span><span style="display: inline-block;">텍스트텍스트텍스트텍스트텍스트<br>텍스트텍스트텍스트텍스트</span></p>
-			</div>
-			<div class="modal-footer">
-			  <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-			</div>
-		  </div>
-		</div>
-	  </div>
+    </div>
+
 
 	<!-- 푸터 인클루드 -->
 	<%@ include file="../include/footer.jsp"%>
@@ -171,4 +142,223 @@
             $(this).addClass('share_add_book_btn_on');
             }
         })
+
+        window.onload = function(){
+            deptTrees();
+        }
+
+        function deptTrees(){
+            $.ajax({
+                type:"GET",
+                url:"/WorkConGW/orgList",
+                contentType:"application/json",
+            // 	data:dataSet,
+                processData:true,
+                success: function(data) {
+                    console.log(data);
+                    data.forEach(function(e, i) {
+                        var deptId = e.deptId;
+                        var deptName = e.deptName;
+                        var deptSupId = e.deptSupId;
+                        var position = e.position;
+                        var empState = e.empState;
+                        var stName = e.empState;
+                        var level = 5;
+                        var deptSupName = $('li[id="'+deptSupId+'"] a').eq(0).text();
+                        var li = "";
+                        if(e.level){
+                            level = e.level;
+                        }
+                        if(position){
+                            li = '<li onclick="empChecked(this);" data-deptId="'+deptSupId+'" data-empId="'+deptId+'" data-name="'+deptName+" "+position+'" data-dept="'+deptSupName+'" data-state="'+(empState==null ? '' : empState)+'" ondblclick="addEmpList();" id="'+ deptId +'" lvl="'+level +'" class="myChecked" style="cursor:pointer" ><img src="${pageContext.request.contextPath }/pds/emp.png" style="width:20px; height:20px;">'+" "+ deptName + " "+e.position+'</li>';
+                        }else{
+                            li = '<li id="'+ deptId +'" lvl="'+level +'"><a data-deptid="'+ deptId +'" class="file code" style="cursor: pointer; color: #000;" onclick="myClick(this);" >'+ deptName +'&nbsp&nbsp<i data-id="'+deptId+'" data-name="'+deptName+'" style="color:#383d41; cursor:pointer;"></i></a></li>';
+                        }
+                
+                        // 1레벨은 그냥 추가
+                        // 다음 레벨부터는 상위 li의 클래스를 폴더로 바꾸고 자기 자신을 추가
+                    if(level == 1) {
+                            $("#lvl0").append(li);
+                        } else {
+                            var parentLi = $("li[id='"+ deptSupId +"']");
+                            
+                            parentLi.addClass("expandable lastExpandable");
+                            var bUl = parentLi.children("ul");
+                            
+                            // 하위 그룹이 없으면 li로 추가
+                            // 하위 그룹이 있으면 ul로 추가
+                            if(bUl.length == 0) {
+                                var div = "<div onclick='plusFromMinus(this);' class='hitarea expandable-hitarea lastExpandable-hitarea'></div>"
+                                li = "<ul class='' style='display: none;'>" + li + "</ul>";
+                                parentLi.append(div);
+                                parentLi.append(li);
+                                
+                                return false;
+                            } else {
+                                if(position){
+                                    bUl.prepend(li);
+                                    return false;
+                                }
+                                bUl.append(li);
+                            }
+                        }
+                    });
+                }
+            });
+        }
+        function plusFromMinus(obj){
+            if($(obj).hasClass("expandable-hitarea")){
+                $(obj).parent("li").removeClass("expandable lastExpandable");
+                $(obj).parent("li").addClass("collapsable lastCollapsable");
+                $(obj).removeClass("hitarea expandable-hitarea lastExpandable-hitarea");
+                $(obj).addClass("hitarea collapsable-hitarea lastCollapsable-hitarea");
+                $(obj).parent("li").children("ul").css("display","block");
+            }else{
+                $(obj).parent("li").removeClass("collapsable lastCollapsable");
+                $(obj).parent("li").addClass("expandable lastExpandable");
+                $(obj).removeClass("hitarea collapsable-hitarea lastCollapsable-hitarea");
+                $(obj).addClass("hitarea expandable-hitarea lastExpandable-hitarea");
+                $(obj).parent("li").children("ul").css("display","none");
+            }
+        }
+        function empChecked(obj) {
+            //기존 체크된 css 및 클래스 정보 삭제
+            $(".myChecked").css("background-color","");
+            $("li").removeClass("myChecked");
+            
+            //새로 체크된 css 및 클래스 정보 갱신
+            $(obj).addClass("myChecked");
+            $(".myChecked").css("background-color","#2980b9");
+            console.log($(obj).data('empid'));
+            $('#selectemp_Name').val();
+            $('.table tbody').find('.modalBtn').remove();
+            $('.modalContainer').find('.modal').remove();
+            $.ajax({
+                type: "get",
+                url: "/WorkConGW/attend/attendSelect",
+                data: { emp_id: $(obj).data('empid')
+                },
+                success: function(response) {
+                    response.forEach(function(e, i) {
+                        e.HISTORY_ATTEND_DAY = e.HISTORY_ATTEND_DAY || '';
+                        e.EMP_NAME = e.EMP_NAME || '';
+                        e.CODE_NAME = e.CODE_NAME || '';
+                        e.HISTORY_ATTEND_TIME = e.HISTORY_ATTEND_TIME || '';
+                        e.HISTORY_LEAVING_TIME = e.HISTORY_LEAVING_TIME || '';
+                        e.ATTEND_ST_NAME = e.ATTEND_ST_NAME || '';
+                        e.HISTORY_REASON = e.HISTORY_REASON || '';
+
+                        let text = `
+                        <tr class="modalBtn" data-toggle="modal" data-target="#staticBackdrop`+i+`">
+                            <td>`+e.HISTORY_ATTEND_DAY+`</td>
+                            <td>`+e.EMP_NAME+`</td>
+                            <td>`+e.CODE_NAME+`</td>
+                            <td>`+e.HISTORY_ATTEND_TIME+`</td>
+                            <td>`+e.HISTORY_LEAVING_TIME+`</td>
+                            <td><span class="goWork goWork`+e.ATTEND_ST_ID+`">`+e.ATTEND_ST_NAME+`</span></td>
+                            <td>`+e.HISTORY_REASON+`</td>
+                        </tr>
+                        `;
+                        $('tbody').append(text);
+                        let modal = `
+                        <div class="modal fade" id="staticBackdrop`+i+`" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                            <div class="modal-dialog modal-dialog-centered">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                <h5 class="modal-title" id="staticBackdropLabel">`+e.EMP_NAME+`</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                                </div>
+                                <div class="modal-body">
+                                    <p><span class="modalSubTit">날짜</span>`+e.HISTORY_ATTEND_DAY+`</p>
+                                    <p><span class="modalSubTit">직급</span>`+e.CODE_NAME+`</p>
+                                    <p><span class="modalSubTit">출근시간</span>`+e.HISTORY_ATTEND_TIME+`</p>
+                                    <p><span class="modalSubTit">퇴근시간</span>`+e.HISTORY_LEAVING_TIME+`</p>
+                                    <p><span class="modalSubTit">출근상태</span><span class="goWork goWork`+e.ATTEND_ST_ID+`">`+e.ATTEND_ST_NAME+`</span></p>
+                                    <p><span class="modalSubTit">지각사유</span><span style="display: inline-block;">`+e.HISTORY_REASON+`</span></p>
+                                </div>
+                                <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                </div>
+                            </div>
+                            </div>
+                        </div>
+                        `;
+                        $('.modalContainer').append(modal);
+                    })
+                    console.log(response);
+                },
+                error: function(xhr, status, error) {
+                // 오류 처리
+                console.error(xhr.responseText);
+                }
+            });
+        }
+        function myClick(obj){
+            $('.table tbody').find('.modalBtn').remove();
+            $('.modalContainer').find('.modal').remove();
+            console.log($(obj).data('deptid'));
+            $.ajax({
+                type: "get",
+                url: "/WorkConGW/attend/attendDeptSelect",
+                data: { dept_id: $(obj).data('deptid')
+                },
+                success: function(response) {
+                    response.forEach(function(e, i) {
+                        e.HISTORY_ATTEND_DAY = e.HISTORY_ATTEND_DAY || '';
+                        e.EMP_NAME = e.EMP_NAME || '';
+                        e.CODE_NAME = e.CODE_NAME || '';
+                        e.HISTORY_ATTEND_TIME = e.HISTORY_ATTEND_TIME || '';
+                        e.HISTORY_LEAVING_TIME = e.HISTORY_LEAVING_TIME || '';
+                        e.ATTEND_ST_NAME = e.ATTEND_ST_NAME || '';
+                        e.HISTORY_REASON = e.HISTORY_REASON || '';
+
+                        let text = `
+                        <tr class="modalBtn" data-toggle="modal" data-target="#staticBackdrop`+i+`">
+                            <td>`+e.HISTORY_ATTEND_DAY+`</td>
+                            <td>`+e.EMP_NAME+`</td>
+                            <td>`+e.CODE_NAME+`</td>
+                            <td>`+e.HISTORY_ATTEND_TIME+`</td>
+                            <td>`+e.HISTORY_LEAVING_TIME+`</td>
+                            <td><span class="goWork goWork`+e.ATTEND_ST_ID+`">`+e.ATTEND_ST_NAME+`</span></td>
+                            <td>`+e.HISTORY_REASON+`</td>
+                        </tr>
+                        `;
+                        $('tbody').append(text);
+                        let modal = `
+                        <div class="modal fade" id="staticBackdrop`+i+`" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                            <div class="modal-dialog modal-dialog-centered">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                <h5 class="modal-title" id="staticBackdropLabel">`+e.EMP_NAME+`</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                                </div>
+                                <div class="modal-body">
+                                    <p><span class="modalSubTit">날짜</span>`+e.HISTORY_ATTEND_DAY+`</p>
+                                    <p><span class="modalSubTit">직급</span>`+e.CODE_NAME+`</p>
+                                    <p><span class="modalSubTit">출근시간</span>`+e.HISTORY_ATTEND_TIME+`</p>
+                                    <p><span class="modalSubTit">퇴근시간</span>`+e.HISTORY_LEAVING_TIME+`</p>
+                                    <p><span class="modalSubTit">출근상태</span><span class="goWork goWork`+e.ATTEND_ST_ID+`">`+e.ATTEND_ST_NAME+`</span></p>
+                                    <p><span class="modalSubTit">지각사유</span><span style="display: inline-block;">`+e.HISTORY_REASON+`</span></p>
+                                </div>
+                                <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                </div>
+                            </div>
+                            </div>
+                        </div>
+                        `;
+                        $('.modalContainer').append(modal);
+                    })
+                    console.log(response);
+                },
+                error: function(xhr, status, error) {
+                // 오류 처리
+                console.error(xhr.responseText);
+                }
+            });
+        }
     </script>

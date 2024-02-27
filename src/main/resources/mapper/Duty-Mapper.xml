@@ -4,23 +4,742 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.mybatis.mapper.DutyMapper">
 
+    <sql id="search">
+        <if test="searchKeyword != null and searchKeyword != ''">
+            <choose>
+                <when test='searchCondition == "tcmn"'>
+                    AND	(A.duty_board_title LIKE '%' || #{searchKeyword} || '%'
+                    OR A.duty_board_content LIKE '%' || #{searchKeyword} || '%'
+                    OR C.emp_name LIKE '%' || #{searchKeyword} || '%'
+                    )
+                </when>
+                <when test='searchCondition == "t"'>
+                    AND	A.duty_board_title LIKE '%' || #{searchKeyword} || '%'
+                </when>
+                <when test='searchCondition == "c"'>
+                    AND	A.duty_board_content LIKE '%' || #{searchKeyword} || '%'
+                </when>
+                <when test='searchCondition == "m"'>
+                    AND	C.emp_name LIKE '%' || #{searchKeyword} || '%'
+                </when>
+                <when test='searchCondition == "n"'>
+                    AND	A.duty_board_id = #{searchKeyword}
+                </when>
+            </choose>
+        </if>
+        <if test="searchDeadline != null and searchDeadline != ''">
+            AND TO_CHAR(A.duty_board_end_dt,'yyyyMMdd') <![CDATA[ = ]]> TO_CHAR(to_date(#{searchDeadline},'MM/DD/YYYY'),'yyyyMMdd')
+        </if>
+        <if test="searchState != null and searchState != ''">
+            <choose>
+                <when test='searchState == "Y"'>
+                    AND sysdate <![CDATA[ < ]]> A.duty_board_end_dt
+                </when>
+                <when test='searchState == "N"'>
+                    AND sysdate <![CDATA[ >= ]]> A.duty_board_end_dt
+                </when>
+            </choose>
+        </if>
+    </sql>
+
+    <!--  -->
     <select id="selectDutyVO" parameterType="DutyVO" resultType="DutyVO">
         SELECT
-            A.duty_board_id
-             ,A.duty_board_title
-             ,A.duty_board_content
-             ,A.duty_board_readcnt
-             ,A.duty_board_create_dt
-             ,A.duty_board_update_dt
-             ,A.duty_updater_id
-             ,A.duty_board_end_dt
-             ,A.emp_writer_id
-             ,B.emp_name
-             ,A.duty_board_security
+            A.duty_board_id,
+            A.duty_board_title,
+            A.duty_board_content,
+            A.duty_board_readcnt,
+            A.duty_board_create_dt,
+            A.duty_board_update_dt,
+            A.duty_updater_id,
+            A.duty_board_end_dt,
+            A.emp_writer_id,
+            B.emp_name,
+            A.PROJECT_ID,
+            CASE WHEN A.PROJECT_ID != 0 THEN C.PROJECT_TITLE ELSE NULL END AS PROJECT_TITLE
         FROM duty A
-                 JOIN emp B
-                      ON A.emp_writer_id=B.emp_id
+                 JOIN emp B ON A.emp_writer_id = B.emp_id
+                 LEFT JOIN project C ON A.PROJECT_ID = C.PROJECT_ID
         WHERE A.duty_board_id = #{duty_Board_Id}
+    </select>
+
+    <!-- 프로젝트 삭제 시, 업무의 project_Id 업데이트.. 인데 프로젝트에 업무 연결 시, 삭제 불가능하게 수정 -->
+<!--    <update id="updateDutyByDeleteProject" parameterType="ProjectVO">-->
+<!--        UPDATE DUTY-->
+<!--        SET-->
+<!--            PROJECT_ID = null-->
+<!--          ,DUTY_BOARD_UPDATE_DT = sysdate-->
+<!--        WHERE-->
+<!--            PROJECT_ID = #{project_Id}-->
+<!--    </update>-->
+
+    <!-- 업무목록 리스트 조회 -->
+    <select id="selectDutyList" parameterType="DutyVO" resultType="DutyVO">
+        select D3.*
+        from(
+        select D2.*
+        from(
+        select rownum as seq, D1.*
+        from(
+        SELECT
+        A.duty_board_id
+        ,A.duty_board_title
+        ,A.duty_board_content
+        ,A.duty_board_readcnt
+        ,A.duty_board_create_dt
+        ,A.duty_board_update_dt
+        ,A.duty_updater_id
+        ,A.duty_board_end_dt
+        ,A.emp_writer_id
+        ,A.PROJECT_ID
+        ,C.emp_name
+        ,C.emp_id
+        ,C.emp_picture
+        ,B.attachCount
+        ,NVL(D.reply_count,0) as replyCount
+        ,(SELECT COUNT(EMP_ID)
+        FROM EMP
+        WHERE DEPT_ID IN (
+        SELECT DEPT_ID
+        FROM DUTY_RECEPTION
+        WHERE DUTY_BOARD_ID = A.duty_board_id
+        AND DEPT_ID IS NOT NULL
+        )) dept_Cnt
+        ,(SELECT COUNT(DUTY_BOARD_ID)
+        FROM DUTY_RECEPTION
+        WHERE DUTY_BOARD_ID = A.duty_board_id
+        AND EMP_ID IS NOT NULL
+        ) emp_Cnt
+        FROM DUTY A
+        LEFT OUTER JOIN (
+        SELECT duty_board_id,
+        COUNT(*) as attachCount
+        FROM duty_attach
+        GROUP BY duty_board_id
+        ) B
+        ON A.duty_board_id=B.duty_board_id
+        JOIN emp C
+        ON A.emp_writer_id=C.emp_id
+        LEFT OUTER JOIN (
+        SELECT duty_board_id,
+        COUNT(*) AS reply_count
+        FROM duty_reply
+        GROUP BY duty_board_id
+        ) D
+        ON A.duty_board_id=D.duty_board_id
+        WHERE 1=1
+        AND (#{emp_Writer_Id} = EMP_WRITER_ID
+        OR  #{emp_Writer_Id} IN (SELECT T1.EMP_ID
+        FROM DUTY_ENFORCER T1
+        WHERE T1.DUTY_BOARD_ID = A.duty_board_id)
+        OR  #{emp_Writer_Id} IN (SELECT T2.EMP_ID
+        FROM DUTY_RECEPTION T2
+        WHERE T2.DUTY_BOARD_ID = A.duty_board_id
+        AND T2.EMP_ID IS NOT NULL
+        )
+        OR  (SELECT DEPT_ID
+        FROM EMP
+        WHERE EMP_ID = #{emp_Writer_Id}) IN
+        (SELECT T3.DEPT_ID
+        FROM DUTY_RECEPTION T3
+        WHERE T3.DUTY_BOARD_ID = A.duty_board_id
+        AND T3.DEPT_ID IS NOT NULL)
+        )
+        <include refid="search" />
+        ORDER BY A.duty_board_create_dt DESC
+        ) D1
+        ) D2
+        where seq <![CDATA[ > ]]> #{firstIndex}
+        ) D3
+        where rownum <![CDATA[ <= ]]> #{recordCountPerPage}
+    </select>
+
+    <!-- 업무목록 - 업무 수신자(담당자) 리스트 조회 -->
+    <select id="selectDutyEnforcerList" parameterType="DutyVO" resultType="DutyEnforcerCommand">
+        SELECT  A.emp_id
+             ,A.emp_name
+             ,A.emp_picture
+             ,B.attend_st_name
+             ,C.dept_name
+             ,D.code_name as officialName
+             ,E.duty_board_id
+             ,E.read_st
+        FROM emp A, attend_st B, dept C, code D, DUTY_ENFORCER E
+        WHERE A.attend_st_id = B.attend_st_id(+)
+          AND A.dept_id = C.dept_id(+)
+          AND A.CODE_ID = D.code_id
+          AND A.emp_id = E.emp_id
+          AND duty_board_id = #{duty_Board_Id}
+    </select>
+
+    <!-- 업무목록 - 업무 목록 총 개수 -->
+    <select id="selectDutyListTotalCount" parameterType="DutyVO" resultType="int">
+        SELECT
+        COUNT(*)
+        FROM duty A
+        LEFT OUTER JOIN (
+        SELECT duty_board_id,
+        COUNT(*) as attachCount
+        FROM duty_attach
+        GROUP BY duty_board_id
+        ) B
+        ON A.duty_board_id=B.duty_board_id
+        JOIN emp C
+        ON A.emp_writer_id=C.emp_id
+        LEFT OUTER JOIN (
+        SELECT duty_board_id,
+        COUNT(*) AS reply_count
+        FROM duty_reply
+        GROUP BY duty_board_id
+        ) D
+        ON A.duty_board_id=D.duty_board_id
+
+        WHERE 1=1
+        AND (#{emp_Writer_Id} = EMP_WRITER_ID
+        OR  #{emp_Writer_Id} IN (SELECT T1.EMP_ID
+        FROM DUTY_ENFORCER T1
+        WHERE T1.DUTY_BOARD_ID = A.duty_board_id)
+        OR  #{emp_Writer_Id} IN (SELECT T2.EMP_ID
+        FROM DUTY_RECEPTION T2
+        WHERE T2.DUTY_BOARD_ID = A.duty_board_id
+        AND T2.EMP_ID IS NOT NULL
+        )
+        OR   (SELECT DEPT_ID
+        FROM EMP
+        WHERE EMP_ID = #{emp_Writer_Id}) IN
+        (SELECT T3.DEPT_ID
+        FROM DUTY_RECEPTION T3
+        WHERE T3.DUTY_BOARD_ID = A.duty_board_id
+        AND T3.DEPT_ID IS NOT NULL)
+        )
+        <include refid="search" />
+    </select>
+
+    <!-- 업무 등록 -->
+    <insert id="insertDuty" parameterType="DutyVO">
+        <selectKey resultType="int" keyProperty="duty_Board_Id" order="BEFORE">
+            SELECT duty_board_id_seq.nextval FROM dual
+        </selectKey>
+        INSERT INTO duty (
+        duty_board_id
+        ,duty_board_title
+        ,duty_board_content
+        ,duty_board_readcnt
+        ,duty_board_create_dt
+        ,duty_board_update_dt
+        ,duty_updater_id
+        <if test='duty_Board_End_Dt != null'>
+            ,duty_board_end_dt
+        </if>
+        ,emp_writer_id
+        <if test='project_Id != 0'>
+        ,project_id
+        </if>
+        ) VALUES (
+        #{duty_Board_Id}
+        ,#{duty_Board_Title}
+        ,#{duty_Board_Content}
+        ,0
+        ,sysdate
+        ,sysdate
+        ,#{duty_Updater_Id}
+        <if test='duty_Board_End_Dt != null'>
+            ,#{duty_Board_End_Dt}
+        </if>
+        ,#{emp_Writer_Id}
+        <if test='project_Id != 0'>
+        ,#{project_Id}
+        </if>
+        )
+    </insert>
+
+    <!-- 업무 등록 - 수신자(담당자) 등록 -->
+    <insert id="insertDutyEnforcer" parameterType="DutyEnforcerCommand">
+        INSERT INTO DUTY_ENFORCER (
+        duty_board_id
+        ,emp_id
+        ) VALUES (
+        #{duty_Board_Id}
+        ,#{emp_Id}
+        )
+    </insert>
+
+    <!-- 업무 등록 - 참조자 등록 -->
+    <insert id="insertDutyReceptioner" parameterType="DutyEnforcerCommand">
+        INSERT INTO DUTY_RECEPTION (
+        DUTY_BOARD_ID
+        ,EMP_ID
+        ) VALUES (
+        #{duty_Board_Id}
+        ,#{emp_Id}
+        )
+    </insert>
+
+    <!-- 업무 등록 - 파일 등록 -->
+    <insert id="insertDutyFile" parameterType="DutyAttachVO">
+        INSERT INTO duty_attach (
+                                     attach_id
+                                   ,attach_path
+                                   ,attach_name
+                                   ,attach_type
+                                   ,attach_create_dt
+                                   ,duty_board_id
+        ) VALUES (
+                   duty_attach_id_seq.nextval
+                 ,#{attach_path}
+                 ,#{attach_name}
+                 ,#{attach_type}
+                 ,sysdate
+                 ,#{duty_Board_Id}
+                 )
+    </insert>
+
+    <!-- 받은,보낸 업무목록 리스트 조회 -->
+    <select id="selectMyDutyList" parameterType="DutyVO" resultType="DutyVO">
+        select D3.*
+        from(
+        select D2.*
+        from(
+        select rownum as seq, D1.*
+        from(
+        SELECT
+        A.duty_board_id
+        ,A.duty_board_title
+        ,A.duty_board_content
+        ,A.duty_board_readcnt
+        ,A.duty_board_create_dt
+        ,A.duty_board_update_dt
+        ,A.duty_board_end_dt
+        ,A.emp_writer_id
+        ,C.emp_name
+        ,C.emp_id
+        ,C.emp_picture
+        ,B.attachCount
+        ,NVL(D.reply_count,0) as replyCount
+        ,(SELECT COUNT(EMP_ID)
+        FROM EMP
+        WHERE DEPT_ID IN (
+        SELECT DEPT_ID
+        FROM DUTY_RECEPTION
+        WHERE DUTY_BOARD_ID = A.duty_board_id
+        AND DEPT_ID IS NOT NULL
+        )) dept_Cnt
+        ,(SELECT COUNT(DUTY_BOARD_ID)
+        FROM DUTY_RECEPTION
+        WHERE DUTY_BOARD_ID = A.duty_board_id
+        AND EMP_ID IS NOT NULL
+        ) emp_Cnt
+        FROM duty A
+        LEFT OUTER JOIN (
+        SELECT duty_board_id,
+        COUNT(*) as attachCount
+        FROM duty_attach
+        GROUP BY duty_board_id
+        ) B
+        ON A.duty_board_id=B.duty_board_id
+        JOIN emp C
+        ON A.emp_writer_id=C.emp_id
+        LEFT OUTER JOIN (
+        SELECT duty_board_id,
+        COUNT(*) AS reply_count
+        FROM duty_reply
+        GROUP BY duty_board_id
+        ) D
+        ON A.duty_board_id=D.duty_board_id
+
+        WHERE 1=1
+        <if test='dutyType == "send"'>
+            AND emp_writer_id = #{emp_Writer_Id}
+        </if>
+        <if test='dutyType == "receive"'>
+            AND #{emp_Writer_Id} IN (SELECT T1.EMP_ID
+            FROM DUTY_ENFORCER T1
+            WHERE T1.DUTY_BOARD_ID = A.duty_board_id)
+        </if>
+        <include refid="search" />
+        ORDER BY A.duty_board_create_dt DESC
+        ) D1
+        ) D2
+        where seq <![CDATA[ > ]]> #{firstIndex}
+        ) D3
+        where rownum <![CDATA[ <= ]]> #{recordCountPerPage}
+    </select>
+
+    <!-- 받은,보낸 업무목록 - 받은,보낸 업무 총 개수 -->
+    <select id="selectMyDutyListTotalCount" parameterType="DutyVO" resultType="int">
+        SELECT COUNT(*)
+        FROM duty A
+        LEFT OUTER JOIN (
+        SELECT duty_board_id,
+        COUNT(*) as attachCount
+        FROM duty_attach
+        GROUP BY duty_board_id
+        ) B
+        ON A.duty_board_id=B.duty_board_id
+        JOIN emp C
+        ON A.emp_writer_id=C.emp_id
+        LEFT OUTER JOIN (
+        SELECT duty_board_id,
+        COUNT(*) AS reply_count
+        FROM duty_reply
+        GROUP BY duty_board_id
+        ) D
+        ON A.duty_board_id=D.duty_board_id
+
+        WHERE 1=1
+        <if test='dutyType == "send"'>
+            AND emp_writer_id = #{emp_Writer_Id}
+        </if>
+        <if test='dutyType == "receive"'>
+            AND #{emp_Writer_Id} IN (SELECT T1.EMP_ID
+            FROM DUTY_ENFORCER T1
+            WHERE T1.DUTY_BOARD_ID = A.duty_board_id)
+        </if>
+        <include refid="search" />
+    </select>
+
+    <update id="plusProjectDutyCount" parameterType="int">
+        UPDATE PROJECT
+        SET
+            DUTY_COUNT = DUTY_COUNT+1
+            ,PROJECT_UPDATE_DT = sysdate
+        WHERE
+            PROJECT_ID = #{project_Id}
+    </update>
+
+    <!-- 업무 삭제 시 카운트 -1 -->
+    <update id="minusProjectDutyCount" parameterType="int">
+        UPDATE PROJECT
+        SET
+            DUTY_COUNT = DUTY_COUNT-1
+          ,PROJECT_UPDATE_DT = sysdate
+        WHERE
+            PROJECT_ID = #{project_Id}
+    </update>
+
+    <!-- 참조 업무목록 리스트 조회 -->
+    <select id="selectDutyReceptionList" parameterType="DutyVO" resultType="DutyVO">
+        select D3.*
+        from(
+        select D2.*
+        from(
+        select rownum as seq, D1.*
+        from(
+        SELECT
+        A.duty_board_id
+        ,A.duty_board_title
+        ,A.duty_board_content
+        ,A.duty_board_readcnt
+        ,A.duty_board_create_dt
+        ,A.duty_board_update_dt
+        ,A.duty_board_end_dt
+        ,A.emp_writer_id
+        ,C.emp_name
+        ,C.emp_id
+        ,C.emp_picture
+        ,B.attachCount
+        ,NVL(D.reply_count,0) as replyCount
+        ,(SELECT COUNT(EMP_ID)
+        FROM EMP
+        WHERE DEPT_ID IN (
+        SELECT DEPT_ID
+        FROM DUTY_RECEPTION
+        WHERE DUTY_BOARD_ID = A.duty_board_id
+        AND DEPT_ID IS NOT NULL
+        )) dept_Cnt
+        ,(SELECT COUNT(DUTY_BOARD_ID)
+        FROM DUTY_RECEPTION
+        WHERE DUTY_BOARD_ID = A.duty_board_id
+        AND EMP_ID IS NOT NULL
+        ) emp_Cnt
+        FROM duty A
+        LEFT OUTER JOIN (
+        SELECT duty_board_id,
+        COUNT(*) as attachCount
+        FROM duty_attach
+        GROUP BY duty_board_id
+        ) B
+        ON A.duty_board_id=B.duty_board_id
+        JOIN emp C
+        ON A.emp_writer_id=C.emp_id
+        LEFT OUTER JOIN (
+        SELECT duty_board_id,
+        COUNT(*) AS reply_count
+        FROM duty_reply
+        GROUP BY duty_board_id
+        ) D
+        ON A.duty_board_id=D.duty_board_id
+
+        WHERE 1=1
+        AND (
+        #{emp_Writer_Id} IN (SELECT T2.EMP_ID
+        FROM DUTY_RECEPTION T2
+        WHERE T2.DUTY_BOARD_ID = A.duty_board_id
+        AND T2.EMP_ID IS NOT NULL
+        )
+        OR   (SELECT DEPT_ID
+        FROM EMP
+        WHERE EMP_ID = #{emp_Writer_Id}) IN
+        (SELECT T3.DEPT_ID
+        FROM DUTY_RECEPTION T3
+        WHERE T3.DUTY_BOARD_ID = A.duty_board_id
+        AND T3.DEPT_ID IS NOT NULL)
+        )
+        <include refid="search" />
+        ORDER BY A.duty_board_create_dt DESC
+
+        ) D1
+        ) D2
+        where seq <![CDATA[ > ]]> #{firstIndex}
+        ) D3
+        where rownum <![CDATA[ <= ]]> #{recordCountPerPage}
+    </select>
+
+    <!-- 참조 업무목록 - 참조 업무 총 개수 -->
+    <select id="selectDutyReceptionListTotalCount" parameterType="DutyVO" resultType="int">
+        SELECT COUNT(*)
+        FROM duty A
+        LEFT OUTER JOIN (
+        SELECT duty_board_id,
+        COUNT(*) as attachCount
+        FROM duty_attach
+        GROUP BY duty_board_id
+        ) B
+        ON A.duty_board_id=B.duty_board_id
+        JOIN emp C
+        ON A.emp_writer_id=C.emp_id
+        LEFT OUTER JOIN (
+        SELECT duty_board_id,
+        COUNT(*) AS reply_count
+        FROM duty_reply
+        GROUP BY duty_board_id
+        ) D
+        ON A.duty_board_id=D.duty_board_id
+        WHERE 1=1
+        AND (
+        #{emp_Writer_Id} IN (SELECT T2.EMP_ID
+        FROM DUTY_RECEPTION T2
+        WHERE T2.DUTY_BOARD_ID = A.duty_board_id
+        AND T2.EMP_ID IS NOT NULL
+        )
+        OR   (SELECT DEPT_ID
+        FROM EMP
+        WHERE EMP_ID = #{emp_Writer_Id}) IN
+        (SELECT T3.DEPT_ID
+        FROM DUTY_RECEPTION T3
+        WHERE T3.DUTY_BOARD_ID = A.duty_board_id
+        AND T3.DEPT_ID IS NOT NULL)
+        )
+        <include refid="search" />
+    </select>
+
+
+    <!-- 업무 디테일 - 조회수 증가 -->
+    <update id="increaseDutyReadcnt" parameterType="DutyVO">
+        UPDATE duty
+        SET
+            duty_board_readcnt = duty_board_readcnt+1
+        WHERE
+            duty_board_id = #{duty_Board_Id}
+    </update>
+
+    <!-- 업무 디테일 - 댓글 총 개수 -->
+    <select id="selectReplyListTotalCount" parameterType="DutyVO" resultType="int">
+        SELECT
+            COUNT(*)
+        FROM duty_reply
+        WHERE duty_board_id=#{duty_Board_Id}
+    </select>
+
+    <!-- 업무 디테일 - 수신자(담당자)가 읽으면 상태 변경 -->
+    <update id="updateDutyEnforcer" parameterType="DutyEnforcerCommand">
+        UPDATE DUTY_ENFORCER
+        SET
+            read_st = 'Y'
+        WHERE
+            duty_board_id = #{duty_Board_Id}
+          AND   emp_id = #{emp_Id}
+    </update>
+
+    <!-- 업무 디테일 - 파일 리스트 가져오기 -->
+    <select id="selectDutyAttachList" parameterType="DutyVO" resultType="DutyAttachVO">
+        SELECT
+            ATTACH_ID
+             ,ATTACH_PATH
+             ,ATTACH_NAME
+             ,ATTACH_TYPE
+             ,ATTACH_CREATE_DT
+             ,DUTY_BOARD_ID
+        FROM
+            DUTY_ATTACH
+        WHERE DUTY_BOARD_ID = #{duty_Board_Id}
+    </select>
+
+    <!-- 업무 디테일 - 댓글 리스트 가져오기 -->
+    <select id="selectDutyReplyList" parameterType="DutyVO" resultType="DutyReplyVO">
+        select D3.*
+        from(
+                select D2.*
+                from(
+                        select rownum as seq, D1.*
+                        from(
+                                SELECT
+                                    reply_id
+                                     ,reply_content
+                                     ,reply_create_dt
+                                     ,reply_update_dt
+                                     ,duty_board_id
+                                     ,A.EMP_ID
+                                     ,B.emp_name
+                                FROM
+                                    duty_reply A, emp B
+                                WHERE A.EMP_ID=B.emp_id
+                                  AND duty_board_id=#{duty_Board_Id}
+                                ORDER BY reply_create_dt desc
+                            ) D1
+                    ) D2
+                where seq <![CDATA[ > ]]> #{firstIndex}
+            ) D3
+        where rownum <![CDATA[ <= ]]> #{recordCountPerPage}
+    </select>
+
+    <!-- 업무 디테일 - 참조자 리스트 -->
+    <select id="selectReceptionList" parameterType="DutyVO" resultType="DutyReceptionCommand">
+        SELECT
+            A.DUTY_BOARD_ID
+             ,A.EMP_ID
+             ,B.EMP_NAME
+        FROM DUTY_RECEPTION A, EMP B
+        WHERE A.EMP_ID = B.EMP_ID
+          AND DUTY_BOARD_ID=#{duty_Board_Id}
+          AND A.EMP_ID IS NOT NULL
+    </select>
+
+    <!-- 업무 디테일 - 댓글 등록 -->
+    <insert id="insertDutyReply" parameterType="DutyReplyVO">
+        INSERT INTO duty_reply (
+                                    reply_id
+                                  ,reply_content
+                                  ,reply_create_dt
+                                  ,reply_update_dt
+                                  ,duty_board_id
+                                  ,emp_id
+        ) VALUES (
+                   duty_reply_id_seq.nextval
+                 ,#{reply_Content}
+                 ,sysdate
+                 ,sysdate
+                 ,#{duty_Board_Id}
+                 ,#{emp_Id}
+                 )
+    </insert>
+
+    <!-- 업무 디테일 - 댓글 삭제 -->
+    <delete id="deleteDutyReply" parameterType="DutyReplyVO">
+        DELETE FROM duty_reply
+        WHERE reply_id = #{reply_Id}
+    </delete>
+
+    <!-- 업무 디테일 - 댓글 수정 -->
+    <update id="updateDutyReply" parameterType="DutyReplyVO">
+        UPDATE duty_reply
+        SET
+            reply_content=#{reply_Content}
+          ,reply_update_dt=sysdate
+        WHERE
+            reply_id =#{reply_Id}
+    </update>
+
+    <!-- 업무 디테일 - 업무 삭제 - 담당자 삭제 -->
+    <delete id="deleteDutyEnforcer" parameterType="DutyVO">
+        DELETE FROM DUTY_ENFORCER
+        WHERE
+            duty_board_id =#{duty_Board_Id}
+    </delete>
+
+    <!-- 업무 디테일 - 업무 삭제 - 참조자 삭제 -->
+    <delete id="deleteDutyReceiver" parameterType="DutyVO">
+        DELETE FROM duty_reception
+        WHERE
+            duty_board_id =#{duty_Board_Id}
+    </delete>
+
+    <!-- 업무 디테일 - 업무 삭제 - 파일 삭제 -->
+    <delete id="deleteDutyFile" parameterType="DutyVO">
+        DELETE FROM duty_attach
+        WHERE
+            duty_board_id = #{duty_Board_Id}
+    </delete>
+
+    <!-- 업무 디테일 - 업무 삭제 - 댓글 전부 삭제 -->
+    <delete id="deleteDutyReplyAll" parameterType="DutyVO">
+        DELETE FROM duty_reply
+        WHERE duty_board_id=#{duty_Board_Id}
+    </delete>
+
+    <!-- 업무 디테일 - 업무 삭제 -->
+    <delete id="deleteDuty" parameterType="DutyVO">
+        DELETE FROM duty
+        WHERE
+            duty_board_id = #{duty_Board_Id}
+    </delete>
+
+    <!-- 업무 디테일 - 업무 수정 -->
+    <update id="updateDuty" parameterType="DutyVO">
+        UPDATE duty
+        SET
+            duty_board_title = #{duty_Board_Title}
+          ,duty_board_content = #{duty_Board_Content}
+          ,duty_board_update_dt = sysdate
+          ,duty_board_end_dt = #{duty_Board_End_Dt}
+          ,PROJECT_ID = #{new_Project_Id}
+        WHERE
+            duty_board_id = #{duty_Board_Id}
+    </update>
+
+    <!-- 업무 디테일 - 업무 수정 - 파일 삭제를 위한 파일 찾기 -->
+    <select id="selectDutyAttachById" parameterType="DutyAttachVO" resultType="DutyAttachVO">
+        SELECT
+            attach_id
+             ,attach_path
+             ,attach_name
+             ,attach_type
+             ,attach_create_dt
+             ,duty_board_id
+        FROM
+            duty_attach
+        WHERE duty_board_id=#{duty_Board_Id}
+          AND attach_id=#{attach_id}
+    </select>
+
+    <delete id="deleteDutyFileById" parameterType="DutyAttachVO">
+        DELETE FROM duty_attach
+        WHERE
+            duty_board_id = #{duty_Board_Id}
+          AND attach_id = #{attach_id}
+    </delete>
+
+    <select id="dutyProgressPercent" parameterType="DutyVO" resultType="DutyProgressVO">
+        SELECT
+            D.duty_board_id,
+            COUNT(I.issue_board_id) AS total_issues,
+            SUM(CASE WHEN I.issue_project_st = 'done' THEN 1 ELSE 0 END) AS done_issues,
+            SUM(CASE WHEN I.issue_project_st = 'todo' THEN 1 ELSE 0 END) AS todo_issues,
+            SUM(CASE WHEN I.issue_project_st = 'inprogress' THEN 1 ELSE 0 END) AS inprogress_issues,
+            CASE
+                WHEN COUNT(I.issue_board_id) = 0 THEN 0
+                ELSE (SUM(CASE WHEN I.issue_project_st = 'todo' THEN 0
+                               WHEN I.issue_project_st = 'inprogress' THEN 0.5
+                               WHEN I.issue_project_st = 'done' THEN 1
+                               ELSE 0 END) / COUNT(I.issue_board_id)) * 100
+                END AS progress_percentage
+        FROM
+            duty D
+                LEFT JOIN
+            ISSUE_BOARD I ON D.duty_board_id = I.duty_board_id
+        WHERE D.DUTY_BOARD_ID = #{duty_Board_Id}
+        GROUP BY
+            D.duty_board_id
     </select>
 
 </mapper>

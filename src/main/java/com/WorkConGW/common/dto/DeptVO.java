@@ -17,7 +17,7 @@ public class DeptVO extends BaseVO {
     private String dept_St;
     private String dept_Hp;
     private String dept_Leader_Id;
-    private String dept_Team_Yn;
+    private int dept_Team_Yn;
 
     private String dept_Leader_Name; // 담당자명
     private String dept_Sup_Name;
@@ -27,6 +27,9 @@ public class DeptVO extends BaseVO {
 
     private String emp_Id; // 특정 직원의 부서 및 담당부서 조회를 위해 추가
 
+
+    private String code_Id; // 특정 직원의 직급 조회를 추가
+
     private String flag; // deptService 이용 시 제어하기 위해 추가
 
 
@@ -34,7 +37,7 @@ public class DeptVO extends BaseVO {
 
 
     public DeptVO(){}
-    public DeptVO(String dept_Id, String dept_Sup_Id, String dept_Name, String dept_Create_Dt, String dept_Update_Dt, String dept_St, String dept_Hp, String dept_Leader_Id, String dept_Team_Yn, String dept_Leader_Name, String dept_Sup_Name, String emp_Email, int dept_Emp_Count, String emp_Id, String flag) {
+    public DeptVO(int dept_Team_Yn,String dept_Id, String dept_Sup_Id, String dept_Name, String dept_Create_Dt, String dept_Update_Dt, String dept_St, String dept_Hp, String dept_Leader_Id, String dept_Leader_Name, String dept_Sup_Name, String emp_Email, int dept_Emp_Count, String emp_Id, String flag) {
         super();
         this.dept_Id = dept_Id;
         this.dept_Sup_Id = dept_Sup_Id;
@@ -118,11 +121,11 @@ public class DeptVO extends BaseVO {
         this.dept_Leader_Id = dept_Leader_Id;
     }
 
-    public String getDept_Team_Yn() {
+    public int getDept_Team_Yn() {
         return dept_Team_Yn;
     }
 
-    public void setDept_Team_Yn(String dept_Team_Yn) {
+    public void setDept_Team_Yn(int dept_Team_Yn) {
         this.dept_Team_Yn = dept_Team_Yn;
     }
 
@@ -172,5 +175,13 @@ public class DeptVO extends BaseVO {
 
     public void setFlag(String flag) {
         this.flag = flag;
+    }
+
+    public String getCode_Id() {
+        return code_Id;
+    }
+
+    public void setCode_Id(String code_Id) {
+        this.code_Id = code_Id;
     }
 }

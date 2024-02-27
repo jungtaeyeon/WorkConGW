@@ -2,15 +2,19 @@ package com.WorkConGW.board;
 
 import com.WorkConGW.board.anony.dto.AnonyReplyVO;
 import com.WorkConGW.board.anony.dto.AnonyVO;
+import com.WorkConGW.board.duty.dto.DutyProgressVO;
 import com.WorkConGW.board.duty.dto.DutyReplyVO;
 import com.WorkConGW.board.duty.dto.DutyVO;
 import com.WorkConGW.board.issue.dto.IssueReplyVO;
 import com.WorkConGW.board.issue.dto.IssueVO;
+import com.WorkConGW.board.issue.dto.ProjectVO;
 import com.WorkConGW.board.notice.dto.NoticeVO;
 import com.WorkConGW.common.command.FileUploadCommand;
 import com.WorkConGW.emp.dto.EmpVO;
 import org.apache.ibatis.type.Alias;
 import org.springframework.web.multipart.MultipartFile;
+
+import java.util.List;
 
 @Alias("boardFormVO")
 public class BoardFormVO {
@@ -38,6 +42,10 @@ public class BoardFormVO {
 	private IssueVO issueVO;
 	private IssueVO searchIssueVO;
 	private IssueReplyVO issueReplyVO;
+
+	private List<ProjectVO> projectVO;
+
+	private DutyProgressVO dutyProgressVO;
 
 
 
@@ -197,7 +205,7 @@ public class BoardFormVO {
 	public int getDuty_Board_Id() {
 		return this.dutyVO.getDuty_Board_Id();
 	}
-	public void set_DutyBoard_Id(int duty_Board_Id) {
+	public void setDuty_Board_Id(int duty_Board_Id) {
 		this.dutyVO.setDuty_Board_Id(duty_Board_Id);
 	}
 	public AnonyReplyVO getSearchanonyReplyVO() {
@@ -208,5 +216,36 @@ public class BoardFormVO {
 		this.searchanonyReplyVO = searchanonyReplyVO;
 	}
 
+	public List<ProjectVO> getProjectVO() {
+		return projectVO;
+	}
+
+	public void setProjectVO(List<ProjectVO> projectVO) {
+		this.projectVO = projectVO;
+	}
+
+	/* 업무 조회 구분을 위해 추가 */
+	public String getDutyType() {
+		return dutyVO.getDutyType();
+	}
+	public void setDutyType(String dutyType) {
+		this.dutyVO.setDutyType(dutyType);
+	}
+
+	/* 이슈 디테일 조회를 위해 추가 */
+	public int getIssue_Board_Id() {
+		return issueVO.getIssue_Board_Id();
+	}
+	public void setIssue_Board_Id(int issue_board_id) {
+		this.issueVO.setIssue_Board_Id(issue_board_id);
+	}
+
+	public DutyProgressVO getDutyProgressVO() {
+		return dutyProgressVO;
+	}
+
+	public void setDutyProgressVO(DutyProgressVO dutyProgressVO) {
+		this.dutyProgressVO = dutyProgressVO;
+	}
 }
 

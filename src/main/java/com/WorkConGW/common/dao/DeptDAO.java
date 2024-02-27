@@ -26,18 +26,54 @@ public class DeptDAO {
         return deptList;
     }
 
-    public void registDept(DeptVO deptVO) {
-        sqlSessionTemplate.insert("insertDept", deptVO);
+    /** 부서장일 경우 전체 조회 **/
+    public List<DeptVO> selectAllList(DeptVO deptVO) {
+        List<DeptVO> selectAllList = sqlSessionTemplate.selectList("selectAllList", deptVO);
+        log.info(selectAllList.toString());
+        return selectAllList;
     }
 
 
-    public int checkName(String deptName) {
-        int result;
-        result = sqlSessionTemplate.selectOne("checkName",deptName);
-        return result;
-    }
+    /**페이징이 적용된 모든 부서 리스트 조회*/
+    //public List<DeptVO> selectDeptPagingList(DeptVO searchDeptVO) throws SQLException;
 
-    public List<DeptVO> selectAllDeptName() {
-        return sqlSessionTemplate.selectList("selectAllDeptName");
-    }
+    /**전체 부서 개수*/
+//    public int selectDeptCount(DeptVO searchDeptVO) throws SQLException;
+
+    /**부서 사용 직원 수*/
+//    public int seletDeptEmpCount(DeptVO deptVO) throws SQLException;
+
+    /**부서 등록*/
+//    public void insertDept(DeptVO deptVO) throws SQLException;
+
+    /**부서코드로 부서 조회*/
+//    public DeptVO selectDeptByDeptId(DeptVO deptVO);
+
+    /**부서장 아이디로 부서장 이름 조회*/
+//    public String selectEmpNameByLeaderId(String deptLeaderId);
+
+    /**부서명 중복확인*/
+//    public int dupleCheckDeptName(String deptName);
+
+    /**부서 삭제 (상태변경)*/
+//    public void deleteDept(DeptVO deptVO);
+
+    /**부서 수정*/
+//    public void updateDept(DeptVO deptVO);
+
+public void registDept(DeptVO deptVO) {
+    sqlSessionTemplate.insert("insertDept", deptVO);
+}
+
+
+public int checkName(String deptName) {
+    int result;
+    result = sqlSessionTemplate.selectOne("checkName",deptName);
+    return result;
+}
+
+public List<DeptVO> selectAllDeptName() {
+    return sqlSessionTemplate.selectList("selectAllDeptName");
+}
+
 }

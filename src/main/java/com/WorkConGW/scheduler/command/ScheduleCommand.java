@@ -38,6 +38,8 @@ public class ScheduleCommand extends BaseVO {
     private String searchType;
 
 
+
+
     /**
      * VO 변경
      */
@@ -78,9 +80,6 @@ public class ScheduleCommand extends BaseVO {
                 case "S03":
                     backgroundColor = "#b070db";
                     break;
-                case "S04":
-                    backgroundColor = "#ffa94d";
-                    break;
             }
         }
 
@@ -104,8 +103,10 @@ public class ScheduleCommand extends BaseVO {
         scheduleVO.setSchedule_Imp(numImportant);
         scheduleVO.setSchedule_Location(location);
         scheduleVO.setSchedule_Background_Color(backgroundColor);
-        scheduleVO.setSearch_Type(searchType);
-        scheduleVO.setSearch_Important(setImportant);
+        scheduleVO.setSearchType(searchType);
+        scheduleVO.setSearchImportant(setImportant);
+        scheduleVO.setSearchCondition(super.getSearchCondition());
+        scheduleVO.setSearchKeyword(super.getSearchKeyword());
         scheduleVO.setDept_Id(dept_Id);
         scheduleVO.setTeam_Id(team_Id);
 

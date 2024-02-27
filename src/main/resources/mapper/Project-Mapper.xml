@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mybatis.mapper.MilestoneMapper">
+
+    <select id="selectProjectList" resultType="ProjectVO">
+        SELECT
+        A.PROJECT_ID
+        ,A.PROJECT_TITLE
+        ,A.PROJECT_CREATE_DT
+        ,A.PROJECT_END_DT
+        ,A.PROJECT_UPDATE_DT
+        ,A.PROJECT_ST
+        ,A.EMP_ID
+        ,A.EMP_NAME
+        ,A.DUTY_Count
+        ,NVL(B.todoIssueCount,0) as todoIssueCount
+        ,NVL(C.inprogressIssueCount,0) as inprogressIssueCount
+        ,NVL(D.doneIssueCount,0) as doneIssueCount
+        FROM
+        PROJECT A
+        ,(SELECT a.PROJECT_ID, count(*) as todoIssueCount
+        FROM DUTY a, ISSUE_BOARD b
+        WHERE b.ISSUE_PROJECT_ST = 'todo' and a.DUTY_BOARD_ID = b.DUTY_BOARD_ID
+        GROUP BY a.PROJECT_ID
+        ORDER BY a.PROJECT_ID) B
+        ,(SELECT a.PROJECT_ID, count(*) as inprogressIssueCount
+        FROM DUTY a, ISSUE_BOARD b
+        WHERE b.ISSUE_PROJECT_ST = 'inprogress' and a.DUTY_BOARD_ID = b.DUTY_BOARD_ID
+        GROUP BY a.PROJECT_ID
+        ORDER BY a.PROJECT_ID) C
+        ,(SELECT a.PROJECT_ID, count(*) as doneIssueCount
+        FROM DUTY a, ISSUE_BOARD b
+        WHERE b.ISSUE_PROJECT_ST = 'done' and a.DUTY_BOARD_ID = b.DUTY_BOARD_ID
+        GROUP BY a.PROJECT_ID
+        ORDER BY a.PROJECT_ID) D
+        WHERE 1=1
+        <choose>
+            <when test='isOpen == "open"'>
+                AND PROJECT_ST=1
+            </when>
+            <otherwise>
+                AND PROJECT_ST=2
+            </otherwise>
+        </choose>
+        AND A.PROJECT_ID = B.PROJECT_ID(+)
+        AND A.PROJECT_ID = C.PROJECT_ID(+)
+        AND A.PROJECT_ID = D.PROJECT_ID(+)
+        ORDER BY PROJECT_UPDATE_DT DESC
+    </select>
+
+    <insert id="insertProject" parameterType="ProjectVO">
+        INSERT INTO PROJECT (
+                                   PROJECT_ID
+                                 ,PROJECT_TITLE
+                                 ,PROJECT_CREATE_DT
+                                 ,PROJECT_END_DT
+                                 ,PROJECT_UPDATE_DT
+                                 ,PROJECT_ST
+                                 ,EMP_ID
+                                 ,EMP_NAME
+                                 ,DUTY_Count
+        ) VALUES (
+                  PROJECT_ID_SEQ.nextval
+                 ,#{project_Title}
+                 ,sysdate
+                 ,#{project_End_Dt}
+                 ,sysdate
+                 ,1
+                 ,#{emp_Id}
+                 ,#{emp_Name}
+                 ,0
+                 )
+    </insert>
+
+    <update id="updateProject" parameterType="ProjectVO">
+        UPDATE PROJECT
+        SET PROJECT_UPDATE_DT = sysdate
+        <if test="project_Title != null and project_Title != ''">
+            ,project_Title = #{project_Title}
+        </if>
+        <if test="project_End_Dt != null">
+            ,project_End_Dt = #{project_End_Dt}
+        </if>
+        <if test="project_St != 0">
+            ,project_St = #{project_St}
+        </if>
+        WHERE
+        project_Id = #{project_Id}
+    </update>
+
+    <select id="selectProject" parameterType="ProjectVO" resultType="ProjectVO">
+        SELECT
+            A.PROJECT_ID
+             ,A.PROJECT_TITLE
+             ,A.PROJECT_CREATE_DT
+             ,A.PROJECT_END_DT
+             ,A.PROJECT_UPDATE_DT
+             ,A.PROJECT_ST
+             ,A.EMP_ID
+             ,A.EMP_NAME
+             ,A.DUTY_Count
+             ,NVL(B.todoIssueCount,0) as todoIssueCount
+             ,NVL(C.inprogressIssueCount,0) as inprogressIssueCount
+             ,NVL(D.doneIssueCount,0) as doneIssueCount
+        FROM
+            PROJECT A
+           ,(SELECT a.PROJECT_ID, count(*) as todoIssueCount
+             FROM DUTY a, ISSUE_BOARD b
+             WHERE b.ISSUE_PROJECT_ST = 'todo' and a.DUTY_BOARD_ID = b.DUTY_BOARD_ID
+             GROUP BY a.PROJECT_ID
+             ORDER BY a.PROJECT_ID) B
+           ,(SELECT a.PROJECT_ID, count(*) as inprogressIssueCount
+             FROM DUTY a, ISSUE_BOARD b
+             WHERE b.ISSUE_PROJECT_ST = 'inprogress' and a.DUTY_BOARD_ID = b.DUTY_BOARD_ID
+             GROUP BY a.PROJECT_ID
+             ORDER BY a.PROJECT_ID) C
+           ,(SELECT a.PROJECT_ID, count(*) as doneIssueCount
+             FROM DUTY a, ISSUE_BOARD b
+             WHERE b.ISSUE_PROJECT_ST = 'done' and a.DUTY_BOARD_ID = b.DUTY_BOARD_ID
+             GROUP BY a.PROJECT_ID
+             ORDER BY a.PROJECT_ID) D
+        WHERE A.PROJECT_ID = B.PROJECT_ID(+)
+          AND A.PROJECT_ID = C.PROJECT_ID(+)
+          AND A.PROJECT_ID = D.PROJECT_ID(+)
+          AND A.PROJECT_ID = #{project_Id}
+    </select>
+
+    <delete id="deleteProject" parameterType="ProjectVO">
+        DELETE FROM PROJECT
+        WHERE
+            PROJECT_ID = #{project_Id}
+    </delete>
+
+    <select id="getDutyProjectId" parameterType="ProjectVO" resultType="ProjectVO">
+        SELECT A.PROJECT_ID, a.DUTY_BOARD_TITLE
+        FROM DUTY A
+        JOIN PROJECT B ON A.PROJECT_ID = B.PROJECT_ID
+    </select>
+
+</mapper>

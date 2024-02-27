@@ -18,13 +18,12 @@
         order by dept_id
     </select>
 
-
 <!--    treeview에 들어갈 사원 select -->
     <select id="selectSearchEmp" parameterType="OrganizationCommand" resultType="OrganizationCommand">
-        select a.emp_id 			deptId,
-               a.emp_name 			deptName,
-               a.dept_id 			deptSupId,
-               b.code_name	        position,
+        select a.emp_id           deptId,
+               a.emp_name         deptName,
+               a.dept_id          deptSupId,
+               b.code_name          position,
                c.attend_st_name     empState
         from emp a
                  left outer join attend_st c

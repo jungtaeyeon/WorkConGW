@@ -3,7 +3,9 @@ package com.WorkConGW.board.issue.dto;
 
 import com.WorkConGW.common.dto.BaseVO;
 import org.apache.ibatis.type.Alias;
+import org.springframework.format.annotation.DateTimeFormat;
 
+import java.util.Date;
 import java.util.List;
 
 @Alias("IssueVO")
@@ -13,17 +15,21 @@ public class IssueVO extends BaseVO {
 	private String issue_Board_Title;
 	private String issue_Board_Content;
 	private int issue_Board_Readcnt;
-	private String issue_Board_Create_Dt;
-	private String issue_Board_Update_Dt;
+	@DateTimeFormat(pattern = "MM/dd/yyyy")
+	private Date issue_Board_Create_Dt;
+	@DateTimeFormat(pattern = "MM/dd/yyyy")
+	private Date issue_Board_Update_Dt;
 	private String issue_Board_Updater_Id;
 	private String emp_Id;
 	private int duty_Board_Id;
 	private int milestone_Id;
-	private String issue_Board_St;
+	private int project_Id;
+	private int issue_Board_St; // 이슈 공개 여부
 	private String issue_Project_St;	// 프로젝트 상태
-	private String issue_Open_St = "Y";	// 이슈 공개 여부
+	private int issue_Open_St;
+	private String project_Title;
 	private String emp_Name;
-	private String empPicture;
+	private String emp_Picture;
 	private String officialName;
 	private String dept_Name;
 	private String teamName;
@@ -69,19 +75,19 @@ public class IssueVO extends BaseVO {
 		this.issue_Board_Readcnt = issue_Board_Readcnt;
 	}
 
-	public String getIssue_Board_Create_Dt() {
+	public Date getIssue_Board_Create_Dt() {
 		return issue_Board_Create_Dt;
 	}
 
-	public void setIssue_Board_Create_Dt(String issue_Board_Create_Dt) {
+	public void setIssue_Board_Create_Dt(Date issue_Board_Create_Dt) {
 		this.issue_Board_Create_Dt = issue_Board_Create_Dt;
 	}
 
-	public String getIssue_Board_Update_Dt() {
+	public Date getIssue_Board_Update_Dt() {
 		return issue_Board_Update_Dt;
 	}
 
-	public void setIssue_Board_Update_Dt(String issue_Board_Update_Dt) {
+	public void setIssue_Board_Update_Dt(Date issue_Board_Update_Dt) {
 		this.issue_Board_Update_Dt = issue_Board_Update_Dt;
 	}
 
@@ -117,11 +123,19 @@ public class IssueVO extends BaseVO {
 		this.milestone_Id = milestone_Id;
 	}
 
-	public String getIssue_Board_St() {
+	public int getProject_Id() {
+		return project_Id;
+	}
+
+	public void setProject_Id(int project_Id) {
+		this.project_Id = project_Id;
+	}
+
+	public int getIssue_Board_St() {
 		return issue_Board_St;
 	}
 
-	public void setIssue_Board_St(String issue_Board_St) {
+	public void setIssue_Board_St(int issue_Board_St) {
 		this.issue_Board_St = issue_Board_St;
 	}
 
@@ -133,12 +147,20 @@ public class IssueVO extends BaseVO {
 		this.issue_Project_St = issue_Project_St;
 	}
 
-	public String getIssue_Open_St() {
+	public int getIssue_Open_St() {
 		return issue_Open_St;
 	}
 
-	public void setIssue_Open_St(String issue_Open_St) {
+	public void setIssue_Open_St(int issue_Open_St) {
 		this.issue_Open_St = issue_Open_St;
+	}
+
+	public String getProject_Title() {
+		return project_Title;
+	}
+
+	public void setProject_Title(String project_Title) {
+		this.project_Title = project_Title;
 	}
 
 	public String getEmp_Name() {
@@ -149,12 +171,12 @@ public class IssueVO extends BaseVO {
 		this.emp_Name = emp_Name;
 	}
 
-	public String getEmpPicture() {
-		return empPicture;
+	public String getEmp_Picture() {
+		return emp_Picture;
 	}
 
-	public void setEmpPicture(String empPicture) {
-		this.empPicture = empPicture;
+	public void setEmp_Picture(String emp_Picture) {
+		this.emp_Picture = emp_Picture;
 	}
 
 	public String getOfficialName() {

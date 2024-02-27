@@ -66,6 +66,9 @@ public class NoticeService {
     // 글등록 폼에서 등록
     public void regist(NoticeVO notice) throws SQLException {
         logger.info("시퀀스로 id 채번 전 => " + String.valueOf(notice.getNotice_id()));
+        if("E".equals(notice.getNotice_important_st())) {	// 긴급 공지이면
+            noticeDAO.deleteEmergency();
+            noticeDAO.insertNotice(notice);
 
         logger.info(notice.toString());
         noticeDAO.insertNotice(notice);
@@ -77,12 +80,12 @@ public class NoticeService {
 
                 NoticeAttachVO noticeAttachVO = new NoticeAttachVO(attachVO);
                 noticeAttachVO.setNotice_id(notice.getNotice_id());
-                noticeAttachVO.setEmp_attacher_id(notice.getEmp_writer_id());
 
                 noticeDAO.insertNoticeFile(noticeAttachVO);
             }
         }
     }
+}
 
 //     글삭제 및 첨부파일 삭제
     public void remove(NoticeVO noticeVO) throws SQLException {
@@ -138,7 +141,6 @@ public class NoticeService {
             for(AttachVO attachVO : noticeVO.getNoticeAttachList()) {
                 NoticeAttachVO noticeAttachVO = new NoticeAttachVO(attachVO);
                 noticeAttachVO.setNotice_id(noticeVO.getNotice_id());
-                noticeAttachVO.setEmp_attacher_id(noticeVO.getEmp_writer_id());
                 noticeDAO.insertNoticeFile(noticeAttachVO);
             }
         }

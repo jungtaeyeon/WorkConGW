@@ -44,7 +44,6 @@
 							<div class="body">
 								<form:form modelAttribute="boardFormVO" name="boardRegistForm">
 									<form:hidden path="noticeVO.emp_writer_id" value="${loginUser.emp_Id }"/>
-									<form:hidden path="noticeVO.notice_update_id" value="${loginUser.emp_Id }"/>
 									<form:hidden path="noticeVO.notice_content" />
 									<div id="fileUploadForm">
 									</div>
@@ -55,7 +54,9 @@
 											<div class="form-group">
 												<select id="selectBoard" class="form-control show-tick" onchange="changeCategory(this);">
 													<option value="default">게시판 선택</option>
+													<c:if test="${loginUser.auth_Id == 's' }">
 													<option value="notice">사내공지</option>
+													</c:if>
 													<option value="anony">익명게시판</option>
 												</select>
 											</div>
@@ -68,13 +69,13 @@
 											</div>
 										</div>
 										<div class="col-md-3 col-sm-12 formGroup noticeForm">
-											<label class="notice_important_yn">필독여부</label>
+											<label class="notice_important_st">필독여부</label>
 											<div class="form-group">
-												<div class="form-group notice_important_yn">
-													<select name="noticeVO.notice_important_yn" id="selectNoticeYN" class="form-control show-tick">
+												<div class="form-group notice_important_st">
+													<select name="noticeVO.notice_important_st" id="selectNoticeYN" class="form-control show-tick">
 														<option value="default">-필독여부-</option>
-														<option value="Y">설정</option>
-														<option value="N">해제</option>
+														<option value=1>설정</option>
+														<option value=0>해제</option>
 													</select>
 												</div>
 											</div>
@@ -91,9 +92,6 @@
 									<div class="row clearfix">
 										<!-- 파일 입력 -->
 										<div class="col-12 formGroup noticeForm">
-												<%--	                                <label>파일 첨부</label>--%>
-												<%--	                                    <input type="file" name="fileUploadCommand.uploadFile" class="dropify" style="height: 100px;">--%>
-												<%--	                                    <div class="mt-3"></div>--%>
 											<input type="file" id="fileInput" style="display: none;" />
 											<button type="button" class="btn btn-secondary" style="margin-bottom:5px;" onclick="myFileUpload();">파일 추가</button>
 											<span class="float-right" style="margin:15px 10px 0 0;">파일 개수 <span id="fileCount">${empty boardFormVO.noticeVO.noticeAttachList ? 0 : boardFormVO.noticeVO.noticeAttachList.size()}</span>/5</span>
@@ -104,7 +102,6 @@
 														<th style="width:200px;">타입</th>
 														<th style="width:300px;">파일명</th>
 														<th style="width:200px;">확장자</th>
-														<th style="width:200px;">용량</th>
 														<th style="width:100px;"><i class="fas fa-trash-alt" style="cursor: pointer;" onclick="removeAll();"></i>
 														</th>
 													</tr>
@@ -129,9 +126,6 @@
 																</td>
 																<td style="font-weight: normal;">
 																		${noticeAttach.attach_type }
-																</td>
-																<td style="font-weight: normal;">
-																		${noticeAttach.attach_size }
 																</td>
 																<td>
 																	<i class="fas fa-times" data-id="${status.index }" data-attach_id="${noticeAttach.attach_id }" style="cursor: pointer;" onclick="removeEl(this)"></i>
@@ -198,8 +192,8 @@
 
 				//사내공지
 				if(boardCategory=='notice'){
-					let notice_important_yn = $('select[name="noticeVO.notice_important_yn"]').val();
-					if(notice_important_yn == "default"){	//위에서 option value가 default일 경우에 해당할때
+					let notice_important_st = $('select[name="noticeVO.notice_important_st"]').val();
+					if(notice_important_st == "default"){	//위에서 option value가 default일 경우에 해당할때
 						alert('필독여부를 선택해주세요.');
 						return;
 					}
@@ -279,8 +273,14 @@
 
 				var fileName = inputFileTag.eq(filesLength-1)[0].files[0].name;
 				var extension = getExtensionOfFilename(fileName);
-				var fileSize = (inputFileTag.eq(filesLength-1)[0].files[0].size)/1000 + "KB";
+				var fileSize = (inputFileTag.eq(filesLength-1)[0].files[0].size / 1000) / 1000; // MB
 				var fileType;
+
+				if(fileSize > 50){
+					alert("50MB 이하로 업로드해 주세요.");
+					inputFileTag.eq(filesLength-1).remove();
+					return;
+				}
 
 				if(!(extension == 'PNG' || extension == 'DOC' || extension == 'DOCX' || extension == 'GIF' || extension == 'JAVA' || extension == 'JPG' || extension == 'PDF'|| extension == 'PPT' || extension == 'PPTX'|| extension == 'TXT' || extension == 'XLSX'|| extension == 'ZIP')){
 					alert("지원하지 않는 파일 형식입니다.");
@@ -298,7 +298,6 @@
 						+'<td>'+fileType+'</td>'
 						+'<td style="font-weight: normal;">'+fileName+'</td>'
 						+'<td style="font-weight: normal;">'+extension+'</td>'
-						+'<td style="font-weight: normal;">'+fileSize+'</td>'
 						+'<td><i class="fas fa-times" data-id="'+uuid+'" style="cursor: pointer;" onclick="removeEl(this)"></i></td>'
 						+'</tr>';
 				$('#appendTbody').append(fileTag);

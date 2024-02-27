@@ -3,7 +3,6 @@ package com.WorkConGW.common;
 import lombok.ToString;
 
 @ToString
-
 public class PaginationInfo {
     private int currentPageNo;			//현재 페이지 번호
 	private int recordCountPerPage;		//한 페이지당 게시되는 게시물 수
@@ -13,6 +12,8 @@ public class PaginationInfo {
     private int firstPageNoOnPageList;	//페이지 리스트의 첫 페이지 번호
 	private int lastPageNoOnPageList;	//페이지 리스트의 마지막 페이지 번호
 	private int firstRecordIndex; 		//페이징 sql의 조건절에 사용되는 시작 rownum
+	private int lastRecordIndex;
+	private int totalPageCount;
 	
 	private boolean xprev = true;		//이전버튼
 	private boolean xnext = true;		//다음버튼
@@ -112,6 +113,19 @@ public class PaginationInfo {
 	}
 	public void setRealEnd(int realEnd) {
 		this.realEnd = realEnd;
+	}
+
+	public int getLastRecordIndex() {
+		return lastRecordIndex;
+	}
+
+	public void setLastRecordIndex(int lastRecordIndex) {
+		this.lastRecordIndex = lastRecordIndex;
+	}
+
+	public int getTotalPageCount() {
+		this.totalPageCount = (this.getTotalRecordCount() - 1) / this.getRecordCountPerPage() + 1;
+		return this.totalPageCount;
 	}
 	
 }

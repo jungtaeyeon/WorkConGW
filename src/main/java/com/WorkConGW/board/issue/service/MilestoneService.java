@@ -5,6 +5,7 @@ import com.WorkConGW.board.issue.dao.MilestoneDAO;
 import com.WorkConGW.board.issue.dto.IssueReplyVO;
 import com.WorkConGW.board.issue.dto.IssueVO;
 import com.WorkConGW.board.issue.dto.MilestoneVO;
+import com.WorkConGW.board.issue.dto.ProjectVO;
 import com.WorkConGW.emp.dto.EmpVO;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,5 +24,10 @@ public class MilestoneService {
 	public MilestoneService(MilestoneDAO milestoneDAO, IssueDAO issueDAO) {
 		this.milestoneDAO = milestoneDAO;
 		this.issueDAO = issueDAO;
+	}
+
+	/* 이슈 디테일에서 사용 */
+	public List<MilestoneVO> getMilestoneListAll(EmpVO empVO) throws SQLException{
+		return milestoneDAO.selectMilestoneListSimple(empVO);
 	}
 }

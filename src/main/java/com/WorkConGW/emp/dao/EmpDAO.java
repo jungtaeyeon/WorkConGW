@@ -1,8 +1,13 @@
 package com.WorkConGW.emp.dao;
 
+import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.TimeZone;
 
 import org.mybatis.spring.SqlSessionTemplate;
 import org.slf4j.Logger;
@@ -24,8 +29,18 @@ public class EmpDAO {
 
     public EmpVO selectEmpById(String emp) {
         List<EmpVO> empvo = sqlSessionTemplate.selectList("selectEmpById", emp);
+
+        Map<String,Object> pmap = new HashMap<>();
+        String attendStartTime = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+        pmap.put("attendStartTime", attendStartTime);
+        pmap.put("emp", emp);
+        String history_attend_time = sqlSessionTemplate.selectOne("attend_time", pmap);
+        String history_leaving_time = sqlSessionTemplate.selectOne("leaving_time", pmap);
+        logger.info(history_attend_time);
         if(empvo != null && !empvo.isEmpty()) {
             EmpVO empvo2 = empvo.get(0);
+            empvo2.setHistory_Attend_Time(history_attend_time);
+            empvo2.setHistory_Leaving_Time(history_leaving_time);
             logger.info(empvo.toString());
             return empvo2;
         } else {

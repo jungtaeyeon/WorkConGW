@@ -4,9 +4,11 @@ import java.util.Date;
 
 import com.WorkConGW.common.command.FileUploadCommand;
 import org.apache.ibatis.type.Alias;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import com.WorkConGW.common.dto.BaseVO;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.google.api.client.util.Data;
 
 @Alias("EmpVO")
 public class EmpVO extends BaseVO{
@@ -39,24 +41,21 @@ public class EmpVO extends BaseVO{
     private String emp_Update_Yn;
     private String team_Id;
     private String auth_Name;
-
+    private FileUploadCommand fileUploadCommand;
 
     private String search_code;
     private String flag;
     private String emp_Sup_Id;
 
     private int emp_authkey;
-
-
-    private FileUploadCommand fileUploadCommand;
-
-
-
+    
+    private String history_Attend_Time;
+    private String history_Leaving_Time;
 
 	
     
     public EmpVO(String emp_ZipCode,int emp_authkey,String emp_Id, String emp_Name, String emp_Pwd,String emp_Regno, String emp_Hp, String emp_Sign,String emp_Picture, int emp_St, String emp_Add1,String emp_Add2,String dept_Id, Date emp_Create_Dt, Date emp_Update_Dt,String emp_Email
-        , String auth_Id, String code_Id, String search_code, String code_Name, String dept_Name, String attend_St_Name, String emp_Update_Yn, String team_Id, String auth_Name, String attend_St_Id, String emp_Regno2,String emp_Sup_Id) {
+        , String auth_Id, String code_Id, String emp_Code_Resp_Id, String code_Name, String dept_Name, String attend_St_Name, String emp_Update_Yn, String team_Id, String auth_Name, String search_Auth, String attend_St_Id, String emp_Regno2,String emp_Sup_Id, String history_Attend_Time, String history_Leaving_Time) {
             super();
             this.emp_ZipCode=emp_ZipCode;
             this.emp_Regno2 = emp_Regno2;
@@ -86,6 +85,8 @@ public class EmpVO extends BaseVO{
             this.attend_St_Id=attend_St_Id;
             this.emp_Sup_Id =emp_Sup_Id;
             this.emp_authkey = emp_authkey;
+            this.history_Attend_Time = history_Attend_Time;
+            this.history_Leaving_Time = history_Leaving_Time;
 
     }
     
@@ -337,16 +338,21 @@ public class EmpVO extends BaseVO{
         this.emp_authkey = emp_authkey;
     }
 
-
-    public String getSearch_code() {
-        return search_code;
+    public String getHistory_Attend_Time() {
+        return this.history_Attend_Time;
     }
 
-    public void setSearch_code(String search_code) {
-        this.search_code = search_code;
+    public void setHistory_Attend_Time(String history_Attend_Time) {
+        this.history_Attend_Time = history_Attend_Time;
     }
 
+    public String getHistory_Leaving_Time() {
+        return this.history_Leaving_Time;
+    }
 
+    public void setHistory_Leaving_Time(String history_Leaving_Time) {
+        this.history_Leaving_Time = history_Leaving_Time;
+    }
 
 }
 

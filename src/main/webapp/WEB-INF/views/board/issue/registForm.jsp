@@ -53,7 +53,7 @@
 										<label class="boardWriter" style="font-size: 14px; font-weight: bold;">작성자</label>
 										<div class="form-group">
 											<input type="text" readonly class="form-control"
-												   placeholder="" value="${loginUser.empName }">
+												   placeholder="" value="${loginUser.emp_Name }">
 										</div>
 									</div>
 									<div class="col-md-3 col-sm-12 formGroup issueForm">
