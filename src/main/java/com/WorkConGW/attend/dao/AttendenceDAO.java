@@ -30,11 +30,11 @@ public class AttendenceDAO {
   @Autowired
   private SqlSessionTemplate sqlSessionTemplate;
 
-  public List<AttendenceVO> attendenceList(String empId) {
+  public List<AttendenceVO> attendenceList(Map<String, Object> pmap) {
     logger.info("attendenceList");
-    logger.info(empId);
+    logger.info(pmap.toString());
     List<AttendenceVO> attendenceList = null;
-    attendenceList = sqlSessionTemplate.selectList("attendenceList", empId);
+    attendenceList = sqlSessionTemplate.selectList("attendenceList", pmap);
     
     return attendenceList;
   }
@@ -125,10 +125,10 @@ public class AttendenceDAO {
     return result;
   }
 
-  public List<Map<String, Object>> attendDeptSelect(Map<String, Object> pmap) {
-    logger.info("attendDeptSelect");
+  public List<Map<String, Object>> attendMainSelect(Map<String, Object> pmap) {
+    logger.info("attendMainSelect");
     logger.info(pmap.toString());
-    List<Map<String, Object>> result = sqlSessionTemplate.selectList("attendDeptHistorySelect", pmap);
+    List<Map<String, Object>> result = sqlSessionTemplate.selectList("attendMainSelect", pmap);
     logger.info(result.toString());
     return result;
   }

@@ -20,7 +20,30 @@
                         a.attend_st_id = b.attend_st_id  
                 where 
                         emp_id = #{empId}
+                        and TO_CHAR(history_attend_time, 'YYYY-MM') = #{attendDay}
                 order by history_attend_time desc
+        </select>
+
+        <select id="attendMainSelect" resultType="map" parameterType="String">
+                select 
+                        history_id,
+                        emp_id,
+                        TO_CHAR(a.history_attend_time, 'YYYY-MM-DD') AS history_attend_day,
+                        TO_CHAR(a.history_attend_time, 'HH24:MI') AS history_attend_time,
+                        TO_CHAR(a.history_leaving_time, 'HH24:MI') AS history_leaving_time,
+                        a.attend_st_id,
+                        b.attend_st_name, 
+                        history_reason 
+                from 
+                        attend_history a 
+                left outer join 
+                        attend_st b 
+                on 
+                        a.attend_st_id = b.attend_st_id  
+                where 
+                        emp_id = #{empId}
+                        and TO_CHAR(history_attend_time, 'YYYY-MM') = #{attendDay}
+                order by a.history_attend_time desc
         </select>
 
         <select id="attendenceNormalCountList" resultType="int" parameterType="String">
@@ -81,29 +104,6 @@
                 and TO_CHAR(history_attend_time, 'YYYY-MM-DD') = #{history_reason_date}
         </update>
 
-        <select id="attendDeptHistorySelect" resultType="map" parameterType="java.util.Map">
-                select 
-                        a.emp_id,
-                        a.emp_name,
-                        c.history_reason,
-                        TO_CHAR(c.history_attend_time, 'YYYY-MM-DD') AS history_attend_day,
-                        TO_CHAR(c.history_attend_time, 'HH24:MI') AS history_attend_time,
-                        TO_CHAR(c.history_leaving_time, 'HH24:MI') AS history_leaving_time,
-                        c.attend_st_id,
-                        d.attend_st_name,
-                        e.code_name,
-                        b.dept_name
-                from 
-                        emp a 
-                        left outer join dept b on b.dept_id = a.dept_id
-                        left outer join attend_history c on a.emp_id = c.emp_id
-                        left outer join attend_st d on c.attend_st_id = d.attend_st_id
-                        left outer join code e on e.code_id = a.code_id
-                where 
-                        a.dept_id = #{dept_id} or b.dept_sup_id = #{dept_id}
-                order by c.history_attend_time desc
-        </select>
-
         <select id="attendSelect" resultType="map" parameterType="java.util.Map">
                 select 
                         a.emp_id,
@@ -117,13 +117,19 @@
                         e.code_name,
                         b.dept_name
                 from 
-                        emp a 
+                        attend_history c
+                        left outer join emp a on a.emp_id = c.emp_id
                         left outer join dept b on b.dept_id = a.dept_id
-                        left outer join attend_history c on a.emp_id = c.emp_id
                         left outer join attend_st d on c.attend_st_id = d.attend_st_id
                         left outer join code e on e.code_id = a.code_id
-                where 
-                        a.emp_id = #{emp_id}
+                <where>
+                        <if test="emp_id != null">
+                                a.emp_id = #{emp_id}
+                        </if>
+                        <if test="dept_id != null">
+                                a.dept_id = #{dept_id} or b.dept_sup_id = #{dept_id}
+                        </if>
+                </where>
                 order by c.history_attend_time desc
         </select>
 </mapper>

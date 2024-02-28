@@ -38,11 +38,11 @@ public class AttendenceController extends CommonController{
         if(empVO != null) {
             empId = empVO.getEmp_Id();
         }
-		attendenceList = attendenceService.attendenceList(empId);
 		Map<String, Object> pmap = new HashMap<>();
 		String attendDay = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM"));
 		pmap.put("empId", empId);
 		pmap.put("attendDay", attendDay);
+		attendenceList = attendenceService.attendenceList(pmap);
 		Map<String, Object> attendenceCountList = attendenceService.attendenceCountList(pmap);
 		logger.info(attendenceCountList.toString());
 		model.addAttribute("attendenceCountList", attendenceCountList);

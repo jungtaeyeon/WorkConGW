@@ -221,6 +221,7 @@
                 $(obj).parent("li").children("ul").css("display","none");
             }
         }
+        
         function empChecked(obj) {
             //기존 체크된 css 및 클래스 정보 삭제
             $(".myChecked").css("background-color","");
@@ -229,81 +230,23 @@
             //새로 체크된 css 및 클래스 정보 갱신
             $(obj).addClass("myChecked");
             $(".myChecked").css("background-color","#2980b9");
-            console.log($(obj).data('empid'));
-            $('#selectemp_Name').val();
+            data = {emp_id: $(obj).data('empid')}
+            selectAjax(data);
+        }
+
+        function myClick(obj){
+            console.log($(obj).data('deptid'));
+            data = {dept_id: $(obj).data('deptid')};
+            selectAjax(data);
+        }
+
+        function selectAjax(data){
             $('.table tbody').find('.modalBtn').remove();
             $('.modalContainer').find('.modal').remove();
             $.ajax({
                 type: "get",
                 url: "/WorkConGW/attend/attendSelect",
-                data: { emp_id: $(obj).data('empid')
-                },
-                success: function(response) {
-                    response.forEach(function(e, i) {
-                        e.HISTORY_ATTEND_DAY = e.HISTORY_ATTEND_DAY || '';
-                        e.EMP_NAME = e.EMP_NAME || '';
-                        e.CODE_NAME = e.CODE_NAME || '';
-                        e.HISTORY_ATTEND_TIME = e.HISTORY_ATTEND_TIME || '';
-                        e.HISTORY_LEAVING_TIME = e.HISTORY_LEAVING_TIME || '';
-                        e.ATTEND_ST_NAME = e.ATTEND_ST_NAME || '';
-                        e.HISTORY_REASON = e.HISTORY_REASON || '';
-
-                        let text = `
-                        <tr class="modalBtn" data-toggle="modal" data-target="#staticBackdrop`+i+`">
-                            <td>`+e.HISTORY_ATTEND_DAY+`</td>
-                            <td>`+e.EMP_NAME+`</td>
-                            <td>`+e.CODE_NAME+`</td>
-                            <td>`+e.HISTORY_ATTEND_TIME+`</td>
-                            <td>`+e.HISTORY_LEAVING_TIME+`</td>
-                            <td><span class="goWork goWork`+e.ATTEND_ST_ID+`">`+e.ATTEND_ST_NAME+`</span></td>
-                            <td>`+e.HISTORY_REASON+`</td>
-                        </tr>
-                        `;
-                        $('tbody').append(text);
-                        let modal = `
-                        <div class="modal fade" id="staticBackdrop`+i+`" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
-                            <div class="modal-dialog modal-dialog-centered">
-                            <div class="modal-content">
-                                <div class="modal-header">
-                                <h5 class="modal-title" id="staticBackdropLabel">`+e.EMP_NAME+`</h5>
-                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                    <span aria-hidden="true">&times;</span>
-                                </button>
-                                </div>
-                                <div class="modal-body">
-                                    <p><span class="modalSubTit">날짜</span>`+e.HISTORY_ATTEND_DAY+`</p>
-                                    <p><span class="modalSubTit">직급</span>`+e.CODE_NAME+`</p>
-                                    <p><span class="modalSubTit">출근시간</span>`+e.HISTORY_ATTEND_TIME+`</p>
-                                    <p><span class="modalSubTit">퇴근시간</span>`+e.HISTORY_LEAVING_TIME+`</p>
-                                    <p><span class="modalSubTit">출근상태</span><span class="goWork goWork`+e.ATTEND_ST_ID+`">`+e.ATTEND_ST_NAME+`</span></p>
-                                    <p><span class="modalSubTit">지각사유</span><span style="display: inline-block;">`+e.HISTORY_REASON+`</span></p>
-                                </div>
-                                <div class="modal-footer">
-                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                                </div>
-                            </div>
-                            </div>
-                        </div>
-                        `;
-                        $('.modalContainer').append(modal);
-                    })
-                    console.log(response);
-                },
-                error: function(xhr, status, error) {
-                // 오류 처리
-                console.error(xhr.responseText);
-                }
-            });
-        }
-        function myClick(obj){
-            $('.table tbody').find('.modalBtn').remove();
-            $('.modalContainer').find('.modal').remove();
-            console.log($(obj).data('deptid'));
-            $.ajax({
-                type: "get",
-                url: "/WorkConGW/attend/attendDeptSelect",
-                data: { dept_id: $(obj).data('deptid')
-                },
+                data: data,
                 success: function(response) {
                     response.forEach(function(e, i) {
                         e.HISTORY_ATTEND_DAY = e.HISTORY_ATTEND_DAY || '';
