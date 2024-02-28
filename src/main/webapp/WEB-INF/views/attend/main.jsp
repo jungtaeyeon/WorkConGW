@@ -346,14 +346,14 @@
 			weekdays = getWeekdaysInMonth(currentYear, currentMonth);
 			currentMonth = (currentMonth < 10 ? "0" : "") + currentMonth
 			$('.table tbody').find('.modalBtn').remove();
-      $('.modalContainer').find('.modal').remove();
+      		$('.modalContainer').find('.modal').remove();
 			$.ajax({
-        type : 'get',
-        url : '/WorkConGW/attend/attendMainSelect',
-        data : {
-					attendDay : currentYear + '-' + currentMonth
-        },
-        success : function(result) {
+				type : 'get',
+				url : '/WorkConGW/attend/attendMainSelect',
+				data : {
+							attendDay : currentYear + '-' + currentMonth
+				},
+				success : function(result) {
 					console.log(result);
 					attendenceNormalCount = result[result.length - 1].attendenceNormalCountList;
 					let attendenceTardyCountList = result[result.length - 1].attendenceTardyCountList;

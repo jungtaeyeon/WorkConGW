@@ -18,9 +18,17 @@
         .serchContain{
             display: flex; 
             align-items: flex-start;
+            margin-bottom: 10px;
         }
         #serchForm{display: flex;}
-        .serchTextGroup{width: 240px;}
+        .serchTextGroup{display: flex;}
+        .serchTextGroup span{
+            font-size: 19px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 0px 10px;
+        } 
         .tableCheckBox{text-align: center; vertical-align: middle !important;}
 		.tardy{
 			background: red;
@@ -49,28 +57,12 @@
 			vertical-align: top;
             width: 69px;
 		}
-        .share_add_book_btn_contain{
-            display: flex;
-            margin-bottom: 3%;
-        }
-        .share_add_book_btn{
-            width: 150px;
-            height: 35px;
-            background: #f2f2f2;
-            border: 1px solid #f2f2f2;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            color: #646464;
-            cursor: pointer;
-        }
-        .share_add_book_btn_on{
-            background-color: #2985db;
-            color: #fff;
-        }
         .treeviewGroup{width: 300px; height: 500px; border:1px solid #000; overflow-y: scroll;}
         .subContentContainer{display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 5%;}
         .serchContainer{margin-right: 2%;}
+        .pagination{
+            justify-content: center;
+        }
     </style>
     <%@ include file="../include/header.jsp"%>
 
@@ -86,44 +78,46 @@
 			</div>
             <div class="subContentContainer">
                 <div class="serchContainer">
-                    <!-- <div class="serchContain">
-                        <form action="addBookSearch" id="serchForm">
-                            <div class="serchTextGroup">
-                                <input type="text" name="searchText" class="form-control" placeholder="입력해주세요" aria-label="입력해주세요"> 
-                            </div>
-                        </form>
-                        <button class="btn btn-outline-secondary" style="width: 60px;" onclick="serchBtn()" name="serchBtn" type="button">검색</button>
-                    </div> -->
                     <div class="treeviewGroup">
                         <div class="body">
                             <div>
-                              <ul id="codeList" class="treeview">
-                                <li>
-                                  WorkCon 조직도&nbsp
-                                  <ul id="lvl0"></ul>
-                                </li>
-                              </ul>
+                                <ul id="codeList" class="treeview">
+                                    <li>
+                                        WorkCon 조직도&nbsp
+                                        <ul id="lvl0"></ul>
+                                    </li>
+                                </ul>
                             </div>
-                          </div>
+                        </div>
                     </div>
                 </div>
-                <table class="table table-hover"> <!-- 부트스트랩 게시판 -->
-
-                    <thead class="thead-light"> <!-- 게시판 맨위 색변경 클래스-->
-                        <tr>
-                            <th>날짜</th>
-                            <th>이름</th>
-                            <th>직급</th>
-                            <th>출근시간</th>
-                            <th>퇴근시간</th>
-                            <th>상태</th>
-                            <th>근태사유</th>
-                        </tr>
-                    </thead>
-
-                    <tbody>
-                    </tbody>
-                </table>
+                <div style="width: 100%;">
+                    <div class="serchContain">
+                        <div class="serchTextGroup">
+                            <input type="date" name="startTime" class="form-control"> 
+                            <span>~</span>
+                            <input type="date" name="endTime" class="form-control"> 
+                        </div>
+                        <button class="btn btn-outline-secondary" style="width: 60px;" onclick="serchBtn()" name="serchBtn" type="button">검색</button>
+                        <button class="btn btn-outline-secondary" style="width: 75px; margin-left: 6px;" onclick="initializeButton()" name="serchBtn" type="button">초기화</button>
+                    </div>
+                    <table class="table table-hover"> <!-- 부트스트랩 게시판 -->
+                        <thead class="thead-light"> <!-- 게시판 맨위 색변경 클래스-->
+                            <tr>
+                                <th>날짜</th>
+                                <th>이름</th>
+                                <th>직급</th>
+                                <th>출근시간</th>
+                                <th>퇴근시간</th>
+                                <th>상태</th>
+                                <th>근태사유</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        </tbody>
+                    </table>
+                    <ul class="pagination" id="pagination"></ul>
+                </div>
             </div>
 		</div>
 	</section>
@@ -132,16 +126,17 @@
     </div>
 
 
+
 	<!-- 푸터 인클루드 -->
 	<%@ include file="../include/footer.jsp"%>
 
     <script>
-        $(".share_add_book_btn").click(function(){
-            if(!$(this).hasClass('share_add_book_btn_on')){
-            $(".share_add_book_btn").not(this).removeClass("share_add_book_btn_on");
-            $(this).addClass('share_add_book_btn_on');
-            }
-        })
+        
+        let startSeartTime;
+        let endSeartTime;
+        let itemsPerPage = 5;
+        let currentPage = 1;
+        let today = new Date();
 
         window.onload = function(){
             deptTrees();
@@ -155,7 +150,6 @@
             // 	data:dataSet,
                 processData:true,
                 success: function(data) {
-                    console.log(data);
                     data.forEach(function(e, i) {
                         var deptId = e.deptId;
                         var deptName = e.deptName;
@@ -221,87 +215,144 @@
                 $(obj).parent("li").children("ul").css("display","none");
             }
         }
-        
-        function empChecked(obj) {
-            //기존 체크된 css 및 클래스 정보 삭제
-            $(".myChecked").css("background-color","");
-            $("li").removeClass("myChecked");
-            
-            //새로 체크된 css 및 클래스 정보 갱신
-            $(obj).addClass("myChecked");
-            $(".myChecked").css("background-color","#2980b9");
-            data = {emp_id: $(obj).data('empid')}
-            selectAjax(data);
-        }
-
-        function myClick(obj){
-            console.log($(obj).data('deptid'));
-            data = {dept_id: $(obj).data('deptid')};
-            selectAjax(data);
-        }
-
-        function selectAjax(data){
-            $('.table tbody').find('.modalBtn').remove();
-            $('.modalContainer').find('.modal').remove();
+        let data;
+        function selectAjax(data, callback){
             $.ajax({
                 type: "get",
                 url: "/WorkConGW/attend/attendSelect",
                 data: data,
                 success: function(response) {
-                    response.forEach(function(e, i) {
-                        e.HISTORY_ATTEND_DAY = e.HISTORY_ATTEND_DAY || '';
-                        e.EMP_NAME = e.EMP_NAME || '';
-                        e.CODE_NAME = e.CODE_NAME || '';
-                        e.HISTORY_ATTEND_TIME = e.HISTORY_ATTEND_TIME || '';
-                        e.HISTORY_LEAVING_TIME = e.HISTORY_LEAVING_TIME || '';
-                        e.ATTEND_ST_NAME = e.ATTEND_ST_NAME || '';
-                        e.HISTORY_REASON = e.HISTORY_REASON || '';
-
-                        let text = `
-                        <tr class="modalBtn" data-toggle="modal" data-target="#staticBackdrop`+i+`">
-                            <td>`+e.HISTORY_ATTEND_DAY+`</td>
-                            <td>`+e.EMP_NAME+`</td>
-                            <td>`+e.CODE_NAME+`</td>
-                            <td>`+e.HISTORY_ATTEND_TIME+`</td>
-                            <td>`+e.HISTORY_LEAVING_TIME+`</td>
-                            <td><span class="goWork goWork`+e.ATTEND_ST_ID+`">`+e.ATTEND_ST_NAME+`</span></td>
-                            <td>`+e.HISTORY_REASON+`</td>
-                        </tr>
-                        `;
-                        $('tbody').append(text);
-                        let modal = `
-                        <div class="modal fade" id="staticBackdrop`+i+`" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
-                            <div class="modal-dialog modal-dialog-centered">
-                            <div class="modal-content">
-                                <div class="modal-header">
-                                <h5 class="modal-title" id="staticBackdropLabel">`+e.EMP_NAME+`</h5>
-                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                    <span aria-hidden="true">&times;</span>
-                                </button>
-                                </div>
-                                <div class="modal-body">
-                                    <p><span class="modalSubTit">날짜</span>`+e.HISTORY_ATTEND_DAY+`</p>
-                                    <p><span class="modalSubTit">직급</span>`+e.CODE_NAME+`</p>
-                                    <p><span class="modalSubTit">출근시간</span>`+e.HISTORY_ATTEND_TIME+`</p>
-                                    <p><span class="modalSubTit">퇴근시간</span>`+e.HISTORY_LEAVING_TIME+`</p>
-                                    <p><span class="modalSubTit">출근상태</span><span class="goWork goWork`+e.ATTEND_ST_ID+`">`+e.ATTEND_ST_NAME+`</span></p>
-                                    <p><span class="modalSubTit">지각사유</span><span style="display: inline-block;">`+e.HISTORY_REASON+`</span></p>
-                                </div>
-                                <div class="modal-footer">
-                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                                </div>
-                            </div>
-                            </div>
-                        </div>
-                        `;
-                        $('.modalContainer').append(modal);
-                    })
-                    console.log(response);
+                    callback(response);
                 },
                 error: function(xhr, status, error) {
                 // 오류 처리
                 console.error(xhr.responseText);
                 }
             });
+        }
+
+        // 페이지 업데이트 호출
+        function empChecked(obj) {
+            //기존 체크된 css 및 클래스 정보 삭제
+            $(".myChecked").css("background-color","");
+            $("li").removeClass("myChecked");
+            //새로 체크된 css 및 클래스 정보 갱신
+            $(obj).addClass("myChecked");
+            $(".myChecked").css("background-color","#2980b9");
+            data = {emp_id: $(obj).data('empid')}
+            selectAjax(data, function(response){
+                data = response
+                updatePage(currentPage);
+            });
+        }
+
+        function myClick(obj){
+            data = {dept_id: $(obj).data('deptid')};
+            selectAjax(data, function(response){
+                data = response
+                updatePage(currentPage);
+            });
+            
+        }
+        function addZero(num) {
+            return (num < 10 ? '0' : '') + num;
+        }
+        function serchBtn(){
+            updatePage(currentPage);
+        }
+
+        function initializeButton() {
+            $('input[name="startTime"]').val('');
+            $('input[name="endTime"]').val('');
+            updatePage(currentPage);
+        }
+
+        // 페이지를 업데이트하는 함수
+        function updatePage(page) {
+            let startIndex = (page - 1) * itemsPerPage;
+            let endIndex = startIndex + itemsPerPage;
+            if($('input[name="startTime"]').val() == ''){
+                startSeartTime = '1998-05-15';
+                endSeartTime = today.getFullYear() + '-' + addZero(today.getMonth() + 1) + '-' + addZero(today.getDate());
+            }else{
+                startSeartTime = $('input[name="startTime"]').val();
+                endSeartTime = $('input[name="endTime"]').val();
+            }
+
+            let searchDataFiltered = data.filter(function(e) {
+                return (e.HISTORY_ATTEND_DAY >= startSeartTime && e.HISTORY_ATTEND_DAY <= endSeartTime);
+            });
+
+            let pageData = searchDataFiltered.slice(startIndex, endIndex);
+
+            $('.table tbody').find('.modalBtn').remove();
+            $('.modalContainer').find('.modal').remove();
+            pageData.forEach(function(e, i) {
+                e.HISTORY_ATTEND_DAY = e.HISTORY_ATTEND_DAY || '';
+                e.EMP_NAME = e.EMP_NAME || '';
+                e.CODE_NAME = e.CODE_NAME || '';
+                e.HISTORY_ATTEND_TIME = e.HISTORY_ATTEND_TIME || '';
+                e.HISTORY_LEAVING_TIME = e.HISTORY_LEAVING_TIME || '';
+                e.ATTEND_ST_NAME = e.ATTEND_ST_NAME || '';
+                e.HISTORY_REASON = e.HISTORY_REASON || '';
+
+                let text = `
+                    <tr class="modalBtn" data-toggle="modal" data-target="#staticBackdrop` + i + `">
+                        <td>` + e.HISTORY_ATTEND_DAY + `</td>
+                        <td>` + e.EMP_NAME + `</td>
+                        <td>` + e.CODE_NAME + `</td>
+                        <td>` + e.HISTORY_ATTEND_TIME + `</td>
+                        <td>` + e.HISTORY_LEAVING_TIME + `</td>
+                        <td><span class="goWork goWork` + e.ATTEND_ST_ID + `">` + e.ATTEND_ST_NAME + `</span></td>
+                        <td>` + e.HISTORY_REASON + `</td>
+                    </tr>
+                `;
+                $('tbody').append(text);
+                let modal = `
+                    <div class="modal fade" id="staticBackdrop` + i + `" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                        <div class="modal-dialog modal-dialog-centered">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="staticBackdropLabel">` + e.EMP_NAME + `</h5>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                                <div class="modal-body">
+                                    <p><span class="modalSubTit">날짜</span>` + e.HISTORY_ATTEND_DAY + `</p>
+                                    <p><span class="modalSubTit">직급</span>` + e.CODE_NAME + `</p>
+                                    <p><span class="modalSubTit">출근시간</span>` + e.HISTORY_ATTEND_TIME + `</p>
+                                    <p><span class="modalSubTit">퇴근시간</span>` + e.HISTORY_LEAVING_TIME + `</p>
+                                    <p><span class="modalSubTit">출근상태</span><span class="goWork goWork` + e.ATTEND_ST_ID + `">` + e.ATTEND_ST_NAME + `</span></p>
+                                    <p><span class="modalSubTit">지각사유</span><span style="display: inline-block;">` + e.HISTORY_REASON + `</span></p>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                $('.modalContainer').append(modal);
+            });
+
+            $('.pagination').find('li').remove();
+
+            // 검색된 데이터에 따라 페이지 버튼을 생성
+            for (var i = 1; i <= Math.ceil(searchDataFiltered.length / itemsPerPage); i++) {
+                let button = `
+                    <li class="paginate_button page-item">
+                        <a href="javascript:void(0);" aria-controls="dataTable" data-dt-idx="0" tabindex="0" class="page-link">`+i+`</a>
+                    </li>
+                `;
+                let buttonElement = $(button); // 문자열을 jQuery 객체로 변환
+                console.log(buttonElement);
+                buttonElement.click(function() {
+                    currentPage = parseInt($(this).text());
+                    updatePage(currentPage);
+                });
+
+                $('.pagination').append(buttonElement);
+            }                                           
         }
     </script>
