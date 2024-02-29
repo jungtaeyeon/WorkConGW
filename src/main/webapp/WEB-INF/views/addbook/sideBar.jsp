@@ -494,6 +494,8 @@ $("#addEmp").click(function(){
     success: function(response) {
       // 성공적으로 처리된 후에 수행할 작업
       console.log(response);
+      alert("공유성공하였습니다.");
+      location.reload();
     },
     error: function(xhr, status, error) {
       // 오류 처리

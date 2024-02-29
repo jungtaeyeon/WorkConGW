@@ -12,11 +12,11 @@ import com.WorkConGW.util.interceptor.LoginUserLogInterceptor;
 @Configuration
 public class WebMvcConfig implements WebMvcConfigurer {
 
-    @Override
-    public void addResourceHandlers(ResourceHandlerRegistry registry) {
-        registry.addResourceHandler("/pds/**")
-                .addResourceLocations("file:/Users/jeongtaeyeon/WorkConProject/WorkConFeature/WorkConGW/src/main/webapp/pds/");
-    }
+    // @Override
+    // public void addResourceHandlers(ResourceHandlerRegistry registry) {
+    //     registry.addResourceHandler("/pds/**")
+    //             .addResourceLocations("file:/Users/jeongtaeyeon/WorkConProject/WorkConFeature/WorkConGW/src/main/webapp/pds/");
+    // }
 
 
 

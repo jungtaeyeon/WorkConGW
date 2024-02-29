@@ -135,10 +135,7 @@ public class AddBookDAO {
   public int shareAddBookGroupDelete(Map<String, Object> pmap) {
     logger.info("shareAddBookGroupDelete");
     int result = 0;
-    result = sqlSessionTemplate.delete("shareAddBookGroupManageDelete", pmap);
     result = sqlSessionTemplate.delete("shareAddBookGroupDelete", pmap);
-    logger.info(Integer.toString(result));
-    
     logger.info(Integer.toString(result));
     return result;
   }
@@ -171,11 +168,7 @@ public class AddBookDAO {
         paramMap.put("emp_id", emp_id);
         // MyBatis의 insert 쿼리를 실행합니다.
         logger.info(paramMap.toString());
-        result += sqlSessionTemplate.insert("addBookShareManageInsert", paramMap);
-        logger.info(Integer.toString(result));
         result += sqlSessionTemplate.insert("addBookShareInsert", paramMap);
-        sqlSessionTemplate.insert("addBookShareManageInsertUpdate", paramMap);
-        logger.info(Integer.toString(result));
     }
     sqlSessionTemplate.insert("addBookShareManageUpdate", paramMap);
     logger.info(Integer.toString(result));

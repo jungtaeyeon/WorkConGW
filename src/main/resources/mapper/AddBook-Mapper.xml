@@ -69,9 +69,7 @@
                         NVL(b.add_book_id, '0') AS add_book_id, 
                         NVL(b.add_book_title, ' ') AS add_book_title, 
                         NVL(b.share_add_book_yn, '0') AS share_add_book_yn, 
-                        a.emp_id AS emp_id,
-                        s.manage_id AS share_manage_id,
-                        s.emp_id AS share_emp_id
+                        a.emp_id AS emp_id
                 FROM 
                         add_book_manage a
                 LEFT OUTER JOIN 
@@ -83,12 +81,8 @@
                                         FROM dual
                                         CONNECT BY REGEXP_SUBSTR(A.MANAGE_ADD_BOOK_ID, '[^#]+', 1, LEVEL) IS NOT NULL
                                 ) OR b.add_book_id IS NULL)
-                LEFT OUTER JOIN
-                        share_add_book s 
-                ON 
-                        a.manage_id = s.manage_id
                 WHERE 
-                        (s.emp_id = #{empId} OR a.emp_id = #{empId})
+                        a.emp_id = #{empId}
                         AND manage_starred = '1'
                 ORDER BY 
                         manage_id ASC
@@ -115,14 +109,14 @@
                         s.add_book_id AS share_add_book_id
                 FROM 
                         add_book_manage a
-                LEFT OUTER JOIN 
-                        add_book  b 
-                ON 
-                        a.emp_id = #{empId}
                 LEFT OUTER JOIN
                         share_add_book s 
                 ON 
                         a.manage_id = s.manage_id
+                LEFT OUTER JOIN 
+                        add_book  b 
+                ON 
+                        b.add_book_id = s.add_book_id
                 WHERE 
                         s.emp_id = #{empId}
                         AND s.add_book_id = b.add_book_id
@@ -453,16 +447,6 @@
                 AND emp_id = #{empId}
         </delete>
 
-        <delete id="shareAddBookGroupManageDelete" parameterType="map">
-                DELETE FROM add_book_manage
-                WHERE manage_id IN (
-                        SELECT manage_id
-                        FROM share_add_book
-                        WHERE add_book_id = #{add_book_id}
-                        and emp_id= #{empId}
-                )
-        </delete>
-
         <!-- 주소록 삭제 -->
         <delete id="addBookDelete" parameterType="java.util.List">
                 DELETE FROM add_book_manage
@@ -472,53 +456,18 @@
                 </foreach>
         </delete>
 
-        <insert id="addBookShareManageInsert" parameterType="java.util.Map">
-                        INSERT INTO add_book_manage (
-                        manage_id, 
-                        manage_display_name, 
-                        manage_hp, 
-                        manage_email, 
-                        manage_remark, 
-                        manage_company_name,
-                        manage_official_name,
-                        manage_dept_name,
-                        manage_starred,
-                        manage_add_book_id,
-                        share_add_book_manage_yn,
-                        emp_id
-                        ) 
-                        SELECT 
-                        add_book_manage_seq.nextval,
-                        manage_display_name,
-                        manage_hp, 
-                        manage_email, 
-                        manage_remark, 
-                        manage_company_name,
-                        manage_official_name,
-                        manage_dept_name,
-                        manage_starred,
-                        b.add_book_id as manage_add_book_id,
-                        share_add_book_manage_yn,
-                        #{emp_id} AS emp_id
-                        FROM  
-                        add_book_manage a 
-                        LEFT OUTER JOIN 
-                        add_book b ON a.emp_id = b.emp_id 
-                        and b.add_book_id IN (
-                                        SELECT REGEXP_SUBSTR(A.MANAGE_ADD_BOOK_ID, '[^#]+', 1, LEVEL) AS ADD_BOOK_ID
-                                        FROM dual
-                                        CONNECT BY REGEXP_SUBSTR(A.MANAGE_ADD_BOOK_ID, '[^#]+', 1, LEVEL) IS NOT NULL
-                                ) OR b.add_book_id IS NULL 
-                        WHERE 
-                        b.add_book_id = #{add_book_id} and a.share_add_book_manage_yn is null
-        </insert>
-
         <insert id="addBookShareInsert" parameterType="java.util.Map">
                 INSERT INTO share_add_book (emp_id, manage_id,add_book_id)
-                SELECT #{emp_id} AS emp_id,manage_id,b.add_book_id as add_book_id
+                SELECT #{emp_id},a.manage_id,#{add_book_id}              
                 FROM add_book_manage a 
-                LEFT OUTER JOIN add_book b ON a.emp_id = #{emp_id} and a.manage_add_book_id = #{add_book_id}
-                WHERE b.add_book_id = #{add_book_id} and a.share_add_book_manage_yn is null
+                LEFT OUTER JOIN add_book b ON a.emp_id = b.emp_id
+                WHERE (b.add_book_id IN (
+                                SELECT REGEXP_SUBSTR(A.MANAGE_ADD_BOOK_ID, '[^#]+', 1, LEVEL) AS ADD_BOOK_ID
+                                FROM dual
+                                CONNECT BY REGEXP_SUBSTR(A.MANAGE_ADD_BOOK_ID, '[^#]+', 1, LEVEL) IS NOT NULL
+                        ) OR b.add_book_id IS NULL)
+                AND a.emp_id = #{empId}
+                AND b.add_book_id = #{add_book_id}
         </insert>
 
         <update id="addBookShareManageUpdate" parameterType="map">
@@ -536,14 +485,6 @@
                 AND a.emp_id = #{empId}
                 AND b.add_book_id = #{add_book_id}
                 )
-        </update>
-
-        <update id="addBookShareManageInsertUpdate" parameterType="map">
-                UPDATE add_book_manage
-                SET 
-                        share_add_book_manage_yn = '1'
-                WHERE 
-                        emp_id = #{emp_id} and manage_add_book_id = #{add_book_id}
         </update>
 
         <update id="addBookShareInsertUpdate" parameterType="map">

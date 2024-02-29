@@ -147,7 +147,7 @@ public class CommonController {
         EmpVO empVO = (EmpVO)request.getSession().getAttribute("loginUser");
         empVO = empService.getEmp(empVO.getEmp_Id());
         model.addAttribute("empVO", empVO);
-        return "/home";
+        return "/home2";
     }
 
     @GetMapping("/api/weather-app-key")

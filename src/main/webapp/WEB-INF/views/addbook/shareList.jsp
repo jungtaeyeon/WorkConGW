@@ -181,9 +181,7 @@ java.util.ArrayList, com.WorkConGW.addbook.dto.AddBookVO" %>
                           ${addBook.manage_email}
                         </td>
                         <td class="listModalBtn" data-toggle="modal" data-target="#staticBackdrop${status.index}">
-                          <c:forEach var="addBookGroup" items="${addBookList}">
-                            <c:if test="${addBookGroup.add_book_title ne ' '}"> <span class="groupTag">${addBookGroup.add_book_title}</span></c:if>
-                          </c:forEach>
+                          <c:if test="${addBook.add_book_title ne ' '}"> <span class="groupTag">${addBook.add_book_title}</span></c:if>
                         </td>
                       </tr>
                       <!-- Modal -->
@@ -233,8 +231,11 @@ java.util.ArrayList, com.WorkConGW.addbook.dto.AddBookVO" %>
 
     
     <script>
+      
       let loginUser = "${loginUser.emp_Id}";
-      let addBookList = "${addBookGroupList[0].emp_id}";
+      let addBookList = "${groupedByManageId}";
+      console.log(addBookList);
+      console.log("${loginUser.emp_Id}");
       $(".starred").click(function(){
         if(loginUser == addBookList){
           $(this).toggleClass("fa-regular");

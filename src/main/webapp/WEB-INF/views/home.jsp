@@ -5,11 +5,6 @@
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 
-
-
-
-
-
 <style>
 	#calendar {
 		width: 300px;
@@ -138,7 +133,7 @@
 
 </style>
 <body>
-    <%@ include file="./include/header.jsp"%>
+<%@ include file="./include/header.jsp"%>
 <div id="main-content" style="width: 100%;">
 	<div class="container-fluid" >
 		<!-- 메인 content 넣는 곳 -->
@@ -162,7 +157,7 @@
 									<h4 class="m-b-0" style="margin: 10px;">
 										<strong>&nbsp;</strong>
 									</h4>
-									<span style="font-size:1.5em;"></span>
+									<span style="font-size:1.5em;">asdasdasdasd</span>
 									<span style="font-size:1.5em;"></span>
 								</div>
 								<div class="m-t-15" style="font-size:1.1em;">
@@ -1005,7 +1000,7 @@
 						'<img src= "http://openweathermap.org/img/wn/'
 						+ WeatherResult.weather[0].icon +
 						'@2x.png" alt="' + WeatherResult.weather[0].description + '"/>'
-
+				
 				$('.SeoulIcon').html(weathericonUrl);
 			});
 
