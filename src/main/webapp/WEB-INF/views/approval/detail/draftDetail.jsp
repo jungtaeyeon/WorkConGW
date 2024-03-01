@@ -179,29 +179,22 @@
                                 </tbody>
                             </table>
 
-                            <table border="1" style="display: inline-block;border-collapse: collapse;background: white;float: right;margin-top: -120px;" class="lineTable">
+                            <c:forEach items="${getApprovalList}" varStatus="status" var = "list">
+                                <c:if test="${list.history_Type eq '반려'}">
+                            <table border="1" style="/* display: inline-block; */border-collapse: collapse;background: white;float: right;margin-top: -120px;/* border-radius: 15px; *//* border: 2px solid #ccc; */">
                                 <tbody>
                                 <tr>
-                                    <td style="width: 40px; text-align: center;" contenteditable="false">반려사유<td>
+                                    <td style="width: 40px; text-align: center; color: red; font-weight: bold; padding: 5px;" contenteditable="false">반려사유</td>
                                 </tr>
-
                                 <tr>
-                                    <td style="width: 90px; height: 95px; text-align: center;" contenteditable="false">
-
-                                        <c:if test="${list.history_Type eq '신청'}">
-                                            <div id="d${list.emp_Id}" style="width: 90px; height: 56px;" contenteditable="false" ></div>
-                                        </c:if>
-
-                                        <c:if test="${list.history_Type eq '결재'}">
-                                            <div id="d${list.emp_Id}" style="width: 90px; height: 56px;" contenteditable="false"></div>
-                                        </c:if>
-
+                                    <td style="width: 90px; height: 95px; text-align: center; padding: 10px;" contenteditable="false">
+                                        <div style="font-weight: bold; color: red; font-size: 16px;">${approval.approval_Cancel_Reason}</div>
                                     </td>
                                 </tr>
-
-
                                 </tbody>
                             </table>
+                                </c:if>
+                            </c:forEach>
 
                         </td>
                     <tr>

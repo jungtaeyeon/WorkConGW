@@ -95,10 +95,12 @@
             <h2><i class="fa-solid fa-angles-right"></i> <!--왼쪽 아이콘 폰트어썸-->결재대기문서</h2>
             <div class="btnGroup">
                 &nbsp
-                <button type="button" class="btn btn-dark myBtn" style="width: 100px; opacity: 0.3;" onclick="review_go();">결재</button>
+                <button type="button" class="btn btn-dark myBtn" style="width: 100px; " onclick="review_go();">결재</button>
                 &nbsp
-                <button type="button" class="btn btn-dark myBtn" style="width: 100px; opacity: 0.3;" onclick="return_go();">반려</button>
+                <button type="button" class="btn btn-dark myBtn" style="width: 100px; " onclick="return_go();">반려</button>
 
+                &nbsp
+                <button type="button" class="btn btn-dark myBtn" style="width: 100px; "  onClick="location.href='<%=request.getContextPath()%>/approval/lists/waitList'">목록</button>
             </div>
         </div>
 
@@ -114,7 +116,7 @@
                     </div>
                     <div class="modal-footer">
                         <p>*반려이유는 기안자에게 전달됩니다.</p>
-                        <button id="reason_y" type="button" class="btn btn-primary" onclick="reason_y();">확인</button>
+                        <button id="reason_y" type="button" class="btn btn-dark" onclick="reason_y();">확인</button>
                         <button type="button" class="btn btn-danger" data-dismiss="modal" onclick="reason_n();">닫기</button>
                         <button id="modal-off" type="button" class="btn btn-danger" data-dismiss="modal" style="display: none;">닫기</button>
                     </div>

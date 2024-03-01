@@ -93,11 +93,11 @@
         <div class="subTitleText"> <!--컨텐츠 부분 타이틀 클래스(이건 부트스트랩 클래스 아니고 임의로 만든 클래스)-->
             <h2><i class="fa-solid fa-angles-right"></i> <!--왼쪽 아이콘 폰트어썸-->기안하기</h2>
             <div class="btnGroup">
-                <button type="button" class="btn btn-primary" onclick="OpenWindow('<%=request.getContextPath()%>/approval/approvalLine?doc_Id=${approval.doc_Id}', 'WorkConGW', 1200,790)">결제라인</button>
+                <button type="button" class="btn btn-dark" onclick="OpenWindow('<%=request.getContextPath()%>/approval/approvalLine?doc_Id=${approval.doc_Id}', 'WorkConGW', 1200,790)">결제라인</button>
                 &nbsp
-                <button type="button" class="btn btn-primary" onclick="approval_go()">결제요청</button>
+                <button type="button" class="btn btn-dark" onclick="approval_go()">결제요청</button>
                 &nbsp
-                <button type="button" class="btn btn-primary" onclick="approvalTemp_go()">임시저장</button>
+                <button type="button" class="btn btn-dark" onclick="approvalTemp_go()">임시저장</button>
 
             </div>
         </div>
