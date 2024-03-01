@@ -57,7 +57,7 @@
                                         <div class="input-group date searchCri searchDt selectDt myConditions" data-date-autoclose="true" data-provide="datepicker" style="font-size:1.2em;width:200px;margin-right:15px;float:left;display:none;">
                                             <form:input path="searchApprovalVO.searchDt" id="inputSearchDt" type="text" class="form-control" placeholder="완료날짜 선택" readonly="true"/>
                                             <div class="input-group-append">
-                                                <button class="btn btn-outline-secondary" type="button"><i class="fa fa-calendar"></i></button>
+                                                <button class="btn btn-outline-secondary" type="button" onclick="searchList();"><i class="fa fa-calendar"></i></button>
                                             </div>
                                         </div>
                                         <form:select path ="searchApprovalVO.searchState" id = "selectSearchState" class="form-control selectState myConditions" style="width:200px;font-size: 1.2em;margin-right:15px;float:left;">
@@ -73,12 +73,11 @@
                                             <form:option value="t">제목</form:option>
                                             <form:option value="d">문서번호</form:option>
                                         </form:select>
-
+                                        <button type="button" class="btn btn-default" onclick="searchList();" style="margin-left: 5px;"><i class="fas fa-search" aria-hidden="true"></i></button>
 
 
                                         <div id="navbar-search" class="navbar-form search-form selectSearch" style="float:left;">
                                             <form:input path = "searchApprovalVO.searchKeyword" class="form-control" placeholder="Search here..." type="text" style="width: 218px;height:36px;padding-right: 40px;" onkeypress="checkEnter(searchList);"/>
-                                            <button type="button" class="btn btn-default" onclick="searchList();"><i class="icon-magnifier"></i></button>
                                         </div>
 
                                         <div class="form-group" style="float:right;">
@@ -104,7 +103,7 @@
                                             </thead>
                                             <tbody style="cursor: pointer;">
                                             <c:forEach items="${approvalList }" var="doc">
-                                                <tr onclick="window.location='<%=request.getContextPath()%>/approval/detail?docId=${doc.doc_Id}';">
+                                                <tr onclick="window.location='<%=request.getContextPath()%>/approval/draftDetail?docId=${doc.doc_Id}';">
                                                 <td><fmt:formatDate value = "${doc.approval_Recommand_Dt}" pattern="yyyy-MM-dd"/></td>
                                                     <td><span>${doc.form_Name}</span></td>
                                                     <td><span class="text-info">${doc.approval_Title}</span></td>
@@ -118,13 +117,11 @@
                                                         <td><span class="badge badge-success">결재진행중</span></td>
                                                     </c:if>
                                                     <c:if test="${doc.approval_St eq 2}">
-                                                        <td><span class="badge badge-default">결재완료</span></td>
+                                                        <td><span class="badge badge-primary">결재완료</span></td>
                                                     </c:if>
                                                     <c:if test="${doc.approval_St eq 3}">
-                                                        <td><span class="badge-purple badge">결재반려</span></td>
+                                                        <td><span class="badge badge-danger">결재반려</span></td>
                                                     </c:if>
-
-
                                                 </tr>
                                                 <c:if test = "${empty approvalList}">
                                                 <tr>
@@ -161,9 +158,7 @@
                                         </ul>
                                     </div>
                                 </div>
-
-
-                                <form:hidden path = "searchApprovalVO.pageIndex"/>
+                                <form:hidden path="searchApprovalVO.pageIndex"/>
                             </form:form>
                         </div>
                     </div>
@@ -201,9 +196,7 @@
         let listForm = $('form[name="listForm"]');
         $('input[name="searchApprovalVO.pageIndex"]').val(pageNo);
 
-        $("#pageIndex").val(pageNo);
-        $("#listForm").submit();
-        return false;
+        listForm.submit();
 
     }
 

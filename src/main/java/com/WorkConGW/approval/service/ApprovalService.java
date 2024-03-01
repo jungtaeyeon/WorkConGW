@@ -325,6 +325,7 @@ public class ApprovalService{
 
         Map<String,Object> dataMap = new HashMap<>();
 
+        logger.info("getDraftList : pageIndex" + searchApprovalVO.getPageIndex());
         //기안문서 조회
         List<ApprovalVO> draftDocs = approvalDAO.selectDraftDocsById(searchApprovalVO);
 
@@ -363,7 +364,6 @@ public class ApprovalService{
 
 
         List<ApprovalHistoryVO> pList = approvalDAO.getHistoryLine(doc_Id);
-        logger.info("pList : "+pList.toString());
         ApprovalHistoryVO approvalHistoryVO = approvalDAO.selectHistoryById(docId);
         ApprovalVO approvalVO = approvalDAO.selectWaitDocByDocId(docId);
         approvalVO.setAttachVOList(approvalDAO.selectAttachsByDocId(docId));
@@ -511,8 +511,9 @@ public class ApprovalService{
 /////////////////////////////반려 하는 사람의 emp_Id / doc_Id값을 넣는다./////////////////////////////
         approvalHistoryVO.setDoc_Id((Integer.parseInt((String)dataMap.get("doc_Id"))));
         approvalHistoryVO.setEmp_Id(emp_Id);
-        approvalHistoryVO.setHistory_st(1); // 반려도 결재가 완료된 상태이니 (1)로 바꿔줘야함.
+        approvalHistoryVO.setHistory_st(3); // 반려도 결재가 완료된 상태이니 (1)로 바꿔줘야함.
         approvalHistoryVO.setHistory_Turn("N"); //결재차례가 아니니  업데이트 처리
+        approvalHistoryVO.setHistory_Type("반려");
         approvalDAO.updateApprovalHistory(approvalHistoryVO);
 
 /////////////////////////////반려 하는 사람의 emp_Id / 상태값을 업데이트한다./////////////////////////////

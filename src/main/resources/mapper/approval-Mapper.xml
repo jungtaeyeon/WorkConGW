@@ -95,48 +95,49 @@
 
 
     <select id = "selectDraftDocsById" parameterType="ApprovalVO" resultType="ApprovalVO">
-        SELECT D2.*
+SELECT D2.*
 
         FROM (SELECT D1.*
 
 
-        FROM(
-        SELECT ROWNUM as seq, D.*
+                FROM(
+                    SELECT rownum as seq, D.*
 
 
-        FROM (
-        SELECT A.APPROVAL_TITLE,
-        A.APPROVAL_RECOMMAND_DT,
-        A.APPROVAL_ST,
-        A.DOC_ID,
-        C.FORM_NAME
+                    FROM
+                    (
+                        SELECT A.APPROVAL_TITLE,
+                        A.APPROVAL_RECOMMAND_DT,
+                        A.APPROVAL_ST,
+                        A.DOC_ID,
+                        C.FORM_NAME
 
 
-        FROM APPROVAL A, APPROVAL_ATTACH D, APPROVAL_FORM C
+                        FROM APPROVAL A, APPROVAL_ATTACH D, APPROVAL_FORM C
 
 
-        WHERE A.FORM_ID = C.FORM_ID AND A.DOC_ID = D.DOC_ID(+) AND APPROVAL_ST NOT IN(4,5)  AND EMP_DRAFTER_ID = #{emp_Drafter_Id}
+                        WHERE A.FORM_ID = C.FORM_ID AND A.DOC_ID = D.DOC_ID(+) AND NOT A.APPROVAL_ST  IN(4,5)  AND EMP_DRAFTER_ID = #{emp_Drafter_Id}
 
-        <include refid="search" />
+                        <include refid="search" />
 
-        GROUP BY A.APPROVAL_TITLE,
-        A.APPROVAL_RECOMMAND_DT,
-        A.APPROVAL_ST,
-        A.EMP_DRAFTER_ID,
-        A.DOC_ID,
-        C.FORM_NAME
+                        GROUP BY A.APPROVAL_TITLE,
+                        A.APPROVAL_RECOMMAND_DT,
+                        A.APPROVAL_ST,
+                        A.EMP_DRAFTER_ID,
+                        A.DOC_ID,
+                        C.FORM_NAME
 
-        ORDER BY 2 DESC
+                        ORDER BY 2 DESC
 
-        )D
+                    )D
 
-        )D1
+                )D1
 
-        where seq <![CDATA[ >= ]]> #{firstIndex}
+            where seq <![CDATA[ > ]]> #{firstIndex}
 
         )D2
 
-        where rownum <![CDATA[ <= ]]> #{recordCountPerPage}
+where rownum <![CDATA[ <= ]]> #{recordCountPerPage}
 
     </select>
 
@@ -248,6 +249,9 @@
         SET HISTORY_ST = #{history_st},
             HISTORY_ALLOW_DT = current_Date,
             HISTORY_TURN = #{history_Turn}
+        <if test="history_st == 3">
+            ,HISTORY_TYPE = #{history_Type}
+        </if>
 
         WHERE DOC_ID = #{doc_Id} and EMP_ID = #{emp_Id}
     </update>

@@ -206,6 +206,9 @@
                                                                 <div id="d${list.emp_Id}" style="width: 90px; height: 56px;" contenteditable="false"></div>
                                                             </c:if>
 
+                                                            <c:if test="${list.history_Type eq '반려'}">
+                                                                <div id="d${list.emp_Id}" style="width: 90px; height: 56px;" contenteditable="false"></div>
+                                                            </c:if>
 
                                                         </td>
                                                     </tr>
@@ -430,15 +433,6 @@
         $(".modal").remove()
         getReturnSign()
 
-        $("td").attr("contenteditable",false);
-        $("div").attr("contenteditable",false);
-        $("#vacationType").attr("disabled",true);
-        $(".startDt").attr("readonly",true);
-        $(".endDt").attr("readonly",true);
-        $("input").attr("readonly",true);
-        $("textarea").attr("readonly",true);
-
-
         let content = $("#contents").html();
         let docId = '${approval.doc_Id}';
         let obj = {}
@@ -457,6 +451,7 @@
             processData: true,
             success: function (data) {
                 console.log(data)
+                window.location.reload()
             },
             error: function (e) {
                 console.log(e)
@@ -525,15 +520,31 @@
 
     function getSign() {
         let imageCon, emp_Id, imageURL;
-        let historyType, historyTurn, historyStep
+        let historyType, historyTurn, historyStep, historySt;
+
         <c:forEach var="list" items="${getApprovalList}">
         imageCon = '${list.emp_Sign}';
         emp_Id = '${list.emp_Id}';
         historyType = '${list.history_Type}';
         historyTurn = '${list.history_Turn}';
         historyStep = '${list.history_Step}';
+        historySt = '${list.history_st}';
 
-        if (historyType === '신청' || (historyTurn === 'N' && historyType === '결재' && historyStep === '2')) {
+        /*
+        * @ 작성자 : 오지환
+        * @ 작성일자 : 2024.03.01
+        * @ 설명 : 조건문에 대한 해설
+        * 1. historyType이 신청인지 확인 --> 첫 조건이 신청이기 때문에 나머지 조건은 확인 x
+        * 2. historyType이 결재이기 때문에 --> historyType === '신청' 제외한 뒤 부분 실행
+        *       - historyTurn이 'N'인지 확인 "그리고"
+        *       - historyType이 '결재'인지 확인 --> 두 조건이 맞아야 뒷 부분 실행 (Y라면 내 차례이기 때문에 도장이 찍히면 안됨)
+        * 3. 1~2 조건이 맞으면 -> historyStep이 2 "또는" 3인지 확인 그리고 history_st가 1이면 결재완료 상태임 (만약에 세번쨰 사람이 도장을 찍으면 historySt가 1로 업데이트 된다.)  그렇기 떄문에 마지막 ===1로 마지막 사람인지 아닌지 구별해야함.
+        * 4. 즉, 결재자 두 사람은 마지막 조건을 통해서 로직을 나눠서 탄다.
+
+        *
+        *
+        * */
+        if (historyType === '신청' || (historyTurn === 'N' && historyType === '결재' && (historyStep === '2' || historyStep === '3') && historySt === '1')) {
             console.log(emp_Id);
             console.log(imageCon);
             imageURL = "<%=request.getContextPath()%>/pds/Sign/" + imageCon;
@@ -544,6 +555,22 @@
                 'background-repeat': 'no-repeat'
             }).trigger("create");
         }
+
+
+        if (historySt === '3')
+        {
+            console.log("historyst3>>"+emp_Id);
+            let imageURL = "<%=request.getContextPath()%>/pds/Sign/반려.png"
+            console.log(imageURL)
+            $('div#d' + emp_Id).css({
+                'background-image': 'url(' + imageURL + ')',
+                'background-position': 'center',
+                'background-size': 'contain',
+                'background-repeat': 'no-repeat'
+            }).trigger("create");
+        }
+
+
         </c:forEach>
     }
 
