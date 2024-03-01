@@ -77,7 +77,7 @@
           <a href="#">내가받은결재</a>
           <ul class="main-menu metismenu">
             <li id="li_importantSchedule" class="metismenuLI">
-                <a href="<%=request.getContextPath()%>" class=""><i class="fa fa-square" id="importantSchedule"></i> <span>결재대기문서</span></a>
+                <a href="<%=request.getContextPath()%>/approval/lists/waitList" class=""><i class="fa fa-square" id="importantSchedule"></i> <span>결재대기문서</span></a>
             </li>
             <li id="li_importantSchedule" class="metismenuLI">
               <a href="addBookList" class=""><i class="fa fa-square" id="importantSchedule"></i> <span>결재완료문서</span></a>

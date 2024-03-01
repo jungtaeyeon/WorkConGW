@@ -254,7 +254,7 @@
 				<a href="javascript:void(0);" class="user-name" data-toggle="dropdown" aria-expanded="false">
 
 					<c:if test="${loginUser.emp_Picture != null}">
-						<div id="pictureView" style="background-image:url('${pageContext.request.contextPath }/pds/empPicture/${ loginUser.emp_Picture}'); width: 55px; height: 55px;" class="rounded-circle avatar" ></div>
+						<div id="pictureView" style="background-image:url('${pageContext.request.contextPath}/pds/empPicture/${loginUser.emp_Picture}'); width: 55px; height: 55px;" class="rounded-circle avatar" ></div>
 					</c:if>
 					<c:if test = "${loginUser.emp_Picture == null}">
 						<div id="pictureViewPhoto" style="background-color: #ffffff;" class="rounded-circle user-photo">
@@ -506,24 +506,24 @@
 	}
 
 
-	function checkSession() {
-		let session = <%=session.getMaxInactiveInterval()%> ;
-		if(session > 300){
-			alert('시간이 만료되었습니다. 로그인해주세요')
-			location.href = "<%=request.getContextPath()%>/common/loginForm"
-			sessionStorage.clear()
-		}
-		else{
-			document.write(session);
-			clearTimeout(orange);
-		}
-	}
+	<%--function checkSession() {--%>
+	<%--	let session = <%=session.getMaxInactiveInterval()%> ;--%>
+	<%--	if(session > 300){--%>
+	<%--		alert('시간이 만료되었습니다. 로그인해주세요')--%>
+	<%--		location.href = "<%=request.getContextPath()%>/common/loginForm"--%>
+	<%--		sessionStorage.clear()--%>
+	<%--	}--%>
+	<%--	else{--%>
+	<%--		document.write(session);--%>
+	<%--		clearTimeout(orange);--%>
+	<%--	}--%>
+	<%--}--%>
 
-	function checkStart() {
-		orange = setInterval(checkSession, 300000);
-		console.log(orange)
-	}
-	checkStart();
+	<%--function checkStart() {--%>
+	<%--	orange = setInterval(checkSession, 300000);--%>
+	<%--	console.log(orange)--%>
+	<%--}--%>
+	<%--checkStart();--%>
 
 
 

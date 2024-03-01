@@ -1,6 +1,8 @@
  package com.WorkConGW.emp.service;
 
 import java.io.File;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
@@ -107,7 +109,9 @@ public class EmpService {
          {
              if(empVO.getEmp_Sign()!=null)
              {
-                 signImage.transferTo(new File(rename));
+                 Path filePath = Paths.get(SignPath, rename);
+                 // 파일 저장
+                 signImage.transferTo(filePath.toFile());
              }
          }}
          else{ //실패함

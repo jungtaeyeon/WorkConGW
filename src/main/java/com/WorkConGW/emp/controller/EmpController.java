@@ -293,10 +293,37 @@ public class EmpController {
         return "/common/join";
     }
 
+//    @PostMapping("registSign")
+//    public ResponseEntity<String> updateSign(@RequestParam(value = "myEmpSign" , required=false) MultipartFile SignImage, @SessionAttribute("loginUser")EmpVO empVO,RedirectAttributes attr) throws IOException,IllegalStateException
+//    {
+//
+//        logger.info("registSign");
+//        int result = empService.updateSign(SignImage,SignPath,empVO);
+//        String msg = "";
+//        ResponseEntity<String> entity = null;
+//        if(result > 0)
+//        {
+//            msg = "서명 이미지가 등록 되었습니다.";
+//            entity = new ResponseEntity<>(msg , HttpStatus.OK);
+//
+//        }
+//        else{
+//            msg = "서명 이미지가 없습니다.";
+//            entity = new ResponseEntity<>(msg, HttpStatus.OK);
+//
+//        }
+//
+//        return entity;
+//
+//
+//
+//    }
+
     @PostMapping("registSign")
     public ResponseEntity<String> updateSign(@RequestParam(value = "myEmpSign" , required=false) MultipartFile SignImage, @SessionAttribute("loginUser")EmpVO empVO,RedirectAttributes attr) throws IOException,IllegalStateException
     {
 
+        logger.info("registSign");
         int result = empService.updateSign(SignImage,SignPath,empVO);
         String msg = "";
         ResponseEntity<String> entity = null;
@@ -317,6 +344,7 @@ public class EmpController {
 
 
     }
+
    @GetMapping("/registerAuth")
     public String loginView(HttpServletRequest request, Model model, String emp_Email, String emp_Id){
         logger.info("loginView");
