@@ -3,7 +3,6 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
-<link rel="stylesheet" href="<%=request.getContextPath()%>/resources/templates/light/assets/fonts/font.css">
 <title>${meetRoomVO.meet_Room_Name } 회의실 </title>
 <style>
     #main-content{
@@ -43,48 +42,65 @@
     #edit-participater{
         cursor: pointer;
     }
+    #modifyBtn{
+        display: none;
+    }
 </style>
 
-
-<%@ include file="../include/header.jsp"%>
 <body>
+<!-- 헤더인클루드 -->
+<%@ include file="../include/header.jsp"%>
 <div id="main-content">
-    <div class="container-fluid">
-        <div class="form-header container-fluid-header" style="font-family: S-CoreDream-4Regular ">
+    <div class="container-fluid" style="font-family: S-CoreDream-4Regular	">
+        <div class="form-header container-fluid-header">
             <h3 class="form-title">${meetRoomVO.meet_Room_Name } 회의실</h3>
             <div>
-                <button type="button" id="modifyBtn" onclick="javascript:location.href='<%=request.getContextPath() %>/reservation/modifyForm?meet_Room_Id=${meetRoomVO.meet_Room_Id}';" class="btn btn-info header-btn">&nbsp;&nbsp;&nbsp;수 &nbsp;&nbsp;정&nbsp;&nbsp;&nbsp;</button>
-                <button type="button" class="btn btn-danger" onclick="removeRoom();">삭제</button>
-                <button type="button" class="btn btn-secondary" onclick="location.href='${pageContext.request.contextPath}/reservation/adminMain'">닫기</button>
+                <c:if test="${loginUser.emp_Id == meetRoomVO.emp_Id}">
+                    <button type="button" id="modifyBtn" onclick="javascript:location.href='<%=request.getContextPath() %>/reservation/modifyForm?meet_Room_Id=${meetRoomVO.meet_Room_Id}';" class="btn btn-info header-btn">&nbsp;&nbsp;&nbsp;수 &nbsp;&nbsp;정&nbsp;&nbsp;&nbsp;</button>
+                    <button type="button" class="btn btn-danger" onclick="removeRoom();">취소</button>
+                </c:if>
+
+                <button type="button" class="btn btn-secondary" onclick="goBack()">닫기</button>
             </div>
         </div>
         <hr>
-        <div class="row" style="font-family: S-CoreDream-4Regular">
+        <div class="row">
             <div class="col-md-4">
                 <form:form modelAttribute="meetRoomVO" id="detailForm" name="detailForm" class="form-horizontal" autocomplete="off">
                     <form:hidden path="meet_Room_Id" />
+                    <form:hidden path="meet_Room_Reservation_Id"  />
+                    <form:hidden path="emp_Id"/>
                 </form:form>
                 <div class="row">
                     <div class="col-xs-12">
-                        <label class="col-xs-4" for="edit-title">회의실명</label>
-                        <div class="col-sm-10 input-group-sm">
-                            <form:input path="meetRoomVO.meet_Room_Name" id="meetRoomName" class="form-control" readonly="true"/>
+                        <label class="col-xs-12" for="edit-title">예약자 </label>
+                        <div class="col-sm-12 input-group-sm">
+                            ${meetRoomVO.emp_Name }(${meetRoomVO.official_Name})
                         </div>
                     </div>
                 </div>
                 <div class="row">
                     <div class="col-xs-12">
-                        <label class="col-xs-4" for="edit-start">회의실 위치</label>
-                        <div class="col-sm-10 input-group-sm">
-                            <form:input path="meetRoomVO.meet_Room_No" id="meetRoomNo" class="form-control" readonly="true"/>
+                        <label class="col-xs-12" for="edit-title">부서명</label>
+                        <div class="col-sm-12 input-group-sm">
+                            ${meetRoomVO.dept_Name}
                         </div>
                     </div>
                 </div>
                 <div class="row">
                     <div class="col-xs-12">
-                        <label class="col-xs-4" for="edit-end">수용인원</label>
-                        <div class="col-sm-10 input-group-sm">
-                            <form:input path="meetRoomVO.meet_Room_Capacity" id="meetRoomCapacity" class="form-control" readonly="true"/>
+                        <label class="col-xs-12" for="edit-title">예약정보</label>
+                        <div class="col-sm-12 input-group-sm">
+                            <span 예약 회의실 : ${meetRoomVO.meet_Room_Name }/>
+                            ${meetRoomVO.meet_Room_Name } (${meetRoomVO.meet_Room_Capacity } 인)/${meetRoomVO.meet_Room_No }호
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-xs-12">
+                        <label class="col-xs-12" for="edit-title">예약 날짜</label>
+                        <div class="col-sm-12 input-group-sm" style="color: red;">
+                            ${meetRoomVO.reservation_Date } / ${meetRoomVO.reservation_Start_Time }시 ~ ${meetRoomVO.reservation_End_Time }시
                         </div>
                     </div>
                 </div>
@@ -92,7 +108,7 @@
                     <div class="col-xs-12">
                         <label class="col-xs-4" for="edit-end">내용</label>
                         <div class="col-sm-10 input-group-sm">
-                            <form:textarea path="meetRoomVO.meet_Room_Content" id="meetRoomContent" class="form-control" rows="4" cols="40" readonly="true"/>
+                            <form:textarea path="meetRoomVO.meet_Room_Detail" id="meetRoomContent" class="form-control" rows="4" cols="40" readonly="true"/>
                         </div>
                     </div>
                 </div>
@@ -104,44 +120,43 @@
         </div>
     </div>
 </div>
-<%@ include file="../include/footer.jsp"%>
 
 <script>
-
     function goBack() {
         window.history.back();
     }
+
 
     function removeRoom(){
 
         var meetRoomId = '${meetRoomVO.meet_Room_Id}';
 
-        if(confirm('해당 회의실을 삭제하시겠습니까?')){
+        if(confirm('해당 예약을 취소하시겠습니까?')){
             var detailForm = $('form[name="detailForm"]')[0];
             var formData = new FormData(detailForm);
 
             $.ajax({
-                url:"<c:url value='/reservation/remove'/>",
+                url:"<c:url value='/reservation/reservationRemove'/>",
                 type:'post',
                 data:formData,
                 processData:false,
                 contentType:false,
                 success:function(response){
                     if(response && response > 0){
-                        alert("회의실이 삭제되었습니다.");
-                        location.href='<%=request.getContextPath()%>/reservation/adminMain';
+                        alert("예약이 취소되었습니다.");
                     }else{
-                        alert("회의실 삭제에 실패했습니다..");
-                        location.href='<%=request.getContextPath()%>/reservation/adminMain';
+                        alert("예약 취소에 실패했습니다..");
                     }
-                    window.close();
+                    location.href='<%=request.getContextPath()%>/reservation/main';
                 },
                 error:function(request, status, error){
-                    alert("주소록 삭제에 실패했습니다..");
+                    alert("취소에 실패했습니다..");
                     console.log(error);
                     CloseWindow();
                 }
             });
         }
     }
+
+
 </script>

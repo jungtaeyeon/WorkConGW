@@ -7,7 +7,6 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <link rel="stylesheet" href="<%=request.getContextPath() %>/resources/templates/light/assets/fonts/font.css">
   <style>
     .columnList {
       position:absolute;
@@ -51,15 +50,15 @@
       <c:set value="0" var="index"/>
       <c:forEach items="${reservationList}" var="todayReservation" varStatus="status">
 
-        <c:if test="${todayReservation.reservationDate eq compareDate}">
+        <c:if test="${todayReservation.reservation_Date eq compareDate}">
           <c:if test="${index <4 }">
             <c:set value="${index+1 }" var="index"/>
             <div class="col-lg-3 col-md-6 col-sm-12">
               <div class="card" style="cursor:pointer;">
-                <div class="body text-left pro-img" onclick="OpenWindow('${pageContext.request.contextPath }/reservation/reservationDetail?meetRoomVO.meetRoomReservationId=${todayReservation.meetRoomReservationId }', 'JoinWorkGW', 1200, 700);">
-                  <p><strong style="color: red;">${todayReservation.reservationDate}</strong>시간 :${todayReservation.reservationStartTime }시 ~ ${todayReservation.reservationEndTime }시</p>
-                  <p><strong>장소 : ${todayReservation.meetRoomName}</strong>(${todayReservation.meetRoomNo })</p>
-                  <p><strong>목적 : </strong>${todayReservation.meetRoomDetail }</p>
+                <div class="body text-left pro-img" onclick="location.href='${pageContext.request.contextPath }/reservation/reservationDetail?meet_Room_Reservation_Id=${todayReservation.meet_Room_Reservation_Id }', 'WorkConGW', 1200, 700;">
+                  <p><strong style="color: red;">${todayReservation.reservation_Date}</strong>시간 :${todayReservation.reservation_Start_Time }시 ~ ${todayReservation.reservation_End_Time }시</p>
+                  <p><strong>장소 : ${todayReservation.meet_Room_Name}</strong>(${todayReservation.meet_Room_No })</p>
+                  <p><strong>목적 : </strong>${todayReservation.meet_Room_Detail }</p>
                   <div class="project_progress">
                     <div class="progress progress-xs">
                       <div class="progress-bar l-green" role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100" style="width: 100%;">
@@ -69,7 +68,7 @@
                   </div>
                   <br>
                   <div class="align-items-center d-flex">
-                    <img alt="" src="getPicture?picture=${todayReservation.meetRoomAttachPath}" style="width: 338px;height: 150px;">
+                    <img alt="" src="getPicture?picture=${todayReservation.meet_Room_Attach_Origin}" style="width: 338px;height: 150px;">
                   </div>
                 </div>
               </div>
@@ -87,27 +86,29 @@
         <div class="card">
           <div class="body project_report" style="height: 950px;">
             <div style=" margin-left: 12px;"><h4 id="reservationType">예약</h4></div>
-            <!--                     	 -->
-<%--            <form:form commandName="meetRoomFormVO" name="listForm">--%>
-<%--              <form:hidden path="searchMeetRoomVO.isType" id="isReservationType"/>--%>
+            <form:form modelAttribute="meetRoomFormVO" name="listForm">
+              <form:hidden path="searchMeetRoomReservationVO.isType" id="isReservationType"/>
               <div style="margin-top:20px;">
-<%--                <form:select path="searchMeetRoomVO.searchCondition" class="form-control selectSearch" style="width:130px;font-size: 1.2em;float:left;">--%>
-<%--                  <form:option value="tcm">전체</form:option>--%>
-<%--                  <form:option value="t">회의실명</form:option>--%>
-<%--                  <form:option value="c">내용</form:option>--%>
-<%--                  <form:option value="m">작성자</form:option>--%>
-<%--                </form:select>--%>
+                <form:select path="searchMeetRoomReservationVO.searchCondition" class="form-control selectSearch" style="width:130px;font-size: 1.2em;float:left;">
+                  <form:option value="tcm">전체</form:option>
+                  <form:option value="t">회의실명</form:option>
+                  <form:option value="c">내용</form:option>
+                  <form:option value="m">예약자</form:option>
+                </form:select>
+                <button type="button" class="btn btn-outline-secondary" onclick="resetAndReservation()">
+                  <i class="fas fa-sync-alt"></i> <!-- 초기화 아이콘 -->
+                </button>
                 <div id="navbar-search" class="navbar-form search-form selectSearch" style="float:left;">
-<%--                  <form:input path="searchMeetRoomVO.searchKeyword" class="form-control" placeholder="Search here..." type="text" style="width: 200px;height:36px;padding-right: 40px;" onkeypress="checkEnter(searchMeetRoomList);"/>--%>
-                  <button type="button" class="btn btn-default" onclick="searchMeetRoomList();"><i class="icon-magnifier"></i></button>
+                  <form:input path="searchMeetRoomReservationVO.searchKeyword" class="form-control" placeholder="Search here..." type="text" style="width: 200px;height:36px;padding-right: 40px;" onkeypress="checkEnter(searchMeetRoomList);"/>
+
                 </div>
                 <div class="form-group" style="float:right;">
                   <div style="display: inline-block;float:left;font-size: 1.2em;margin:6px 20px 0 0">
                     <span>${paginationInfo.currentPageNo} </span>/<span> ${paginationInfo.totalPageCount} 페이지 중</span>
                   </div>
-<%--                  <form:select path="searchMeetRoomVO.pageUnit" class="form-control" style="width:130px;font-size: 1.2em;" onchange="searchMeetRoomList(1);">--%>
-<%--                    <form:options items="${meetRoomFormVO.searchMeetRoomVO.pageUnitSelector}" itemValue="pageUnitValue" itemLabel="pageUnitLabel"/>--%>
-<%--                  </form:select>--%>
+                  <form:select path="searchMeetRoomReservationVO.pageUnit" class="form-control" style="width:130px;font-size: 1.2em;" onchange="searchMeetRoomList(1);">
+                    <form:options items="${meetRoomFormVO.searchMeetRoomReservationVO.pageUnitSelector}" itemValue="pageUnitValue" itemLabel="pageUnitLabel"/>
+                  </form:select>
                 </div>
               </div>
               <!--                         	예약탭 -->
@@ -142,32 +143,32 @@
                       <c:if test="${!empty reservationList}">
 
                         <c:forEach items="${reservationList }" var="room">
-                          <c:if test="${room.reservationDate eq compareDate}">
+                          <c:if test="${room.reservation_Date eq compareDate}">
                             <tr role="row">
                               <td class="project-title" style="padding:15px 30px;">
                                 <div>
                                   <h6 style="display:inline-block;font-weight: bold;max-width: 400px; overflow: hidden; white-space: nowrap; text-overflow: ellipsis;vertical-align: middle;">
-                                    <span class="roomTitle" style="cursor:pointer;margin-left:5px;font-size:1.1em;" onclick="OpenWindow('${pageContext.request.contextPath }/reservation/reservationDetail?meetRoomVO.meetRoomReservationId=${room.meetRoomReservationId }', 'JoinWorkGW', 1200, 700);">${room.meetRoomDetail }</span>
+                                    <span class="roomTitle" style="cursor:pointer;margin-left:5px;font-size:1.1em;" onclick="location.href='<%=request.getContextPath()%>/reservation/reservationDetail?meet_Room_Reservation_Id=${room.meet_Room_Reservation_Id }', 'WorkConGW', 1200, 700;">${room.meet_Room_Detail }</span>
                                   </h6>
-                                  <c:if test="${room.meetRoomReservationId ne 0 }">
-                                    <c:if test="${room.reservationDate eq compareDate}">
+                                  <c:if test="${room.meet_Room_Reservation_Id ne 0 }">
+                                    <c:if test="${room.reservation_Date eq compareDate}">
                                       <span class="btn btn-outline-danger" style="padding: 0px 3px;margin-left:5px;">오늘</span>
                                     </c:if>
                                   </c:if>
-                                  <c:if test="${room.meetRoomReservationId eq 1 }">
+                                  <c:if test="${room.meet_Room_Reservation_Id eq 1 }">
                                     <span class="btn btn-outline-secondary" style="padding: 0px 3px;margin-left:5px;">사용완료</span>
                                   </c:if>
                                 </div>
-                                <span style="margin-left:25px;">날짜 :${room.reservationDate }  </span>
-                                <span style="margin-left:5px;">시간 :${room.reservationStartTime }시 ~ ${room.reservationEndTime }시</span>
+                                <span style="margin-left:25px;">날짜 :${room.reservation_Date }  </span>
+                                <span style="margin-left:5px;">시간 :${room.reservation_Start_Time }시 ~ ${room.reservation_End_Time }시</span>
                               </td>
                               <td class="project-actions" style="max-width: 0px; overflow: hidden; white-space: nowrap; text-overflow: ellipsis;padding-right:50px;">
-                                  ${room.meetRoomName } / ${room.meetRoomNo}
+                                  ${room.meet_Room_Name } / ${room.meet_Room_No}
                               </td>
                               <td class="project-actions">
                                 <div style="display:inline-block;vertical-align:middle;">
-                                  <strong>${room.emp_Name } ${room.officialName }</strong>
-                                  <div>${room.dept_Name } <span>${room.teamName }</span></div>
+                                  <strong>${room.emp_Name } ${room.official_Name }</strong>
+                                  <div>${room.dept_Name }</div>
                                 </div>
                               </td>
                             </tr>
@@ -175,32 +176,32 @@
                         </c:forEach>
 
                         <c:forEach items="${reservationList }" var="room">
-                          <c:if test="${room.reservationDate ne compareDate}">
+                          <c:if test="${room.reservation_Date ne compareDate}">
                             <tr role="row">
                               <td class="project-title" style="padding:15px 30px;">
                                 <div>
                                   <h6 style="display:inline-block;font-weight: bold;max-width: 400px; overflow: hidden; white-space: nowrap; text-overflow: ellipsis;vertical-align: middle;">
-                                    <span class="roomTitle" style="cursor:pointer;margin-left:5px;font-size:1.1em;" onclick="OpenWindow('${pageContext.request.contextPath }/reservation/reservationDetail?meetRoomVO.meetRoomReservationId=${room.meetRoomReservationId }', 'JoinWorkGW', 1200, 700);">${room.meetRoomDetail }</span>
+                                    <span class="roomTitle" style="cursor:pointer;margin-left:5px;font-size:1.1em;" onclick="location.href='${pageContext.request.contextPath }/reservation/reservationDetail?meet_Room_Reservation_Id=${room.meet_Room_Reservation_Id }', 'WorkConGW', 1200, 700;">${room.meet_Room_Detail }</span>
                                   </h6>
-                                  <c:if test="${room.meetRoomReservationId ne 0 }">
-                                    <c:if test="${room.reservationDate eq compareDate}">
+                                  <c:if test="${room.meet_Room_Reservation_Id ne 0 }">
+                                    <c:if test="${room.reservation_Date eq compareDate}">
                                       <span class="btn btn-outline-danger" style="padding: 0px 3px;margin-left:5px;">오늘</span>
                                     </c:if>
                                   </c:if>
-                                  <c:if test="${room.meetRoomReservationId eq 1 }">
+                                  <c:if test="${room.meet_Room_Reservation_Id eq 1 }">
                                     <span class="btn btn-outline-secondary" style="padding: 0px 3px;margin-left:5px;">사용완료</span>
                                   </c:if>
                                 </div>
-                                <span style="margin-left:25px;">날짜 :${room.reservationDate }  </span>
-                                <span style="margin-left:5px;">시간 :${room.reservationStartTime }시 ~ ${room.reservationEndTime }시</span>
+                                <span style="margin-left:25px;">날짜 :${room.reservation_Date }  </span>
+                                <span style="margin-left:5px;">시간 :${room.reservation_Start_Time }시 ~ ${room.reservation_End_Time }시</span>
                               </td>
                               <td class="project-actions" style="max-width: 0px; overflow: hidden; white-space: nowrap; text-overflow: ellipsis;padding-right:50px;">
-                                  ${room.meetRoomName } / ${room.meetRoomNo}
+                                  ${room.meet_Room_Name } / ${room.meet_Room_No}
                               </td>
                               <td class="project-actions">
                                 <div style="display:inline-block;vertical-align:middle;">
-                                  <strong>${room.empName } ${room.officialName }</strong>
-                                  <div>${room.deptName } <span>${room.teamName }</span></div>
+                                  <strong>${room.emp_Name } ${room.official_Name}</strong>
+                                  <div>${room.dept_Name }</div>
                                 </div>
                               </td>
                             </tr>
@@ -226,11 +227,11 @@
                       </c:if>
                     </ul>
                   </nav>
-<%--                  <form:hidden path="searchMeetRoomVO.pageIndex" />--%>
+                  <form:hidden path="searchMeetRoomReservationVO.pageIndex" />
 
                 </div>
               </div>
-<%--            </form:form>--%>
+            </form:form>
             <!-- 	                         -->
           </div>
         </div>
@@ -244,25 +245,28 @@
         <div class="card">
           <div class="body project_report" >
             <div style=" margin-left: 12px;"><h4 id="reservationType">공지</h4></div>
-<%--            <form:form commandName="meetRoomFormVO" name="listForm2">--%>
-<%--              <form:hidden path="searchReservationNoticeVO.isType" id="isReservationNoticeType"/>--%>
+            <form:form modelAttribute="meetRoomFormVO" name="listForm2">
+              <form:hidden path="searchReservationNoticeVO.isType" id="isReservationNoticeType"/>
               <div style="margin-top:20px;">
-<%--                <form:select path="searchReservationNoticeVO.searchCondition" class="form-control selectSearch" style="width:130px;font-size: 1.2em;float:left;">--%>
-<%--                  <form:option value="tc">전체</form:option>--%>
-<%--                  <form:option value="t">제목</form:option>--%>
-<%--                  <form:option value="c">내용</form:option>--%>
-<%--                </form:select>--%>
+                <form:select path="searchReservationNoticeVO.searchCondition" class="form-control selectSearch" style="width:130px;font-size: 1.2em;float:left;">
+                  <form:option value="tc">전체</form:option>
+                  <form:option value="t">제목</form:option>
+                  <form:option value="c">내용</form:option>
+                </form:select>
+                <button type="button" class="btn btn-outline-secondary" onclick="resetAndNotice();">
+                  <i class="fas fa-sync-alt"></i> <!-- 초기화 아이콘 -->
+                </button>
                 <div id="navbar-search" class="navbar-form search-form selectSearch" style="float:left;">
-<%--                  <form:input path="searchReservationNoticeVO.searchKeyword" class="form-control" placeholder="Search here..." type="text" style="width: 200px;height:36px;padding-right: 40px;" onkeypress="checkEnter(searchReservationNoticeList);"/>--%>
+                  <form:input path="searchReservationNoticeVO.searchKeyword" class="form-control" placeholder="Search here..." type="text" style="width: 200px;height:36px;padding-right: 40px;" onkeypress="checkEnter(searchReservationNoticeList);"/>
                   <button type="button" class="btn btn-default" onclick="searchReservationNoticeList();"><i class="icon-magnifier"></i></button>
                 </div>
                 <div class="form-group" style="float:right;">
                   <div style="display: inline-block;float:left;font-size: 1.2em;margin:6px 20px 0 0">
                     <span>${paginationInfo2.currentPageNo} </span>/<span> ${paginationInfo2.totalPageCount} 페이지 중</span>
                   </div>
-<%--                  <form:select path="searchReservationNoticeVO.pageUnit" class="form-control" style="width:130px;font-size: 1.2em;" onchange="searchReservationNoticeList(1);">--%>
-<%--                    <form:options items="${meetRoomFormVO.searchReservationNoticeVO.pageUnitSelector}" itemValue="pageUnitValue" itemLabel="pageUnitLabel"/>--%>
-<%--                  </form:select>--%>
+                  <form:select path="searchReservationNoticeVO.pageUnit" class="form-control" style="width:130px;font-size: 1.2em;" onchange="searchReservationNoticeList(1);">
+                    <form:options items="${meetRoomFormVO.searchReservationNoticeVO.pageUnitSelector}" itemValue="pageUnitValue" itemLabel="pageUnitLabel"/>
+                  </form:select>
                 </div>
               </div>
               <!--                         	예약탭 -->
@@ -288,13 +292,13 @@
                             <td class="project-title" style="padding:15px 30px;">
                               <div>
                                 <h6 style="display:inline-block;font-weight: bold;max-width: 400px; overflow: hidden; white-space: nowrap; text-overflow: ellipsis;vertical-align: middle;">
-                                  <span class="roomTitle" style="cursor:pointer;margin-left:5px;font-size:1.1em;" onclick="OpenWindow('${pageContext.request.contextPath }/reservation/reservationNoticeDetail?reservationNoticeVO.reservationNoticeId=${notice.reservationNoticeId}', 'JoinWorkGW', 1200, 700);">${notice.reservationNoticeTitle }</span>
+                                  <span class="roomTitle" style="cursor:pointer;margin-left:5px;font-size:1.1em;" onclick="location.href='${pageContext.request.contextPath }/reservation/reservationNoticeDetail?reservation_Notice_Id=${notice.reservation_Notice_Id}', 'WorkConGW', 1200, 700;">${notice.reservation_Notice_Title }</span>
                                 </h6>
                               </div>
-                              <span style="margin-left:25px;">${notice.reservationNoticeContent }  </span>
+                              <span style="margin-left:25px;">${notice.reservation_Notice_Content }  </span>
                             </td>
                             <td class="project-actions" style="max-width: 0px; overflow: hidden; white-space: nowrap; text-overflow: ellipsis;padding-right:50px;">
-                                ${notice.reservationNoticeCreateDate }
+                                ${notice.reservation_Notice_Create_Date }
                             </td>
                             <td class="project-actions">
                               <div style="display:inline-block;vertical-align:middle;">
@@ -322,35 +326,38 @@
                       </c:if>
                     </ul>
                   </nav>
-<%--                  <form:hidden path="searchReservationNoticeVO.pageIndex" />--%>
+                  <form:hidden path="searchReservationNoticeVO.pageIndex" />
 
                 </div>
               </div>
-<%--            </form:form>--%>
+            </form:form>
           </div>
         </div>
         <div class="card">
           <div class="body project_report">
             <div style=" margin-left: 12px;"><h4 id="reservationType">민원</h4></div>
-<%--            <form:form commandName="meetRoomFormVO" name="listForm3">--%>
+            <form:form modelAttribute="meetRoomFormVO" name="listForm3">
               <div style="margin-top:20px;">
-<%--                <form:select path="searchReservationComplainVO.searchCondition" class="form-control selectSearch" style="width:130px;font-size: 1.2em;float:left;">--%>
-<%--                  <form:option value="tcw">전체</form:option>--%>
-<%--                  <form:option value="t">제목</form:option>--%>
-<%--                  <form:option value="c">내용</form:option>--%>
-<%--                  <form:option value="w">작성자</form:option>--%>
-<%--                </form:select>--%>
+                <form:select path="searchReservationComplainVO.searchCondition" class="form-control selectSearch" style="width:130px;font-size: 1.2em;float:left;">
+                  <form:option value="tcw">전체</form:option>
+                  <form:option value="t">제목</form:option>
+                  <form:option value="c">내용</form:option>
+                  <form:option value="w">작성자</form:option>
+                </form:select>
+                <button type="button" class="btn btn-outline-secondary" onclick="resetAndComplain();">
+                  <i class="fas fa-sync-alt"></i> <!-- 초기화 아이콘 -->
+                </button>
                 <div id="navbar-search" class="navbar-form search-form selectSearch" style="float:left;">
-<%--                  <form:input path="searchReservationComplainVO.searchKeyword" class="form-control" placeholder="Search here..." type="text" style="width: 200px;height:36px;padding-right: 40px;" onkeypress="checkEnter(searchReservationComplainList);"/>--%>
+                  <form:input path="searchReservationComplainVO.searchKeyword" class="form-control" placeholder="Search here..." type="text" style="width: 200px;height:36px;padding-right: 40px;" onkeypress="checkEnter(searchReservationComplainList);"/>
                   <button type="button" class="btn btn-default" onclick="searchReservationComplainList();"><i class="icon-magnifier"></i></button>
                 </div>
                 <div class="form-group" style="float:right;">
                   <div style="display: inline-block;float:left;font-size: 1.2em;margin:6px 20px 0 0">
                     <span>${paginationInfo3.currentPageNo} </span>/<span> ${paginationInfo3.totalPageCount} 페이지 중</span>
                   </div>
-<%--                  <form:select path="searchReservationComplainVO.pageUnit" class="form-control" style="width:130px;font-size: 1.2em;" onchange="searchReservationComplainList(1);">--%>
-<%--                    <form:options items="${meetRoomFormVO.searchReservationComplainVO.pageUnitSelector}" itemValue="pageUnitValue" itemLabel="pageUnitLabel"/>--%>
-<%--                  </form:select>--%>
+                  <form:select path="searchReservationComplainVO.pageUnit" class="form-control" style="width:130px;font-size: 1.2em;" onchange="searchReservationComplainList(1);">
+                    <form:options items="${meetRoomFormVO.searchReservationComplainVO.pageUnitSelector}" itemValue="pageUnitValue" itemLabel="pageUnitLabel"/>
+                  </form:select>
                 </div>
               </div>
               <!--                         	예약탭 -->
@@ -379,17 +386,17 @@
                             <td class="project-title" style="padding:15px 30px;">
                               <div>
                                 <h6 style="display:inline-block;font-weight: bold;max-width: 400px; overflow: hidden; white-space: nowrap; text-overflow: ellipsis;vertical-align: middle;">
-                                  <span class="complainTitle" style="cursor:pointer;margin-left:5px;font-size:1.1em;" onclick="OpenWindow('${pageContext.request.contextPath}/reservation/complain/detail?complainId=${complain.complainId}','민원상세창',500,400);">${complain.complainContent}</span>
+                                  <span class="complainTitle" style="cursor:pointer;margin-left:5px;font-size:1.1em;" onclick="location.href='${pageContext.request.contextPath}/reservation/complain/detail?complain_Id=${complain.complain_Id}','민원상세창',500,400;">${complain.complain_Content}</span>
                                 </h6>
                               </div>
-                              <span style="margin-left:25px;">${complain.complainTitle }  </span>
+                              <span style="margin-left:25px;">${complain.complain_Title }  </span>
                             </td>
                             <td class="project-actions" style="max-width: 0px; overflow: hidden; white-space: nowrap; text-overflow: ellipsis;padding-right:50px;">
-                                ${complain.complainCreateDate }
+                                ${complain.complain_Create_Date }
                             </td>
                             <td class="project-actions">
                               <div style="display:inline-block;vertical-align:middle;">
-                                <input type="button"  class="btn btn-outline-danger" value="삭제" onclick="remove_go(${complain.complainId })"/>
+                                <input type="button"  class="btn btn-outline-danger" value="삭제" onclick="remove_go(${complain.complain_Id })"/>
                               </div>
                             </td>
                           </tr>
@@ -413,11 +420,11 @@
                       </c:if>
                     </ul>
                   </nav>
-<%--                  <form:hidden path="searchReservationComplainVO.pageIndex" />--%>
+                  <form:hidden path="searchReservationComplainVO.pageIndex" />
 
                 </div>
               </div>
-<%--            </form:form>--%>
+            </form:form>
             <!-- 	                         -->
           </div>
         </div>
@@ -432,7 +439,7 @@
 </div>
 </section>
 
-<%-- <form name="modifyForm" action='<c:url value="/board/milestone/modify"/>' method='post'> --%>
+ <form name="modifyForm" action='<c:url value="/board/milestone/modify"/>' method='post'>
 <!-- 	<input type="hidden" name="milestoneId" /> -->
 <!-- 	<input type="hidden" name="milestoneName" /> -->
 <!-- 	<input type="hidden" name="milestoneEndDt" /> -->
@@ -441,9 +448,55 @@
 <!-- 	detail 페이지 용 -->
 <!-- 	<input type="hidden" name="openIssueCount" /> -->
 <!-- 	<input type="hidden" name="closedIssueCount" /> -->
-<%-- </form> --%>
+ </form>
 
 <script>
+  //검색조건 초기화
+  //예약목록
+  function resetAndReservation(pageNo) {
+    if(!pageNo){
+      pageNo = 1;
+    }
+    var listForm = $('form[name="listForm"]');
+    $('input[name="searchMeetRoomReservationVO.pageIndex"]').val(pageNo);
+    $('select[name="searchMeetRoomReservationVO.searchCondition"]').val('');
+    $('input[name="searchMeetRoomReservationVO.searchKeyword"]').val('');
+    listForm.submit();
+  }
+
+  function resetAndNotice(pageNo) {
+    if(!pageNo){
+      pageNo = 1;
+    }
+    var listForm = $('form[name="listForm"]');
+    $('input[name="searchReservationNoticeVO.pageIndex"]').val(pageNo);
+    $('select[name="searchReservationNoticeVO.searchCondition"]').val('');
+    $('input[name="searchReservationNoticeVO.searchKeyword"]').val('');
+    listForm.submit();
+  }
+
+  function resetAndComplain(pageNo) {
+    if(!pageNo){
+      pageNo = 1;
+    }
+    var listForm = $('form[name="listForm"]');
+    $('input[name="searchReservationComplainVO.pageIndex"]').val(pageNo);
+    $('select[name="searchReservationComplainVO.searchCondition"]').val('');
+    $('input[name="searchReservationComplainVO.searchKeyword"]').val('');
+    listForm.submit();
+  }
+
+
+
+
+
+
+
+  function goBack() {
+    window.history.back();
+  }
+
+
   window.addEventListener('load', function() {
     var navBar = $('.reservationList');
     navBar.addClass('active');

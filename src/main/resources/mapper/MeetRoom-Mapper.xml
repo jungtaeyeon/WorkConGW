@@ -4,7 +4,121 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.mybatis.mapper.MeetRoomMapper">
 
-<select id ="getAllComplainList" parameterType="compainVO" resultType="compainVO">
+
+    <sql id="search">
+        <if test="searchKeyword != null and searchKeyword != ''">
+            <choose>
+                <when test='searchCondition == "tcw"'>
+                    AND	meet_room_name LIKE '%' || #{searchKeyword} || '%'
+                    OR meet_room_content LIKE '%' || #{searchKeyword} || '%'
+
+                </when>
+                <when test='searchCondition == "t"'>
+                    AND	meet_room_name LIKE '%' || #{searchKeyword} || '%'
+                </when>
+                <when test='searchCondition == "c"'>
+                    AND	meet_room_content LIKE '%' || #{searchKeyword} || '%'
+                </when>
+                <when test='searchCondition == "w"'>
+                    AND	meet_room_content LIKE '%' || #{searchKeyword} || '%'
+                </when>
+            </choose>
+        </if>
+    </sql>
+
+    <sql id="type">
+        <if test="meet_Room_St != null">
+            <choose>
+                <when test='meet_Room_St == 1'>
+                    AND	meet_room_st = 1
+                </when>
+                <when test='meet_Room_St == 0'>
+                    AND	meet_room_st = 0
+                </when>
+            </choose>
+        </if>
+    </sql>
+
+    <sql id="reservationSearch">
+        <if test="searchKeyword != null and searchKeyword != ''">
+            <choose>
+                <when test='searchCondition == "tcm"'>
+                    and (C.meet_room_name LIKE '%' || #{searchKeyword} || '%' OR  A.MEET_ROOM_DETAIL LIKE '%' || #{searchKeyword} || '%' OR B.emp_name LIKE '%' || #{searchKeyword} || '%')
+                </when>
+                <when test='searchCondition == "t"'>
+                    AND	C.meet_room_name LIKE '%' || #{searchKeyword} || '%'
+                </when>
+                <when test='searchCondition == "c"'>
+                    AND	A.MEET_ROOM_DETAIL LIKE '%' || #{searchKeyword} || '%'
+                </when>
+                <when test='searchCondition == "m"'>
+                    AND	B.emp_name LIKE '%' || #{searchKeyword} || '%'
+                </when>
+            </choose>
+        </if>
+    </sql>
+
+    <sql id="noticeSearch">
+        <if test="searchKeyword != null and searchKeyword != ''">
+            <choose>
+                <when test='searchCondition == "tc"'>
+                    and (RESERVATION_NOTICE_TITLE LIKE '%' || #{searchKeyword} || '%' OR  RESERVATION_NOTICE_CONTENT LIKE '%' || #{searchKeyword} || '%')
+                </when>
+                <when test='searchCondition == "t"'>
+                    AND RESERVATION_NOTICE_TITLE LIKE '%' || #{searchKeyword} || '%'
+                </when>
+                <when test='searchCondition == "c"'>
+                    AND	RESERVATION_NOTICE_CONTENT LIKE '%' || #{searchKeyword} || '%'
+                </when>
+            </choose>
+        </if>
+    </sql>
+
+
+    <select id="getAllMeetRoomList" resultType="MeetRoomVO">
+        select
+            MEET_ROOM_ID
+             ,MEET_ROOM_NAME
+             ,MEET_ROOM_NO
+        FROM
+            meet_room
+        where
+            MEET_ROOM_ST = 1
+
+    </select>
+
+
+    <select id="getReservationNoticeList" parameterType="ReservationNoticeVO" resultType="ReservationNoticeVO">
+        select D3.*
+        from(
+        select D2.*
+        from(
+        select rownum as seq, D1.*
+        from(
+        SELECT
+        reservation_notice_id
+        ,reservation_notice_title
+        ,emp_id
+        ,reservation_notice_content
+        ,reservation_notice_create_date
+        ,reservation_notice_st
+        FROM
+        RESERVATION_NOTICE
+        where
+        reservation_notice_st = '1'
+        <include refid="noticeSearch" />
+
+        ) D1
+        ) D2
+        where seq <![CDATA[ >= ]]> #{firstIndex}
+        ) D3
+        where rownum <![CDATA[ <= ]]> #{recordCountPerPage}
+
+    </select>
+
+
+
+    <select id ="getAllComplainList" parameterType="ReservationComplainVO" resultType="ReservationComplainVO">
     SELECT D3.*
 
     FROM (SELECT D2.*
@@ -30,7 +144,7 @@
     FROM EMP A , AUTH B
 
     WHERE A.AUTH_ID = B.AUTH_ID) B
-    WHERE COMPLAIN_ST ='1'
+    WHERE COMPLAIN_ST = 1
     AND A.EMP_ID = B.EMP_ID
     ORDER BY COMPLAIN_CREATE_DATE DESC
     ) D1
@@ -41,6 +155,535 @@
     WHERE rownum <![CDATA[<=]]> #{recordCountPerPage}
 
 </select>
+
+
+    <select id="getDept" parameterType="String" resultType="String">
+        select
+            dept_id
+        from
+            emp
+        where
+            emp_id = #{emp_Id}
+    </select>
+
+    <insert id="registMeetRoom" parameterType="MeetRoomVO">
+        <selectKey resultType="int" keyProperty="meet_Room_Id" order="BEFORE">
+            select MEETROOM_ID_SEQ.nextval from dual
+        </selectKey>
+        INSERT INTO meet_room (
+        meet_room_id
+        ,meet_room_no
+        ,meet_room_st
+        ,meet_room_admin_id
+        ,meet_room_capacity
+        ,meet_room_name
+        ,meet_room_attach_name
+        ,meet_room_attach_type
+        ,meet_room_create_date
+        ,meet_room_attach_origin
+        ,meet_room_content
+        ) VALUES (
+        #{meet_Room_Id}
+        ,#{meet_Room_No}
+        ,#{meet_Room_St}
+        ,#{meet_Room_Admin_Id}
+        ,#{meet_Room_Capacity}
+        ,#{meet_Room_Name}
+        ,#{meet_Room_Attach_Name}
+        ,#{meet_Room_Attach_Type}
+        ,sysdate
+        ,#{meet_Room_Attach_Origin}
+        ,#{meet_Room_Content}
+        )
+    </insert>
+
+    <update id="modifyMeetRoom"  parameterType="MeetRoomVO">
+        UPDATE meet_room
+        SET
+            meet_room_st = #{meet_Room_St}
+          ,meet_room_capacity = #{meet_Room_Capacity}
+          ,meet_room_name =  #{meet_Room_Name}
+          ,meet_room_content = #{meet_Room_Content}
+        WHERE
+            meet_room_id =#{meet_Room_Id}
+
+    </update>
+
+    <delete id="remove" parameterType="int">
+        DELETE FROM meet_room
+        WHERE
+            meet_room_id =#{meet_Room_Id}
+    </delete>
+
+
+    <!-- 사용가능한 회의실 목록 조회 -->
+    <select id="getMeetRoomList" parameterType="MeetRoomVO" resultType="MeetRoomVO">
+        select D3.*
+        from(
+        select D2.*
+        from(
+        select rownum as seq, D1.*
+        from(
+        SELECT
+        meet_room_id
+        ,meet_room_no
+        ,meet_room_st
+        ,meet_room_admin_id
+        ,meet_room_capacity
+        ,meet_room_name
+        ,meet_room_attach_name
+        ,meet_room_attach_type
+        ,meet_room_create_date
+        ,meet_room_attach_origin
+        ,meet_room_content
+        FROM
+        meet_room
+        where
+        meet_room_st is not null
+        <include refid="search" />
+        <include refid="type" />
+        order by meet_room_st desc, meet_room_create_date desc
+        ) D1
+        ) D2
+        where seq <![CDATA[ >= ]]> #{firstIndex}
+        ) D3
+        where rownum <![CDATA[ <= ]]> #{recordCountPerPage}
+    </select>
+
+    <select id="selectMeetRoomListTotalCount"  parameterType="MeetRoomVO" resultType="int">
+        SELECT
+            COUNT(*)
+        FROM
+            meet_room
+        WHERE
+            meet_room_st = 1
+          AND   1 = 1
+    </select>
+
+    <select id="getSearchReservation" parameterType="MeetRoomReservationVO" resultType="MeetRoomReservationVO">
+        select D3.*
+        from(
+        select D2.*
+        from(
+        select rownum as seq, D1.*
+        from(
+        SELECT
+        A.MEET_ROOM_ID
+        ,C.MEET_ROOM_NAME
+        ,A.RESERVATION_START_TIME
+        ,A.RESERVATION_END_TIME
+        ,A.RESERVATION_DATE
+        ,A.MEET_ROOM_RESERVATION_ID
+        ,A.MEET_ROOM_DETAIL
+        ,C.MEET_ROOM_ST
+        ,C.MEET_ROOM_NO
+        ,C.MEET_ROOM_CAPACITY
+        ,C.MEET_ROOM_ATTACH_ORIGIN
+        ,a.emp_id
+        ,B.emp_name
+        ,B.emp_picture
+        ,B.code_name as official_Name
+        ,B.dept_name
+        ,B.team_name
+        ,B.dept_id
+        FROM
+        MEET_ROOM_RESERVATION A
+        LEFT OUTER JOIN (
+        SELECT  D1.emp_id
+        ,D1.emp_name
+        ,D1.emp_picture
+        ,D1.code_id
+        ,D2.code_name
+        ,D3.dept_name
+        ,D3.dept_id
+
+        ,D4.dept_name team_Name
+        FROM emp D1, code D2, dept D3, dept D4
+        WHERE D1.code_id = D2.code_id
+        AND D1.dept_id = D3.dept_id
+        AND D1.dept_id = D4.dept_id(+)
+        ORDER BY D1.code_id DESC
+        ) B
+        ON A.emp_id = B.emp_id
+        , MEET_ROOM  C
+        where A.MEET_ROOM_ID= C.MEET_ROOM_ID
+        <include refid="reservationSearch" />
+        <choose>
+            <when test="isType == 'dept' ">
+                and	A.meet_room_dept_id = #{meet_Room_Dept_Id}
+                and  MEET_ROOM_RESERVATION_ST = 1
+            </when>
+            <when test="emp_Id != null">
+                and A.emp_id = #{emp_Id}
+                and  MEET_ROOM_RESERVATION_ST = 1
+            </when>
+
+        </choose>
+        order by A.RESERVATION_DATE desc, A.RESERVATION_START_TIME
+
+
+        ) D1
+        ) D2
+        where seq <![CDATA[ >= ]]> #{firstIndex}
+        ) D3
+        where rownum <![CDATA[ <= ]]> #{recordCountPerPage}
+    </select>
+
+    <select id="notUseRoomList" parameterType="MeetRoomVO" resultType="MeetRoomVO">
+        select D3.*
+        from(
+        select D2.*
+        from(
+        select rownum as seq, D1.*
+        from(
+        SELECT
+        meet_room_id
+        ,meet_room_no
+        ,meet_room_st
+        ,meet_room_admin_id
+        ,meet_room_capacity
+        ,meet_room_name
+        ,meet_room_attach_name
+        ,meet_room_attach_type
+        ,meet_room_create_date
+        ,meet_room_attach_origin
+        ,meet_room_content
+        FROM
+        meet_room
+        where
+        <include refid="search" />
+        meet_room_st = 0
+        ) D1
+        ) D2
+        where seq <![CDATA[ >= ]]> #{firstIndex}
+        ) D3
+        where rownum <![CDATA[ <= ]]> #{recordCountPerPage}
+    </select>
+
+
+
+    <select id="getMeetRoomVOForDetail"  parameterType="int" resultType="MeetRoomVO">
+        SELECT
+            meet_room_id
+             ,meet_room_no
+             ,meet_room_st
+             ,meet_room_admin_id
+             ,meet_room_capacity
+             ,meet_room_name
+             ,meet_room_attach_name
+             ,meet_room_attach_type
+             ,meet_room_create_date
+             ,meet_room_attach_origin
+             ,meet_room_content
+        FROM
+            meet_room
+        where
+            meet_room_id = #{meet_Room_Id}
+    </select>
+
+    <select id="searchRoom" parameterType="map" resultType="MeetRoomVO">
+        select
+            meet_room_id
+             ,meet_room_no
+             ,meet_room_st
+             ,meet_room_admin_id
+             ,meet_room_capacity
+             ,meet_room_name
+             ,meet_room_attach_name
+             ,meet_room_attach_type
+             ,meet_room_create_date
+             ,meet_room_attach_origin
+             ,meet_room_content
+        from meet_room
+        where meet_room_id not in(SELECT
+                                      meet_room_id
+                                  FROM
+                                      meet_room_reservation
+
+                                  where  MEET_ROOM_RESERVATION_ST = 1
+
+                                    and reservation_date  = #{reservation_Date}
+
+                                    and
+                                      (  (#{reservation_Start_Time}   <![CDATA[ >= ]]>  reservation_start_time
+                                          and #{reservation_Start_Time}    <![CDATA[ < ]]>   reservation_end_time)
+                                          or
+                                         (#{reservation_End_Time} <![CDATA[ >= ]]> reservation_start_time
+                                             and #{reservation_End_Time} <![CDATA[ < ]]>  reservation_end_time))
+        )
+
+          and MEET_ROOM_ST = 1
+
+
+
+    </select>
+
+    <select id="searchRoomInfo" parameterType="int" resultType="MeetRoomVO">
+        SELECT
+            meet_room_id
+             ,meet_room_no
+             ,meet_room_st
+             ,meet_room_admin_id
+             ,meet_room_capacity
+             ,meet_room_name
+             ,meet_room_attach_name
+             ,meet_room_attach_type
+             ,meet_room_create_date
+             ,meet_room_attach_origin
+             ,meet_room_content
+        FROM
+            meet_room
+        where
+            meet_room_id = #{roomId}
+    </select>
+
+    <insert id="makeReservation" parameterType="MeetRoomReservationVO" >
+        <selectKey resultType="int" keyProperty="meet_Room_Reservation_Id" order="BEFORE">
+            select MEETROOM_RESERVATION_ID.nextval from dual
+        </selectKey>
+        INSERT INTO meet_room_reservation (
+        meet_room_reservation_id
+        , meet_room_id
+        , emp_id
+        , reservation_start_time
+        , reservation_end_time
+        , reservation_date
+        , meet_room_detail
+        , meet_room_dept_id
+        , MEET_ROOM_RESERVATION_ST
+        ) VALUES (
+        #{meet_Room_Reservation_Id}
+        , #{meet_Room_Id}
+        , #{emp_Id}
+        , #{reservation_Start_Time}
+        , #{reservation_End_Time}
+        , #{reservation_Date}
+        , #{meet_Room_Detail}
+        , #{meet_Room_Dept_Id}
+        , 1
+        )
+    </insert>
+
+
+    <select id="getMeetRoomReservationVOForDetail"  parameterType="int" resultType="MeetRoomReservationVO">
+        SELECT
+            A.MEET_ROOM_ID
+             ,C.MEET_ROOM_NAME
+             ,A.RESERVATION_START_TIME
+             ,A.RESERVATION_END_TIME
+             ,A.RESERVATION_DATE
+             ,A.MEET_ROOM_RESERVATION_ID
+             ,A.MEET_ROOM_DETAIL
+             ,C.MEET_ROOM_ST
+             ,C.MEET_ROOM_NO
+             ,C.MEET_ROOM_CAPACITY
+             ,C.MEET_ROOM_ATTACH_ORIGIN
+             ,a.emp_id
+             ,B.emp_name
+             ,B.emp_picture
+             ,B.code_name as official_Name
+             ,B.dept_name
+             ,B.teamName
+             ,B.dept_id
+        FROM
+            MEET_ROOM_RESERVATION A
+                LEFT OUTER JOIN (
+                SELECT  D1.emp_id
+                     ,D1.emp_name
+                     ,D1.emp_picture
+                     ,D1.code_id
+                     ,D2.code_name
+                     ,D3.dept_name
+                     ,D3.dept_id
+                     ,D4.dept_name teamName
+                FROM emp D1, code D2, dept D3, dept D4
+                WHERE D1.CODE_ID = D2.code_id
+                  AND D1.dept_id = D3.dept_id
+                  AND D1.dept_id = D4.dept_id(+)
+                ORDER BY D1.code_id DESC
+            ) B
+                                ON A.emp_id = B.emp_id
+           ,(
+            SELECT MEET_ROOM_NAME
+                 ,MEET_ROOM_NO
+                 ,MEET_ROOM_CAPACITY
+                 ,MEET_ROOM_ID
+                 ,MEET_ROOM_ATTACH_ORIGIN
+                 ,MEET_ROOM_ST
+            FROM MEET_ROOM
+        ) C
+        where A.MEET_ROOM_ID=C.MEET_ROOM_ID
+          and a.MEET_ROOM_RESERVATION_ID = #{meet_Room_Reservation_Id}
+
+    </select>
+
+    <update id="reservationRemove" parameterType="int">
+        UPDATE MEET_ROOM_RESERVATION
+        SET
+            MEET_ROOM_RESERVATION_ST = 0
+        WHERE
+            MEET_ROOM_RESERVATION_ID = #{meet_Room_Reservation_Id}
+    </update>
+
+
+    <select id="selectreservationNoticeListTotalCount"  parameterType="ReservationNoticeVO" resultType="int">
+        SELECT
+            COUNT(*)
+        FROM
+            RESERVATION_NOTICE
+        WHERE
+            reservation_notice_st = 1
+          AND   1 = 1
+    </select>
+
+
+    <select id="getComplainList" parameterType="ReservationComplainVO" resultType="ReservationComplainVO">
+        select D3.*
+        from(
+        select D2.*
+        from(
+        select rownum as seq, D1.*
+        from(
+        SELECT
+        complain_id
+        , complain_title
+        , complain_content
+        , complain_st
+        , emp_id
+        , meet_room_id
+        , complain_create_date
+        FROM
+        reservation_complain
+        where
+        complain_st = 1
+        <choose>
+            <when test="emp_Id != null ">
+                and emp_id = #{emp_Id}
+            </when>
+            <when test="emp_Id == null ">
+                and emp_id = #{emp_Id}
+            </when>
+        </choose>
+
+
+        ) D1
+        ) D2
+        where seq <![CDATA[ >= ]]> #{firstIndex}
+        ) D3
+        where rownum <![CDATA[ <= ]]> #{recordCountPerPage}
+    </select>
+
+
+    <select id="selectreservationComplainListTotalCount"  parameterType="ReservationComplainVO" resultType="int">
+        SELECT
+            COUNT(*)
+        FROM
+            reservation_complain
+        WHERE
+            complain_st = 1
+          AND   1 = 1
+    </select>
+
+
+    <insert id="registComplain" parameterType="ReservationComplainVO">
+        <selectKey resultType="int" keyProperty="complain_Id" order="BEFORE">
+            select COMPLAIN_ID_SEQ.nextval from dual
+        </selectKey>
+        INSERT INTO reservation_complain (
+        complain_id
+        ,complain_title
+        ,complain_content
+        ,complain_st
+        ,emp_id
+        ,meet_room_id
+        ,complain_create_date
+        ) VALUES (
+        #{complain_Id}
+        ,'민원'
+        ,#{complain_Content}
+        ,1
+        ,#{emp_Id}
+        ,#{meet_Room_Id}
+        ,#{complain_Create_Date}
+        )
+    </insert>
+
+    <update id="removeComplain" parameterType="int">
+        UPDATE RESERVATION_COMPLAIN
+        SET
+            COMPLAIN_ST = 0
+        WHERE
+            COMPLAIN_ID =#{removeId}
+    </update>
+
+
+    <select id="selectComplainForDetail" parameterType="ReservationComplainVO" resultType="ReservationComplainVO">
+        SELECT
+            A.complain_id
+             ,A.complain_title
+             ,A.complain_content
+             ,A.complain_st
+             ,A.emp_id
+             ,A.meet_room_id
+             ,A.complain_create_date
+             ,B.emp_name
+             ,B.code_name official_Name
+        FROM
+            reservation_complain A,
+            (
+                select T1.emp_id
+                     ,T1.emp_name
+                     ,T2.code_name
+                from emp T1, code T2
+                where T1.code_id = T2.code_id) B
+        WHERE
+            complain_st = 1
+          AND A.emp_id = B.emp_id
+          AND A.complain_id = #{complain_Id}
+    </select>
+
+    <insert id="registNotice" parameterType="ReservationNoticeVO">
+        <selectKey resultType="int" keyProperty="reservation_Notice_Id" order="BEFORE">
+            select RESERVATION_NOTICE_ID.nextval from dual
+        </selectKey>
+        INSERT INTO reservation_notice (
+                                            reservation_notice_id
+                                          ,reservation_notice_title
+                                          ,emp_id
+                                          ,reservation_notice_content
+                                          ,reservation_notice_create_date
+                                          ,reservation_notice_st
+        ) VALUES (
+                #{reservation_Notice_Id}
+                 ,#{reservation_Notice_Title}
+                 ,#{emp_Id}
+                 ,#{reservation_Notice_Content}
+                 ,#{reservation_Notice_Create_Date}
+                 ,1
+                 )
+    </insert>
+
+    <select id="getNoticeVOForDetail"  parameterType="ReservationNoticeVO" resultType="ReservationNoticeVO">
+        SELECT
+            reservation_notice_id
+             ,reservation_notice_title
+             ,emp_id
+             ,reservation_notice_content
+             ,reservation_notice_create_date
+             ,reservation_notice_st
+        FROM
+            reservation_notice
+        where
+            reservation_notice_id = #{reservation_Notice_Id}
+    </select>
+
+    <update id="removeNotice" parameterType="int">
+        UPDATE reservation_notice
+        SET
+            RESERVATION_NOTICE_ST = 0
+        WHERE
+            RESERVATION_NOTICE_ID =#{reservation_Notice_Id}
+    </update>
 
 
 </mapper>

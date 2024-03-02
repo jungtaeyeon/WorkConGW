@@ -7,6 +7,7 @@
 
 
 
+
 <!DOCTYPE html>
 <html>
 <head>
@@ -56,6 +57,13 @@
 			display: flex;
 			align-items: center;
 		}
+
+
+
+		.btn.btn-outline-secondary {
+			padding: 2px 4px; /* 버튼 패딩 조정 */
+		}
+
 		ul.menuList li {
 			height:100%;
 			display: flex;

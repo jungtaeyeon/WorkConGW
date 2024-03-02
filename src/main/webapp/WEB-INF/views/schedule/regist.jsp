@@ -132,7 +132,9 @@
                     <label class="col-xs-4" for="edit-type">일정 그룹</label>
                     <select class="form-control" type="text" name="type" id="edit-type" onchange="showDeptSelect();">
                         <option value="S01">개인일정</option>
+                        <c:if test="${loginUser.code_Id eq 'c01'}">
                             <option value="S02">부서일정</option>
+                        </c:if>
                             <option value="S03">팀일정</option>
                     </select>
                 </div>

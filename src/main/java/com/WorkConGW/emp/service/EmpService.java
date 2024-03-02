@@ -33,7 +33,7 @@ import jakarta.servlet.http.HttpSession;
 public class EmpService {
 
     Logger logger = LoggerFactory.getLogger(EmpService.class);
-    @Autowired 
+    @Autowired
     private HomeService homeService;
     @Autowired
     private JavaMailSender mailSender;

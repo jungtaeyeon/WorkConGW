@@ -214,7 +214,7 @@ public class CommonController {
             }
             if("u".equals(empVO.getAuth_Id()))
             {
-                url = "redirect:./home";
+                url = "redirect:/common/home";
             }
             else if("s".equals(empVO.getAuth_Id()))
             {
