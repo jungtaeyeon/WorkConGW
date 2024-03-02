@@ -36,6 +36,8 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.WorkConGW.YAMLConfig;
+import com.WorkConGW.board.notice.dto.NoticeVO;
+import com.WorkConGW.board.notice.service.NoticeService;
 import com.WorkConGW.common.service.HomeService;
 import com.WorkConGW.common.service.MenuService;
 import com.WorkConGW.emp.dto.EmpVO;
@@ -77,6 +79,9 @@ public class CommonController {
 
     @Value("${summernotePath}")
     private String summernotePath;
+
+    @Autowired
+    private NoticeService noticeService;
 
     protected static Map<String, HttpSession> users = new HashMap<>();
 
@@ -146,8 +151,21 @@ public class CommonController {
     public String home(HomeFormVO homeFormVO, Model model, HttpServletRequest request) throws SQLException {
         EmpVO empVO = (EmpVO)request.getSession().getAttribute("loginUser");
         empVO = empService.getEmp(empVO.getEmp_Id());
+        NoticeVO noticeVO = homeFormVO.getNoticeVO(); //noticeVO객체를 얻어옴
+        noticeVO.setRecordCountPerPage(5); //5개 지정
+        Map<String,Object> dataMap = noticeService.getNoticeList(noticeVO);
         model.addAttribute("empVO", empVO);
+        logger.info(dataMap.toString());
+        model.addAttribute("noticeList",dataMap.get("noticeList"));
         return "/home2";
+    }
+
+    @GetMapping("/home2")
+    public String home2(HomeFormVO homeFormVO, Model model, HttpServletRequest request) throws SQLException {
+        EmpVO empVO = (EmpVO)request.getSession().getAttribute("loginUser");
+        empVO = empService.getEmp(empVO.getEmp_Id());
+        model.addAttribute("empVO", empVO);
+        return "/home";
     }
 
     @GetMapping("/api/weather-app-key")

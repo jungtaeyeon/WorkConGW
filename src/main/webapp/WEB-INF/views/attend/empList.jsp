@@ -63,6 +63,7 @@
         .pagination{
             justify-content: center;
         }
+        .treeview{font-size: 14px;}
     </style>
     <%@ include file="../include/header.jsp"%>
 

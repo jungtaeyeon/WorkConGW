@@ -7,4 +7,33 @@
 <update id="updateProfile">
     UPDATE EMP SET EMP_PICTURE = #{emp_Picture}  WHERE EMP_ID = #{emp_Id}
 </update>
+    <select id="homescheduleList" resultType="map" parameterType="java.util.Map">
+                SELECT schedule_title,code_id,schedule_imp
+                FROM (
+                    SELECT * 
+                    FROM SCHEDULE
+                    WHERE TO_CHAR(SCHEDULE_START_DT, 'YYYY-MM-DD') = #{schedule_Start_Dt}
+                    AND SCHEDULE_ST = 1
+                    AND SCHEDULE_WRITER_ID = #{empId}
+                    AND CODE_ID = 'S01'
+                    AND ROWNUM &lt;= 2
+                    UNION ALL
+                    SELECT * 
+                    FROM SCHEDULE
+                    WHERE TO_CHAR(SCHEDULE_START_DT, 'YYYY-MM-DD') = #{schedule_Start_Dt}
+                    AND SCHEDULE_ST = 1
+                    AND SCHEDULE_WRITER_ID = #{empId}
+                    AND CODE_ID = 'S02'
+                    AND ROWNUM &lt;= 2
+                    UNION ALL
+                    SELECT * 
+                    FROM SCHEDULE
+                    WHERE TO_CHAR(SCHEDULE_START_DT, 'YYYY-MM-DD') = #{schedule_Start_Dt}
+                    AND SCHEDULE_ST = 1
+                    AND SCHEDULE_WRITER_ID = #{empId}
+                    AND CODE_ID = 'S03'
+                    AND ROWNUM &lt;= 2
+                ) 
+                ORDER BY SCHEDULE_START_DT
+    </select>
 </mapper>

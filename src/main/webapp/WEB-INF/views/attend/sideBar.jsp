@@ -110,7 +110,7 @@ let timerElement = document.getElementById("attendTimeContent");
 
 // 타이머 갱신 주기 (1초)
 let timerInterval = 1000;
-
+updateTimer();
   $('.attendStartBtn').click(function(){
     if(history_Attend_Time == ""){
       $.ajax({

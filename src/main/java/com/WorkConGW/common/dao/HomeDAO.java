@@ -9,7 +9,8 @@ import org.springframework.stereotype.Repository;
 import com.WorkConGW.common.controller.CommonController;
 import com.WorkConGW.emp.dto.EmpVO;
 
-
+import java.util.List;
+import java.util.Map;
 
 @Repository
 public class HomeDAO {
@@ -22,5 +23,12 @@ public class HomeDAO {
 
         return sqlSessionTemplate.update("updateProfile", empVO);
     }
-	
+
+	public List<Map<String, Object>> homescheduleList(Map<String, Object> pmap) {
+        logger.info("homescheduleList");
+        logger.info(pmap.toString());
+        List<Map<String, Object>> result = sqlSessionTemplate.selectList("homescheduleList", pmap);
+        logger.info(result.toString());
+        return result;
+    }
 }

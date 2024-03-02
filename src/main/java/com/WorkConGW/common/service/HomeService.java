@@ -1,5 +1,8 @@
 package com.WorkConGW.common.service;
 
+import java.util.List;
+import java.util.Map;
+import java.util.HashMap;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -143,5 +146,10 @@ public class HomeService {
         }
     }
 
-	
+	public List<Map<String, Object>> homescheduleList(Map<String, Object> pmap) {
+        logger.info("homescheduleList");
+        logger.info(pmap.toString());
+        List<Map<String, Object>> result = homeDAO.homescheduleList(pmap);
+        return result;
+    }
 }

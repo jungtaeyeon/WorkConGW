@@ -276,10 +276,10 @@
 			$('input[name="history_reason_date"]').attr("max",history_reason_date_today);
 		});
 		$('.go-prev').on('click', function() {
-        thisMonth = new Date(year, month - 2, 1);
-        renderCalender(thisMonth);
-				month = month - 1;
-    });
+			thisMonth = new Date(year, month - 2, 1);
+			renderCalender(thisMonth);
+			month = month - 1;
+		});	
 		$('.go-next').click(function(){
 			thisMonth = new Date(year, month, 1);
 			renderCalender(thisMonth);
