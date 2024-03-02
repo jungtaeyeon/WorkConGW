@@ -154,7 +154,59 @@
 #importantSchedule{color: #D25565;}
 #companySchedule{color: #a9e34b;}
 #deptSchedule{color: #b070db;}
-
+.gridContent .table td, .gridContent .table th{border-top: none; border-bottom: 1px solid #dee2e6;}
+.approvalContentGroup {
+    background: #F7F7F7;
+	padding: 8px;
+	margin-bottom: 11px;
+	cursor: pointer;
+}
+.approvalGroup {
+    display: flex;
+    justify-content: space-between;
+	align-items: center;
+}
+p.approvalTit {
+    font-size: 15px;
+    font-weight: 500;
+}
+span.approvalNum {
+    font-size: 16px;
+    font-weight: 600;
+    margin-right: 5px;
+    color: #374859;
+}
+p.approvalForm, p.approvalName, p.approvalDay {
+    font-size: 15px;
+	font-weight: 500;
+}
+.approvalGroup:nth-child(1) {
+    margin-bottom: 8px;
+}
+.weathertitle{
+	font-family: arial;
+	text-align: center;
+	height: auto;
+}
+.weatherInfoGroup {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+	align-items: center;
+    margin-top: 20px;
+}
+.SeoulNowtemp, .SeoulNowName{
+	font-size: 25px;
+	margin-bottom: 0;
+}
+.weatherInfoGroup p{
+	display: flex;
+    flex-direction: column;
+	font-size: 16px;
+}
+.weatherInfoGroup p i{
+	margin-bottom: 5px;
+} 
 </style>
 <%@ include file="./include/header.jsp"%>
 <section class="mainDashBoard">
@@ -240,32 +292,175 @@
 		<p class="gridContentTit">공지사항</p>
 		<i class="fa fa-sign-in" aria-hidden="true" onclick="location.href='<%=request.getContextPath()%>/board/notice/noticeList'"></i>
 	</div>
-	
+	<div class="table-responsive" style="overflow:hidden;">
+		<table class="table table-hover m-b-0 c_list">
+			<tbody style="cursor: pointer;">
+			<c:if test="${!empty noticeList}">
+				<c:forEach items="${noticeList}" var="notice">
+					<tr onclick="window.location.href='<%=request.getContextPath()%>/board/notice/detail?notice_id=${notice.notice_id }'">
+						<td><span style="display: inline-block;font-weight: bold;max-width: 155px;overflow: hidden;white-space: nowrap;text-overflow: ellipsis;">
+								<c:if test="${notice.notice_important_st eq 'Y'}">
+									<span class="badge badge-danger">필독</span>
+								</c:if>
+								${notice.notice_title}</span></td>
+						<td style="text-align: right;"><fmt:formatDate value="${notice.notice_create_dt}" pattern="yyyy-MM-dd"/></td>
+					</tr>
+				</c:forEach>
+			</c:if>
+			<c:if test="${empty noticeList}">
+				<tr>
+					<td colspan="6" style="text-align: center;"><strong>사내공지가 존재하지 않습니다.</strong></td>
+				</tr>
+			</c:if>
+			</tbody>
+		</table>
+	</div>
   </div>
   <div class="gridContent">
 	<div class="girdContentTitGroup">
 		<p class="gridContentTit">전자결재</p>
+		<i class="fa fa-sign-in" aria-hidden="true" onclick="location.href='<%=request.getContextPath()%>/approval/main'"></i>
 	</div>
+	<c:if test="${!empty approvalList}">
+		<c:forEach items="${approvalList}" var = "doc">
+			<div class="approvalContentGroup" onclick='window.location="<%=request.getContextPath()%>/approval/awaitDocDetail?docId=${doc.doc_Id}"'>
+				<div class="approvalGroup">
+					<p class="approvalTit"><span class="approvalNum">[${doc.doc_Id}]</span>${doc.approval_Title}</p>
+					<p class="approvalForm">${doc.form_Name}</p>
+				</div>
+				<div class="approvalGroup">
+					<p class="approvalName">${doc.emp_Name}<span class="approvalNameDept">${doc.emp_Drafter_Official}</span></p>
+					<p class="approvalDay"><fmt:formatDate value="${doc.approval_Recommand_Dt}" pattern="yyyy-MM-dd"/></p>
+				</div>
+			</div>
+		</c:forEach>
+	</c:if>
+	<c:if test="${empty approvalList}">
+		<div class="approvalGroup">
+			<p class="approvalForm" style="text-align: center; width: 100%;">전자결재가 존재하지 않습니다.</p>
+		</div>
+	</c:if>
   </div>
   <div class="gridContent">
 	<div class="girdContentTitGroup">
 		<p class="gridContentTit">오늘의날씨</p>
 	</div>
+	<div class = "weathertitle">
+		<h3 class="SeoulIcon"></h3>
+		<h3 class="SeoulNowtemp"></h3>
+		<h3 class="SeoulNowName"></h3>
+		<div class="weatherInfoGroup">
+			<p class="SeoulLowtemp"></p>
+			<p class="SeoulHightemp"></p>
+			<p class="Seoulhumidity"></p>
+			<p class="SeoulWindSpeed"></p>
+		</div>
+	</div>
   </div>
   <div class="gridContent">
 	<div class="girdContentTitGroup">
 		<p class="gridContentTit">업무관리</p>
+		<i class="fa fa-sign-in" aria-hidden="true" onclick="location.href='<%=request.getContextPath()%>/board/duty/dutyList'"></i>
 	</div>
+	<c:if test="${!empty dutyList}">
+		<c:forEach items="${dutyList}" var = "duty">
+			<div class="approvalContentGroup" onclick="window.location.href='${pageContext.request.contextPath }/board/duty/detail?duty_Board_Id=${duty.duty_Board_Id }'">
+				<div class="approvalGroup">
+					<p class="approvalTit"><span class="approvalNum">[#${duty.duty_Board_Id }]</span>${duty.duty_Board_Title }</p>
+					<p class="approvalForm">
+						<span class="Readcnt">조회:${duty.duty_Board_Readcnt}</span>
+					</p>
+				</div>
+				<div class="approvalGroup">
+					<p class="approvalName">${duty.emp_Name}<span class="approvalNameDept"></span></p>
+					<p class="approvalDay">
+						<fmt:formatDate value="${duty.duty_Board_Create_Dt }" pattern="yyyy.MM.dd"/>
+					</p>
+				</div>
+			</div>
+		</c:forEach>	
+	</c:if>
+	<c:if test="${empty dutyList}">
+		<div class="approvalGroup">
+			<p class="approvalForm" style="text-align: center; width: 100%;">업무가 존재하지 않습니다.</p>
+		</div>
+	</c:if>
   </div>
   <div class="gridContent">
 	<div class="girdContentTitGroup">
 		<p class="gridContentTit">이슈관리</p>
+		<i class="fa fa-sign-in" aria-hidden="true" onclick="location.href='<%=request.getContextPath()%>/board/issue/list'"></i>
 	</div>
+	<c:if test="${!empty issueList}">
+		<c:forEach items="${issueList}" var = "issue">
+			<c:if test="${issue.issue_Board_St eq 1 || issue.emp_Id eq loginUser.emp_Id}">
+				<div class="approvalContentGroup" onclick="window.location.href='${pageContext.request.contextPath }/board/issue/detail?issue_Board_Id=${issue.issue_Board_Id }';">
+					<div class="approvalGroup">
+						<p class="approvalTit"><span class="approvalNum">[#${issue.issue_Board_Id }]</span>${issue.issue_Board_Title }</p>
+						<p class="approvalForm">
+							<span class="reply_Count">댓글:${issue.reply_Count }</span>
+							<span class="Readcnt">조회:${issue.issue_Board_Readcnt }</span>
+						</p>
+					</div>
+					<div class="approvalGroup">
+						<p class="approvalName">${issue.emp_Name}<span class="approvalNameDept">${issue.officialName}</span></p>
+						<p class="approvalDay">
+							<fmt:formatDate value="${issue.issue_Board_Create_Dt}" pattern="yyyy-MM-dd"/>
+						</p>
+					</div>
+				</div>
+			</c:if>	
+		</c:forEach>	
+	</c:if>
+	<c:if test="${empty issueList}">
+		<div class="approvalGroup">
+			<p class="approvalForm" style="text-align: center; width: 100%;">이슈가 존재하지 않습니다.</p>
+		</div>
+	</c:if>
   </div>
   <div class="gridContent">
 	<div class="girdContentTitGroup">
 		<p class="gridContentTit">프로젝트</p>
+		<i class="fa fa-sign-in" aria-hidden="true" onclick="location.href='<%=request.getContextPath()%>/board/project/list'"></i>
 	</div>
+	<c:if test="${!empty projectList}">
+		<c:forEach items="${projectList}" var = "project">
+			<div class="approvalContentGroup" onclick="window.location.href='${pageContext.request.contextPath }/board/project/detail?project_Id=${project.project_Id}'">
+				<div class="approvalGroup">
+					<p class="approvalTit"><span class="approvalNum">[#${project.project_Id }]</span>${project.project_Title }</p>
+					<p class="approvalForm">
+						<fmt:formatDate value="${project.project_Update_Dt }" pattern="yyyy-MM-dd"/>
+					</p>
+				</div>
+				<div class="approvalGroup">
+					<c:if test="${project.todoIssueCount + project.inprogressIssueCount + project.doneIssueCount eq 0 }">
+						<c:set var="percentage" value="0"></c:set>
+					</c:if>
+					<c:if test="${project.todoIssueCount + project.inprogressIssueCount + project.doneIssueCount ne 0 }">
+						<c:set var="totalWeight" value="${project.todoIssueCount * 0 + project.inprogressIssueCount * 0.5 + project.doneIssueCount * 1 }" />
+						<c:set var="totalIssueCount" value="${project.todoIssueCount + project.inprogressIssueCount + project.doneIssueCount }" />
+						<c:set var="percentage" value="${(totalWeight / totalIssueCount) * 100 }" />
+						<fmt:parseNumber var="percentage" value="${percentage}" integerOnly="true" />
+					</c:if>
+					<div class="progress progress-xs" style="width: 50%; height:10px;margin-top:5px;background-color:rgb(0,0,0,0.2);">
+						<div class="progress-bar" role="progressbar" aria-valuenow="${percentage}" aria-valuemin="0" aria-valuemax="100" style="width: ${percentage}%; height:10px;">
+					</div>
+					</div>
+					<div style="margin-top: 5px;font-size:1.1em;">
+						<span><strong style="font-size:1.1em;">${percentage }%</strong> 진행됨</span>
+						<!-- <span style="margin-left:10px;"><strong style="font-size:1.1em;">${project.todoIssueCount }</strong> Todo</span>
+						<span style="margin-left:10px;"><strong style="font-size:1.1em;">${project.inprogressIssueCount }</strong> Inprogress</span>
+						<span style="margin-left:10px;"><strong style="font-size:1.1em;">${project.doneIssueCount }</strong> Done</span> -->
+					</div>
+				</div>
+			</div>
+		</c:forEach>	
+	</c:if>
+	<c:if test="${empty projectList}">
+		<div class="approvalGroup">
+			<p class="approvalForm" style="text-align: center; width: 100%;">프로젝트가 존재하지 않습니다.</p>
+		</div>
+	</c:if>
   </div>
 </section>
 <%@ include file="./include/footer.jsp"%>
@@ -541,4 +736,24 @@
             }
         });
     }
+	$.getJSON("<%=request.getContextPath()%>/common/api/weather-app-key",
+			function (WeatherResult) {
+				//기온출력
+				console.log(WeatherResult)
+				$('.SeoulNowName').append(WeatherResult.weather[0].main);
+				$('.SeoulNowtemp').append(WeatherResult.main.temp+'&deg;C');
+				$('.SeoulLowtemp').append('<i class="fa-solid fa-temperature-low"></i>'+WeatherResult.main.temp_min+'&deg;C');
+				$('.SeoulHightemp').append('<i class="fa-solid fa-temperature-high"></i>'+WeatherResult.main.temp_max+'&deg;C');
+				$('.Seoulhumidity').append('<i class="fa-solid fa-droplet"></i>'+WeatherResult.main.humidity+'%');
+				$('.SeoulWindSpeed').append('<i class="fa-solid fa-wind"></i>'+WeatherResult.wind.speed+'m/s');
+
+				//날씨아이콘출력
+				//WeatherResult.weater[0].icon
+				let weathericonUrl =
+						'<img src= "http://openweathermap.org/img/wn/'
+						+ WeatherResult.weather[0].icon +
+						'@2x.png" alt="' + WeatherResult.weather[0].description + '"/>'
+				
+				$('.SeoulIcon').html(weathericonUrl);
+			});
 </script>

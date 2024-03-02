@@ -16,7 +16,7 @@ import java.util.List;
 @Getter
 @Setter
 @Alias("ApprovalVO")
-public class ApprovalVO  {
+public class ApprovalVO extends BaseVO {
 
     private int doc_Id;
     private int form_Id;

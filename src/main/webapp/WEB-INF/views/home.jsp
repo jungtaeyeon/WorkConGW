@@ -990,6 +990,7 @@
 	$.getJSON("<%=request.getContextPath()%>/common/api/weather-app-key",
 			function (WeatherResult) {
 				//기온출력
+				
 				$('.SeoulNowtemp').append(WeatherResult.main.temp);
 				$('.SeoulLowtemp').append(WeatherResult.main.temp_min);
 				$('.SeoulHightemp').append(WeatherResult.main.temp_max);

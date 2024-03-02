@@ -11,6 +11,7 @@ import java.nio.file.StandardCopyOption;
 import java.sql.SQLException;
 import java.util.*;
 
+import com.WorkConGW.common.PaginationInfo;
 import com.WorkConGW.common.command.FileUploadCommand;
 import com.WorkConGW.common.dto.DashboardVO;
 import com.WorkConGW.common.dto.HomeFormVO;
@@ -36,6 +37,14 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.WorkConGW.YAMLConfig;
+import com.WorkConGW.approval.dto.ApprovalVO;
+import com.WorkConGW.approval.service.ApprovalService;
+import com.WorkConGW.board.issue.dto.IssueVO;
+import com.WorkConGW.board.issue.dto.ProjectVO;
+import com.WorkConGW.board.issue.service.IssueService;
+import com.WorkConGW.board.issue.service.ProjectService;
+import com.WorkConGW.board.duty.dto.DutyVO;
+import com.WorkConGW.board.duty.service.DutyService;
 import com.WorkConGW.board.notice.dto.NoticeVO;
 import com.WorkConGW.board.notice.service.NoticeService;
 import com.WorkConGW.common.service.HomeService;
@@ -70,9 +79,20 @@ public class CommonController {
     @Autowired
     private HomeService homeService;
 
+    @Autowired
+    private ApprovalService approvalService;
 	
 	@Autowired
 	private MenuService menuService;
+
+    @Autowired
+	private IssueService issueService;
+
+    @Autowired
+	private ProjectService projectService;
+
+    @Autowired
+	private DutyService dutyService;
 
     @Value("${uploadPath}")
     private String fileUploadPath;
@@ -84,9 +104,6 @@ public class CommonController {
     private NoticeService noticeService;
 
     protected static Map<String, HttpSession> users = new HashMap<>();
-
-
-
 
     public ResponseEntity<byte[]> getPicture(String picturePath, String picture) throws Exception{
         // EmpCotroller.(baseController호출) -> BaseController
@@ -151,11 +168,33 @@ public class CommonController {
     public String home(HomeFormVO homeFormVO, Model model, HttpServletRequest request) throws SQLException {
         EmpVO empVO = (EmpVO)request.getSession().getAttribute("loginUser");
         empVO = empService.getEmp(empVO.getEmp_Id());
+        String emp_Id = ((EmpVO)request.getSession().getAttribute("loginUser")).getEmp_Id();
         NoticeVO noticeVO = homeFormVO.getNoticeVO(); //noticeVO객체를 얻어옴
+        ApprovalVO approvalVO = homeFormVO.getApprovalVO(); 
+        IssueVO issueVO = homeFormVO.getIssueVO(); 
+        DutyVO dutyVO = homeFormVO.getDutyVO(); 
+        ProjectVO projectVO = homeFormVO.getProjectVO(); 
+
         noticeVO.setRecordCountPerPage(5); //5개 지정
+        approvalVO.setRecordCountPerPage(3); 
+        issueVO.setRecordCountPerPage(3); 
+        dutyVO.setFirstIndex(0);
+        dutyVO.setRecordCountPerPage(3); 
+        dutyVO.setEmp_Writer_Id(emp_Id);
+
         Map<String,Object> dataMap = noticeService.getNoticeList(noticeVO);
+        Map<String,Object> approvalList = approvalService.getWaitList(approvalVO);
+        List<IssueVO> issueList = issueService.searchList(issueVO);
+        List<ProjectVO> projectList = projectService.getProjectList(projectVO);
+        
+        List<DutyVO> dutyList = dutyService.searchList(dutyVO);
+        
+        logger.info(projectList.toString());
+        model.addAttribute("projectList", projectList);
         model.addAttribute("empVO", empVO);
-        logger.info(dataMap.toString());
+        model.addAttribute("approvalList",approvalList.get("waitDocs"));
+        model.addAttribute("dutyList",dutyList);
+        model.addAttribute("issueList",issueList);
         model.addAttribute("noticeList",dataMap.get("noticeList"));
         return "/home2";
     }

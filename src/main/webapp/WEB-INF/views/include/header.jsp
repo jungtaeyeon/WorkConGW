@@ -178,6 +178,7 @@
 		}
 		.menuProfile a{color:#000;}
 		.user-name{color: #fff;}
+		.dropdown-menu{left: -5px;}
 	</style>
 </head>
 <body class="theme-black" style="">
