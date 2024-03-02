@@ -91,8 +91,8 @@
         text-align: center; /* 가운데 정렬 */
         border: 1px solid #ccc; /* 테두리 스타일 */
         border-radius: 5px; /* 테두리 둥글게 처리 */
-        padding: 10px; /* 내부 여백 */
         margin-bottom: 20px; /* 하단 여백 */
+
     }
 
     .header {
@@ -518,13 +518,13 @@
                     if (position) {
                         li = '<li id="' + deptId + '" data-type="supervisor" lvl="' + level + '"><img src="<%=request.getContextPath() %>/js/treeview/images/file.gif"><a class="file code myHover" id="t1">' + " " + deptName + " " + e.position + '</a></li>';
                         if(stName == '휴가중') {
-                            li = '<li onclick = "empChecked(this);" ondblclick="moveRight();" stName="' + stName + '" id="' + deptId + '" lvl="' + level + '" class ="" style="cursor: pointer"><img src="<%=request.getContextPath() %>/js/treeview/images/folder-closed.gif">'+" "+deptName +" "+'</a></li>'
+                            li = '<li onclick = "empChecked(this);" ondblclick="moveRight();" stName="' + stName + '" id="' + deptId + '" lvl="' + level + '" class ="" style="cursor: pointer"><img src="<%=request.getContextPath() %>/js/treeview/images/dept2.png">'+" "+deptName +" "+'</a></li>'
                         }
                         else{
                             li = '<li onclick="empChecked(this);" ondblclick="moveRight();" stName="'+stName+'" id="'+ deptId +'" lvl="'+level +'" class="" style="cursor:pointer" ><img src = "<%=request.getContextPath()%>/js/treeview/images/emp2.png">'+" "+ deptName + " "+e.position+'</li>';
                         }
                     } else {
-                        li = '<li id="' + deptId + '" data-type="dept" lvl="' + level + '"><img src="<%=request.getContextPath() %>/js/treeview/images/folder-closed.gif"><a class="file code" onclick="myClick(this)">' + " " + deptName + " " + '</a></li>';
+                        li = '<li id="' + deptId + '" data-type="dept" lvl="' + level + '"><img src="<%=request.getContextPath() %>/js/treeview/images/dept2.png"><a class="file code" onclick="myClick(this)">' + " " + deptName + " " + '</a></li>';
                     }
 
                     // 1레벨은 그냥 추가

@@ -26,7 +26,110 @@
     }
     .hiddenFillBtn:hover{ background-color: #ffffff; }
 
+    .subTitleText{
+        margin-bottom: 25px;
+    }
+    .subTitleText h2{
+        display: flex;
+        justify-content: flex-start;
+        align-items: center;
+        font-size: 27px;
+    }
+    .subTitleText i{
+        font-size: 24px;
+        margin-right: 5px;
+    }
+    .serchContain{
+        display: flex;
+        align-items: flex-start;
+    }
+    #serchForm{display: flex;}
+    .serchSelect{width: 150px;}
+    .serchTextGroup{width: 350px;}
+    .tableCheckBox{text-align: center; vertical-align: middle !important;}
+    .tardy{
+        background: red;
+        color: #fff;
+        padding: 5px 10px;
+        border-radius: 6px;
+    }
+    .goWork{
+        color: #fff;
+        padding: 5px 10px;
+        border-radius: 6px;
+    }
+    .goWork0{background-color: #77af9c;}
+    .goWork1{background: green;}
+    .goWork2{background-color: #ce6d39;}
+    .goWork3{background-color: #c82333;}
+    .goWork4{background-color: #6aafe6;}
+    .goWork5{background-color: #ff5f2e;}
+
+    .pie-chart {
+        position: relative;
+        display:inline-block;
+        width: 150px;
+        height: 150px;
+        border-radius: 50%;
+        transition: 0.3s;
+    }
+    span.center{
+        background: #fff;
+        display : block;
+        position: absolute;
+        top:50%; left:50%;
+        width:100px; height:100px;
+        border-radius: 50%;
+        text-align:center;
+        line-height: 100px;
+        font-size:30px;
+        transform: translate(-50%, -50%);
+    }
+    .attendStatistics{
+        width: 30%;
+        margin-left: 2%;
+    }
+    .attendStatisticsGroup{display: flex; justify-content: space-between; margin-bottom: 5%;}
+    .attendStatisticTextGroup{
+        width: 50%;
+    }
+    .attendStatisticTit{
+        font-size: 20px;
+        color: #fff;
+        background: #000;
+        padding: 5px;
+    }
+    .attendStatisticText{
+        font-size: 18px;
+        padding: 5px;
+        margin-bottom: 0%;
+    }
+    .lateReasonGroup{
+        background: #d2d2d2;
+        padding: 4% 6%;
+        margin: 5% 0;
+    }
+    .lateReasonTit{
+        font-size: 25px;
+        margin-bottom: 0;
+    }
+    .lateReasonSubTit{font-size: 15px;}
+    /* 모달 css */
+    .show{background-color: rgba(0, 0, 0, 0.7);}
+    .modalBtn{cursor: pointer;}
+    .modal-body p{font-size: 16px;}
+    .modal-body span{
+        display: inline-block;
+        margin-left: 15px;
+        vertical-align: top;
+    }
+
+
 </style>
+
+
+
+
 
 <body>
 
@@ -256,12 +359,62 @@
                             </table>
                         </div>
                     </div>
+
+
+
+
                 </div>
+
             </div>
+
+            <div>
+                <!--차트가 그려질 부분-->
+                <canvas id="myChart"></canvas>
+            </div>
+
         </div>
     </div>
 </div>
 </section>
+
+
+<script type="text/javascript">
+    let context = document
+        .getElementById('myChart')
+        .getContext('2d');
+    let myChart = new Chart(context, {
+        type: 'line', // 차트의 형태
+        data: { // 차트에 들어갈 데이터
+            labels: [
+                //x 축
+                '1','2','3'
+            ],
+            datasets: [
+                { //데이터
+                    label: '부서별근태조회', //차트 제목
+                    fill: false, // line 형태일 때, 선 안쪽을 채우는지 안채우는지
+                    data: [
+                        21,19,25,20,23,26,25 //x축 label에 대응되는 데이터 값
+                    ],
+                    backgroundColor: '#0c1e35', // 배경색
+                    borderColor: '#0c1e35', // 경계선 색상
+                    borderWidth: 1 // 경계선 굵기
+                }
+            ]
+        },
+        options: {
+            scales: {
+                yAxes: [
+                    {
+                        ticks: {
+                            beginAtZero: true
+                        }
+                    }
+                ]
+            }
+        }
+    });
+</script>
 
 
 

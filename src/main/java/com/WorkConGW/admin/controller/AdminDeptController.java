@@ -27,7 +27,6 @@ public class AdminDeptController {
     public ResponseEntity<String> regist(@ModelAttribute("deptVO")DeptVO deptVO)
     {
         logger.info("여기들어오니?");
-        logger.info(deptVO.toString());
         ResponseEntity<String> entity = null;
 
         try {

@@ -227,6 +227,30 @@ WHERE EMP_ID = #{emp_Id} AND EMP_PWD = #{emp_Pwd}
 	UPDATE EMP SET EMP_PWD =#{emp_Pwd},EMP_UPDATE_YN = #{emp_Update_Yn} where EMP_ID = #{emp_Id}
 </update>
 
+<update id = "registerDashBoard" parameterType="string">
+	INSERT INTO DASHBOARD(
+		EMP_ID,
+		DASHBOARD_DUTY,
+		DASHBOARD_ISSUE,
+		DASHBOARD_PROJECT,
+		DASHBOARD_APPROVAL,
+		DASHBOARD_RESERVATION,
+		DASHBOARD_BOARD,
+		DASHBOARD_WEATHER
+	)
+	VALUES(
+			  #{emp_Id},
+			  1,
+			  1,
+			  1,
+			  1,
+			  1,
+			  1,
+			  1
+		  )
+
+</update>
+
 
 
 <select id = "selectEmpPagingList" resultType="EmpVO" parameterType="EmpVO">
@@ -299,7 +323,6 @@ FROM(SELECT D2.*
 	<select id = "selectEmpCount" parameterType="EmpVO" resultType="int">
 		SELECT COUNT(A.EMP_ID)
 		FROM EMP A
-		WHERE A.EMP_ST IN(1,4)
 	</select>
 
 

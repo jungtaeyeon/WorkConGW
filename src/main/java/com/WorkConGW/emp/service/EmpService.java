@@ -1,6 +1,7 @@
  package com.WorkConGW.emp.service;
 
 import java.io.File;
+import java.nio.charset.Charset;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.sql.SQLException;
@@ -149,6 +150,7 @@ public class EmpService {
         logger.info(empVO.toString());
        try{
         empDAO.register(empVO);
+
         String key = new TempKey().getKey(50,false);
         empDAO.createAuthKey(empVO.getEmp_Email(), key);
         MailUtils sendMail = new MailUtils(mailSender);
@@ -321,5 +323,11 @@ public class EmpService {
              }
          }
 
+     }
+
+     public void registerDashBoard(EmpVO empVO) {
+         String emp_Id = empVO.getEmp_Id();
+         logger.info(emp_Id);
+         empDAO.registerDashBoard(emp_Id);
      }
  }
