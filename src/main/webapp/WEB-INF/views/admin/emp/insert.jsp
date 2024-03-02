@@ -205,7 +205,7 @@
 <div class="container">
     <div class="signup">
         <form action="<%=request.getContextPath()%>/emp/register" class="signup-form" method="post" id="join">
-            <h1 class="title"><a href="${root}/admin/emp/empList">WorkConGW</a></h1>
+            <h1 class="title">WorkConGW</h1>
             <h3 class="sub-title">사원등록</h3>
 
 
