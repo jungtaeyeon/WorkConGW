@@ -68,9 +68,15 @@
                                             <tr onclick="window.location.href='<%=request.getContextPath()%>/board/notice/detail?notice_id=${notice.notice_id }'">
                                                 <td><fmt:formatDate value="${notice.notice_create_dt}" pattern="yyyy-MM-dd"/></td>
                                                 <td><span style="display: inline-block;font-weight: bold;max-width: 155px;overflow: hidden;white-space: nowrap;text-overflow: ellipsis;">
-                                              			<c:if test="${notice.notice_important_st eq 'Y'}">
+                                              			<c:if test="${notice.notice_important_st eq '1'}">
                                                             <span class="badge badge-danger">필독</span>
                                                         </c:if>
+
+                                                        <c:if test="${notice.notice_important_st eq '0'}">
+                                                            <span class="badge badge-success">공지</span>
+                                                        </c:if>
+
+
                                                         ${notice.notice_title}</span></td>
                                                 <td><span>${notice.emp_Name}&nbsp;${notice.officialName}</span></td>
                                             </tr>

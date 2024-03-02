@@ -58,6 +58,8 @@ public class AdminCommonController extends CommonController {
          noticeVO.setRecordCountPerPage(5); //5개 지정
          Map<String,Object> dataMap = noticeService.getNoticeList(noticeVO);
 
+         logger.info(dataMap.toString());
+
          ReservationComplainVO reservationComplainVO = adminFormVO.getReservationComplainVO();
          reservationComplainVO.setRecordCountPerPage(5);
          List<ReservationComplainVO> complainList = meetRoomService.getAllComplainList(reservationComplainVO);
@@ -68,7 +70,7 @@ public class AdminCommonController extends CommonController {
         logger.info(deptList.toString());
         model.addAttribute("loginUserList",loginUserList);
         model.addAttribute("deptList",deptList);
-        model.addAttribute("noticeList",dataMap.get("noticeList"));
+        model.addAttribute("noticeList",dataMap.get("importantNoticeList"));
         model.addAttribute("complainList",complainList);
         return url;
      }

@@ -109,7 +109,7 @@ public class NoticeController extends BaseController{
     @ResponseBody
     @PostMapping("regist")
     public String regist(BoardFormVO boardFormVO)throws Exception {
-        logger.info("관리자페이지 오류 : 여기들어오니?");
+        logger.info("관리자페이지 오류 : 여기들어오니?"+ boardFormVO.toString());
 
         if(boardFormVO.getFileUploadCommand() != null){
             // 파일 업로드 설정

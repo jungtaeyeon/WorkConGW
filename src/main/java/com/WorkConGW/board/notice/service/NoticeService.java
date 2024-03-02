@@ -65,10 +65,9 @@ public class NoticeService {
 
     // 글등록 폼에서 등록
     public void regist(NoticeVO notice) throws SQLException {
+        logger.info("관리자페이지 오류 : >> 여기 들어오니?");
         logger.info("시퀀스로 id 채번 전 => " + String.valueOf(notice.getNotice_id()));
-        if("E".equals(notice.getNotice_important_st())) {	// 긴급 공지이면
-            noticeDAO.deleteEmergency();
-            noticeDAO.insertNotice(notice);
+
 
         logger.info(notice.toString());
         noticeDAO.insertNotice(notice);
@@ -84,7 +83,6 @@ public class NoticeService {
                 noticeDAO.insertNoticeFile(noticeAttachVO);
             }
         }
-    }
 }
 
 //     글삭제 및 첨부파일 삭제
