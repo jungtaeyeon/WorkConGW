@@ -3,11 +3,9 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
-
 <html>
 <head>
     <title>Title</title>
-
 </head>
 <body>
 <!-- 헤더인클루드 -->
@@ -22,13 +20,13 @@
                 <!-- 메인 content 넣는 곳 -->
                 <div class="row clearfix">
                     <div class="col-12" style="margin-top: 2%; font-family: S-CoreDream-6Bold">
-                        <h2>임시 저장함</h2>
+                        <h2>참조 문서함</h2>
                         <hr>
                     </div>
                 </div>
 
-                <div class="row clearfix" style="font-family: S-CoreDream-7ExtraBold">
-                    <div class="col-12">
+                <div class="row clearfix">
+                    <div class="col-12" style="font-family: S-CoreDream-7ExtraBold">
 
                         <div class="card">
                             <div class="body">
@@ -48,7 +46,6 @@
                                         <i class="fa fa-refresh"></i>&nbsp&nbsp검색 조건 초기화
                                     </label>
                                     <div style="display:inline-block;margin:5px 15px;font-size: 1.2em;color:gray;">
-                                        [총 <fmt:formatNumber value="${paginationInfo.totalRecordCount }" type="number"/>개]
                                     </div>
                                 </div>
 
@@ -88,16 +85,15 @@
                                         </thead>
                                         <tbody style="cursor: pointer;">
                                         <%--                                         <tr onclick='window.open("completeDocDetail?docId="+${doc.docId}+"", "결재문서","_blank" ,"width=1400,height=900");'> --%>
-                                        <tr onclick="OpenWindow('<%=request.getContextPath() %>/approval/docDetail?docId=${doc.docId}&from=temp','결재양식',900,900);">
+                                        <tr >
                                             <td></td>
-                                            <td><span></span></td>
-                                            <td><span class="text-info"></span></td>
+                                            <td><span>${doc.formName}</span></td>
+                                            <td><span class="text-info">${doc.approvalTitle}</span></td>
                                             <td>
-                                                &nbsp<i class="fa fa-save"></i>&nbsp&nbsp
+                                                &nbsp<i class="fa fa-save"></i>&nbsp&nbsp${doc.attachCnt}
                                             </td>
-                                            <td>&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp</td>
-                                            <td><span class="badge badge-warning">임시저장</span></td>
-
+                                            <td>&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp${doc.docId}</td>
+                                            <td><span class="badge badge-info">참조</span></td>
                                         </tr>
                                         <tr>
                                             <td colspan="6" style="text-align: center;"><strong>해당 결재문서가 존재하지 않습니다.</strong></td>
@@ -118,7 +114,6 @@
 
             </div>
         </div>
-
     </div>
 </section>
 <!-- 푸터 인클루드 -->

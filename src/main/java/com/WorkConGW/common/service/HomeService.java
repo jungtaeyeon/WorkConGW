@@ -107,7 +107,7 @@ public class HomeService {
 		String ext = originFileName.substring(originFileName.lastIndexOf("."));
         
 		
-		return empVO.getEmp_Id()+empVO.getEmp_Name()+date + str + ext;
+		return empVO.getEmp_Id() + str + ext;
 	}
 
 

@@ -96,6 +96,7 @@ tbody{
 												<div style="display:inline-block;margin:5px 15px;font-size: 1.2em;color:gray;">
 													<div class="tab-content p-l-0 p-r-0 text-align" style="font-size: 20px;text-align: center;">
 
+
 													</div>
 													<span>총 게시물 ${totCnt} / 페이지(${searchAnonyVO.pageIndex} / ${totalPageCnt})</span>
 												</div>

@@ -70,6 +70,16 @@
     .noticeForm .table tbody td i:hover {
         color: red;
     }
+    #approval-line {
+        padding: 2% 0 1% !important;
+        border: currentColor;
+        text-align: left;
+        color: black;
+        font-size: 12px;
+        font-weight: normal;
+        vertical-align: top;
+        width: 100%;
+    }
 </style>
 <a id="previewModal" href="#defaultModal" data-toggle="modal" data-target="#preModal" style="display: none;"></a>
 
@@ -83,11 +93,9 @@
         <div class="subTitleText"> <!--컨텐츠 부분 타이틀 클래스(이건 부트스트랩 클래스 아니고 임의로 만든 클래스)-->
             <h2><i class="fa-solid fa-angles-right"></i> <!--왼쪽 아이콘 폰트어썸-->기안하기</h2>
             <div class="btnGroup">
-                <button type="button" class="btn btn-primary" onclick="OpenWindow('<%=request.getContextPath()%>/approval/approvalLine?doc_Id=${approval.doc_Id}', 'WorkConGW', 1200,790)">결제라인</button>
+                <button type="button" class="btn btn-dark" onclick="OpenWindow('<%=request.getContextPath()%>/approval/approvalLine?doc_Id=${approval.doc_Id}', 'WorkConGW', 1200,790)">결제라인</button>
                 &nbsp
-                <button type="button" class="btn btn-primary" onclick="approval_go()">결제요청</button>
-                &nbsp
-                <button type="button" class="btn btn-primary" onclick="approvalTemp_go()">임시저장</button>
+                <button type="button" class="btn btn-dark" onclick="approval_go()">결제요청</button>
 
             </div>
         </div>
@@ -191,7 +199,9 @@
                             </table>
 
                         </td>
-                        <td id="approval-line" style="padding: 0px !important; border: currentColor; text-align: right; color: black; font-size: 12px; font-weight: normal; vertical-align: top;">
+                    </tr>
+                    <tr>
+                        <td id="approval-line" >
                             <!-- 에디터 &nbsp; 버그. 개행과 공백을 최소화 시키자. [결재선]-->
 
                         </td>
@@ -388,15 +398,7 @@
             'background-repeat':'no-repeat'
         }).trigger("create");
 
-        let tempDt = new Date()
-        let year = tempDt.getFullYear();
-        let month = ("0"+(tempDt.getMonth()+1)).slice(-2)
-        let date = ("0"+tempDt.getDate()).slice(-2);
-        let hours = ("0"+tempDt.getHours()).slice(-2);
-        let minutes = ("0"+tempDt.getMinutes()).slice(-2);
 
-        let sysDt  = "<div style='height: 36px;'>"+year+"-"+month+"-"+date+" ["+hours+":"+minutes+"]</div>";
-        $('div#d${loginUser.emp_Id}').parent().append(sysDt);
     }
 
     function approval_go(){
@@ -406,8 +408,15 @@
             return false
         }
 
+
+
         if(!confirm("정말 결재요청을 하시겠습니까?"))
         {
+            return false;
+        }
+
+        if (!$(".startDt").val() || !$(".endDt").val()) {
+            alert('날짜를 입력하세요.');
             return false;
         }
 
@@ -433,12 +442,30 @@
                 approvalArray.push(value);
             }
         });
+
+
+
+
+
+        let referArray = [];
+
+        $(".refer").each(function() {
+            let value = $(this).attr("value");
+
+            if (value) {
+                referArray.push(value);
+            }
+        });
+
+        console.log(referArray);
+        jsonData.refer = referArray
         jsonData.approval = approvalArray;
         jsonData.docId = $("#docId").text();
         jsonData.title = $("#title").text();
         jsonData.content = $("#contents").text()
         jsonData.startDt =$(".startDt").val();
         jsonData.endDt = $(".endDt").val();
+
 
 
 
@@ -496,7 +523,6 @@
                 {
                     console.log(data)
                     alert('기안이 완료되었습니다.')
-                    location.href="<%=request.getContextPath()%>/approval/registDocForm"
                 },
                 error: function (e)
                 {

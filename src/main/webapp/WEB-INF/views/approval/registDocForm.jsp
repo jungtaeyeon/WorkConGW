@@ -106,12 +106,11 @@
                         </div>
                         <div class="row clearfix">
                             <div class="col-12">
-                                <button type="button" class="btn btn-secondary float-right" style="width: 100px;" onclick="window.close();" >취소</button>
-                                <button  type="button" class="btn btn-info float-right" style="width: 100px;" onclick="getForm_go();">확인</button>
+                                <button type="button" class="btn btn-dark float-right" style="width: 100px;" onclick="window.close();" >취소 </button>
+                                <button  type="button" class="btn btn-dark float-right" style="width: 100px;margin-right: 10px;" onclick="getForm_go();">확인</button>
                             </div>
                         </div>
                     </div>
-
 
                 </div>
             </div>

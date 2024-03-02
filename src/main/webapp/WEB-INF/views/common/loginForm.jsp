@@ -288,6 +288,10 @@ body, input {
   </head>
   <body>
 
+<%--  <img src="<%=request.getContextPath() %>/images/user1.jpg" id="profileImage">--%>
+<%--  <img src="<%=request.getContextPath() %>/pdsee/00001_05593.png" id="profileImage">--%>
+
+
     <div class="container">
       <div class="form-container">
         <div class="signin">

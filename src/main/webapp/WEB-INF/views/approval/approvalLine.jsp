@@ -383,9 +383,10 @@
             {
                 referObj.name = $("option:selected").eq(i).parent().parent().parent().find(".myName").text().split(" ")[0] // 이름출력
                 referObj.official = $("option:selected").eq(i).parent().parent().parent().find(".myName").text().split(" ")[1] // 직책출력
-                referObj.empId = $('option:selected').eq(i).parent().parent().parent().find(".empId").attr("value") // 사번 출력
+                referObj.empId = $('option:selected').eq(i).parent().parent().parent().find(".empTd").attr("value") // 사번 출력
                 referObj.st = $('option:selected').eq(i).parent().parent().parent().find(".st").children().text() // 상태 출력
                 referArr.push(referObj);
+                console.log(referArr)
                 referObj = {}; // 여기서 초기화 시켜야함. 그래야 다음에 사용할 때 반영이 된다.
             }
         }
@@ -463,9 +464,11 @@
                 str2 +='<button class="btn btn-outline-secondary referBtn" style="padding:0;font-size:0; margin-right: 10px;">';
                 str2 +='<span class="refer" style="font-size: 11px;" value="'+referArr[i].empId+'">'+referArr[i].name+" "+referArr[i].official+'</span>';
                 str2 +='</button>';
-                console.log(referArr)
                 opener.document.querySelector("#refer").innerHTML = str2;
             }
+
+            console.log(empId)
+
 
         }
         opener.document.querySelector("#approval-line").innerHTML=str;
@@ -481,7 +484,7 @@
 
         opener.document.querySelector("#empName").innerHTML = '${emp.emp_Name}'
         opener.document.querySelector("#deptName").innerHTML = '${emp.dept_Name}'
-        opener.document.querySelector("#docId").innerHTML = '${docId}'
+        opener.document.querySelector("#docId").innerHTML = '${docId+1}'
 
         window.close()
 
