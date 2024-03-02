@@ -20,7 +20,7 @@
                 <!-- 메인 content 넣는 곳 -->
                 <div class="row clearfix">
                     <div class="col-12" style="margin-top: 2%; font-family: S-CoreDream-6Bold">
-                        <h2>결재완료문서</h2>
+                        <h2>반려 문서함</h2>
                         <hr>
                     </div>
                 </div>
@@ -61,7 +61,6 @@
                                             </div>
                                         </div>
 
-
                                         <form:select path = "searchApprovalVO.searchCondition" class="form-control selectSearch" style="width:130px;font-size: 1.2em;float:left;">
                                             <form:option value="ftd">전체</form:option>
                                             <form:option value="f">양식</form:option>
@@ -97,24 +96,24 @@
                                             </tr>
                                             </thead>
                                             <tbody style="cursor: pointer;">
-                                            <c:forEach items="${approvalList }" var="completeDocs">
-                                                <tr onclick="window.location='<%=request.getContextPath()%>/approval/completeDetail?docId=${completeDocs.doc_Id}';">
-                                                    <td><fmt:formatDate value = "${completeDocs.approval_Recommand_Dt}" pattern="yyyy-MM-dd"/></td>
-                                                    <td><span>${completeDocs.form_Name}</span></td>
-                                                    <td><span class="text-info">${completeDocs.approval_Title}</span></td>
+                                            <c:forEach items="${approvalList }" var="doc">
+                                                <tr onclick="window.location='<%=request.getContextPath()%>/approval/rejectDetail?docId=${doc.doc_Id}';">
+                                                    <td><fmt:formatDate value = "${doc.approval_Recommand_Dt}" pattern="yyyy-MM-dd"/></td>
+                                                    <td><span>${doc.form_Name}</span></td>
+                                                    <td><span class="text-info">${doc.approval_Title}</span></td>
                                                     <td>
-                                                        &nbsp<i class="fa fa-save"></i>&nbsp&nbsp${completeDocs.attachCnt}
+                                                        &nbsp<i class="fa fa-save"></i>&nbsp&nbsp${doc.attachCnt}
                                                     </td>
-                                                    <td>&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp${completeDocs.doc_Id}</td>
+                                                    <td>&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp${doc.doc_Id}</td>
 
 
-                                                    <c:if test="${completeDocs.approval_St eq 1}">
+                                                    <c:if test="${doc.approval_St eq 1}">
                                                         <td><span class="badge badge-success">결재진행중</span></td>
                                                     </c:if>
-                                                    <c:if test="${completeDocs.approval_St eq 2}">
+                                                    <c:if test="${doc.approval_St eq 2}">
                                                         <td><span class="badge badge-primary">결재완료</span></td>
                                                     </c:if>
-                                                    <c:if test="${completeDocs.approval_St eq 3}">
+                                                    <c:if test="${doc.approval_St eq 3}">
                                                         <td><span class="badge badge-danger">결재반려</span></td>
                                                     </c:if>
                                                 </tr>

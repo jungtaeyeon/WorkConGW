@@ -57,7 +57,7 @@
                                         <div class="input-group date searchCri searchDt selectDt myConditions" data-date-autoclose="true" data-provide="datepicker" style="font-size:1.2em;width:200px;margin-right:15px;float:left;display:none;">
                                             <form:input path="searchApprovalVO.searchDt" id="inputSearchDt" type="text" class="form-control" placeholder="완료날짜 선택" readonly="true"/>
                                             <div class="input-group-append">
-                                                <button class="btn btn-outline-secondary" type="button" onclick="searchList();"><i class="fa fa-calendar"></i></button>
+                                                <button class="btn btn-outline-secondary" type="button"><i class="fa fa-calendar"></i></button>
                                             </div>
                                         </div>
                                         <form:select path ="searchApprovalVO.searchState" id = "selectSearchState" class="form-control selectState myConditions" style="width:200px;font-size: 1.2em;margin-right:15px;float:left;">

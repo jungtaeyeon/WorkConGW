@@ -74,40 +74,35 @@
         </div>
         <div class="tab-content p-l-0 p-r-0 subsubmenu">
           <!--서브메뉴 타이틀-->
-          <a href="#">내가받은결재</a>
+          내가받은결재
           <ul class="main-menu metismenu">
             <li id="li_importantSchedule" class="metismenuLI">
                 <a href="<%=request.getContextPath()%>/approval/lists/waitList" class=""><i class="fa fa-square" id="importantSchedule"></i> <span>결재대기문서</span></a>
             </li>
-            <li id="li_importantSchedule" class="metismenuLI">
-              <a href="addBookList" class=""><i class="fa fa-square" id="importantSchedule"></i> <span>결재완료문서</span></a>
-            </li>
+
           </ul>
         </div>
         <div class="tab-content p-l-0 p-r-0 subsubmenu">
           <!--서브메뉴 타이틀-->  
-          <a href="#">내가올린결재</a>
+          내가올린결재
           <ul class="main-menu metismenu">
             <li id="li_importantSchedule" class="metismenuLI">
               <a href="<%=request.getContextPath()%>/approval/lists/draftList" class=""><i class="fa fa-square" id="importantSchedule"></i> <span>상신문서</span></a>
             </li>
             <li id="li_importantSchedule" class="metismenuLI">
-              <a href="addBookList" class=""><i class="fa fa-square" id="importantSchedule"></i> <span>임시문서</span></a>
+              <a href="<%=request.getContextPath()%>/approval/lists/completeList" class=""><i class="fa fa-square" id="importantSchedule"></i> <span>결재완료문서</span></a>
             </li>
             <li id="li_importantSchedule" class="metismenuLI">
-              <a href="addBookList" class=""><i class="fa fa-square" id="importantSchedule"></i> <span>결재완료문서</span></a>
-            </li>
-            <li id="li_importantSchedule" class="metismenuLI">
-              <a href="addBookList" class=""><i class="fa fa-square" id="importantSchedule"></i> <span>반려문서</span></a>
+              <a href="<%=request.getContextPath()%>/approval/lists/rejectList" class=""><i class="fa fa-square" id="importantSchedule"></i> <span>반려문서</span></a>
             </li>
           </ul>
         </div>
         <div class="tab-content p-l-0 p-r-0 subsubmenu">
           <!--서브메뉴 타이틀-->  
-          <a href="#">참조문서함</a>
+          참조문서함
           <ul class="main-menu metismenu">
             <li id="li_importantSchedule" class="metismenuLI">
-              <a href="addBookList" class=""><i class="fa fa-square" id="importantSchedule"></i> <span>참조문서</span></a>
+              <a href="<%=request.getContextPath()%>/approval/lists/referList" class=""><i class="fa fa-square" id="importantSchedule"></i> <span>참조문서</span></a>
             </li>
           </ul>
         </div>

@@ -96,8 +96,6 @@
                 <button type="button" class="btn btn-dark" onclick="OpenWindow('<%=request.getContextPath()%>/approval/approvalLine?doc_Id=${approval.doc_Id}', 'WorkConGW', 1200,790)">결제라인</button>
                 &nbsp
                 <button type="button" class="btn btn-dark" onclick="approval_go()">결제요청</button>
-                &nbsp
-                <button type="button" class="btn btn-dark" onclick="approvalTemp_go()">임시저장</button>
 
             </div>
         </div>

@@ -94,6 +94,65 @@
     </select>
 
 
+
+    <select id = "selectMainDraftDocsById" parameterType="ApprovalVO" resultType="ApprovalVO">
+        SELECT A.APPROVAL_TITLE,
+               A.APPROVAL_RECOMMAND_DT,
+               A.APPROVAL_ST,
+               A.DOC_ID,
+               C.FORM_NAME
+
+
+        FROM APPROVAL A, APPROVAL_ATTACH D, APPROVAL_FORM C
+
+
+        WHERE A.FORM_ID = C.FORM_ID AND A.DOC_ID = D.DOC_ID(+) AND NOT A.APPROVAL_ST  IN(4,5)  AND EMP_DRAFTER_ID =#{emp_Drafter_Id}
+
+
+        GROUP BY A.APPROVAL_TITLE,
+                 A.APPROVAL_RECOMMAND_DT,
+                 A.APPROVAL_ST,
+                 A.EMP_DRAFTER_ID,
+                 A.DOC_ID,
+                 C.FORM_NAME
+
+        ORDER BY 2 DESC
+    </select>
+
+
+
+    <select id = "selectMainReferDocsById" parameterType="ApprovalVO" resultType="ApprovalVO">
+
+        SELECT                 A.APPROVAL_TITLE,
+                               A.APPROVAL_RECOMMAND_DT,
+                               A.APPROVAL_ST,
+                               A.EMP_DRAFTER_ID,
+                               A.DOC_ID,
+                               COUNT(D.ATTACH_ID)
+
+
+        FROM APPROVAL A, APPROVAL_ATTACH D, REFERENCE E
+
+        WHERE A.DOC_ID = D.DOC_ID(+) AND
+            A.DOC_ID = E.DOC_ID  AND
+            E.EMP_ID =#{emp_Drafter_Id} AND
+            NOT A.APPROVAL_ST IN (1,4,5)
+
+        GROUP BY
+            A.APPROVAL_TITLE,
+            A.APPROVAL_RECOMMAND_DT,
+            A.APPROVAL_ST,
+            A.EMP_DRAFTER_ID,
+            A.DOC_ID,
+            D.ATTACH_ID
+
+        ORDER BY A.APPROVAL_RECOMMAND_DT DESC
+
+    </select>
+
+
+
+
     <select id = "selectDraftDocsById" parameterType="ApprovalVO" resultType="ApprovalVO">
 SELECT D2.*
 
@@ -149,7 +208,7 @@ where rownum <![CDATA[ <= ]]> #{recordCountPerPage}
 
         WHERE A.FORM_ID = C.FORM_ID AND A.EMP_DRAFTER_ID = #{emp_Drafter_Id}
 
-          AND A.APPROVAL_ST IN(4,5)
+        AND NOT A.APPROVAL_ST IN(4,5)
 
         <include refid="search" />
 
@@ -242,6 +301,186 @@ where rownum <![CDATA[ <= ]]> #{recordCountPerPage}
 
 
     </select>
+
+    <select id="selectCompleteDocsById" resultType="ApprovalVO" parameterType="ApprovalVO">
+        SELECT D3.*
+        FROM(SELECT D2.*
+
+        FROM(
+        SELECT rownum as seq , D1.*
+
+        FROM (SELECT
+        D.DOC_ID,
+        A.APPROVAL_TITLE,
+        A.APPROVAL_RECOMMAND_DT,
+        A.EMP_DRAFTER_ID,
+        A.APPROVAL_ST,
+        B.FORM_NAME,
+        C.ATTACH_NAME
+        FROM
+        APPROVAL A
+        JOIN APPROVAL_FORM B ON A.FORM_ID = B.FORM_ID
+        LEFT JOIN APPROVAL_ATTACH C ON A.DOC_ID = C.DOC_ID
+        JOIN APPROVAL_HISTORY D ON A.DOC_ID = D.DOC_ID
+        WHERE
+        D.EMP_ID = #{emp_Drafter_Id}
+        AND D.HISTORY_TURN = 'N'
+        AND A.APPROVAL_ST IN (2)
+        AND A.EMP_DRAFTER_ID = D.EMP_ID
+
+        <include refid="search" />
+
+        GROUP BY
+        D.DOC_ID,
+        A.APPROVAL_TITLE,
+        A.APPROVAL_RECOMMAND_DT,
+        A.EMP_DRAFTER_ID,
+        A.APPROVAL_ST,
+        B.FORM_NAME,
+        C.ATTACH_NAME
+        ORDER BY
+        A.APPROVAL_RECOMMAND_DT DESC
+        ) D1
+
+        ) D2
+
+        WHERE seq <![CDATA[ > ]]> #{firstIndex}
+        )D3
+
+        WHERE rownum <![CDATA[ <= ]]> #{recordCountPerPage}
+
+
+    </select>
+
+    <select id = "selectRejectList" parameterType="ApprovalVO" resultType="ApprovalVO">
+        SELECT D3.*
+        FROM(SELECT D2.*
+
+        FROM(
+        SELECT rownum as seq , D1.*
+
+        FROM (SELECT
+        D.DOC_ID,
+        A.APPROVAL_TITLE,
+        A.APPROVAL_RECOMMAND_DT,
+        A.EMP_DRAFTER_ID,
+        A.APPROVAL_ST,
+        B.FORM_NAME,
+        C.ATTACH_NAME
+        FROM
+        APPROVAL A
+        JOIN APPROVAL_FORM B ON A.FORM_ID = B.FORM_ID
+        LEFT JOIN APPROVAL_ATTACH C ON A.DOC_ID = C.DOC_ID
+        JOIN APPROVAL_HISTORY D ON A.DOC_ID = D.DOC_ID
+        WHERE
+        D.EMP_ID = #{emp_Drafter_Id}
+        AND D.HISTORY_TURN = 'N'
+        AND A.APPROVAL_ST IN (3)
+        AND A.EMP_DRAFTER_ID = D.EMP_ID
+
+
+        <include refid="search" />
+        GROUP BY
+        D.DOC_ID,
+        A.APPROVAL_TITLE,
+        A.APPROVAL_RECOMMAND_DT,
+        A.EMP_DRAFTER_ID,
+        A.APPROVAL_ST,
+        B.FORM_NAME,
+        C.ATTACH_NAME
+        ORDER BY
+        A.APPROVAL_RECOMMAND_DT DESC
+        ) D1
+
+        ) D2
+
+        WHERE seq <![CDATA[ > ]]> #{firstIndex}
+        )D3
+
+        WHERE rownum <![CDATA[ <= ]]> #{recordCountPerPage}
+
+    </select>
+
+    <select id ="selectReferList" parameterType="ApprovalVO" resultType="ApprovalVO">
+        SELECT D3.*
+        FROM(SELECT D2.*
+
+             FROM(
+                     SELECT rownum as seq , D1.*
+
+                     FROM (SELECT                 A.APPROVAL_TITLE,
+                                                  A.APPROVAL_RECOMMAND_DT,
+                                                  A.APPROVAL_ST,
+                                                  A.EMP_DRAFTER_ID,
+                                                  A.DOC_ID,
+                                                  COUNT(D.ATTACH_ID)
+
+
+                           FROM APPROVAL A, APPROVAL_ATTACH D, REFERENCE E
+
+                           WHERE A.DOC_ID = D.DOC_ID(+) AND
+                               A.DOC_ID = E.DOC_ID  AND
+                               E.EMP_ID =#{emp_Drafter_Id} AND
+                               NOT A.APPROVAL_ST IN (1,4,5)
+                             <include refid="search" />
+                           GROUP BY
+                               A.APPROVAL_TITLE,
+                               A.APPROVAL_RECOMMAND_DT,
+                               A.APPROVAL_ST,
+                               A.EMP_DRAFTER_ID,
+                               A.DOC_ID,
+                               D.ATTACH_ID
+
+                           ORDER BY A.APPROVAL_RECOMMAND_DT DESC
+                          ) D1
+
+                 ) D2
+
+             WHERE seq <![CDATA[ > ]]> #{firstIndex}
+            )D3
+
+        WHERE rownum <![CDATA[ <= ]]> #{recordCountPerPage}
+
+
+    </select>
+
+    <select id = "selectReferListCnt" parameterType="ApprovalVO" resultType="int">
+        SELECT
+            COUNT(A.DOC_ID)
+
+
+        FROM APPROVAL A, APPROVAL_ATTACH D, REFERENCE E
+
+        WHERE A.DOC_ID = D.DOC_ID(+) AND
+            A.DOC_ID = E.DOC_ID  AND
+            E.EMP_ID =#{emp_Drafter_Id} AND
+            NOT A.APPROVAL_ST IN (1,4,5)
+    </select>
+
+
+
+    <select id = "selectRejectListCnt" parameterType="ApprovalVO" resultType="int">
+        SELECT
+            count(d.doc_id)
+        FROM
+            APPROVAL A
+                JOIN APPROVAL_FORM B ON A.FORM_ID = B.FORM_ID
+                LEFT JOIN APPROVAL_ATTACH C ON A.DOC_ID = C.DOC_ID
+                JOIN APPROVAL_HISTORY D ON A.DOC_ID = D.DOC_ID
+        WHERE
+            D.EMP_ID = #{emp_Drafter_Id}
+          AND D.HISTORY_TURN = 'N'
+          AND A.APPROVAL_ST IN (3)
+          AND A.EMP_DRAFTER_ID = D.EMP_ID
+    </select>
+
+
+    <select id="selectCheckStepByStep" parameterType="string" resultType="int">
+        SELECT COUNT(*)
+        FROM APPROVAL_HISTORY
+        WHERE DOC_ID = #{doc_Id} AND HISTORY_STEP = 3
+    </select>
+
 
     <update id ="updateApprovalHistory" parameterType="ApprovalHistoryVO">
         UPDATE APPROVAL_HISTORY
@@ -416,6 +655,89 @@ where rownum <![CDATA[ <= ]]> #{recordCountPerPage}
 
     </select>
 
+    <select id = "selectTemporaryList" parameterType="ApprovalVO" resultType="ApprovalVO">
+        SELECT D3.*
+        FROM(SELECT D2.*
+
+             FROM(
+                     SELECT rownum as seq , D1.*
+
+                     FROM (SELECT
+                               D.DOC_ID,
+                               A.APPROVAL_TITLE,
+                               A.APPROVAL_RECOMMAND_DT,
+                               A.EMP_DRAFTER_ID,
+                               A.APPROVAL_ST,
+                               B.FORM_NAME,
+                               C.ATTACH_NAME
+                           FROM
+                               APPROVAL A
+                                   JOIN APPROVAL_FORM B ON A.FORM_ID = B.FORM_ID
+                                   LEFT JOIN APPROVAL_ATTACH C ON A.DOC_ID = C.DOC_ID
+                                   JOIN APPROVAL_HISTORY D ON A.DOC_ID = D.DOC_ID
+                           WHERE
+                               D.EMP_ID = #{emp_Drafter_Id}
+                             AND D.HISTORY_TURN = 'N'
+                             AND A.APPROVAL_ST IN (4)
+                             AND A.EMP_DRAFTER_ID = D.EMP_ID
+                             <include refid="search" />
+
+
+                           GROUP BY
+                               D.DOC_ID,
+                               A.APPROVAL_TITLE,
+                               A.APPROVAL_RECOMMAND_DT,
+                               A.EMP_DRAFTER_ID,
+                               A.APPROVAL_ST,
+                               B.FORM_NAME,
+                               C.ATTACH_NAME
+                           ORDER BY
+                               A.APPROVAL_RECOMMAND_DT DESC
+                          ) D1
+
+                 ) D2
+
+             WHERE seq <![CDATA[ > ]]> #{firstIndex}
+            )D3
+
+        WHERE rownum <![CDATA[ <= ]]> #{recordCountPerPage}
+    </select>
+
+    <select id = "selectTemporaryListCnt" parameterType="ApprovalVO" resultType="int">
+        SELECT
+            COUNT(D.DOC_ID)
+
+        FROM
+            APPROVAL A
+                JOIN APPROVAL_FORM B ON A.FORM_ID = B.FORM_ID
+                LEFT JOIN APPROVAL_ATTACH C ON A.DOC_ID = C.DOC_ID
+                JOIN APPROVAL_HISTORY D ON A.DOC_ID = D.DOC_ID
+        WHERE
+            D.EMP_ID = #{emp_Drafter_Id}
+          AND D.HISTORY_TURN = 'N'
+          AND A.APPROVAL_ST IN (4)
+          AND A.EMP_DRAFTER_ID = D.EMP_ID
+
+
+
+    </select>
+
+    <select id="selectCompleteDocCnt" parameterType="ApprovalVO" resultType="int">
+        SELECT
+            COUNT(D.DOC_ID)
+
+        FROM
+            APPROVAL A
+                JOIN APPROVAL_FORM B ON A.FORM_ID = B.FORM_ID
+                LEFT JOIN APPROVAL_ATTACH C ON A.DOC_ID = C.DOC_ID
+                JOIN APPROVAL_HISTORY D ON A.DOC_ID = D.DOC_ID
+        WHERE
+            D.EMP_ID = #{emp_Drafter_Id}
+          AND D.HISTORY_TURN = 'N'
+          AND A.APPROVAL_ST IN (2)
+          AND A.EMP_DRAFTER_ID = D.EMP_ID
+    </select>
+
     <insert id="insertApprovalLineRegister" parameterType="ApprovalLineVO">
         INSERT INTO APPROVAL_LINE_REGIST(
                                          LINE_ID,
@@ -429,6 +751,9 @@ where rownum <![CDATA[ <= ]]> #{recordCountPerPage}
               )
 
     </insert>
+
+
+
 
     <insert id="insertApprovalHistory" parameterType="map">
 INSERT INTO APPROVAL_HISTORY (HISTORY_ST,

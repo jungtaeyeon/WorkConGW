@@ -430,6 +430,10 @@ public class ApprovalService{
         returnApproval.setDoc_Id((Integer.parseInt((String)dataMap.get("docId"))));
         logger.info(returnApproval.toString());
         approvalDAO.updateApprovalHistory(history);
+
+
+
+
         history = approvalDAO.selectStepByEmpIdAndDocId(history); // 문서 번호에 맞는 사원에 대해 step를 가져온다.
         /*
         * 1. 문서 번호에 맞는 사원에 대해 step를 가져온다.
@@ -442,33 +446,53 @@ public class ApprovalService{
 
         if(historyStep < 4)
         {
-            history = new ApprovalHistoryVO(); // 새로 인스턴스화함.
-            history.setDoc_Id((Integer.parseInt((String)dataMap.get("docId"))));
-            history.setHistory_Step((String.valueOf(historyStep))); // -> 3
-            history.setHistory_Turn("Y"); // 이번엔 3번쨰가 결재할 차례 그러면 이 정보를 업데이트 시켜야함.
-            approvalDAO.updateApprovalHistoryByDocIdAndStep(history);
-            logger.info("before:"+returnApproval.toString());
-           // returnApproval = approvalDAO.selectHistoryTurnYByDocId(returnApproval); // 문서에 대한 결재하는 사번의 이름을 찾아서 넣는다.
-           // logger.info("after:"+returnApproval.toString());
+            int result = approvalDAO.selectCheckStepByStep((String)dataMap.get("docId"));
+            if(result == 1) // 1이면 3번째 결재자가 있다는 거
+            {
+                logger.info("2step 들어옴?");
+                history = new ApprovalHistoryVO(); // 새로 인스턴스화함.
+                history.setDoc_Id((Integer.parseInt((String)dataMap.get("docId"))));
+                history.setHistory_Step((String.valueOf(historyStep))); // -> 3
+                history.setHistory_Turn("Y"); // 이번엔 3번쨰가 결재할 차례 그러면 이 정보를 업데이트 시켜야함.
+                approvalDAO.updateApprovalHistoryByDocIdAndStep(history);
+                logger.info("before:"+returnApproval.toString());
+                // returnApproval = approvalDAO.selectHistoryTurnYByDocId(returnApproval); // 문서에 대한 결재하는 사번의 이름을 찾아서 넣는다.
+                // logger.info("after:"+returnApproval.toString());
 
-            ////////////////////////////////////////리턴에 값을 넣는다////////////////////////////////////
+                ////////////////////////////////////////리턴에 값을 넣는다////////////////////////////////////
 
-            returnApproval.setDoc_Id((Integer.parseInt((String)dataMap.get("docId")))); // 문서 번호+기안자 사번이 set 되어 있다.
+                returnApproval.setDoc_Id((Integer.parseInt((String)dataMap.get("docId")))); // 문서 번호+기안자 사번이 set 되어 있다.
 
-            approval.setApproval_Title((String)dataMap.get("approvalTitle"));
-            approval.setApproval_Content((String)dataMap.get("approvalContent"));
-            approval.setApproval_St(1); // 결재 진행중인 상태
-            approval.setDoc_Id((Integer.parseInt((String) dataMap.get("docId"))));
+                approval.setApproval_Title((String)dataMap.get("approvalTitle"));
+                approval.setApproval_Content((String)dataMap.get("approvalContent"));
+                approval.setApproval_St(1); // 결재 진행중인 상태
+                approval.setDoc_Id((Integer.parseInt((String) dataMap.get("docId"))));
 
-            approvalDAO.updateApproval(approval);
+                approvalDAO.updateApproval(approval);
+            }
+            else{ // 두번째에서 끝내야함
+                returnApproval.setDoc_Id((Integer.parseInt((String)dataMap.get("docId")))); // 문서 번호+기안자 사번이 set 되어 있다.
+
+                approval.setApproval_Title((String)dataMap.get("approvalTitle"));
+                approval.setApproval_Content((String)dataMap.get("approvalContent"));
+                approval.setApproval_St(2); // 결재 진행중인 상태
+                approval.setDoc_Id((Integer.parseInt((String) dataMap.get("docId"))));
+
+                approvalDAO.updateApproval(approval);
+
+            }
+
+
+
 
         }
-        else{ //결재가 전부 완료된 상태
+
 
             List<String> refers = (List<String>)dataMap.get("referArr"); // 사번을 가져옴
-
+            logger.info("refers :" + refers);
             for(String refer : refers)
             {
+                logger.info("refer : "+refer);
                 history = new ApprovalHistoryVO();
                 history.setDoc_Id((Integer.parseInt((String)dataMap.get("docId"))));
                 history.setEmp_Id(refer); // 참조자의 사번을 넣는다.
@@ -490,7 +514,6 @@ public class ApprovalService{
             logger.info("approval >>> 여기들어오니? : "+approval.toString());
             approvalDAO.updateApproval(approval);
 
-        }
 
 
         return returnApproval;
@@ -523,6 +546,152 @@ public class ApprovalService{
         approvalVO.setApproval_St(3); //3번은 반려상태
         approvalVO.setDoc_Id((Integer.parseInt((String)dataMap.get("doc_Id"))));
         approvalDAO.approvalReturn(approvalVO);
+
+    }
+
+    public Map<String, Object> getCompleteList(ApprovalVO searchApprovalVO) {
+// 사용자 정보 가져옴
+        ServletRequestAttributes servletRequestAttributes = (ServletRequestAttributes) RequestContextHolder.currentRequestAttributes();
+        HttpSession session = servletRequestAttributes.getRequest().getSession();
+        EmpVO empVO = (EmpVO) session.getAttribute("loginUser");
+        Map<String,Object> dataMap = new HashMap<>();
+        String emp_Id = empVO.getEmp_Id();
+// 사용자 정보 가져옴
+        searchApprovalVO.setEmp_Drafter_Id(emp_Id);
+
+        logger.info(searchApprovalVO.toString());
+
+        List<ApprovalVO> completeList = new ArrayList<>();
+
+        completeList = approvalDAO.selectCompleteDocsById(searchApprovalVO);
+
+        logger.info(completeList.toString());
+
+        int totCnt = approvalDAO.selectCompleteDocCnt(searchApprovalVO);
+        dataMap.put("totCnt",totCnt);
+        dataMap.put("completeDocs",completeList);
+
+        logger.info(dataMap.toString());
+
+        return dataMap;
+
+
+    }
+
+    public Map<String, Object> getRejectList(ApprovalVO searchApprovalVO) {
+
+        ServletRequestAttributes servletRequestAttributes = (ServletRequestAttributes) RequestContextHolder.currentRequestAttributes();
+        HttpSession session = servletRequestAttributes.getRequest().getSession();
+        EmpVO empVO = (EmpVO) session.getAttribute("loginUser");
+        Map<String,Object> dataMap = new HashMap<>();
+        String emp_Id = empVO.getEmp_Id();
+// 사용자 정보 가져옴
+        searchApprovalVO.setEmp_Drafter_Id(emp_Id);
+
+        logger.info(searchApprovalVO.toString());
+
+        List<ApprovalVO> rejectList = new ArrayList<>();
+
+        rejectList = approvalDAO.selectRejectList(searchApprovalVO);
+
+        logger.info(rejectList.toString());
+
+        int totCnt = approvalDAO.selectRejectListCnt(searchApprovalVO);
+        dataMap.put("totCnt",totCnt);
+        dataMap.put("reject",rejectList);
+
+        logger.info(dataMap.toString());
+
+        return dataMap;
+
+    }
+
+    public Map<String, Object> gettemporaryList(ApprovalVO searchApprovalVO) {
+
+        ServletRequestAttributes servletRequestAttributes = (ServletRequestAttributes) RequestContextHolder.currentRequestAttributes();
+        HttpSession session = servletRequestAttributes.getRequest().getSession();
+        EmpVO empVO = (EmpVO) session.getAttribute("loginUser");
+        Map<String,Object> dataMap = new HashMap<>();
+        String emp_Id = empVO.getEmp_Id();
+// 사용자 정보 가져옴
+        searchApprovalVO.setEmp_Drafter_Id(emp_Id);
+
+        logger.info(searchApprovalVO.toString());
+
+        List<ApprovalVO> temporaryList = new ArrayList<>();
+
+        temporaryList = approvalDAO.selectTemporaryList(searchApprovalVO);
+
+        logger.info(temporaryList.toString());
+
+        int totCnt = approvalDAO.selectTemporaryListCnt(searchApprovalVO);
+        dataMap.put("totCnt",totCnt);
+        dataMap.put("temporary",temporaryList);
+
+        logger.info(dataMap.toString());
+
+        return dataMap;
+
+    }
+
+
+    public Map<String, Object> getReferList(ApprovalVO searchApprovalVO) {
+        ServletRequestAttributes servletRequestAttributes = (ServletRequestAttributes) RequestContextHolder.currentRequestAttributes();
+        HttpSession session = servletRequestAttributes.getRequest().getSession();
+        EmpVO empVO = (EmpVO) session.getAttribute("loginUser");
+        Map<String,Object> dataMap = new HashMap<>();
+        String emp_Id = empVO.getEmp_Id();
+// 사용자 정보 가져옴
+        searchApprovalVO.setEmp_Drafter_Id(emp_Id);
+
+        logger.info(searchApprovalVO.toString());
+
+        List<ApprovalVO> referList = new ArrayList<>();
+
+        referList = approvalDAO.selectReferList(searchApprovalVO);
+
+        logger.info(referList.toString());
+
+        int totCnt = approvalDAO.selectReferListCnt(searchApprovalVO);
+        dataMap.put("totCnt",totCnt);
+        dataMap.put("refer",referList);
+
+        logger.info(dataMap.toString());
+
+        return dataMap;
+    }
+
+    public Map<String, Object> getSaveFormsById(ApprovalVO searchApprovalVO) {
+
+
+        ServletRequestAttributes servletRequestAttributes = (ServletRequestAttributes) RequestContextHolder.currentRequestAttributes();
+        HttpSession session = servletRequestAttributes.getRequest().getSession();
+        EmpVO empVO = (EmpVO) session.getAttribute("loginUser");
+        String emp_Id = empVO.getEmp_Id();
+// 사용자 정보 가져옴
+        searchApprovalVO.setEmp_Drafter_Id(emp_Id);
+
+
+
+        Map<String,Object> dataMap = new HashMap<>();
+        List<ApprovalVO> docs = approvalDAO.selectWaitDocsById(searchApprovalVO);
+        List<ApprovalVO> draftDocs = approvalDAO.selectMainDraftDocsById(searchApprovalVO);
+        List<ApprovalVO> referDocs = approvalDAO.selectMainReferDocsById(searchApprovalVO);
+        List<ApprovalVO> completeDocs = null;
+        completeDocs = approvalDAO.selectCompleteDocsById(searchApprovalVO);
+
+
+
+        dataMap.put("docs", docs);
+        dataMap.put("completeDocs", completeDocs);
+        dataMap.put("draftDocs", draftDocs);
+        dataMap.put("referDocs", referDocs);
+
+
+        logger.info("Main  :   " + dataMap);
+        logger.info("draftDocs >> " + draftDocs.toString());
+        return dataMap;
+
 
     }
 }

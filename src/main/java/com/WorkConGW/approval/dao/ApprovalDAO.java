@@ -141,5 +141,53 @@ public class ApprovalDAO {
     public List<Map<String, Object>> selectEmpPicture(String docId) {
         return sqlSessionTemplate.selectList("selectEmpPicture",docId);
     }
+
+
+
+    public List<ApprovalVO> selectCompleteDocsById(ApprovalVO searchApprovalVO) {
+
+        return sqlSessionTemplate.selectList("selectCompleteDocsById", searchApprovalVO);
+    }
+
+    public int selectCheckStepByStep(String doc_Id) {
+        return  sqlSessionTemplate.selectOne("selectCheckStepByStep", doc_Id);
+    }
+
+    public int selectCompleteDocCnt(ApprovalVO searchApprovalVO) {
+        return sqlSessionTemplate.selectOne("selectCompleteDocCnt", searchApprovalVO);
+    }
+
+    public List<ApprovalVO> selectRejectList(ApprovalVO searchApprovalVO) {
+        return sqlSessionTemplate.selectList("selectRejectList",searchApprovalVO);
+    }
+
+    public int selectRejectListCnt(ApprovalVO searchApprovalVO) {
+        return sqlSessionTemplate.selectOne("selectRejectListCnt", searchApprovalVO);
+    }
+
+
+    public List<ApprovalVO> selectTemporaryList(ApprovalVO searchApprovalVO) {
+        return sqlSessionTemplate.selectList("selectTemporaryList", searchApprovalVO);
+    }
+
+    public int selectTemporaryListCnt(ApprovalVO searchApprovalVO) {
+        return sqlSessionTemplate.selectOne("selectTemporaryListCnt",searchApprovalVO);
+    }
+
+    public List<ApprovalVO> selectReferList(ApprovalVO searchApprovalVO) {
+        return sqlSessionTemplate.selectList("selectReferList", searchApprovalVO);
+    }
+
+    public int selectReferListCnt(ApprovalVO searchApprovalVO) {
+        return sqlSessionTemplate.selectOne("selectReferListCnt",searchApprovalVO);
+    }
+
+    public List<ApprovalVO> selectMainDraftDocsById(ApprovalVO searchApprovalVO) {
+        return sqlSessionTemplate.selectList("selectMainDraftDocsById",searchApprovalVO);
+    }
+
+    public List<ApprovalVO> selectMainReferDocsById(ApprovalVO searchApprovalVO) {
+        return sqlSessionTemplate.selectList("selectMainReferDocsById", searchApprovalVO);
+    }
 }
 

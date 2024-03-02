@@ -93,10 +93,10 @@
     <!--컨텐츠 영역-->
     <div class="contentConteiner">
         <div class="subTitleText"> <!--컨텐츠 부분 타이틀 클래스(이건 부트스트랩 클래스 아니고 임의로 만든 클래스)-->
-            <h2><i class="fa-solid fa-angles-right"></i> <!--왼쪽 아이콘 폰트어썸-->기안문서</h2>
+            <h2><i class="fa-solid fa-angles-right"></i> <!--왼쪽 아이콘 폰트어썸-->결재완료문서</h2>
             <div class="btnGroup">
                 &nbsp
-                <button type="button" class="btn btn-dark myBtn" style="width: 100px;" onClick="location.href='<%=request.getContextPath()%>/approval/lists/draftList'">목록</button>
+                <button type="button" class="btn btn-dark myBtn" style="width: 100px;" onClick="location.href='<%=request.getContextPath()%>/approval/lists/completeList'">목록</button>
 
             </div>
         </div>
@@ -181,18 +181,18 @@
 
                             <c:forEach items="${getApprovalList}" varStatus="status" var = "list">
                                 <c:if test="${list.history_Type eq '반려'}">
-                            <table border="1" style="/* display: inline-block; */border-collapse: collapse;background: white;float: right;margin-top: -120px;/* border-radius: 15px; *//* border: 2px solid #ccc; */">
-                                <tbody>
-                                <tr>
-                                    <td style="width: 40px; text-align: center; color: red; font-weight: bold; padding: 5px;" contenteditable="false">반려사유</td>
-                                </tr>
-                                <tr>
-                                    <td style="width: 90px; height: 95px; text-align: center; padding: 10px;" contenteditable="false">
-                                        <div style="font-weight: bold; color: red; font-size: 16px;">${approval.approval_Cancel_Reason}</div>
-                                    </td>
-                                </tr>
-                                </tbody>
-                            </table>
+                                    <table border="1" style="/* display: inline-block; */border-collapse: collapse;background: white;float: right;margin-top: -120px;/* border-radius: 15px; *//* border: 2px solid #ccc; */">
+                                        <tbody>
+                                        <tr>
+                                            <td style="width: 40px; text-align: center; color: red; font-weight: bold; padding: 5px;" contenteditable="false">반려사유</td>
+                                        </tr>
+                                        <tr>
+                                            <td style="width: 90px; height: 95px; text-align: center; padding: 10px;" contenteditable="false">
+                                                <div style="font-weight: bold; color: red; font-size: 16px;">${approval.approval_Cancel_Reason}</div>
+                                            </td>
+                                        </tr>
+                                        </tbody>
+                                    </table>
                                 </c:if>
                             </c:forEach>
 
