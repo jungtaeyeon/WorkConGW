@@ -309,8 +309,13 @@
         }
 
     </style>
+    <script src="<%=request.getContextPath() %>/js/common.js"></script>
+
+
 </head>
 <body>
+
+
 
 <aside class="side-bar">
 
@@ -394,37 +399,7 @@
     });
 
 
-    function summernote_start(content,contextPath){
-        $(content).summernote({
-            placeholder:'여기에 내용을 적으세요.',
-            height:250,
-            disableResizeEditor: true,
-            callbacks:{
-                onImageUpload : function(files, editor, welEditable) {
-                    //alert("image insert!!");
-                    //file size check!
-                    for (var i = files.length - 1; i >= 0; i--) {
-                        if(files[i].size > 1024*1024*5){
-                            alert("이미지는 5MB 미만입니다.");
-                            return;
-                        }
-                    }
 
-                    //file sending
-                    for (var i = files.length - 1; i >= 0; i--) {
-                        sendImg(files[i], this,contextPath+'/common/summernote/uploadImg.do');
-                    }
-                },
-                onMediaDelete : function(target) {
-                    //alert(target[0].src);
-                    var answer=confirm("정말 이미지를 삭제하시겠습니다.");
-                    if(answer){
-                        deleteImg(target[0].src,contextPath+'/common/summernote/deleteImg.do');
-                    }
-                }
-            }
-        });
-    }
 
     // side-bar 토글 형식
     document.addEventListener('DOMContentLoaded', function() {

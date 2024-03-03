@@ -5,6 +5,7 @@ package com.WorkConGW.admin.controller;
 
 import com.WorkConGW.common.BSPageBar;
 import com.WorkConGW.common.PaginationInfo;
+import com.WorkConGW.common.controller.CommonController;
 import com.WorkConGW.common.dto.BaseVO;
 import jakarta.servlet.http.HttpServletRequest;
 import org.slf4j.Logger;
@@ -22,7 +23,7 @@ import java.util.List;
 
 @Controller
 @RequestMapping("/admin/resource/*")
-public class AdminResourceController {
+public class AdminResourceController extends CommonController {
 
     Logger logger = LoggerFactory.getLogger(AdminResourceController.class);
     @RequestMapping("/loginlog")
