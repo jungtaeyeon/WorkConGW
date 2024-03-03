@@ -50,7 +50,7 @@ https://drive.google.com/file/d/1cKeWUpvTD8EjLoB5c0bL1biyGofqAQZ1/view?usp=drive
 
 깃가이드
 
-https://drive.google.com/file/d/1rGDMJYlF2u-pF5uoDLwvY60jcaqz_HLm/view?usp=drive_link
+[https://drive.google.com/file/d/1rGDMJYlF2u-pF5uoDLwvY60jcaqz_HLm/view?usp=drive_link](https://docs.google.com/spreadsheets/d/1EW7PuX2PxorMzBvYbAOlof--QnCtCH8KSBfUw-rqTLo/edit#gid=358787070)
 
 개발표준 정의서 
 
