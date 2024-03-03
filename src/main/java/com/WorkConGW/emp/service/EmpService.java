@@ -6,6 +6,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import com.WorkConGW.common.command.FileUploadCommand;
@@ -24,6 +25,8 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
+import java.util.Map;
+
 import com.WorkConGW.common.service.HomeService;
 import com.WorkConGW.emp.dao.EmpDAO;
 import com.WorkConGW.emp.dto.EmpVO;
@@ -329,5 +332,21 @@ public class EmpService {
          String emp_Id = empVO.getEmp_Id();
          logger.info(emp_Id);
          empDAO.registerDashBoard(emp_Id);
+     }
+
+     public Map<String,Object> selectGraphEmp(Map<String, Object> dataMap) {
+
+
+        List<EmpVO> empVO = empDAO.selectGraphEmp(dataMap);
+        Map<String,Object> emap = new HashMap<>();
+        emap.put("emp", empVO);
+
+        logger.info("emp", emap.toString());
+
+
+        return emap;
+
+
+
      }
  }

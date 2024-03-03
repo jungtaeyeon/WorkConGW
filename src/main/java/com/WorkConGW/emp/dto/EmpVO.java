@@ -26,6 +26,10 @@ public class EmpVO extends BaseVO{
 
 
 
+    int cnt;
+
+
+
     private String emp_ZipCode;
     private String dept_Id;
     private Date emp_Create_Dt;
@@ -90,6 +94,15 @@ public class EmpVO extends BaseVO{
             this.history_Attend_Time = history_Attend_Time;
             this.history_Leaving_Time = history_Leaving_Time;
 
+    }
+
+
+    public int getCnt() {
+        return cnt;
+    }
+
+    public void setCnt(int cnt) {
+        this.cnt = cnt;
     }
 
 

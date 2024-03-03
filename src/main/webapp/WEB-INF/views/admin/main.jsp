@@ -378,42 +378,101 @@
 </section>
 
 
+
 <script type="text/javascript">
-    let context = document
-        .getElementById('myChart')
-        .getContext('2d');
-    let myChart = new Chart(context, {
-        type: 'line', // 차트의 형태
-        data: { // 차트에 들어갈 데이터
-            labels: [
-                //x 축
-                '1','2','3'
-            ],
-            datasets: [
-                { //데이터
-                    label: '부서별근태조회', //차트 제목
-                    fill: false, // line 형태일 때, 선 안쪽을 채우는지 안채우는지
-                    data: [
-                        21,19,25,20,23,26,25 //x축 label에 대응되는 데이터 값
-                    ],
-                    backgroundColor: '#0c1e35', // 배경색
-                    borderColor: '#0c1e35', // 경계선 색상
-                    borderWidth: 1 // 경계선 굵기
-                }
-            ]
-        },
-        options: {
-            scales: {
-                yAxes: [
-                    {
-                        ticks: {
-                            beginAtZero: true
-                        }
-                    }
-                ]
-            }
-        }
+
+
+    $(document).ready(function() {
+        dataGraph(); // 화면이 로딩될 때 dataGraph() 함수 실행
     });
+
+    function colorize() {
+        let r = Math.floor(Math.random()*200);
+        let g = Math.floor(Math.random()*200);
+        let b = Math.floor(Math.random()*200);
+        let color = 'rgba(' + r + ', ' + g + ', ' + b + ', 0.7)';
+        return color;
+    }
+
+
+    function dataGraph(){
+
+
+
+
+
+
+        $.ajax({
+        url : "<%=request.getContextPath()%>/admin/graphEmp",
+        type : "post",
+        dataType : "json",
+        success : function (data)
+        {
+
+            let labelList = new Array();
+            let valueList = new Array();
+            let colorList = new Array();
+            console.log(data)
+
+            for(let i = 0; i <data.length; i++)
+            {
+                let d = data[i]
+                labelList.push(d.ID);
+                valueList.push(d.Count);
+                colorList.push(colorize());
+
+
+            }
+            console.log(labelList)
+            console.log(valueList)
+            console.log(colorList)
+
+            new Chart(document.getElementById("myChart"), {
+                type: 'bar', // 차트의 형태
+                data: { // 차트에 들어갈 데이터
+                    labels:
+                        labelList
+                    ,
+                    datasets: [{
+                        label : "graph",
+                        backgroundColor: colorList,
+                        data : valueList
+                    }],
+
+
+                },
+                options: {
+
+                    title:{
+                        display : true,
+                        text : '이번주 사원가입 수'
+
+                    }
+
+                }
+
+            });
+
+
+
+        },error : function (e){
+            console.log(e)
+            alert('에러')
+        }
+    })
+
+
+    // let ctx1 = document.getElementById("myChart").getContext('2d')
+    // new Chart(xtx1, {
+    //     type:'pie',
+    //     data : data
+    // })
+
+
+    }
+
+
+
 </script>
 
 

@@ -74,6 +74,9 @@ public class  AdminEmpController  {
         return url;
     }
 
+
+
+
     @GetMapping("empDetail")
     public String empDetail(EmpVO emp,Model model)
     {

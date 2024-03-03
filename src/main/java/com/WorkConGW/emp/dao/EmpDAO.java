@@ -182,4 +182,10 @@ public class EmpDAO {
     public void registerDashBoard(String empId) {
          sqlSessionTemplate.update("registerDashBoard",empId);
     }
+
+
+    public List<EmpVO> selectGraphEmp(Map<String, Object> dataMap) {
+
+        return sqlSessionTemplate.selectList("selectGraphEmp",dataMap);
+    }
 }
