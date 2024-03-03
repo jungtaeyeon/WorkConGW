@@ -84,6 +84,12 @@
 	/* 나머지 th에 대한 너비 설정 계속... */
 
 
+	.pagination{
+		text-align: center;
+		justify-content: center;
+		margin-left : 550px
+	}
+
 </style>
 <!-- 메인 content -->
 <!-- 헤더인클루드 -->

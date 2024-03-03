@@ -32,6 +32,7 @@
 
 .pagination{
 	text-align: center;
+	margin-left: 350px;
 }
 
 #tr1{

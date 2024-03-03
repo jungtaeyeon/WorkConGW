@@ -33,6 +33,10 @@
         -ms-user-select: none;
         user-select: none;
     }
+    .pagination{
+        text-align: center;
+        justify-content: center;
+    }
 
     .contentContainer {
         flex: 1; /* 콘텐츠 컨테이너가 남은 공간을 채우도록 설정 */

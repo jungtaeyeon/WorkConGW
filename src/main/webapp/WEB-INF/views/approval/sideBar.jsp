@@ -24,6 +24,12 @@
     padding-bottom: 0; 
     font-family: S-CoreDream-4Regular
   }
+  .pagination{
+      text-align: center;
+      justify-content: center;
+      margin-left : 500px
+  }
+
   .subsubmenu{margin-bottom: 20px;}
   .tab-content a{color: #000;}
   .metismenu:last-child{margin-bottom:0 !important;}
