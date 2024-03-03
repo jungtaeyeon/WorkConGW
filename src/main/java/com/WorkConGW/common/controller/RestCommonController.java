@@ -42,4 +42,19 @@ public class RestCommonController {
         logger.info(result.toString());
         return result;
     }
+    
+    @GetMapping("/homeReservationList")
+    public List<Map<String, Object>> homeReservationList(@RequestParam Map<String, Object> pmap, HttpSession session){
+        logger.info("homeReservationList");
+        EmpVO empVO = (EmpVO) session.getAttribute("loginUser");
+        String empId = null;
+        if(empVO != null) {
+            empId = empVO.getEmp_Id();
+        }
+        pmap.put("empId", empId);
+        logger.info(pmap.toString());
+        List<Map<String, Object>> result = homeService.homeReservationList(pmap);
+        logger.info(result.toString());
+        return result;
+    }
 }

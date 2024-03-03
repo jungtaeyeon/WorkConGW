@@ -12,7 +12,7 @@
 </script>
 <style>
   .subTitleText{
-    margin-bottom: 25px;
+    margin-bottom: 0px;
   }
   .subTitleText h2{
     display: flex;
@@ -25,7 +25,7 @@
     margin-right: 5px;
   }
   #addBookInsert{
-    margin: 30px 0 1rem;
+    margin: 15px 0 1rem;
   }
   .insertBtn{ margin-bottom:30px;}
   .addBookGroupTagGroup{display: flex; flex-wrap: wrap; margin-top: 0.5rem;}
@@ -54,6 +54,7 @@
     width: auto;
     margin-bottom: 0.3rem;
   }
+  .addBookInteriorInsertGroup{text-align: right;}
 </style>
   <%@ include file="../include/header.jsp"%>
   <section class="subPageContain">
@@ -64,7 +65,9 @@
         <div class="subTitleText">
             <h2><i class="fa-solid fa-angles-right"></i>주소록등록</h2>
         </div>
-        
+        <div class="addBookInteriorInsertGroup">
+          <button type="button" class="btn btn-primary addBookInteriorInsert" onclick="share_delete()" data-toggle="modal" data-target="#managerModal">내부 주소록 추가</button>
+        </div>
         <form id="addBookInsert" method="get" 
         action="
         <c:choose>
@@ -73,6 +76,7 @@
         </c:choose>
         "> 
         <input type="hidden" name="manage_id" value="${param.manage_id}">
+        <input type="hidden" name="manage_emp_id" value="${param.manage_emp_id}">
             <div class="input-group mb-3">
               <div class="input-group-prepend">
                 <span class="input-group-text" id="manage_display_name">이름</span>
@@ -169,7 +173,11 @@
     $(document).on('click', '#addBookGroupTagDeleteBtn', function(){
       $(this).closest('.input-group').remove();
     })
-
+    function share_delete(){
+      if($("input[name='share_add_book_id']").length !=null){
+        $("#managerModal").find(".modal-footer input[name='share_add_book_id']").remove();
+      }
+    }
     function addBookGroupSelect(share_add_book){
       let add_book_id = "${param.add_book_id}";
       $.ajax({

@@ -20,10 +20,12 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.WorkConGW.addbook.dao.AddBookDAO;
 import com.WorkConGW.common.controller.CommonController;
 import com.WorkConGW.common.dao.DashboardDAO;
 import com.WorkConGW.common.dao.HomeDAO;
 import com.WorkConGW.common.dto.DashboardVO;
+import com.WorkConGW.common.dto.HomeFormVO;
 import com.WorkConGW.emp.dto.EmpVO;
 
 
@@ -146,10 +148,32 @@ public class HomeService {
         }
     }
 
+    public List<HomeFormVO> getDashbodeList(String emp_Id) {
+        logger.info("getDashbodeList");
+        logger.info(emp_Id);
+        List<HomeFormVO> result = homeDAO.getDashbodeList(emp_Id);
+        return result;
+    }
+    
 	public List<Map<String, Object>> homescheduleList(Map<String, Object> pmap) {
         logger.info("homescheduleList");
         logger.info(pmap.toString());
         List<Map<String, Object>> result = homeDAO.homescheduleList(pmap);
+        return result;
+    }
+
+    public List<Map<String, Object>> homeReservationList(Map<String, Object> pmap) {
+        logger.info("homeReservationList");
+        logger.info(pmap.toString());
+        List<Map<String, Object>> result = homeDAO.homeReservationList(pmap);
+        return result;
+    }
+
+    public int dashbodeUpdate(Map<String, Object> pmap) {
+        logger.info("dashbodeUpdate");
+        int result = 0;
+        logger.info(pmap.toString());
+        result = homeDAO.dashbodeUpdate(pmap);
         return result;
     }
 }

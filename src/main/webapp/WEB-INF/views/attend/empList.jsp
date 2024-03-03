@@ -99,8 +99,8 @@
                             <span>~</span>
                             <input type="date" name="endTime" class="form-control"> 
                         </div>
-                        <button class="btn btn-outline-secondary" style="width: 60px;" onclick="serchBtn()" name="serchBtn" type="button">검색</button>
-                        <button class="btn btn-outline-secondary" style="width: 75px; margin-left: 6px;" onclick="initializeButton()" name="serchBtn" type="button">초기화</button>
+                        <button class="btn btn-outline-dark" style="width: 60px;" onclick="serchBtn()" name="serchBtn" type="button">검색</button>
+                        <button class="btn btn-outline-dark" style="width: 75px; margin-left: 6px;" onclick="initializeButton()" name="serchBtn" type="button">초기화</button>
                     </div>
                     <table class="table table-hover"> <!-- 부트스트랩 게시판 -->
                         <thead class="thead-light"> <!-- 게시판 맨위 색변경 클래스-->
@@ -253,8 +253,8 @@
                 data = response
                 updatePage(currentPage);
             });
-            
         }
+        
         function addZero(num) {
             return (num < 10 ? '0' : '') + num;
         }

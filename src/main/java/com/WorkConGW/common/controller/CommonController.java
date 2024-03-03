@@ -182,6 +182,7 @@ public class CommonController {
         dutyVO.setRecordCountPerPage(3); 
         dutyVO.setEmp_Writer_Id(emp_Id);
 
+        List<HomeFormVO> dashbodeList = homeService.getDashbodeList(emp_Id);
         Map<String,Object> dataMap = noticeService.getNoticeList(noticeVO);
         Map<String,Object> approvalList = approvalService.getWaitList(approvalVO);
         List<IssueVO> issueList = issueService.searchList(issueVO);
@@ -191,6 +192,7 @@ public class CommonController {
         
         logger.info(projectList.toString());
         model.addAttribute("projectList", projectList);
+        model.addAttribute("dashbodeList", dashbodeList);
         model.addAttribute("empVO", empVO);
         model.addAttribute("approvalList",approvalList.get("waitDocs"));
         model.addAttribute("dutyList",dutyList);
@@ -271,7 +273,7 @@ public class CommonController {
             }
             if("u".equals(empVO.getAuth_Id()))
             {
-                url = "redirect:./home";
+                url = "redirect:/common/home";
             }
             else if("s".equals(empVO.getAuth_Id()))
             {
@@ -537,5 +539,26 @@ public class CommonController {
             // 예외 처리
             e.printStackTrace();
         }
+    }
+
+    @GetMapping("dashbodeUpdate")
+    public String dashbodeUpdate(Model model, @RequestParam Map<String, Object> pmap, HttpSession session) {
+        logger.info("dashbodeUpdate");
+        EmpVO empVO = (EmpVO) session.getAttribute("loginUser");
+        String empId = null;
+        if(empVO != null) {
+            empId = empVO.getEmp_Id();
+        }
+        pmap.put("empId", empId);
+        int result = 0;
+        String path = "";
+        logger.info(pmap.toString());
+        result = homeService.dashbodeUpdate(pmap);
+        if (result == 1) {// 입력이 성공했을때
+            path = "redirect:/common/home";
+        } else {// 입력이 실패 했을때
+            path = "/error";
+        }
+        return path;
     }
 }

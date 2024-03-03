@@ -16,6 +16,9 @@
     column-gap: 20px;
     margin: 2% 15px 3%;
   }
+  .mainDashBoard .none{
+	display: none;
+  }
   .gridContent{
     box-shadow: 0 0 5px 0 rgba(0,0,0,0.15);
     height: 325px;
@@ -123,6 +126,7 @@
     background: #E8E8E8;
     padding: 11px 22px;
 	box-shadow: 0 0 2px 0 rgba(0,0,0,0.15);
+	display: flex;
 }
 .scheduleTit{
 	font-size: 17px;
@@ -154,6 +158,8 @@
 #importantSchedule{color: #D25565;}
 #companySchedule{color: #a9e34b;}
 #deptSchedule{color: #b070db;}
+#privatereservation{color: #27AE60;}
+#deptreservation{color: #D35400;}
 .gridContent .table td, .gridContent .table th{border-top: none; border-bottom: 1px solid #dee2e6;}
 .approvalContentGroup {
     background: #F7F7F7;
@@ -207,6 +213,52 @@ p.approvalForm, p.approvalName, p.approvalDay {
 .weatherInfoGroup p i{
 	margin-bottom: 5px;
 } 
+.checkbox {
+  display: flex;
+  align-items: center;
+  margin: 15px 0;
+}
+
+.checkbox [type='checkbox'] {
+  width: 1.5rem;
+  height: 1.5rem;
+  appearance: none;
+  border-radius: 50%;
+  background-color: #ffffff;
+  transition: background 300ms;
+  cursor: pointer;
+
+  &::before {
+    content: '';
+    color: transparent;
+    display: block;
+    width: inherit;
+    height: inherit;
+    border-radius: inherit;
+    border: 0;
+    background-color: transparent;
+    background-size: contain;
+    box-shadow: inset 0 0 0 1px #ccd3d8;
+  }
+
+  &:checked {
+    background-color: #007bff;
+  }
+
+  &:checked::before {
+    box-shadow: none;
+    background-image: url("data:image/svg+xml,%3Csvg   xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24'%3E %3Cpath d='M15.88 8.29L10 14.17l-1.88-1.88a.996.996 0 1 0-1.41 1.41l2.59 2.59c.39.39 1.02.39 1.41 0L17.3 9.7a.996.996 0 0 0 0-1.41c-.39-.39-1.03-.39-1.42 0z' fill='%23fff'/%3E %3C/svg%3E");
+  }
+}
+
+.checkbox label {
+	cursor: pointer;
+    padding-left: 0.5rem;
+    margin-bottom: 0 !important;
+    font-size: 15px;
+    font-weight: 500;
+}
+.modal.show{background-color: rgba(0, 0, 0, 0.7);}
 </style>
 <%@ include file="./include/header.jsp"%>
 <section class="mainDashBoard">
@@ -227,8 +279,57 @@ p.approvalForm, p.approvalName, p.approvalDay {
         </div>
       </div>
       <div class="dashBoardUpdateBtn">
-        <button type="button" class="btn btn-primary ">대시보드 수정</button>
+        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#dashbodeUpdateModal">대시보드 수정</button>
       </div>
+	   <!-- 그룹수정 Modal -->
+	   <div class="modal fade" id="dashbodeUpdateModal" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="addBookGroupUpdateModal" aria-hidden="true">
+		<div class="modal-dialog modal-dialog-centered">
+		  <div class="modal-content">
+			<div class="modal-header">
+			  <h5 class="modal-title" id="staticBackdropLabel">대시보드수정</h5>
+			  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+				<span aria-hidden="true">&times;</span>
+			  </button>
+			</div>
+			<div class="modal-body">
+			  <form id="dashbodeUpdate" action="dashbodeUpdate" method="get" onsubmit="prepareForm()">
+				<p class="checkbox">
+					<input type="checkbox" id="dashboardReservation" name="dashboardReservation" <c:if test="${dashbodeList[0].dashboard_reservation eq 1}">checked</c:if> />
+					<label for="dashboardReservation">일정관리/시설예약</label>
+				</p>
+				<p class="checkbox">
+					<input type="checkbox" id="dashboardBoard" name="dashboardBoard" <c:if test="${dashbodeList[0].dashboard_board eq 1}">checked</c:if> />
+					<label for="dashboardBoard">공지사항</label>
+				</p>
+				<p class="checkbox">
+					<input type="checkbox" id="dashboardApproval" name="dashboardApproval"<c:if test="${dashbodeList[0].dashboard_approval eq 1}">checked</c:if>  />
+					<label for="dashboardApproval">전자결재</label>
+				</p>
+				<p class="checkbox">
+					<input type="checkbox" id="dashboardWeather" name="dashboardWeather" <c:if test="${dashbodeList[0].dashboard_weather eq 1}">checked</c:if> />
+					<label for="dashboardWeather">오늘의날씨</label>
+				</p>
+				<p class="checkbox">
+					<input type="checkbox" id="dashboardDuty" name="dashboardDuty" <c:if test="${dashbodeList[0].dashboard_duty eq 1}">checked</c:if> />
+					<label for="dashboardDuty">업무관리</label>
+				</p>
+				<p class="checkbox">
+					<input type="checkbox" id="dashboardIssue" name="dashboardIssue" <c:if test="${dashbodeList[0].dashboard_issue eq 1}">checked</c:if> />
+					<label for="dashboardIssue">이슈관리</label>
+				</p>
+				<p class="checkbox">
+					<input type="checkbox" id="dashboardProject" name="dashboardProject" <c:if test="${dashbodeList[0].dashboard_project eq 1}">checked</c:if> />
+					<label for="dashboardProject">프로젝트</label>
+				</p>
+			  </form>
+			</div>
+			<div class="modal-footer">
+			  <button type="button" class="btn btn-secondary" data-dismiss="modal">닫기</button>
+			  <button type="button" class="btn btn-primary" onclick="dashbodeUpdate()">수정</button>
+			</div>
+		  </div>
+		</div>
+	  </div>
     </div>
     <div class="attendContent">
       <div class="attendTimeGroup">
@@ -256,7 +357,7 @@ p.approvalForm, p.approvalName, p.approvalDay {
       </div>
     </div>
   </div>
-  <div class="gridContent scheduleContainer">
+  <div class="gridContent scheduleContainer <c:if test='${dashbodeList[0].dashboard_reservation eq 0}'>none</c:if>">
 	<div class="scheduleLeftContainer">
 		<div class="calendar">
 			<div class="header">
@@ -277,17 +378,30 @@ p.approvalForm, p.approvalName, p.approvalDay {
 		</div>
 	</div>
 	<div class="scheduleRightContainer">
-		<div class="girdContentTitGroup">
-			<p class="gridContentTit">일정관리</p>
+		<div style="width: 49%; margin-right: 1%;">
+			<div class="girdContentTitGroup">
+				<p class="gridContentTit">일정관리</p>
+				<i class="fa fa-sign-in" aria-hidden="true" onclick="location.href='<%=request.getContextPath()%>/schedule/main'"></i>
+			</div>
+			<div class="girdContentGroup">
+				<div class="privateScheduleGroup"></div>
+				<div class="companySchedule"></div>
+				<div class="deptScheduleGroup"></div>
+			</div>
 		</div>
-		<div class="girdContentGroup">
-			<div class="privateScheduleGroup"></div>
-			<div class="companySchedule"></div>
-			<div class="deptScheduleGroup"></div>
+		<div style="width: 49%; margin-left: 1%;">
+			<div class="girdContentTitGroup">
+				<p class="gridContentTit">시설예약</p>
+				<i class="fa fa-sign-in" aria-hidden="true" onclick="location.href='<%=request.getContextPath()%>/reservation/main'"></i>
+			</div>
+			<div class="girdContentGroup">
+				<div class="privatereservationGroup"></div>
+				<div class="deptreservationGroup"></div>
+			</div>
 		</div>
 	</div>
   </div>
-  <div class="gridContent">
+  <div class="gridContent <c:if test='${dashbodeList[0].dashboard_board eq 0}'>none</c:if>">
 	<div class="girdContentTitGroup">
 		<p class="gridContentTit">공지사항</p>
 		<i class="fa fa-sign-in" aria-hidden="true" onclick="location.href='<%=request.getContextPath()%>/board/notice/noticeList'"></i>
@@ -316,9 +430,9 @@ p.approvalForm, p.approvalName, p.approvalDay {
 		</table>
 	</div>
   </div>
-  <div class="gridContent">
+  <div class="gridContent <c:if test='${dashbodeList[0].dashboard_approval eq 0}'>none</c:if>">
 	<div class="girdContentTitGroup">
-		<p class="gridContentTit">전자결재</p>
+		<p class="gridContentTit" >전자결재</p>
 		<i class="fa fa-sign-in" aria-hidden="true" onclick="location.href='<%=request.getContextPath()%>/approval/main'"></i>
 	</div>
 	<c:if test="${!empty approvalList}">
@@ -341,7 +455,7 @@ p.approvalForm, p.approvalName, p.approvalDay {
 		</div>
 	</c:if>
   </div>
-  <div class="gridContent">
+  <div class="gridContent <c:if test='${dashbodeList[0].dashboard_weather eq 0}'>none</c:if>">
 	<div class="girdContentTitGroup">
 		<p class="gridContentTit">오늘의날씨</p>
 	</div>
@@ -357,7 +471,7 @@ p.approvalForm, p.approvalName, p.approvalDay {
 		</div>
 	</div>
   </div>
-  <div class="gridContent">
+  <div class="gridContent <c:if test='${dashbodeList[0].dashboard_duty eq 0}'>none</c:if>">
 	<div class="girdContentTitGroup">
 		<p class="gridContentTit">업무관리</p>
 		<i class="fa fa-sign-in" aria-hidden="true" onclick="location.href='<%=request.getContextPath()%>/board/duty/dutyList'"></i>
@@ -386,7 +500,7 @@ p.approvalForm, p.approvalName, p.approvalDay {
 		</div>
 	</c:if>
   </div>
-  <div class="gridContent">
+  <div class="gridContent <c:if test='${dashbodeList[0].dashboard_issue eq 0}'>none</c:if>">
 	<div class="girdContentTitGroup">
 		<p class="gridContentTit">이슈관리</p>
 		<i class="fa fa-sign-in" aria-hidden="true" onclick="location.href='<%=request.getContextPath()%>/board/issue/list'"></i>
@@ -418,7 +532,7 @@ p.approvalForm, p.approvalName, p.approvalDay {
 		</div>
 	</c:if>
   </div>
-  <div class="gridContent">
+  <div class="gridContent <c:if test='${dashbodeList[0].dashboard_project eq 0}'>none</c:if>">
 	<div class="girdContentTitGroup">
 		<p class="gridContentTit">프로젝트</p>
 		<i class="fa fa-sign-in" aria-hidden="true" onclick="location.href='<%=request.getContextPath()%>/board/project/list'"></i>
@@ -662,14 +776,16 @@ p.approvalForm, p.approvalName, p.approvalDay {
 			days += '<div class="next-date" data-calender='+dateCalendar.getFullYear()+'-'+ padTime(months[dateCalendar.getMonth()] +1)+'-'+ padTime((i - lastDayIndex + 1))+'>' + (i - lastDayIndex + 1) + '</div>';
 		}
 		daysContainer.html(days);
-		let calenderdata = {schedule_Start_Dt : $('.days .on').data('calender')};
+		let calenderdata = {schedule_Start_Dt : $('.days .on').data('calender'), deptId: '${loginUser.dept_Id}'};
 		homeScheduleList(calenderdata);
+		homeReservationList(calenderdata);
 		$('.days div').click(function(){
 			$('.days div').not(this).removeClass('on');
 			$(this).addClass('on');
 			console.log($(this).data('calender'));
-			calenderdata = {schedule_Start_Dt : $(this).data('calender')}
+			calenderdata = {schedule_Start_Dt : $(this).data('calender'),deptId: '${loginUser.dept_Id}'};
 			homeScheduleList(calenderdata);
+			homeReservationList(calenderdata);
 		})
 	}
 
@@ -687,6 +803,42 @@ p.approvalForm, p.approvalName, p.approvalDay {
 	function padTime(time) {
 		return (time < 10 ? "0" : "") + time;
 	}
+	function homeReservationList(data){
+        $.ajax({
+            type: "get",
+            url: "/WorkConGW/common/homeReservationList",
+            data: data,
+            success: function(response) {
+				$('.privatereservationGroup').find('p').remove();
+				$('.deptreservationGroup').find('p').remove();
+				let privatereservation;
+				let deptreservation;
+				response.forEach(function(e, i){
+					let text;
+					if(e.MEET_ROOM_DEPT_ID == null && !privatereservation){
+						text = `<p class="scheduleTit">나의 시설 예약</p>`
+						$('.privatereservationGroup').append(text);
+						privatereservation = true;
+					}else if(e.MEET_ROOM_DEPT_ID !== null && !deptreservation){
+						text = `<p class="scheduleTit">팀 시설 예약</p>`
+						$('.deptreservationGroup').append(text);
+						deptreservation = true;
+					}
+					if(e.MEET_ROOM_DEPT_ID == null){//개인일정
+						text = `<p class="scheduleText"><i class="fa fa-square" id="privatereservation" aria-hidden="true"></i><span>`+e.MEET_ROOM_DETAIL+`</span><span style="margin-left:5px;">/ `+e.RESERVATION_START_TIME+`시~`+e.RESERVATION_END_TIME+`시</span></p>`;
+						$('.privatereservationGroup').append(text);
+					}else if(e.MEET_ROOM_DEPT_ID !== null){//
+						text = `<p class="scheduleText"><i class="fa fa-square" id="deptreservation" aria-hidden="true"></i><span>`+e.MEET_ROOM_DETAIL+`</span><span style="margin-left:5px;">/ `+e.RESERVATION_START_TIME+`시~`+e.RESERVATION_END_TIME+`시 </span></p>`;
+						$('.deptreservationGroup').append(text);
+					}
+				})	
+            },
+            error: function(xhr, status, error) {
+            // 오류 처리
+            console.error(xhr.responseText);
+            }
+        });
+    }
 	function homeScheduleList(data){
         $.ajax({
             type: "get",
@@ -756,4 +908,28 @@ p.approvalForm, p.approvalName, p.approvalDay {
 				
 				$('.SeoulIcon').html(weathericonUrl);
 			});
+
+	function dashbodeUpdate(){
+		let result = confirm('수정하시겠습니까?');
+		if (result) {
+			$('#dashbodeUpdate').submit();
+		}	
+	}
+
+	function prepareForm() {
+		var checkboxes = document.querySelectorAll('input[type="checkbox"]');
+        checkboxes.forEach(function(checkbox) {
+            var value = checkbox.checked ? "1" : "0";
+            checkbox.value = value;
+
+            // 체크되지 않은 체크박스에 대해서는 hidden input을 추가하여 값을 전송하도록 합니다.
+            if (!checkbox.checked) {
+                var hiddenInput = document.createElement('input');
+                hiddenInput.type = 'hidden';
+                hiddenInput.name = checkbox.name;
+                hiddenInput.value = '0';
+                checkbox.parentNode.appendChild(hiddenInput);
+            }
+        });
+    }
 </script>

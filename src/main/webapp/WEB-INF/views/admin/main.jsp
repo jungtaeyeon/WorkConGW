@@ -107,7 +107,7 @@
                                     <!-- 민원 리스트 출력 -->
                                     <c:if test="${!empty complainList}">
                                         <c:forEach items="${complainList}" var="complain">
-                                            <tr onclick="window.location.href='${pageContext.request.contextPath}/reservation/complain/detail?complainId=${complain.complain_Id}'">
+                                            <tr onclick="window.location.href='${pageContext.request.contextPath}/reservation/complain/detail?complain_Id=${complain.complain_Id}'">
                                                 <td>${complain.complain_Create_Date}</td>
                                                 <td><span style="display: inline-block;font-weight: bold;max-width: 200px;overflow: hidden;white-space: nowrap;text-overflow: ellipsis;">
                                               			<span class="badge badge-danger">New</span>${complain.complain_Content}</span>
@@ -220,7 +220,7 @@
                             <c:forEach items="${loginUserList }" var="user">
                                 <li class="loginUserList" style="margin:0px;padding:10px;" data-deptId="${user.dept_Id }" data-empId="${user.emp_Id }">
                                     <div id="pictureView" style="background-image:url('${pageContext.request.contextPath }/pds/empPicture/${user.emp_Picture}');width: 50px; height: 50px;float:left;margin:0px;" ></div>
-                                    <div class="about">
+                                    <div class="about"  >
                                         <div class="name"><strong style="color:black;">${user.emp_Name } ${user.code_Name }</strong></div>
                                         <div class="status">${user.dept_Name } </div>
                                     </div>
@@ -318,8 +318,7 @@
 
     //팝업창 닫기
     function CloseWindow(){
-        if(window.opener) window.opener.location.reload(true);
-        window.close();
+        location.href='<%=request.getContextPath()%>/reservation/adminMain';
     }
 
 
@@ -350,6 +349,7 @@
 
     //엔터키 입력시 함수 실행
     function checkEnter(searchLoginUser) {
+        var keyCode = event.keyCode || event.which;
         if (event.keyCode === 13) {
             searchLoginUser();
         }

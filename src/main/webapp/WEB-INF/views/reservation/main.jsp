@@ -21,10 +21,21 @@
     .subPageContain {
         display: flex;
     }
+    .fc .fc-button-group>*{
+        /*width: 25px;*/
+        /*height: 0px;*/
+        padding: 1px 7px;
+        /*display: inline-block;*/
+        font-size: 15px;
+        /*text-align: center;*/
+    }
     #calendar {
         width: 300px;
         margin: 0 auto;
         font-size: 10px;
+    }
+    .fc-today-button {
+
     }
     .fc-toolbar {
         font-size: 2px;
@@ -199,8 +210,7 @@
                                 <h4 id="guide" style="margin: 0;font-family: S-CoreDream-6Bold;font-size:1.3em;">* 달력에서 원하는 날짜를 선택해주세요</h4>
                                 <div class="col-md-6 " id="availableTime" style="display: none; font-family: S-CoreDream-4Regular">
                                     <h4>선택 날짜</h4>
-
-                                    <h3 style="margin-left: 10px" id="selectDate">2021-4-22</h3>
+                                    <h3 style="margin-left: 10px" id="selectDate"></h3>
                                     <hr>
                                     <br>
                                     <h4>시간 선택</h4>
@@ -298,26 +308,26 @@
                                 </thead>
                                 <tbody style="cursor: pointer;">
                                 <c:set value="0" var="index"/>
-                                <c:forEach items="${myReservationList  }" var="my" varStatus="status">
-                                    <c:if test="${my.reservationDate eq compareDate}">
+                                <c:forEach items="${myReservationList}" var="my" varStatus="status">
+                                    <c:if test="${my.reservation_Date eq compareDate}">
                                         <c:if test="${index <4 }">
                                             <c:set value="${index+1 }" var="index"/>
-                                            <tr role="row" class="odd" onclick="OpenWindow('<%=request.getContextPath()%>/reservation/reservationDetail?meetRoomVO.meetRoomReservationId=${my.meetRoomReservationId}', 'JoinWorkGW', 1000, 700);">
-                                                <td>${my.meetRoomName }</td>
-                                                <td><span style="text-overflow: ellipsis;">${my.meetRoomNo }</span></td>
-                                                <td>${my.reservationDate } / ${my.reservationStartTime }시 ~ ${my.reservationEndTime }시 &nbsp;&nbsp;<span class="btn btn-outline-danger" style="padding: 0px 3px;margin-left:5px;">오늘</span></td>
+                                            <tr role="row" class="odd" onclick="location.href='<%=request.getContextPath()%>/reservation/reservationDetail?meet_Room_Reservation_Id=${my.meet_Room_Reservation_Id}', 'WorkConGW', 1000, 700;">
+                                                <td>${my.meet_Room_Name }</td>
+                                                <td><span style="text-overflow: ellipsis;">${my.meet_Room_No }</span></td>
+                                                <td>${my.reservation_Date } / ${my.reservation_Start_Time }시 ~ ${my.reservation_End_Time }시 &nbsp;&nbsp;<span class="btn btn-outline-danger" style="padding: 0px 3px;margin-left:5px;">오늘</span></td>
                                             </tr>
                                         </c:if>
                                     </c:if>
                                 </c:forEach>
                                 <c:forEach  items="${myReservationList  }" var="my" varStatus="status">
-                                    <c:if test="${my.reservationDate ne compareDate}">
+                                    <c:if test="${my.reservation_Date ne compareDate}">
                                         <c:if test="${index <4 }">
                                             <c:set value="${index+1 }" var="index"/>
-                                            <tr role="row" class="odd" onclick="OpenWindow('<%=request.getContextPath()%>/reservation/reservationDetail?meetRoomVO.meetRoomReservationId=${my.meetRoomReservationId}', 'JoinWorkGW', 1000, 700);">
-                                                <td>${my.meetRoomName }</td>
-                                                <td><span style="text-overflow: ellipsis;">${my.meetRoomNo }</span></td>
-                                                <td>${my.reservationDate } / ${my.reservationStartTime }시 ~ ${my.reservationEndTime }시</td>
+                                            <tr role="row" class="odd" onclick="location.href='<%=request.getContextPath()%>/reservation/reservationDetail?meet_Room_Reservation_Id=${my.meet_Room_Reservation_Id}', 'WorkConGW', 1000, 700;">
+                                                <td>${my.meet_Room_Name }</td>
+                                                <td><span style="text-overflow: ellipsis;">${my.meet_Room_No }</span></td>
+                                                <td>${my.reservation_Date } / ${my.reservation_Start_Time }시 ~ ${my.reservation_End_Time }시</td>
                                             </tr>
                                         </c:if>
                                     </c:if>
@@ -326,15 +336,15 @@
 
 
 
-                                <%-- 		                                    <c:forEach items="${myReservationList  }" var="my" varStatus="status"> --%>
-                                <%-- 		                                    	<c:if test="${status.count <5}"> --%>
-                                <%-- 		                                    	 <tr role="row" class="odd" onclick="OpenWindow('<%=request.getContextPath()%>/reservation/reservationDetail?meetRoomVO.meetRoomReservationId=${my.meetRoomReservationId}', 'JoinWorkGW', 1000, 700);"> --%>
-                                <%-- 		                                            <td>${my.meetRoomName }</td> --%>
-                                <%-- 		                                            <td><span style="text-overflow: ellipsis;">${my.meetRoomNo }</span></td> --%>
-                                <%-- 		                                            <td>${my.reservationDate } / ${my.reservationStartTime }시 ~ ${my.reservationEndTime }시</td> --%>
-                                <!-- 		                                    	 </tr> -->
-                                <%-- 		                                    	</c:if> --%>
-                                <%-- 		                                    </c:forEach> --%>
+<%--                                 		                                    <c:forEach items="${myReservationList}" var="my" varStatus="status">--%>
+<%--                                 		                                    	<c:if test="${status.count <5}">--%>
+<%--                                 		                                    	 <tr role="row" class="odd" onclick="OpenWindow('<%=request.getContextPath()%>/reservation/reservationDetail?meetRoomVO.meet_Room_Reservation_Id=${my.meet_Room_Reservation_Id}', 'JoinWorkGW', 1000, 700);">--%>
+<%--                                 		                                            <td>${my.meet_Room_Name }</td>--%>
+<%--                                 		                                            <td><span style="text-overflow: ellipsis;">${my.meet_Room_No }</span></td>--%>
+<%--                                 		                                            <td>${my.reservation_Date } / ${my.reservation_Start_Time }시 ~ ${my.reservation_End_Time }시</td>--%>
+<%--&lt;%&ndash;                                <!-- 		                                    	 </tr> -->&ndash;%&gt;--%>
+<%--                                 		                                    	</c:if>--%>
+<%--                                 		                                    </c:forEach>--%>
                                 <c:if test="${empty myReservationList}">
                                     <tr>
                                         <td colspan="6" style="text-align: center;"><strong>예약이 존재하지 않습니다.</strong></td>
@@ -360,10 +370,10 @@
                                 <tbody style="cursor: pointer;">
                                 <c:forEach items="${deptReservationList  }" var="deptReservation" varStatus="status">
                                     <c:if test="${status.count <5}">
-                                        <tr role="row" class="odd" onclick="OpenWindow('<%=request.getContextPath()%>/reservation/reservationDetail?meetRoomVO.meetRoomReservationId=${deptReservation.meetRoomReservationId}', 'JoinWorkGW', 1000, 700);">
-                                            <td>${deptReservation.meetRoomName } (${deptReservation.meetRoomNo})</td>
-                                            <td><span style="text-overflow: ellipsis;">${deptReservation.empName }</span><span class="badge badge-danger">${deptReservation.teamName }</span></td>
-                                            <td>${deptReservation.reservationDate } / ${deptReservation.reservationStartTime }시 ~ ${deptReservation.reservationEndTime }시</td>
+                                        <tr role="row" class="odd" onclick="location.href='<%=request.getContextPath()%>/reservation/reservationDetail?meet_Room_Reservation_Id=${deptReservation.meet_Room_Reservation_Id}', 'WorkConGW', 1000, 700;">
+                                            <td>${deptReservation.meet_Room_Name } (${deptReservation.meet_Room_No})</td>
+                                            <td><span style="text-overflow: ellipsis;">${deptReservation.emp_Name }</span><span class="badge badge-danger">${deptReservation.dept_Name }</span></td>
+                                            <td>${deptReservation.reservation_Date } / ${deptReservation.reservation_Start_Time }시 ~ ${deptReservation.reservation_End_Time }시</td>
                                         </tr>
                                     </c:if>
                                 </c:forEach>
@@ -393,9 +403,9 @@
                                     <tbody style="cursor: pointer;">
                                     <c:forEach items="${reservationNoticeList}" var="notice" varStatus="status">
                                         <c:if test="${status.count <5}">
-                                            <tr role="row" class="odd" onclick="OpenWindow('<%=request.getContextPath()%>/reservation/reservationNoticeDetail?reservationNoticeVO.reservationNoticeId=${notice.reservationNoticeId}', 'JoinWorkGW', 1000, 700);">
-                                                <td>${notice.reservationNoticeCreateDate }</td>
-                                                <td>${notice.reservationNoticeTitle }</td>
+                                            <tr role="row" class="odd" onclick="location.href='<%=request.getContextPath()%>/reservation/reservationNoticeDetail?reservation_Notice_Id=${notice.reservation_Notice_Id}', 'WorkConGW', 1000, 700;">
+                                                <td>${notice.reservation_Notice_Create_Date }</td>
+                                                <td>${notice.reservation_Notice_Title }</td>
                                             </tr>
                                         </c:if>
                                     </c:forEach>
@@ -410,33 +420,34 @@
                         </div>
                     </div>
 
-<%--                    <form:form commandName="meetRoomFormVO" name="complainModifyForm" action="${pageContext.request.contextPath }/reservation/registComplain" enctype="multipart/form-data">--%>
-<%--                        <form:hidden path="reservationComplainVO.complainCreateDate" id="dateComplain"/>--%>
-<%--                        <form:hidden path="reservationComplainVO.empId" value="${loginUser.empId }"/>--%>
-<%--                        <p style="display: none;" id="dateComplain"></p>--%>
+                        <%--@elvariable id="meetRoomFormVO" type="MeetRooMFormVO"--%>
+                    <form:form modelAttribute="meetRoomFormVO" name="complainModifyForm" action="${pageContext.request.contextPath}/reservation/registComplain" enctype="multipart/form-data">
+                        <form:hidden path="reservationComplainVO.complain_Create_Date" id="dateComplain"/>
+                        <form:hidden path="reservationComplainVO.emp_Id" value="${loginUser.emp_Id }"/>
+                        <p style="display: none;" id="dateComplain"></p>
                         <div class="header" style="padding-top: 0px; padding-bottom: 0px; ">
                             <h2 style="font-family: S-CoreDream-6Bold">
                                 회의실 민원 함<small style="font-family: S-CoreDream-4Regular">회의실 관련 이슈를 적어주시면 개선에 최선을 다하겠습니다</small>
                             </h2>
                         </div>
                         <div class="form-group body widget newsletter" style="padding-top: 0px;padding-bottom: 0px;margin-bottom: 0px; font-family: S-CoreDream-6Bold" >
-<%--                            <form:select path="reservationComplainVO.meetRoomId" class="form-control show-tick" >--%>
-<%--                                <option value="default">회의실 선택</option>--%>
-<%--                                <c:forEach items="${allRoomList}" var="listRoom">--%>
-<%--                                    <option id="${listRoom.meetRoomId}/${listRoom.meetRoomName}">${listRoom.meetRoomName}(${listRoom.meetRoomNo})</option>--%>
-<%--                                </c:forEach>--%>
-<%--                            </form:select>--%>
+                            <form:select path="reservationComplainVO.meet_Room_Id" class="form-control show-tick" >
+                                <option value="default">회의실 선택</option>
+                                <c:forEach items="${allRoomList}" var="listRoom">
+                                    <option value="${listRoom.meet_Room_Id}">${listRoom.meet_Room_Name}(${listRoom.meet_Room_No})</option>
+                                </c:forEach>
+                            </form:select>
                         </div>
                         <div class="body widget newsletter" style="padding-top: 5px; font-family: S-CoreDream-6Bold">
                             <div class="input-group">
-                                    <input type="text" class="form-control" placeholder="이슈 사항을 적어주세요">
-<%--                                <form:input  path="reservationComplainVO.complainContent"  class="form-control" placeholder="이슈 사항을 적어주세요"/>--%>
+<%--                                    <input type="text" class="form-control" placeholder="이슈 사항을 적어주세요">--%>
+                                <form:input  path="reservationComplainVO.complain_Content"  class="form-control" placeholder="이슈 사항을 적어주세요"/>
                                 <div class="input-group-append">
-<%--                                    <form:button class="btn btn-primary">전송</form:button>--%>
+                                    <form:button class="btn btn-primary">전송</form:button>
                                 </div>
                             </div>
                         </div>
-<%--                    </form:form>--%>
+                    </form:form>
                 </div>
             </div>
         </div>
@@ -454,12 +465,15 @@
 <script src="<%=request.getContextPath() %>/resources/vendor/js/fullcalendar.min.js"></script>
 <script src="<%=request.getContextPath() %>/resources/vendor/js/ko.js"></script>
 <script src="<%=request.getContextPath() %>/resources/vendor/js/select2.min.js"></script>
-<script src="<%=request.getContextPath() %>/resources/vendor/js/bootstrap-datetimepicker.min.js"></script>
-<script src="<%=request.getContextPath() %>/resources/js/common.js"></script>
+<%--<script src="<%=request.getContextPath() %>/resources/vendor/js/bootstrap-datetimepicker.min.js"></script>--%>
+<%--<script src="<%=request.getContextPath() %>/resources/js/common.js"></script>--%>
 <script src="<%=request.getContextPath() %>/resources/js/addEvent.js"></script>
 <script src="<%=request.getContextPath() %>/resources/js/etcSetting.js"></script>
 
 <script>
+
+    <%--let imageURL = "<%=request.getContextPath()%>/pds/Sign/${}--%>
+
     var calendar = $('#calendar').fullCalendar({
         locale                    : 'ko',
         timezone                  : "local",
@@ -517,6 +531,9 @@
         eventLimit: true, // allow "more" link when too many events
 
     });
+
+
+
 
     // 날짜 선택 불가능   selectDate
     $(".fc-day-number").removeAttr("data-goto");
@@ -659,19 +676,32 @@
         $('#availableTime').fadeIn( 250 ).show();
     }
 
-    function searchRoom() {
-        var data = new Object();
-        data.date = $('#selectDate').text();
-        data.startTime = $('#slider-margin-value-min').text();
-        data.endTime = $('#slider-margin-value-max').text();
+    function clearList() {
+        // 목록을 초기화하는 코드 작성
+        //조회버튼을 클릭하면 초기화하고 다시 보여주기위한 함수
+        $('#availableRoom').empty(); // 예시로 목록을 비우는 코드
 
+    }
+
+    function searchRoom() {
+        clearList();
+        let data = new Object();
+        data.reservation_Date = $('#selectDate').text();
+        data.reservation_Start_Time = $('#slider-margin-value-min').text();
+        data.reservation_End_Time = $('#slider-margin-value-max').text();
+
+        // let reservationDate = {
+        //     reservation_Date : $('#selectDate').text()
+        //     ,reservation_Start_Time : $('#slider-margin-value-min').text()
+        //     ,reservation_End_Time : $('#slider-margin-value-max').text();
+        // };
+            console.log(JSON.stringify(data))
         $.ajax({
             type:"POST",
-            url:"<c:url value='/reservation/searchRoom' />",
-            contentType:"application/json",
-            async: false,
+            url:"<c:url value='/reservation/searchRoom'/>",
             data: JSON.stringify(data),
-            processData:true,
+            dataType: "json",
+            contentType:"application/json;charset=utf-8",
             success: function(list) {
                 showAvailableRoom (list)
             }
@@ -686,10 +716,10 @@
     function showAvailableRoom (list) {
         var listOfRoom = list;
 
-        $('#availableRoom').empty();
+        // $('#availableRoom').empty();
         for (var count = 0; count < listOfRoom.length; count++) {
-            var roomId = listOfRoom[count].meetRoomId;
-            var option = $("<option value ='"+roomId+"'>" + listOfRoom[count].meetRoomName +"("+listOfRoom[count].meetRoomCapacity+"인)"+ "</option>");
+            var roomId = listOfRoom[count].meet_Room_Id;
+            var option = $("<option value ='"+roomId+"'>" + listOfRoom[count].meet_Room_Name +"("+listOfRoom[count].meet_Room_Capacity+"인)"+ "</option>");
             $('#availableRoom').append(option);
         }
 
@@ -702,26 +732,25 @@
     //         for (var count = 0; count < listOfRoom.length; count++) {
     //         	var roomId = listOfRoom[count].meetRoomId;
     //             var option = $("<option value ='"+roomId+"'>" + listOfRoom[count].meetRoomName +"("+listOfRoom[count].meetRoomCapacity+"인)"+ "</option>");
-    //             $('#availableRoom').append(option);
+    //             $('#avail ableRoom').append(option);
     //         }
     // };
 
 
     //roomId를 가지고 방정보를 가져온다
-    $("select[id=availableRoom]").change(function(){
-        var roomId = $(this).val();
-
-        var allData = { "roomId": roomId };
+    $("select[id=availableRoom]").change(function(){ //변경 이벤트가 발생하면 실행
+        var meet_Room_Id = $(this).val();
+        var allData = { "meet_Room_Id": meet_Room_Id };
 
         $.ajax({
             type:"GET",
-            url:"<c:url value='searchRoomInfo' />",
+            url:"<c:url value='/reservation/searchRoomInfo?meet_Room_id='/>"+meet_Room_Id,
             data: allData,
             success: function(room) {
-                $('#roomName').text(room.meetRoomName);
-                $('#roomCapacity').text("정원 : "+room.meetRoomCapacity+"명");
-                makeContent(room.meetRoomContent);
-                makeImage(room.meetRoomAttachPath);
+                $('#roomName').text(room.meet_Room_Name);
+                $('#roomCapacity').text("정원 : "+room.meet_Room_Capacity+"명");
+                makeContent(room.meet_Room_Content);
+                makeImage(room.meet_Room_Attach_Origin);
                 $('#infoOfRoom').fadeIn( 250 ).show();
             }
         });
@@ -737,7 +766,7 @@
         }
     }
     function makeImage(str) {
-        var image = $("#roomImg");
+        var image =  $("#roomImg");
         image.empty();
         image.append("<img class='img-fluid img-thumbnail' alt='Awesome Image' src='getPicture?picture="+str+"' style='width: 800px; height: 480px;' >");
     }
@@ -745,25 +774,28 @@
     //최종 예약을 해주는 함수
     function makeReservation() {
         var data = new Object();
-        data.date = $('#selectDate').text();
-        data.startTime = $('#slider-margin-value-min').text();
-        data.endTime = $('#slider-margin-value-max').text();
-        data.meetRoomDetail = $('#roomReason').val();
-        data.meetRoomId = $('#availableRoom').val();
+        data.reservation_Date = $('#selectDate').text();
+        data.reservation_Start_Time = $('#slider-margin-value-min').text();
+        data.reservation_End_Time = $('#slider-margin-value-max').text();
+        data.meet_Room_Detail = $('#roomReason').val();
+        data.meet_Room_Id = $('#availableRoom').val();
 
-        console.log(data.meetRoomDetail);
-        if(!data.meetRoomDetail){
+        console.log(data.meet_Room_Detail);
+        console.log(JSON.stringify(data));
+        if(!data.meet_Room_Detail){
             alert('회의실 사용 목적을 입력해주세요.');
             return;
         }
 
-        if(confirm('신청하신 날짜 : '+data.date+' 시간 : '+data.startTime+'시 부터'+data.endTime+'시 까지 예약을 진행 하시겠습니까?')){
+        if(confirm('신청하신 날짜 : '+data.reservation_Date+' 시간 : '+data.reservation_Start_Time+'시 부터'+data.reservation_End_Time+'시 까지 예약을 진행 하시겠습니까?')){
+            console.log("ajax호출")
             $.ajax({
                 type:"POST",
                 url:"<c:url value='/reservation/makeReservation' />",
                 contentType:"application/json",
                 data: JSON.stringify(data),
                 success: function(list) {
+                    console.log("헤헤헤헤");
                     if(confirm('예약이 등록 되었습니다. 목록페이지로 가시겠습니까?')){
                         location.href="<c:url value='/reservation/reservationList' />";
                     }else {

@@ -33,11 +33,12 @@
         </div>
         <div class="row clearfix" style="font-family: S-CoreDream-4Regular">
             <div class="col-lg-12 col-md-12 col-sm-12">
-                <form name="noticeModifyForm" action="${pageContext.request.contextPath }/reservation/registNotice" enctype="multipart/form-data">
-<%--                    <form:hidden path="reservationNoticeVO.reservationNoticeId"/>--%>
-<%--                    <form:hidden path="reservationNoticeVO.reservationNoticeContent" id="noticeContent"/>--%>
-<%--                    <form:hidden path="reservationNoticeVO.empId" value="${loginUser.empId }"/>--%>
-<%--                    <form:hidden path="reservationNoticeVO.reservationNoticeCreateDate" id="noticeDate"/>--%>
+                <%--@elvariable id="meetRoomFormVO" type="com.WorkConGW.reservation.dto.MeetRoomFormVO"--%>
+                <form:form modelAttribute="meetRoomFormVO" name="noticeModifyForm" action="${pageContext.request.contextPath }/reservation/registNotice" enctype="multipart/form-data">
+                    <form:hidden path="reservationNoticeVO.reservation_Notice_Id"/>
+                    <form:hidden path="reservationNoticeVO.reservation_Notice_Content" id="noticeContent"/>
+                    <form:hidden path="reservationNoticeVO.emp_Id" value="${loginUser.emp_Id }"/>
+                    <form:hidden path="reservationNoticeVO.reservation_Notice_Create_Date" id="noticeDate"/>
                     <div class="body">
                         <div class="row clearfix">
                             <div class="table-responsive" style="padding:5px 15px;">
@@ -53,7 +54,7 @@
                                         </td>
                                         <td colspan="5">
                                             <div style="padding-left:15px;border-left: 1px dotted gray;">
-                                                <form class="form-control" path="reservationNoticeVO.reservationNoticeTitle" style="width:100%;"></form>
+                                                <form:textarea class="form-control" path="reservationNoticeVO.reservation_Notice_Title" style="width:100%;"></form:textarea>
 <%--                                                <!-- 											 class="form-control" type="text" name="title" id="edit-title" required="required"  -->--%>
                                             </div>
                                         </td>
@@ -88,7 +89,7 @@
                             </div>
                         </div>
                     </div>
-<%--                </form:form>--%>
+                </form:form>
             </div>
         </div>
     </div>
@@ -132,8 +133,7 @@
             contentType:false,
             success:function(){
                 alert("글이 생성되었습니다.");
-                opener.location.reload();
-                window.close();
+                location.href='${pageContext.request.contextPath}/reservation/adminMain'
             },
             error:function(){
                 alert("글 생성에실패했습니다.");

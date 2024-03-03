@@ -21,18 +21,21 @@
                 </ul>
                 <ul class="main-menu metismenu">
                     <li class="reservationList">
-                        <a href="<c:url value="/reservation/reservationList"/>" style="font-family: InfinitySans-RegularA1; font-size: 23px;"><i class="icon-book-open" ></i> <span>예약 관리</span></a>
+                        <a href="<c:url value="/reservation/reservationList"/>" style="font-family: InfinitySans-RegularA1; font-size: 23px;"><i class="fa-book-open" ></i> <span>예약 관리</span></a>
                     </li>
                 </ul>
             </nav>
             <nav class="sidebar-nav">
                 <ul class="main-menu metismenu">
+                    <c:if test="${loginUser.auth_Id == 's'}">
                     <li class="reservationAdmin">
-                        <a href="<c:url value="/reservation/adminMain"/>" style="font-family: InfinitySans-RegularA1; font-size: 23px;"><i class="icon-key" ></i> <span>회의실 관리</span></a>
+                            <a href="<c:url value="/reservation/adminMain"/>" style="font-family: InfinitySans-RegularA1; font-size: 23px;"><i class="fa fa-icon-key" ></i> <span>회의실 관리</span></a>
                     </li>
-                    <li>
-                        <%--                          <a href="<c:url value="/reservation/adminMylis"/>" style="font-family: InfinitySans-RegularA1; font-size: 23px;"><i class="fa fa-check-square-o" ></i> <span>관리자 페이지</span></a> --%>
-                    </li>
+                    </c:if>
+
+<%--                    <li>--%>
+<%--                                                  <a href="<c:url value="/reservation/adminMylis"/>" style="font-family: InfinitySans-RegularA1; font-size: 23px;"><i class="fa fa-check-square-o" ></i> <span>관리자 페이지</span></a>--%>
+<%--                    </li>--%>
                 </ul>
             </nav>
         </div>

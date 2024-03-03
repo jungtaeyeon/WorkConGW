@@ -67,6 +67,11 @@ java.util.ArrayList, com.WorkConGW.addbook.dto.AddBookVO" %>
         border-radius: 9px;
         margin: 0 3px;
       }
+      .manageinterior{
+        font-size: 15px;
+        font-weight: 500;
+        color: #d2d2d2;
+      }
     </style>
     <body>
       <!-- 헤더인클루드 -->
@@ -149,7 +154,7 @@ java.util.ArrayList, com.WorkConGW.addbook.dto.AddBookVO" %>
                 <c:forEach var="addBook" items="${addBookList}" varStatus="loop">
                       <c:if test="${loop.index == 0}">
                         <td>
-                          ${addBook.manage_display_name}
+                          ${addBook.manage_display_name}<c:if test="${addBook.manage_emp_id ne null}"><span class="manageinterior">[내부연락처]</span></c:if>
                           <i class="starred fa-star <c:choose><c:when test='${addBook.manage_starred eq 1}'> fa-solid</c:when><c:otherwise> fa-regular</c:otherwise></c:choose>"></i>
                           <input type="hidden" class="manage_id" name="manage_id" value="${addBook.manage_id}"/>
                         </td>

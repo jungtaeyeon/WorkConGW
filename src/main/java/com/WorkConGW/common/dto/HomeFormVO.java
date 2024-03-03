@@ -1,4 +1,10 @@
 package com.WorkConGW.common.dto;
+import org.apache.ibatis.type.Alias;
+
+import com.WorkConGW.common.dto.BaseVO;
+
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import com.WorkConGW.approval.dto.ApprovalVO;
 import com.WorkConGW.board.duty.dto.DutyVO;
@@ -6,13 +12,22 @@ import com.WorkConGW.board.issue.dto.IssueVO;
 import com.WorkConGW.board.issue.dto.ProjectVO;
 import com.WorkConGW.board.notice.dto.NoticeVO;
 
+@Data
+@Alias("HomeFormVO")
 public class HomeFormVO extends BaseVO{
     private NoticeVO noticeVO;
     private ApprovalVO approvalVO;
     private IssueVO issueVO;
     private DutyVO dutyVO;
     private ProjectVO projectVO;
-    
+    private int dashboard_approval;
+    private int dashboard_reservation;
+    private int dashboard_issue;
+    private int dashboard_duty;
+    private int dashboard_project;
+    private int dashboard_board;
+    private int dashboard_weather;
+    private String emp_id;
     public HomeFormVO(){
         this.noticeVO = new NoticeVO();
         this.approvalVO = new ApprovalVO();

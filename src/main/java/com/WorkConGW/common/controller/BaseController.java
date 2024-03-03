@@ -3,6 +3,7 @@ package com.WorkConGW.common.controller;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.URLDecoder;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -17,12 +18,14 @@ import com.WorkConGW.common.dto.AttachVO;
 import com.WorkConGW.common.dto.BaseVO;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpSession;
+import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -158,6 +161,30 @@ public class BaseController {
         //logger.info(fileArray.length);
         return null;
     }// end of imageGet
+
+
+    public ResponseEntity<byte[]> getPicture(String picturePath, String picture) throws Exception{
+        // EmpCotroller.(baseController호출) -> BaseController
+        ResponseEntity<byte[]> entity = null;
+        InputStream in = null;
+        String imgPath = picturePath;
+        try {
+            in = new FileInputStream(new File(imgPath, picture));
+            entity = new ResponseEntity<byte[]>(IOUtils.toByteArray(in), HttpStatus.CREATED);
+            /* IOUtils.toByteArray(in) : 바이트 배열로 변환
+             * 200 OK: 성공적으로 처리했을 때 쓰인다. 가장 일반적으로 볼 수 있는 HTTP 상태
+             * 201 Created: 요청이 성공적으로 처리되어서 리소스가 만들어졌음을 의미한다.
+             * - POST 나 PUT 으로 게시물 작성이나 회원 가입 등의 새로운 데이터를 서버에 생성하는(쓰는, 넣는) 작업이 성공했을 때 반환한다.
+             */
+        } catch (IOException e) {
+            e.printStackTrace();
+            entity = new ResponseEntity<byte[]>(HttpStatus.INTERNAL_SERVER_ERROR);
+        } finally {
+            in.close();
+        }
+        return entity;
+    }
+
 
 
     // 새로고침 조회수 증가 방지

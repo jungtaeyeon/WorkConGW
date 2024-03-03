@@ -117,6 +117,28 @@ public class RestAddBookController {
         return result;
     }
 
+    @GetMapping("messageDelete")
+    public int messageDelete(@RequestParam(value = "message_id[]", required = false) List<Long> message_id) {
+        int result = 0;
+        logger.info(message_id.toString());
+        if (message_id != null && !message_id.isEmpty()) {
+            result = addBookService.messageDelete(message_id);
+        }
+        // 삭제 후 리다이렉트 또는 다른 처리
+        return result;
+    }
+
+    @GetMapping("receiverDelete")
+    public int receiverDelete(@RequestParam(value = "message_id[]", required = false) List<Long> message_id) {
+        int result = 0;
+        logger.info(message_id.toString());
+        if (message_id != null && !message_id.isEmpty()) {
+            result = addBookService.receiverDelete(message_id);
+        }
+        // 삭제 후 리다이렉트 또는 다른 처리
+        return result;
+    }
+
     @GetMapping("addBookShareInsert")
     public int addBookShareInsert(@RequestParam(value = "emp_id[]", required = false) List<String> emp_id, @RequestParam Map<String, Object> pmap,HttpSession session) {
         int result = 0;

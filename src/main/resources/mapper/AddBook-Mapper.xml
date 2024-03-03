@@ -20,7 +20,8 @@
                         NVL(b.add_book_id, '0') AS add_book_id, 
                         NVL(b.add_book_title, ' ') AS add_book_title, 
                         NVL(b.share_add_book_yn, '0') AS share_add_book_yn, 
-                        a.emp_id AS emp_id
+                        a.emp_id AS emp_id,
+                        manage_emp_id
                 FROM 
                         add_book_manage a
                 LEFT OUTER JOIN 
@@ -69,7 +70,8 @@
                         NVL(b.add_book_id, '0') AS add_book_id, 
                         NVL(b.add_book_title, ' ') AS add_book_title, 
                         NVL(b.share_add_book_yn, '0') AS share_add_book_yn, 
-                        a.emp_id AS emp_id
+                        a.emp_id AS emp_id,
+                        a.manage_emp_id AS manage_emp_id
                 FROM 
                         add_book_manage a
                 LEFT OUTER JOIN 
@@ -106,7 +108,8 @@
                         a.emp_id AS emp_id,
                         s.manage_id AS share_manage_id,
                         s.emp_id AS share_emp_id,
-                        s.add_book_id AS share_add_book_id
+                        s.add_book_id AS share_add_book_id,
+                        a.manage_emp_id AS manage_emp_id
                 FROM 
                         add_book_manage a
                 LEFT OUTER JOIN
@@ -177,7 +180,8 @@
                         NVL(b.add_book_id, '0') AS add_book_id, 
                         NVL(b.add_book_title, ' ') AS add_book_title, 
                         NVL(b.share_add_book_yn, '0') AS share_add_book_yn, 
-                        a.emp_id AS emp_id
+                        a.emp_id AS emp_id,
+                        manage_emp_id
                 FROM 
                         add_book_manage a
                 LEFT OUTER JOIN 
@@ -234,7 +238,8 @@
                         NVL(b.add_book_id, '0') AS add_book_id, 
                         NVL(b.add_book_title, ' ') AS add_book_title, 
                         NVL(b.share_add_book_yn, '0') AS share_add_book_yn, 
-                        a.emp_id AS emp_id
+                        a.emp_id AS emp_id,
+                        manage_emp_id
                 FROM 
                         add_book_manage a
                 LEFT OUTER JOIN 
@@ -291,7 +296,8 @@
                         NVL(b.add_book_id, '0') AS add_book_id, 
                         NVL(b.add_book_title, ' ') AS add_book_title, 
                         NVL(b.share_add_book_yn, '0') AS share_add_book_yn, 
-                        a.emp_id AS emp_id
+                        a.emp_id AS emp_id,
+                        manage_emp_id
                 FROM 
                         add_book_manage a
                 LEFT OUTER JOIN 
@@ -337,10 +343,10 @@
         <insert id="addBookInsert" parameterType="java.util.Map">
                 INSERT INTO add_book_manage(manage_id, manage_display_name, manage_hp, manage_email, 
                                             manage_remark, manage_company_name,manage_official_name, manage_dept_name, 
-                                            manage_starred,manage_add_book_id,emp_id)
+                                            manage_starred,manage_add_book_id,emp_id,manage_emp_id)
                 VALUES(add_book_manage_seq.nextval, #{manage_display_name}, #{manage_hp}
                         , #{manage_email},#{manage_remark}, #{manage_company_name},#{manage_official_name}, #{manage_dept_name}
-                        , 0,#{manage_add_book_id},#{empId})
+                        , 0,#{manage_add_book_id},#{empId},#{manage_emp_id})
         </insert>
 
         <update id="addBookUpdate" parameterType="map">
@@ -494,5 +500,144 @@
                 WHERE 
                         add_book_id = #{add_book_id}
         </update>
-        
+
+      
+        <insert id="messageInsert" parameterType="java.util.Map" useGeneratedKeys="true" keyProperty="id">
+                <selectKey keyProperty="id" resultType="Long" order="BEFORE">
+                        SELECT message_seq.nextval FROM dual
+                </selectKey>
+                INSERT INTO message(message_id, emp_id,message_content,message_start_dt, message_delete, message_title)
+                VALUES(#{id}, #{empId} ,#{messageContent},TO_DATE(TO_CHAR(SYSDATE, 'YYYY-MM-DD'), 'YYYY-MM-DD') , 0,#{message_title})
+        </insert>
+
+        <insert id="receivermessageInsert" parameterType="java.util.Map">
+                INSERT INTO receiver_message(message_id, emp_id,receiver_read, receiver_delete)
+                VALUES(#{sequenceKey},#{manage_emp_id}, 0, 0)
+        </insert>
+
+        <select id="messageList" resultType="AddBookVO" parameterType="map">
+                SELECT 
+                        a.message_id,
+                        b.emp_id,
+                        TO_CHAR(a.message_start_dt, 'YYYY-MM-DD') AS message_start_dt,
+                        b.receiver_read,
+                        c.emp_name,
+                        message_content,
+                        message_title
+                FROM
+                        MESSAGE a
+                LEFT OUTER JOIN
+                        RECEIVER_MESSAGE b
+                ON
+                        a.message_id = b.message_id
+                LEFT OUTER JOIN
+                        EMP c
+                ON
+                        b.emp_id = c.emp_id
+                WHERE a.emp_id=#{empId}
+                and message_delete = 0
+        </select>
+        <select id="messageDetail" resultType="AddBookVO" parameterType="map">
+                SELECT 
+                        a.message_id,
+                        b.emp_id,
+                        TO_CHAR(a.message_start_dt, 'YYYY-MM-DD') AS message_start_dt,
+                        b.receiver_read,
+                        c.emp_name,
+                        message_content,
+                        message_title
+                FROM
+                        MESSAGE a
+                LEFT OUTER JOIN
+                        RECEIVER_MESSAGE b
+                ON
+                        a.message_id = b.message_id
+                LEFT OUTER JOIN
+                        EMP c
+                ON
+                        b.emp_id = c.emp_id
+                WHERE a.emp_id=#{empId}
+                and a.message_id = #{message_id}
+                and b.emp_id = #{message_emp_id}
+                and message_delete = 0
+        </select>
+
+        <update id="messageDelete" parameterType="java.util.List">
+                UPDATE message
+                SET 
+                        message_delete = '1'
+                WHERE 
+                        message_id IN
+                <foreach collection="list" item="item" open="(" separator="," close=")">
+                #{item}
+                </foreach>
+        </update>
+        <update id="receivermessageDelete" parameterType="java.util.List">
+                UPDATE receiver_message
+                SET 
+                        receiver_delete = '1'
+                WHERE 
+                        message_id IN
+                <foreach collection="list" item="item" open="(" separator="," close=")">
+                #{item}
+                </foreach>
+        </update>
+
+        <select id="receiverList" resultType="AddBookVO" parameterType="map">
+                SELECT 
+                        a.message_id,
+                        a.emp_id,
+                        TO_CHAR(a.message_start_dt, 'YYYY-MM-DD') AS message_start_dt,
+                        b.receiver_read,
+                        c.emp_name,
+                        message_content,
+                        message_title
+                FROM
+                        MESSAGE a
+                LEFT OUTER JOIN
+                        RECEIVER_MESSAGE b
+                ON
+                        a.message_id = b.message_id
+                LEFT OUTER JOIN
+                        EMP c
+                ON
+                        a.emp_id = c.emp_id
+                WHERE b.emp_id=#{empId}
+                and message_delete = 0
+                and receiver_delete = 0
+        </select>
+
+        <select id="receiverDetail" resultType="AddBookVO" parameterType="map">
+                SELECT 
+                        a.message_id,
+                        a.emp_id,
+                        TO_CHAR(a.message_start_dt, 'YYYY-MM-DD') AS message_start_dt,
+                        b.receiver_read,
+                        c.emp_name,
+                        message_content,
+                        message_title
+                FROM
+                        MESSAGE a
+                LEFT OUTER JOIN
+                        RECEIVER_MESSAGE b
+                ON
+                        a.message_id = b.message_id
+                LEFT OUTER JOIN
+                        EMP c
+                ON
+                        a.emp_id = c.emp_id
+                WHERE b.emp_id=#{empId}
+                and a.message_id = #{message_id}
+                and a.emp_id = #{message_emp_id}
+                and message_delete = 0
+                and receiver_delete = 0
+        </select>
+
+        <update id="receiverRead" parameterType="map">
+                UPDATE receiver_message
+                SET 
+                        receiver_read = '1'
+                WHERE 
+                        message_id = #{message_id}
+        </update>
 </mapper>

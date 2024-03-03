@@ -7,6 +7,7 @@
 
 
 
+
 <!DOCTYPE html>
 <html>
 <head>
@@ -60,6 +61,13 @@
 			display: flex;
 			align-items: center;
 		}
+
+
+
+		.btn.btn-outline-secondary {
+			padding: 2px 4px; /* 버튼 패딩 조정 */
+		}
+
 		ul.menuList li {
 			height:100%;
 			display: flex;
@@ -259,7 +267,7 @@
 				<a href="javascript:void(0);" class="user-name" data-toggle="dropdown" aria-expanded="false">
 
 					<c:if test="${loginUser.emp_Picture != null}">
-						<div id="pictureView" style="background-image:url('${pageContext.request.contextPath}/pds/empPicture/${loginUser.emp_Picture}'); width: 55px; height: 55px;" class="rounded-circle avatar" ></div>
+						<div id="pictureView" style="background-image:url('${pageContext.request.contextPath}/pds/empPicture/${loginUser.emp_Picture}'); width: 55px; height: 55px; background-color: #fff;" class="rounded-circle avatar" ></div>
 					</c:if>
 					<c:if test = "${loginUser.emp_Picture == null}">
 						<div id="pictureViewPhoto" style="background-color: #ffffff;" class="rounded-circle user-photo">

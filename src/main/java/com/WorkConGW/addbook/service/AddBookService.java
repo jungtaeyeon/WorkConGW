@@ -170,5 +170,55 @@ public class AddBookService {
     return result;
   }
 
+  public int messageInsert(Map<String, Object> pmap) {
+    logger.info("messageInsert");
+    int result = 0;
+    logger.info(pmap.toString());
+    result = AddBookDAO.messageInsert(pmap);
+    return result;
+  }
 
+  public List<AddBookVO> messageList(Map<String, Object> pmap) {
+    logger.info("messageList");
+    List<AddBookVO> list = new ArrayList<>();
+    list = AddBookDAO.messageList(pmap);
+    return list;
+  }
+
+  public List<AddBookVO> messageDetail(Map<String, Object> pmap) {
+    logger.info("messageDetail");
+    List<AddBookVO> list = new ArrayList<>();
+    list = AddBookDAO.messageDetail(pmap);
+    return list;
+  }
+
+  public int messageDelete(List<Long> manage_id) {
+    logger.info("messageDelete");
+    int result = 0;
+    logger.info(manage_id.toString());
+    result = AddBookDAO.messageDelete(manage_id);
+    return result;
+  }
+
+  public List<AddBookVO> receiverList(Map<String, Object> pmap) {
+    logger.info("receiverList");
+    List<AddBookVO> list = new ArrayList<>();
+    list = AddBookDAO.receiverList(pmap);
+    return list;
+  }
+
+  public List<AddBookVO> receiverDetail(Map<String, Object> pmap) {
+    logger.info("receiverDetail");
+    List<AddBookVO> list = new ArrayList<>();
+    list = AddBookDAO.receiverDetail(pmap);
+    return list;
+  }
+
+  public int receiverDelete(List<Long> manage_id) {
+    logger.info("receiverDelete");
+    int result = 0;
+    logger.info(manage_id.toString());
+    result = AddBookDAO.receiverDelete(manage_id);
+    return result;
+  }
 }
