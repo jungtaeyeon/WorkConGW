@@ -35,7 +35,7 @@
 		<form:hidden path="issueVO.issue_Board_Id"/>
 		<form:hidden path="issueVO.issue_Board_Content"/>
 		<form:hidden path="issueVO.issue_Open_St"/>
-		<form:hidden path="issueVO.issue_Board_St"/>
+		<form:hidden id="hiddenIssue_Board_St" path="issueVO.issue_Board_St"/>
 		<form:hidden path="issueVO.issue_Project_St"/>
 			<div class="block-header">
 	            <div class="row">
@@ -44,9 +44,8 @@
 	                	<h2 style="padding-left:10px; font-size:2em; ">
 							#${issue.issue_Board_Id}
 						</h2>
-							<h2 class="detailMode" style="padding-top: 0px; padding-left:10px; font-size:2.5em; ">
-								${issue.issue_Board_Title}
-							</h2>
+							<h2 class="detailMode" style="padding-left:10px; font-size:2.5em; font-family:S-CoreDream-6Bold ">
+								<span id="spanIssue_Board_Title" style="word-wrap:break-word;">${issue.issue_Board_Title }</span> </h2>
 							<form:input path="issueVO.issue_Board_Title" class="modifyMode" style="width:100%;padding-left:10px;font-size:2em;display:none;" />
 	                	<div>
 								<%--이슈 상태 close일 때 숨기기--%>
@@ -69,13 +68,13 @@
 	                			<span style="margin-left:5px;">댓글 <span id="issueReplyCount">${issue.reply_Count }</span></span>
 	                			<span class="detailMode">
 									<%-- 이슈 공개 상태(Y) 인 경우 비공개 미노출 --%>
-	                				<span id="spanissue_Board_St" <c:if test="${issue.issue_Board_St eq 1 }">style="display:none;"</c:if> >
+	                				<span id="spanIssue_Board_St" <c:if test="${issue.issue_Board_St eq 1 }">style="display:none;"</c:if> >
 			                			<span style="margin-left:5px;">•</span>
 			                			<span style="margin-left:5px;">비공개</span>
 	                				</span>
 	                			</span>
 	                			<span class="modifyMode m-l-15" style="display:none;">
-	                				<select name="issueVO.issue_Board_St">
+	                				<select name="issueVO.issue_Board_St" id="issue_Board_St">
 	                					<option <c:if test="${issue.issue_Board_St eq 1 }">selected</c:if> value=1>공개</option>
 	                					<option <c:if test="${issue.issue_Board_St eq 2 }">selected</c:if> value=2>비공개</option>
 	                				</select>
@@ -126,7 +125,7 @@
 	                                	<div class="row">
 	                                		<div class="col-lg-10">
 												<%-- 내용: issue_Board_Content 받아올 예정 --%>
-		                                        <span id="spanissue_Board_Content" class="detailModeContent" style="font-size:1.1em;">${issue.issue_Board_Content}</span>
+		                                        <span id="spanIssueBoardContent" class="detailModeContent" style="font-size:1.1em;">${issue.issue_Board_Content}</span>
 	                                		</div>
 	                                		<div class="col-lg-2">
 												<%-- 작성자만 버튼 노출 --%>
@@ -149,6 +148,7 @@
 	                                </div>
 		                        </li>
 								<%-- 댓글 영역 시작 --%>
+								<ul id="commentList" style="max-height: 400px; overflow-y: auto; overflow-x: hidden; list-style-type: none;">
 								<c:forEach items="${issueReplyList }" var="issueReply" varStatus="status">
 									<%-- 댓글 --%>
 									<c:if test="${issueReply.reply_Group_Code eq 1 }">
@@ -221,6 +221,7 @@
 										<div class="timeline-item green" style="margin-top:10px; margin-left:30px;">
 											<%-- 시간 차이 계산 함수 적용 예정 --%>
 												<span class="date replyDate" data-createDt="${issueReply.reply_Create_Dt }"></span>
+												${issueReply.koreanTime}
 											<h5 style="font-weight:bold;">이슈 재시작</h5>
 											<%-- 로그인한 사원 이름 가져올 예정 --%>
 											<p style="margin:5px 0px 0px;">${loginUser.emp_Name}님이 이슈를 다시 진행시켰습니다.</p>
@@ -229,6 +230,7 @@
 									<li style="clear: both"></li>
 									</c:if>
 								</c:forEach>
+								</ul>
 								<%-- 댓글 영역 끝 --%>
                         	</ul>
                         
@@ -280,8 +282,9 @@
                         	</div>
                         	<!-- 업무 수정창 -->
                         	<div class="m-t-5 modifyModeTask" style="display:none;">
-								<form:input path="issueVO.duty_Board_Id" style="width:100%;margin-top:5px;margin-bottom:5px;"/>
-								<%-- 이슈 저장 함수 필요 --%>
+								<form:input path="issueVO.duty_Board_Id" id="dutyBoardIdForIssue" style="width:100%;margin-top:5px;margin-bottom:5px;" readonly="true"/>
+								<a href="#largeModal" id="addDuty" data-toggle="modal" data-target="#dutyModal"> + 업무 선택하기</a><br>
+							<%-- 이슈 저장 함수 필요 --%>
 								<button type="button" class="btn btn-primary" style="width: 49%;font-size: 0.9em;padding: 5px;" onclick="saveIssue('업무번호');">저장</button>
                         		<button type="button" class="btn btn-secondary" style="width: 49%;font-size: 0.9em;padding: 5px;" onclick="changeMode('업무번호');">취소</button>
                         	</div>
@@ -328,6 +331,48 @@
 	</div>
 </div>
 
+		<!-----------------------------------------------업무 추가 모달--------------------------------------------->
+		<!-- Modal -->
+		<div class="modal fade" id="dutyModal" tabindex="-1" role="dialog" aria-hidden="true">
+			<div class="modal-dialog" role="document" style="max-width: 400px;">
+				<div class="modal-content">
+					<div class="modal-header">
+						<h4 class="title" id="largeProjectModalLabel">업무 수정</h4>
+					</div>
+					<div class="modal-body">
+						<!-- 모달 수신자 등록 폼 -->
+						<div class="body" style="padding: 6px;">
+							<ul class="nav nav-tabs">
+								<li class="nav-item"><a class="nav-link show active" data-toggle="tab" href="#projectOrg">프로젝트</a></li>
+							</ul>
+							<div class="tab-content" style="padding: 0;">
+								<!-- 조직도 -->
+								<div class="tab-pane show active" id="projectOrg">
+									<div class="header" style="height: 5px; margin-top: 15px;">
+									</div>
+									<div class="body" style="overflow-y: scroll; height: 300px;">
+										<div>
+											<ul id="projectList" class="treeview">
+												<li>
+													프로젝트 리스트&nbsp
+													<ul id="project"></ul>
+												</li>
+											</ul>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-secondary" data-dismiss="modal" id="closeProjectModal">닫기</button>
+					</div>
+				</div>
+			</div>
+		</div>
+
+
+
 		<form name="replyRegistForm">
 			<input type="hidden" name="issue_Board_Id" value="${issue.issue_Board_Id }"/>
 			<input type="hidden" name="emp_Id" value="${loginUser.emp_Id }"/>
@@ -345,6 +390,18 @@
 			$(this).text(getTimeDefferFromCurrent(new Date($(this).attr('data-createDt'))));
 		});
 
+		// 서버에서 받은 날짜 문자열
+		var serverDateStr = "${issueReply.reply_Create_Dt}";
+
+// JavaScript Date 객체 생성
+		var serverDate = new Date(serverDateStr);
+
+// 클라이언트의 로컬 시간대에 맞게 시간 변환
+		var clientDateStr = serverDate.toLocaleString();
+
+// 변환된 시간을 HTML 요소에 삽입
+		document.getElementById("clientTime").innerText = clientDateStr;
+
 	}
 
 		function goBackToList() {
@@ -358,6 +415,96 @@
 
 	// 이전 마일스톤
 	var milestoneManager;
+
+
+	// 업무 번호 추가 !
+	function displayProjectTree(projectTree) {
+		var projectList = $("#project");
+
+		projectTree.forEach(function(projectWithDuties) {
+			var project = projectWithDuties.project;
+			var duties = projectWithDuties.duties;
+
+			var projectLink = $("<a>").addClass("project-link").attr("href", "#").attr("data-project-id", project.project_Id).text(project.project_Title);
+			var imgSrc = $("<img>").attr("src", "<%=request.getContextPath() %>/js/treeview/images/file.gif");
+			var projectItem = $("<li>").addClass("project-item").attr("id", project.project_Id).append(imgSrc).append(projectLink);
+
+			var dutyList = $("<ul>").addClass("duty-list");
+
+			duties.forEach(function(duty) {
+				var dutyLink = $("<a>").addClass("duty-link").attr("href", "#").attr("data-duty-id", duty.duty_Board_Id).text(duty.duty_Board_Title);
+				var dutyItem = $("<li>").addClass("duty-item").attr("id", duty.duty_Board_Id).append(dutyLink);
+
+				// 이미지 요소를 생성하고 업무 아이템에 추가합니다.
+				var imgSrc = $("<img>").attr("src", "<%=request.getContextPath() %>/js/treeview/images/file.gif");
+				dutyLink.prepend(imgSrc);
+
+				dutyList.append(dutyItem);
+
+				// 클릭된 업무 아이템에서 duty-Board-Id를 가져옵니다.
+				dutyLink.click(function() {
+					var dutyBoardId = $(this).attr('data-duty-id');
+
+					// 가져온 duty-Board-Id를 입력란에 넣습니다.
+					$('#dutyBoardIdForIssue').val(dutyBoardId);
+
+					// 모달을 닫습니다.
+					$('#dutyModal').modal('hide');
+				});
+			});
+
+			// 클릭된 프로젝트 아이템에서 project-Id를 가져옵니다.
+			projectLink.click(function() {
+				toggleExpandCollapse(this);
+			});
+
+			var expandIcon = $("<div>").addClass("hitarea expandable-hitarea").attr("onclick", "toggleExpandCollapse(this);");
+			projectItem.prepend(expandIcon);
+
+			if (duties.length > 0) {
+				projectItem.addClass("expandable").append(dutyList).find(".hitarea").addClass("collapsable-hitarea");
+				dutyList.hide();
+			} else {
+				projectItem.addClass("collapsable").find(".hitarea").addClass("expandable-hitarea");
+			}
+
+			projectList.append(projectItem);
+		});
+	}
+
+
+
+	function toggleExpandCollapse(element) {
+		var $element = $(element);
+		var $dutyList = $element.siblings(".duty-list");
+
+		$element.toggleClass("expandable-hitarea collapsable-hitarea");
+		$dutyList.toggle();
+
+		if ($dutyList.is(":hidden")) {
+			$element.removeClass("collapsable-hitarea").addClass("expandable-hitarea");
+		} else {
+			$element.removeClass("expandable-hitarea").addClass("collapsable-hitarea");
+		}
+	}
+
+	$(document).ready(function() {
+		$.ajax({
+			type: "GET",
+			url: "<c:url value='/getProjectTreeView' />",
+			contentType: "application/json",
+			processData: true,
+			success: function(data) {
+				displayProjectTree(data);
+			},
+			error: function(xhr, status, error) {
+				console.error("Failed to retrieve project tree:", error);
+			}
+		});
+
+		// 모든 프로젝트를 닫힌 상태로 표시
+		$(".duty-list").hide();
+	});
 
 
 // 수정버튼 클릭 (이슈 제목, 이슈 내용, 업무, 댓글, 마일스톤)
@@ -487,25 +634,14 @@ function removeReply(replyId){
 
 	// 이슈 제목/내용/상태 변경
 	function saveIssue(category, issueSt, projectSt){
-		if(category=='업무번호'){
-			if(!$.isNumeric($('input[name="issueVO.duty_Board_Id"]').val()) || $('input[name="issueVO.duty_Board_Id"]').val().substr(0,1) == "0"){
-				alert('업무 번호는 숫자만 입력 가능합니다.');
-				$('input[name="issueVO.duty_Board_Id"]').focus();
-				return;
-			}
-			if($('input[name="issueVO.duty_Board_Id"]').val().length > 8){
-				alert('업무번호는 8자리 이하로 입력해야 합니다.');
-				$('input[name="issueVO.duty_Board_Id"]').focus();
-				return;
-			}
-			if (!$('input[name="issueVO.duty_Board_Id"]').val()) {
-				alert('업무번호가 존재하지 않습니다.');
-				return;
-			}
-		}
 		if(category=='이슈상태'){
 			$('input[name="issueVO.issue_Open_St"]').val(issueSt);
 			$('input[name="issueVO.issue_Project_St"]').val(projectSt);
+		}
+		if(category=='제목'){
+			var selectedValue = document.getElementById('issue_Board_St').value;
+			// 숨은 입력 필드에 선택된 값 설정
+			document.querySelector('input[name="issueVO.issue_Board_St"]').value = selectedValue;
 		}
 		if(category=='마일스톤'){
 			var value = $('select[name="issueVO.milestone_Id"]').val();
@@ -534,36 +670,27 @@ function removeReply(replyId){
 			success:function(duty_Board_Title){
 
 				var msg = category;
-				if (category=='업무번호' && !duty_Board_Title){
-					alert('업무번호를 확인해주세요.');
-				} else {
-					if(category=='업무번호' || category=='이슈상태'){
+				if(category=='업무번호' || category=='이슈상태'){
 						msg += '가';
 					}else{
 						msg += '이';
 					}
 					alert(msg+' 수정되었습니다.');
-				}
+
 
 				if(category=='제목'){
 					$('#spanIssue_Board_Title').text($('input[name="issueVO.issue_Board_Title"]').val());
-					if($('select[name="issueVO.issue_Board_St"]').val() == 1){
+					if ($('#hiddenIssue_Board_St').val() == 1) {
 						$('#spanIssue_Board_St').css('display','none');
 					}else{
 						$('#spanIssue_Board_St').css('display','inline');
 					}
+
 				}else if(category=='내용'){
-					$('#spanIssue_Board_Content').html($('input[name="issueVO.Issue_Board_Content"]').val());
+					$('#spanIssueBoardContent').html($('input[name="issueVO.issue_Board_Content"]').val());
 				}else if(category=='업무번호'){
-					if(duty_Board_Title){	// 업무 번호가 존재하는 경우 연결
-						$('#spanDuty_Board_Id').text('# '+$('input[name="issueVO.duty_Board_Id"]').val());
-						$('#spanDuty_Board_Id').css('display','');
-						$('#spanDuty_Board_Id').on('click',function(){
-							window.location.reload(true);
-						});
-						$('#spanNoDuty_Board_Id').css('display','none');
-						$('#spanDuty_Board_Title').text($.trim(duty_Board_Title));
-					}
+					window.location.reload(true);
+
 				}else if(category=='이슈상태'){
 						if(issueSt == 2){	// 이슈 종료
 							jsIssueReplyVO.reply_Group_Code = 2;
@@ -578,24 +705,25 @@ function removeReply(replyId){
 
 					window.location.reload(true);
 				}else if(category=='마일스톤'){
-					jsIssueReplyVO.milestone_Id = $('select[name="issueVO.milestone_Id"]').val();
-
-					// 마일스톤 뷰 수정
-					$('.detailModeMilestone').children().remove();
-					var milestoneView = '';
-					if(jsIssueReplyVO.milestone_Id == 0){	// 마일스톤 삭제
-						milestoneView += '<div style="margin-top:10px;">'
-								+'<span>등록된 마일스톤이 없습니다.</span>'
-								+'</div>';
-					}
-					$('.detailModeMilestone').append(milestoneView);
-
-					if($('select[name="issueVO.milestone_Id"]').val() == 0){
-						$('select[name="issueVO.milestone_Id"]').val("-1");
-					}
+					window.location.reload(true);
+					// jsIssueReplyVO.milestone_Id = $('select[name="issueVO.milestone_Id"]').val();
+					//
+					// // 마일스톤 뷰 수정
+					// $('.detailModeMilestone').children().remove();
+					// var milestoneView = '';
+					// if(jsIssueReplyVO.milestone_Id == 0){	// 마일스톤 삭제
+					// 	milestoneView += '<div style="margin-top:10px;">'
+					// 			+'<span>등록된 마일스톤이 없습니다.</span>'
+					// 			+'</div>';
+					// }
+					// $('.detailModeMilestone').append(milestoneView);
+					//
+					// if($('select[name="issueVO.milestone_Id"]').val() == 0){
+					// 	$('select[name="issueVO.milestone_Id"]').val("-1");
+					// }
 				}
 				changeMode(category);
-				window.location.reload(true);
+				// window.location.reload(true);
 			},
 			error:function(){
 				alert('제목 수정 실패');

@@ -84,6 +84,12 @@
 	/* 나머지 th에 대한 너비 설정 계속... */
 
 
+	.pagination{
+		text-align: center;
+		justify-content: center;
+		margin-left : 550px
+	}
+
 </style>
 <!-- 메인 content -->
 <!-- 헤더인클루드 -->
@@ -112,7 +118,9 @@
 						</div>
 
 						<form:form modelAttribute="empFormVO" id = "listForm" name = "listForm" method="get">
+
 						<div class="box" id="searchFormDiv" style="font-family: S-CoreDream-7ExtraBold">
+
 							<form:select path="searchEmpVO.search_code" class="form-control selectSearch" style="width:150px;font-size: 1.2em;float:left;">
 								<form:option value="">직책 전체</form:option>
 								<form:option value="c01">부장</form:option>
@@ -121,6 +129,7 @@
 								<form:option value="c04">대리</form:option>
 								<form:option value="c05">사원</form:option>
 							</form:select>
+
 
 
 							<form:select path = "searchEmpVO.searchCondition"  class="form-control selectSearch" style="width:150px;font-size: 1.2em;float:left;">
@@ -132,11 +141,11 @@
 								<form:input path = "searchEmpVO.searchKeyword" class="form-control" placeholder="검색" type="text" style="width: 218px;height:36px;padding-right: 40px;" onkeypress="checkEnter(searchList);"  autocomplete="off"/>
 								<button type="button" class="btn btn-default" onclick="searchList();"><i class="icon-magnifier"></i></button>
 							</div>
-							<div class="form-group float-left" id="resultNumDiv">
-								<span id="resultNumSpan">[총 <fmt:formatNumber value="${paginationInfo.totalRecordCount }" type="number"/>개]</span>
-							</div>
+							<button type="button" class="btn btn-default" onclick="searchList();" style="margin-left: 5px;"><i class="fas fa-search" aria-hidden="true"></i></button>
+
 
 						</div>
+
 						<div class="body" style="font-family: S-CoreDream-7ExtraBold">
 							<div class="table-responsive">
 								<table class="table table-hover js-basic-example dataTable table-custom table-striped m-b-0 c_list">
@@ -192,6 +201,9 @@
 												</c:when>
 												<c:when test="${emp.attend_St_Name eq '조퇴'}">
 													<td><span class="badge badge-info">${emp.attend_St_Name}</span></td>
+												</c:when>
+												<c:when test="${emp.attend_St_Name eq '야근'}">
+													<td><span class="badge badge-warning">${emp.attend_St_Name}</span></td>
 												</c:when>
 												<c:otherwise>
 													<td><span>${emp.attend_St_Name}</span></td>

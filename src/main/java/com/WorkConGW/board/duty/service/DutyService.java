@@ -49,7 +49,7 @@ public class DutyService {
 
         logger.info(String.valueOf(dutyVO.getProject_Id()));
 
-        dutyDAO.plusProjectDutyCount(dutyVO.getProject_Id());
+//        dutyDAO.plusProjectDutyCount(dutyVO.getProject_Id());
 
         logger.info(String.valueOf(dutyVO.getDuty_Board_Id()));
 
@@ -181,7 +181,7 @@ public class DutyService {
         dutyDAO.deleteDutyReplyAll(dutyVO);
 
         // 프로젝트 카운트 -1
-        dutyDAO.minusProjectDutyCount(dutyVO.getProject_Id());
+//        dutyDAO.minusProjectDutyCount(dutyVO.getProject_Id());
 
         // 게시글 삭제
         dutyDAO.deleteDuty(dutyVO);
@@ -233,10 +233,10 @@ public class DutyService {
         }
 
         // 업무 수정 -> 프로젝트 수정 시, 변경한 프로젝트 Count +1, 변경 전 프로젝트 Count -1
-        if (dutyVO.getProject_Id() != dutyVO.getNew_Project_Id()){
-            dutyDAO.plusProjectDutyCount(dutyVO.getNew_Project_Id());
-            dutyDAO.minusProjectDutyCount(dutyVO.getProject_Id());
-        }
+//        if (dutyVO.getProject_Id() != dutyVO.getNew_Project_Id()){
+//            dutyDAO.plusProjectDutyCount(dutyVO.getNew_Project_Id());
+//            dutyDAO.minusProjectDutyCount(dutyVO.getProject_Id());
+//        }
 
     }
 

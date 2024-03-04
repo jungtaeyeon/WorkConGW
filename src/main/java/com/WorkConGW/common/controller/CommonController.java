@@ -198,14 +198,6 @@ public class CommonController {
         model.addAttribute("dutyList",dutyList);
         model.addAttribute("issueList",issueList);
         model.addAttribute("noticeList",dataMap.get("noticeList"));
-        return "/home2";
-    }
-
-    @GetMapping("/home2")
-    public String home2(HomeFormVO homeFormVO, Model model, HttpServletRequest request) throws SQLException {
-        EmpVO empVO = (EmpVO)request.getSession().getAttribute("loginUser");
-        empVO = empService.getEmp(empVO.getEmp_Id());
-        model.addAttribute("empVO", empVO);
         return "/home";
     }
 

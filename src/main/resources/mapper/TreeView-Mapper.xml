@@ -48,4 +48,35 @@
 
             connect by prior  form_id = form_sup_id
         </select>
+
+
+    <!--   프로젝트 리스트 폼 -->
+    <select id="selectSearchProjectOrg"  resultType="ProjectOrgCommand">
+        SELECT
+            PROJECT_ID,
+            PROJECT_TITLE
+        FROM
+            PROJECT
+        where PROJECT_ST = 1
+    </select>
+
+    <!--   프로젝트 리스트 폼에 들어갈 업무 리스트 -->
+<!--    <select id="selectSearchDuty"  resultType="ProjectOrgCommand">-->
+<!--        SELECT-->
+<!--            PROJECT_ID,-->
+<!--            DUTY_BOARD_ID,-->
+<!--            DUTY_BOARD_TITLE-->
+<!--        FROM-->
+<!--            DUTY-->
+<!--    </select>-->
+
+    <select id="selectDutiesByProjectId" parameterType="int" resultType="ProjectOrgCommand">
+    SELECT
+    DUTY_BOARD_ID,
+    DUTY_BOARD_TITLE
+    FROM
+    DUTY
+    WHERE
+    PROJECT_ID = #{project_Id}
+    </select>
 </mapper>

@@ -1,6 +1,7 @@
 package com.WorkConGW.board.notice.service;
 
 import com.WorkConGW.board.BoardFormVO;
+import com.WorkConGW.board.anony.dto.AnonyVO;
 import com.WorkConGW.board.notice.dao.NoticeDAO;
 import com.WorkConGW.board.notice.dto.NoticeAttachVO;
 import com.WorkConGW.board.notice.dto.NoticeVO;
@@ -12,6 +13,7 @@ import org.springframework.stereotype.Service;
 
 import java.io.File;
 import java.sql.SQLException;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -35,11 +37,13 @@ public class NoticeService {
 //        return datMap;
 //	}
 
-    public Map<String,Object> getNoticeList(NoticeVO searchNoticeVO)
-    {
+    public Map<String,Object> getNoticeList(NoticeVO searchNoticeVO) {
         Map<String,Object> dataMap = new HashMap<>();
+
         List<NoticeVO> noticeList = noticeDAO.selectNoticeList(searchNoticeVO);
+
         List<NoticeVO> importantNoticeList = noticeDAO.selectImportantNoticeList();
+
         dataMap.put("noticeList", noticeList);
         dataMap.put("importantNoticeList",importantNoticeList);
         logger.info(dataMap.toString());
@@ -65,10 +69,8 @@ public class NoticeService {
 
     // 글등록 폼에서 등록
     public void regist(NoticeVO notice) throws SQLException {
+        logger.info("관리자페이지 오류 : >> 여기 들어오니?");
         logger.info("시퀀스로 id 채번 전 => " + String.valueOf(notice.getNotice_id()));
-        if("E".equals(notice.getNotice_important_st())) {	// 긴급 공지이면
-            noticeDAO.deleteEmergency();
-            noticeDAO.insertNotice(notice);
 
         logger.info(notice.toString());
         noticeDAO.insertNotice(notice);
@@ -85,7 +87,6 @@ public class NoticeService {
             }
         }
     }
-}
 
 //     글삭제 및 첨부파일 삭제
     public void remove(NoticeVO noticeVO) throws SQLException {

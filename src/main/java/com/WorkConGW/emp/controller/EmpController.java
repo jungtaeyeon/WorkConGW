@@ -84,16 +84,18 @@ public class EmpController {
 
 
     @PostMapping("/register")
-    public String register(EmpVO empVO, RedirectAttributes rttr,Model model)
+    public String register(EmpVO empVO,Model model)
     {
         logger.info("register");
+        logger.info(empVO.getEmp_Id());
+        empService.registerDashBoard(empVO);
         String hashedPw = BCrypt.hashpw(empVO.getEmp_Pwd(), BCrypt.gensalt());
         empVO.setEmp_Pwd(hashedPw); // 암호화된 정보를 넣는다.
+
         empService.register(empVO);
+
         model.addAttribute("emp",empVO);
-        rttr.addFlashAttribute("msg", "가입이 완료되었습니다.");
-        rttr.addFlashAttribute("emp_Email",empVO.getEmp_Email());
-        rttr.addFlashAttribute("emp_Id", empVO.getEmp_Id());
+
 
         
         return "redirect:/admin/emp/empInsert";

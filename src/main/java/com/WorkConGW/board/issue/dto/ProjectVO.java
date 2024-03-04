@@ -19,7 +19,7 @@ public class ProjectVO {
 	private int project_St;
 	private String emp_Id;
 	private String emp_Name;
-	private int duty_Count;
+	private int dutyCount;
 	private String isOpen = "open";	// 탭 체크
 	private int todoIssueCount;	// todo 이슈 개수
 	private int inprogressIssueCount;	// inprogress 이슈 개수
@@ -89,12 +89,12 @@ public class ProjectVO {
 		this.emp_Name = emp_Name;
 	}
 
-	public int getDuty_Count() {
-		return duty_Count;
+	public int getDutyCount() {
+		return dutyCount;
 	}
 
-	public void setDuty_Count(int duty_Count) {
-		this.duty_Count = duty_Count;
+	public void setDutyCount(int dutyCount) {
+		this.dutyCount = dutyCount;
 	}
 
 	public String getIsOpen() {

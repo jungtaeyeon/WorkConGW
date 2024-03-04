@@ -175,16 +175,11 @@
       cursor: pointer;
       background-color: #0f0f0f;
       color: #fff;
-      font-weight: 600;
-      font-size: 1.2rem;
       margin: 30px 0;
       transition: .5s;
     }
 
-    .btn:hover {
-      background-color: #0f0f0f;
-      color: #fff;
-    }
+
 
     .input-btn {
       border: 1.5px solid #0f0f0f;
@@ -269,6 +264,18 @@
       color : white;
       margin-left: 2px;
     }
+
+    #modifyPwdBtn{
+      border: 1px solid #0f0f0f;
+      height: 32px;
+      width: 100px;
+      border-radius: 5px;
+      font-weight: 500;
+      font-size: 14px;
+
+    }
+
+
   </style>
 </head>
 <body>
@@ -307,9 +314,9 @@
             <span id="deleteImage">x</span>
 
             <div class="profile-btn-area">
-              <label for="imageInput">이미지 선택</label>
+              <label for="imageInput" style="margin-top: 7px;">이미지 선택</label>
               <input type="file" name="profileImage" id="imageInput" accept="image/*">
-              <button>변경하기</button>
+              <button >변경하기</button>
             </div>
           </form>
 
@@ -331,7 +338,7 @@
             <div class="input-field id-field">
               <label>* 비밀번호 : </label>
               <input id = "empPwd" name="emp_Pwd" type="password" value="${loginUser.emp_Pwd}" required />
-              <button id="modifyPwdBtn" class="btn btn-primary" data-type="success" onclick="window.open('<%=request.getContextPath()%>/common/password/modifyForm', '비밀번호수정', 'width=700,height=650,left=600');" style="width: 141px;">비밀번호 변경</button>
+              <button id="modifyPwdBtn"  data-type="success" style="width: 141px;">비밀번호 변경</button>
             </div>
             <div class="input-field">
               <label>* 사번</label>
@@ -375,7 +382,7 @@
                 <input id="myFileName" type="text" class="form-control" name="emp_Sign" style="cursor: pointer;" value="${loginUser.emp_Sign}" onclick="addEmpSign();" required readonly>
                 <input type="file" id ="myEmpSign" class="myEmpSign" onchange="myAddSignFile(this);" name="myEmpSign" style="display: none;">
                 <div class="input-group-prepend">
-                  <span class="input-group-text"><i class="fa fa-file-o" ></i> </span>
+                  <span class="input-group-text" style="margin: 10px;"><i class="fa fa-file-o" ></i> </span>
                 </div>
               </div>
             </div>
@@ -399,6 +406,26 @@
 
 
 <script>
+
+
+
+  // 비밀번호 변경 버튼 클릭 시 팝업 창 열기
+  document.getElementById("modifyPwdBtn").addEventListener("click", () => {
+    // 팝업 창 열기
+    window.open('<%=request.getContextPath()%>/common/password/modifyForm', '비밀번호수정', 'width=700,height=650,left=600');
+
+  });
+
+  window.addEventListener('message', function(event) {
+    // 메시지가 올바른 출처에서 오고, 내용이 'popupClosed'인지 확인
+    if (event.origin === '<%=request.getContextPath()%>' && event.data === 'popupClosed') {
+      // 팝업 창이 성공적으로 닫혔을 때 로그인 페이지로 리다이렉션
+      window.location.href = '<%=request.getContextPath()%>/common/loginForm';
+    }
+  });
+
+
+
 
   const profileImage = document.getElementById("profileImage"); // img 태그
   const deleteImage = document.getElementById("deleteImage"); // x 버튼
@@ -535,6 +562,9 @@
       }
     })
   }
+
+
+
 
   function myAddSignFile(obj) {
     if($(".myEmpSign")[0].files[0]){

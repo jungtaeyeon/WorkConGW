@@ -398,24 +398,24 @@
         <include refid="search" />
     </select>
 
-    <update id="plusProjectDutyCount" parameterType="int">
-        UPDATE PROJECT
-        SET
-            DUTY_COUNT = DUTY_COUNT+1
-            ,PROJECT_UPDATE_DT = sysdate
-        WHERE
-            PROJECT_ID = #{project_Id}
-    </update>
+<!--    <update id="plusProjectDutyCount" parameterType="int">-->
+<!--        UPDATE PROJECT-->
+<!--        SET-->
+<!--            DUTY_COUNT = DUTY_COUNT+1-->
+<!--            ,PROJECT_UPDATE_DT = sysdate-->
+<!--        WHERE-->
+<!--            PROJECT_ID = #{project_Id}-->
+<!--    </update>-->
 
     <!-- 업무 삭제 시 카운트 -1 -->
-    <update id="minusProjectDutyCount" parameterType="int">
-        UPDATE PROJECT
-        SET
-            DUTY_COUNT = DUTY_COUNT-1
-          ,PROJECT_UPDATE_DT = sysdate
-        WHERE
-            PROJECT_ID = #{project_Id}
-    </update>
+<!--    <update id="minusProjectDutyCount" parameterType="int">-->
+<!--        UPDATE PROJECT-->
+<!--        SET-->
+<!--            DUTY_COUNT = DUTY_COUNT-1-->
+<!--          ,PROJECT_UPDATE_DT = sysdate-->
+<!--        WHERE-->
+<!--            PROJECT_ID = #{project_Id}-->
+<!--    </update>-->
 
     <!-- 참조 업무목록 리스트 조회 -->
     <select id="selectDutyReceptionList" parameterType="DutyVO" resultType="DutyVO">
@@ -595,7 +595,7 @@
                                     duty_reply A, emp B
                                 WHERE A.EMP_ID=B.emp_id
                                   AND duty_board_id=#{duty_Board_Id}
-                                ORDER BY reply_create_dt desc
+                                ORDER BY reply_create_dt
                             ) D1
                     ) D2
                 where seq <![CDATA[ > ]]> #{firstIndex}

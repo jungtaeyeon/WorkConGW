@@ -1,7 +1,9 @@
 package com.WorkConGW.board.issue.dto;
 
 import org.apache.ibatis.type.Alias;
+import org.springframework.format.annotation.DateTimeFormat;
 
+import java.util.Date;
 import java.util.List;
 
 @Alias("MilestoneVO")
@@ -9,15 +11,22 @@ public class MilestoneVO {
 
 	private int milestone_Id;
 	private String milestone_Name;
-	private String milestone_Create_Dt;
-	private String milestone_End_Dt;
-	private String milestone_Update_Dt;
+	@DateTimeFormat(pattern = "MM/dd/yyyy")
+	private Date milestone_Create_Dt;
+	@DateTimeFormat(pattern = "MM/dd/yyyy")
+	private Date milestone_End_Dt;
+	@DateTimeFormat(pattern = "MM/dd/yyyy")
+	private Date milestone_Update_Dt;
 	private String milestone_St;
 	private String emp_Id;
 	private String emp_Name;
 	private String isOpen = "open";	// 탭 체크
 	private int openIssueCount;	// 진행중 이슈 개수
 	private int closedIssueCount;	// 종료된 이슈 개수
+	private String todoIssueCount;
+	private String inprogressIssueCount;
+	private String doneIssueCount;
+	private int milestoneCount;
 	private int oppListCount;	// 진행/종료된 이슈 개수(반대)
 	
 	private List<IssueVO> issueList;	// 마일스톤의 이슈리스트
@@ -38,27 +47,27 @@ public class MilestoneVO {
 		this.milestone_Name = milestone_Name;
 	}
 
-	public String getMilestone_Create_Dt() {
+	public Date getMilestone_Create_Dt() {
 		return milestone_Create_Dt;
 	}
 
-	public void setMilestone_Create_Dt(String milestone_Create_Dt) {
+	public void setMilestone_Create_Dt(Date milestone_Create_Dt) {
 		this.milestone_Create_Dt = milestone_Create_Dt;
 	}
 
-	public String getMilestone_End_Dt() {
+	public Date getMilestone_End_Dt() {
 		return milestone_End_Dt;
 	}
 
-	public void setMilestone_End_Dt(String milestone_End_Dt) {
+	public void setMilestone_End_Dt(Date milestone_End_Dt) {
 		this.milestone_End_Dt = milestone_End_Dt;
 	}
 
-	public String getMilestone_Update_Dt() {
+	public Date getMilestone_Update_Dt() {
 		return milestone_Update_Dt;
 	}
 
-	public void setMilestone_Update_Dt(String milestone_Update_Dt) {
+	public void setMilestone_Update_Dt(Date milestone_Update_Dt) {
 		this.milestone_Update_Dt = milestone_Update_Dt;
 	}
 
@@ -108,6 +117,38 @@ public class MilestoneVO {
 
 	public void setClosedIssueCount(int closedIssueCount) {
 		this.closedIssueCount = closedIssueCount;
+	}
+
+	public String getTodoIssueCount() {
+		return todoIssueCount;
+	}
+
+	public void setTodoIssueCount(String todoIssueCount) {
+		this.todoIssueCount = todoIssueCount;
+	}
+
+	public String getInprogressIssueCount() {
+		return inprogressIssueCount;
+	}
+
+	public void setInprogressIssueCount(String inprogressIssueCount) {
+		this.inprogressIssueCount = inprogressIssueCount;
+	}
+
+	public String getDoneIssueCount() {
+		return doneIssueCount;
+	}
+
+	public void setDoneIssueCount(String doneIssueCount) {
+		this.doneIssueCount = doneIssueCount;
+	}
+
+	public int getMilestoneCount() {
+		return milestoneCount;
+	}
+
+	public void setMilestoneCount(int milestoneCount) {
+		this.milestoneCount = milestoneCount;
 	}
 
 	public int getOppListCount() {
