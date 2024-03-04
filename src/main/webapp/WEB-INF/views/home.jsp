@@ -412,10 +412,14 @@ p.approvalForm, p.approvalName, p.approvalDay {
 			<c:if test="${!empty noticeList}">
 				<c:forEach items="${noticeList}" var="notice">
 					<tr onclick="window.location.href='<%=request.getContextPath()%>/board/notice/detail?notice_id=${notice.notice_id }'">
-						<td><span style="display: inline-block;font-weight: bold;max-width: 155px;overflow: hidden;white-space: nowrap;text-overflow: ellipsis;">
-								<c:if test="${notice.notice_important_st eq 'Y'}">
+						<td><span style="display: inline-block;font-weight: bold;max-width: 350px;overflow: hidden;white-space: nowrap;text-overflow: ellipsis;">
+							<c:if test="${notice.notice_important_st eq '1'}">
 									<span class="badge badge-danger">필독</span>
-								</c:if>
+							</c:if>
+
+							<c:if test="${notice.notice_important_st eq '0'}">
+									<span class="badge badge-success">공지</span>
+							</c:if>
 								${notice.notice_title}</span></td>
 						<td style="text-align: right;"><fmt:formatDate value="${notice.notice_create_dt}" pattern="yyyy-MM-dd"/></td>
 					</tr>
@@ -489,7 +493,7 @@ p.approvalForm, p.approvalName, p.approvalDay {
 					<p class="approvalName">${duty.emp_Name}<span class="approvalNameDept"></span></p>
 					<p class="approvalDay">
 						<fmt:formatDate value="${duty.duty_Board_Create_Dt }" pattern="yyyy.MM.dd"/>
-					</p>
+					</p>				
 				</div>
 			</div>
 		</c:forEach>	

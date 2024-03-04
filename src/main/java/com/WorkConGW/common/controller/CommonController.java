@@ -197,7 +197,7 @@ public class CommonController {
         model.addAttribute("approvalList",approvalList.get("waitDocs"));
         model.addAttribute("dutyList",dutyList);
         model.addAttribute("issueList",issueList);
-        model.addAttribute("noticeList",dataMap.get("noticeList"));
+        model.addAttribute("noticeList",dataMap.get("importantNoticeList"));
         return "/home";
     }
 
