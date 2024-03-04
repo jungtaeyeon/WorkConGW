@@ -1,1071 +1,621 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8"
-		 pageEncoding="UTF-8"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
-
-
-
-
-
-
 <style>
-	#calendar {
-		width: 300px;
-		margin: 0 auto;
-		font-size: 10px;
-	}
-	.fc-toolbar {
-		font-size: 2px;
-		width: 350px;
-	}
-	.fc-toolbar h2 {
-		font-size: 12px;
-		white-space: normal !important;
-	}
-	/* click +2 more for popup */
-	.fc-more-cell a {
-		display: block;
-		/*     width: 95%;  */
-		margin: 1px auto 0 auto;
-		border-radius: 3px;
-		background: grey;
-		color: transparent;
-		overflow: hidden;
-		height: 4px;
-	}
+  p{margin-bottom: 0 !important;}
+  #pictureView{
+	border: none !important;
+	box-shadow: 0px 0px 5px 2px rgba(0,0,0,0.15);
+  }
+  .mainDashBoard{
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    row-gap: 20px;
+    column-gap: 20px;
+    margin: 2% 15px 3%;
+  }
+  .mainDashBoard .none{
+	display: none;
+  }
+  .gridContent{
+    box-shadow: 0 0 5px 0 rgba(0,0,0,0.15);
+    height: 325px;
+    padding: 2% 3%;
+  }
+  .gridContent:nth-child(2) {
+    grid-column: 2 / span 2;
+	padding: 1% 1.5%; 
+  }
+  .profilImgTextGroup{display: flex; align-items: center;}
+  .profilContent{display: flex; justify-content: space-between; padding-bottom: 15px; border-bottom: 2px solid #c4c4c4; margin-bottom: 13px;}
+  .profilText{margin-left: 6px;}
+  .profilName{
+    font-size: 24px;
+    font-weight: bold;
+  }
+  .profilCode{
+    font-size: 19px;
+    margin-left: 4px;
+  }
+  .profilEmp, .profilDept{font-size: 17px; font-weight: 500;line-height: 1.2; color: #34495E;}
+  .profilEmp span, .profilDept span{margin-right: 5px;}
+  .dashBoardUpdateBtn .btn-primary{
+    background-color: rgb(52, 152, 219) !important;
+    border: 1px solid rgb(52, 152, 219) !important;
+  }
+  .attendContent{
+	display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+  }
+  .attendTimeBtnGroup{display:flex;}
+  .attendTimeBtnGroup .btn{margin-right: 10px; width: 130px; border-radius: 30px;}
+  .attendTimeBtnGroup .btn-primary{background-color: #0CAD50; border:none;}
+  .attendTimeBtnGroup .btn-primary:hover{background-color: #0CAD50; border:none;}
+  .attendTimeBtnGroup .btn-secondary{background-color: #C0392B; border:none;}
+  .attendTimeBtnGroup .btn-secondary:hover{background-color: #C0392B; border:none;}
+  .attendTodayText{
+	font-size: 19px;
+    font-weight: 500;
+  }
+  .attendTodayDayText{font-size: 14px;}
+  .attendTodayTime{
+	font-size: 40px;
+    line-height: 1.2;
+    font-weight: 400;
+  }
+  .attendStartTimeGroup{margin-top: 10px;}
+  .attendTimeContentGroup,.attendEndTimeGroup,.attendStartTimeGroup{
+	font-size: 16px;
+  }
+  .attendStartTimeText,.attendEndTimeText, .attendTimeContentText{margin-right: 9px;}
+  .calendar {
+    width: 280px;
+}
 
-	.fc-view-month .fc-event, .fc-view-agendaWeek .fc-event, .fc-content {
-		font-size: 0;
-		/*     overflow: hidden; */
-		height: 2px;
-	}
-	.fc-view-agendaWeek .fc-event-vert {
-		font-size: 0;
-		overflow: hidden;
-		width: 2px !important;
-	}
-	.fc-agenda-axis {
-		width: 20px !important;
-		font-size: 5px;
-	}
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.header h2{
+	font-size: 26px;
+	padding: 0;
+}
+.header button{border: none; font-size: 18px; background-color: transparent;}
+.header button:focus{outline: none;}
 
+.weekdays {
+    display: flex;
+	justify-content: space-around;
+}
 
+.weekdays div {
+    width: 42px;
+    padding: 5px;
+    text-align: center;
+    font-weight: bold;
+}
 
-	/* .fc-button-content { */
-	/*     padding: 0; */
-	/* } */
-	.fc-content-skeleton table{
-		width: 100%;
-	}
-	.fc-month-view{
-		overflow-y: scroll;
-	}
-	.fc-view-container{
-		width: 397px;
-	}
-	.fc-view{
-		overflow: hidden;
-		margin-left: 41px;
-	}
+.days {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+}
 
-	.fc-left{
-		margin-left: 41px;
-	}
+.days div {
+	height: 40px;
+	display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+	cursor: pointer;
+}
+.days .on{
+	background-color: #1663C0;
+	border-radius: 50%;
+	color: #fff;
+	opacity: 1;
+}
+.prev-date, .next-date{opacity: 0.5;}
+.scheduleContainer{display: flex;}
+.scheduleRightContainer{
+	width: calc(100% - 266px);
+    margin-left: 14px;
+    background: #E8E8E8;
+    padding: 11px 22px;
+	box-shadow: 0 0 2px 0 rgba(0,0,0,0.15);
+	display: flex;
+}
+.scheduleTit{
+	font-size: 17px;
+    font-weight: 500;
+}
+.scheduleText{
+	font-size: 15px;
+	margin-bottom: 3px !important;
+}
+.girdContentTitGroup{
+	padding-bottom: 7px;
+    border-bottom: 2px solid #c4c4c4;
+    margin-bottom: 7px;
+	display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+.girdContentTitGroup i{font-size: 17px; cursor: pointer;}
+.gridContentTit{font-size: 20px; font-weight: 500;}
 
+.girdContentGroup i{
+    margin-right: 4px;
+}
+.girdContentGroup div{
+	margin-bottom:3px;
 
+}
+#privateSchedule{color: #74c0fc;}
+#importantSchedule{color: #D25565;}
+#companySchedule{color: #a9e34b;}
+#deptSchedule{color: #b070db;}
+#privatereservation{color: #27AE60;}
+#deptreservation{color: #D35400;}
+.gridContent .table td, .gridContent .table th{border-top: none; border-bottom: 1px solid #dee2e6;}
+.approvalContentGroup {
+    background: #F7F7F7;
+	padding: 8px;
+	margin-bottom: 11px;
+	cursor: pointer;
+}
+.approvalGroup {
+    display: flex;
+    justify-content: space-between;
+	align-items: center;
+}
+p.approvalTit {
+    font-size: 15px;
+    font-weight: 500;
+}
+span.approvalNum {
+    font-size: 16px;
+    font-weight: 600;
+    margin-right: 5px;
+    color: #374859;
+}
+p.approvalForm, p.approvalName, p.approvalDay {
+    font-size: 15px;
+	font-weight: 500;
+}
+.approvalGroup:nth-child(1) {
+    margin-bottom: 8px;
+}
+.weathertitle{
+	font-family: arial;
+	text-align: center;
+	height: auto;
+}
+.weatherInfoGroup {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+	align-items: center;
+    margin-top: 20px;
+}
+.SeoulNowtemp, .SeoulNowName{
+	font-size: 25px;
+	margin-bottom: 0;
+}
+.weatherInfoGroup p{
+	display: flex;
+    flex-direction: column;
+	font-size: 16px;
+}
+.weatherInfoGroup p i{
+	margin-bottom: 5px;
+} 
+.checkbox {
+  display: flex;
+  align-items: center;
+  margin: 15px 0;
+}
 
-	.CurrIcon, .CurrTemp{
-		display: inline-block;
-		font-size: 2rem;
-		text-align: center;
-	}
-	.CurrIcon{
-		margin-right: 2px;
-	}
-	.City{
-		font-size: 1.2rem;
-		text-align: center;
-	}
-	.fc-day{
-		text-align: center;
-	}
-	#displayAndHiddenOrg{
-		border: 1px solid #2980b9;
-		background-color: #2980b9;
-		color: #ffffff;
-		width: 15%;
-		text-align: center;
-		font-weight: bold;
-		display: flex;
-		justify-content: space-between;
-		left: 24px;
-	}
-	#hiddenMenu {
-		width: 17.8em;
-	}
-	.commonModal-content {
-		right: 78.6%;
-	}
-	.fancy-checkbox input[type="checkbox"]+span:before{
-		width:20px;
-		height:20px;
-	}
-	.issueTitle:hover{
-		color:#5c8ed4;
-	}
-	.fa-sort-down:before, .fa-sort-desc:before, .dd4 .dd-item > button[data-action="collapse"]:before, .dd4 .dd-item > button:before{
-		content:"";
-	}
+.checkbox [type='checkbox'] {
+  width: 1.5rem;
+  height: 1.5rem;
+  appearance: none;
+  border-radius: 50%;
+  background-color: #ffffff;
+  transition: background 300ms;
+  cursor: pointer;
 
+  &::before {
+    content: '';
+    color: transparent;
+    display: block;
+    width: inherit;
+    height: inherit;
+    border-radius: inherit;
+    border: 0;
+    background-color: transparent;
+    background-size: contain;
+    box-shadow: inset 0 0 0 1px #ccd3d8;
+  }
 
-	.weathertitle{
-		font-family: arial;
-		text-align: center;
-		border: 1px solid rgb(0,0,0,0.2);
-		border-radius:0%;
-		height: auto;
-	}
+  &:checked {
+    background-color: #007bff;
+  }
 
-	.attendTimeContent{
-		font-size: 33px;
-		text-align: center;
-		font-weight: bold;
-		color: #0069d9;
-		margin-bottom: 0;
-	}
+  &:checked::before {
+    box-shadow: none;
+    background-image: url("data:image/svg+xml,%3Csvg   xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24'%3E %3Cpath d='M15.88 8.29L10 14.17l-1.88-1.88a.996.996 0 1 0-1.41 1.41l2.59 2.59c.39.39 1.02.39 1.41 0L17.3 9.7a.996.996 0 0 0 0-1.41c-.39-.39-1.03-.39-1.42 0z' fill='%23fff'/%3E %3C/svg%3E");
+  }
+}
 
+.checkbox label {
+	cursor: pointer;
+    padding-left: 0.5rem;
+    margin-bottom: 0 !important;
+    font-size: 15px;
+    font-weight: 500;
+}
+.modal.show{background-color: rgba(0, 0, 0, 0.7);}
 </style>
-<body>
-    <%@ include file="./include/header.jsp"%>
-<div id="main-content" style="width: 100%;">
-	<div class="container-fluid" >
-		<!-- 메인 content 넣는 곳 -->
-
-		<div class="row clearfix">
-			<!-- 왼쪽줄 시작 -->
-			<div class="col-2">
-				<div class="card" id="profileCard" style="font-family: InfinitySans-RegularA1">
-					<ul class="nav nav-tabs" style="font-family: InfinitySans-RegularA1">
-						<li class="nav-item"><a class="nav-link active" data-toggle="tab" href="#profile_menu" onclick="changeSettingMode(this);">프로필</a></li>
-						<li class="nav-item"><a class="nav-link" data-toggle="tab" href="#setting_menu" onclick="changeSettingMode(this);">대시보드 설정</a></li>
-					</ul>
-					<div class="tab-content p-l-0 p-r-0">
-						<div class="tab-pane animated fadeIn active" id="profile_menu" style="height:47vh;">
-							<div class="body text-center">
-								<div class="profile-image m-b-15" id="userPictureDiv" style="height: 250px; width: 75%; border-radius: 50%;"></div>
-
-								<div class="profile-image m-b-15" id="userPictureDiv" style="height: 12em; width: 70%;"></div>
-
-								<div style="margin-top:25px;">
-									<h4 class="m-b-0" style="margin: 10px;">
-										<strong>&nbsp;</strong>
-									</h4>
-									<span style="font-size:1.5em;"></span>
-									<span style="font-size:1.5em;"></span>
-								</div>
-								<div class="m-t-15" style="font-size:1.1em;">
-									<div>
-										결재할 문서 :  &nbsp;
-										<a href="<%=request.getContextPath() %>/approval/lists/waitList">
-											<i class="icon-share-alt"></i>
-										</a>
-									</div>
-
-									<div id="scheduleFormDiv">
-										오늘의 일정 :  &nbsp;
-										<a href="<%=request.getContextPath() %>/schedule/main?from=home">
-											<i class="icon-share-alt"></i>
-										</a>
-									</div>
-								</div>
-							</div>
-						</div>
-
-						<div class="tab-pane animated fadeIn" id="setting_menu" style="height:47vh;padding:0 15px;">
-							<h5 style="display:inline-block;">개인 대시보드 설정</h5>
-							<a data-toggle="popover" data-trigger="hover" data-placement="left" data-html="true" data-content="내 대시보드에 표시할 항목을 3개까지 선택할 수 있습니다.<br/>선택한 항목이 3개 이하일 경우 기본값으로 설정됩니다." style="cursor:pointer;font-family: InfinitySans-RegularA1" data-original-title="" title="">
-								<i class="fa fa-question-circle" style="font-size: 1.5em;margin-left:5px;"></i>
-							</a>
-
-							<!-- 대시보드 설정화면 -->
-							<div style="margin-top:10px;">
-								<h6>업무관리</h6>
-								<label class="fancy-checkbox">
-									<input type="checkbox" class="dashboardEl" name="dashboardDuty" >
-									<span>업무제안 목록</span>
-								</label>
-								<label class="fancy-checkbox">
-									<input type="checkbox" class="dashboardEl defaultDashboard" name="dashboardIssue" >
-									<span>업무이슈 목록</span>
-								</label>
-								<label class="fancy-checkbox">
-									<input type="checkbox" class="dashboardEl" name="dashboardProject" >
-									<span>프로젝트 관리</span>
-								</label>
-							</div>
-							<div style="margin-top:10px;">
-								<h6>전자결재</h6>
-								<label class="fancy-checkbox">
-									<input type="checkbox" class="dashboardEl" name="dashboardApproval" >
-									<span>결재대기문서 | 기안문서</span>
-								</label>
-							</div>
-							<div style="margin-top:10px;">
-								<h6>시설예약</h6>
-								<label class="fancy-checkbox">
-									<input type="checkbox" class="dashboardEl defaultDashboard" name="dashboardReservation">
-									<span>회의실 예약 현황</span>
-								</label>
-							</div>
-							<div style="margin-top:10px;">
-								<h6>게시판</h6>
-								<label class="fancy-checkbox">
-									<input type="checkbox" class="dashboardEl defaultDashboard" name="dashboardBoard" >
-									<span>사내공지 | 경조사</span>
-								</label>
-							</div>
-							<button type="button" class="btn btn-primary" style="width:100%;margin-top:15px;" onclick="saveDashboard(this);">저장</button>
-						</div>
-					</div>
-				</div>
-
-				<div class="card" style="font-family: S-CoreDream-4Regular">
-					<div class="head text-center" style="margin-top: 20px;">
-						<h2>근태관리</h2>
-						<span></span>
-						<h4 style="margin-top: 10px;"><i class="fa  fa-clock-o fa-1x"></i> 근무 시간</h4>
-						<p id="attendTimeContent" class="attendTimeContent">00:00:00</p>
-					</div>
-					<div class="body">
-						<div class="text-center">
-							<h4 class="m-b-0">
-								<strong></strong>
-							</h4>
-						</div>
-						<div class="m-t-25" style="margin-bottom: 20px;">
-							<div class="row clearfix">
-								<div class="col-lg-6" id="startWork">
-									<button type="button" class="btn btn-primary attendStartBtn" style="width: 100%;"><i class="fa fa-check-circle"></i>출근하기</button>
-								</div>
-								<div class="col-lg-6" id="endWork">
-									<button type="button" class="btn btn-secondary attendEndBtn" style="width: 100%;"><i class="fa fa-home"></i>퇴근하기</button>
-								</div>
-							</div>
-						</div>
-						<!-- <div class="m-t-15"  style="font-family: GoyangDeogyang;">
-							<div class="row clearfix" style="margin-bottom: 5px; ">
-								<div class="col-lg-6">
-									<span>출근시간</span>
-								</div>
-								<div class="col-lg-6">
-									<span></span>
-									<span>미등록</span>
-								</div>
-							</div>
-							<div class="row clearfix" style="margin-bottom: 5px;">
-								<div class="col-lg-6">
-									<span>퇴근시간</span>
-								</div>
-								<div class="col-lg-6">
-									<span></span>
-									<span>미등록</span>
-								</div>
-							</div>
-							<div class="row clearfix" style="margin-bottom: 30px;">
-								<div class="col-lg-6">
-									<span>필요근무시간</span>
-								</div>
-								<div class="col-lg-6 attendTime" >
-									<span id="weeklyDefferTime" value="${attendenceVO.weeklyAttendMilliSec}"></span><span> </span>
-									<span id="weeklyDefferTime" value="${attendenceVO.weeklyAttendMilliSec}">0시간 0분</span>&nbsp;<span></span>
-									<br><span class="badge badge-info" style="margin: 0;">초과근무 중</span><br><span class="excessTime"></span>
-								</div>
-							</div>
-						</div> -->
-					</div>
-				</div>
-				<!-- //////////////////////////////날씨///////////////////////////////////// -->
-				<div class = "weathertitle">
-					<span class="nowtime"></span>
-					<span>현재날씨</span>
-
-					<h3>경기도</h3>
-					<h3 class="SeoulIcon"></h3>
-					<h3 class="SeoulNowtemp">현재기온:</h3>
-					<h3 class="SeoulLowtemp">최저기온:</h3>
-					<h3 class="SeoulHightemp">최대기온:</h3>
-				</div>
-				<!-- //////////////////////////////날씨///////////////////////////////////// -->
+<%@ include file="./include/header.jsp"%>
+<section class="mainDashBoard">
+  <div class="gridContent profilContainer">
+    <div class="profilContent">
+      <div class="profilImgTextGroup">
+        <c:if test="${loginUser.emp_Picture != null}">
+          <div id="pictureView" style="background-image:url('${pageContext.request.contextPath }/pds/empPicture/${ loginUser.emp_Picture}'); width: 110px; height: 110px;" class="rounded-circle avatar" ></div>
+        </c:if>
+        <c:if test = "${loginUser.emp_Picture == null}">
+          <div id="pictureViewPhoto" style="background-color: #ffffff;" class="rounded-circle user-photo">
+          </div>
+        </c:if>
+        <div class="profilText">
+          <p class="profilName">${loginUser.emp_Name}<span class="profilCode">${loginUser.code_Name}</span></p>  
+          <p class="profilEmp"><span>[사번]</span>${loginUser.emp_Id}</p>  
+          <p class="profilDept"><span>[부서]</span>${loginUser.dept_Name}</p>  
+        </div>
+      </div>
+      <div class="dashBoardUpdateBtn">
+        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#dashbodeUpdateModal">대시보드 수정</button>
+      </div>
+	   <!-- 그룹수정 Modal -->
+	   <div class="modal fade" id="dashbodeUpdateModal" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="addBookGroupUpdateModal" aria-hidden="true">
+		<div class="modal-dialog modal-dialog-centered">
+		  <div class="modal-content">
+			<div class="modal-header">
+			  <h5 class="modal-title" id="staticBackdropLabel">대시보드수정</h5>
+			  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+				<span aria-hidden="true">&times;</span>
+			  </button>
 			</div>
-
-			<!-- 왼쪽줄 끝 -->
-
-			<!-- 가운데줄 시작 -->
-			<div class="col-7" style="padding:0px;">
-				<div class="dd dd4">
-					<ol class="dd-list">
-						<li class="dd-item" id="dashboardBoard" data-order="" >
-							<div class="card">
-								<div class="header" style="padding-bottom:0px;font-family: GoyangIlsan ">
-									<h3 style="display:inline-block;">
-										게시판
-									</h3>
-									<span class="dd-handle" style="display:none;font-size:1.5em;cursor:pointer;float:right;color: gray;padding: 0px;background-color: white;line-height: 0;height: auto;margin:0px;"><i class="icon-cursor-move"></i></span>
-								</div>
-								<div class="body">
-									<div class="row clearfix">
-										<div class="col-6" style="font-family: S-CoreDream-4Regular">
-											<div class="head">
-												<h5>
-													사내공지
-													<span class="float-right" style="cursor: pointer;" onclick="location.href='<%=request.getContextPath()%>/board/notice/list'">
-		                                            <i class="fa fa-sign-in"></i>
-		                                         </span>
-												</h5>
-											</div>
-											<div class="table-responsive" style="overflow:hidden;">
-												<table class="table table-hover m-b-0 c_list">
-													<thead>
-													<tr>
-														<th>게시날짜</th>
-														<th>제목</th>
-														<th>작성자</th>
-														<th>조회수</th>
-													</tr>
-													</thead>
-													<tbody style="cursor: pointer;">
-													<tr onclick="OpenWindow('<%=request.getContextPath()%>/board/notice/detail?noticeId=${notice.noticeId }', '글 상세보기', 800, 700);">
-														<td></td>
-														<td><span style="display: inline-block;font-weight: bold;max-width: 155px;overflow: hidden;white-space: nowrap;text-overflow: ellipsis;"><span class="badge badge-danger">필독</span></span></td>
-														<td><span style="display: inline-block;font-weight: bold;max-width: 155px;overflow: hidden;white-space: nowrap;text-overflow: ellipsis;"></span></td>
-														<td><span>&nbsp;</span></td>
-														<td><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span></td>
-													</tr>
-
-													<tr>
-														<td colspan="6" style="text-align: center;"><strong>해당 공지가 존재하지 않습니다.</strong></td>
-													</tr>
-													</tbody>
-												</table>
-											</div>
-										</div>
-										<div class="col-6"  style="font-family: S-CoreDream-4Regular">
-											<div class="head">
-												<h5>
-													경조사
-													<span class="float-right" style="cursor: pointer;" onclick="location.href='<%=request.getContextPath()%>/board/cac/list'">
-		                                            <i class="fa fa-sign-in"></i>
-		                                         </span>
-												</h5>
-											</div>
-											<div class="table-responsive" style="overflow: hidden;">
-												<table class="table table-hover m-b-0 c_list">
-													<thead>
-													<tr>
-														<th>분류</th>
-														<th>제목</th>
-														<th>시작 날짜</th>
-														<th>종료 날짜</th>
-														<th>작성자</th>
-													</tr>
-													</thead>
-													<tbody style="cursor: pointer;">
-													<tr onclick="OpenWindow('<%=request.getContextPath()%>/board/cac/detail?cacBoardId=${cac.cacBoardId }', '글 상세보기', 950, 850);">
-														<td><span class="badge badge-dark">부고</span></td>
-														<td><span class="badge badge-warning">결혼</span></td>
-														<td><span class="badge badge-secondary">기타</span></td>
-														<td><span style="display: inline-block;font-weight: bold;max-width: 100px;overflow: hidden;white-space: nowrap;text-overflow: ellipsis;"></span></td>
-														<td></td>
-														<td></td>
-														<td><span>&nbsp;</span></td>
-													</tr>
-
-													<tr>
-														<td colspan="6" style="text-align: center;"><strong>해당 결재문서가 존재하지 않습니다.</strong></td>
-													</tr>
-													</tbody>
-												</table>
-											</div>
-										</div>
-									</div>
-
-								</div>
-							</div>
-						</li>
-
-						<li class="dd-item" id="dashboardDuty" data-order="">
-							<div class="card">
-								<div class="header"  style="padding-bottom:0px;font-family: GoyangIlsan">
-									<h3 style="display: inline-block;">
-										업무제안 목록
-									</h3>
-									<span class="dd-handle" style="display:none;font-size:1.5em;cursor:pointer;float:right;color: gray;padding: 0px;background-color: white;line-height: 0;height: auto;margin:0px;"><i class="icon-cursor-move"></i></span>
-									<span style="cursor: pointer;font-size: 1.8em;vertical-align: middle;margin-left: 5px;" onclick="location.href='<%=request.getContextPath()%>/board/duty/dutyList'">
-                             <i class="fa fa-sign-in"></i>
-                          </span>
-								</div>
-								<div class="body" style="padding-top:10px;font-family: S-CoreDream-4Regular">
-									<div class="table-responsive">
-										<table class="table table-hover m-b-0 c_list">
-											<thead>
-											<tr>
-												<th>업무번호</th>
-												<th>업무제목</th>
-												<th>완료 기한</th>
-												<th>진행 상태</th>
-												<th>팀장</th>
-												<th>담당자</th>
-											</tr>
-											</thead>
-											<tbody style="cursor: pointer;">
-											<tr role="row" onclick="OpenWindow('<%=request.getContextPath()%>/board/duty/detail?dutyBoardId=${duty.dutyBoardId }', 'WorkConGW', 1000, 700);">
-												<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
-												<td class="project-title sorting_1">
-													<h6 style="display:inline-block;font-weight: bold;max-width: 400px; overflow: hidden; white-space: nowrap; text-overflow: ellipsis;vertical-align: middle;margin-bottom:3px;"></h6>
-													<i class="icon-bubble text-info" style="margin-left:5px; font-weight: bold"><span class="m-l-5" style="font-weight: bold;"></span></i>
-													<br>
-													<span>
-                                                            </span>
-												</td>
-												<td>
-
-													<span class="badge badge-danger">마감임박</span>
-
-												</td>
-												<td>
-													<span class="badge badge-success">진행중</span>
-													<span class="badge badge-danger">종료</span>
-												</td>
-												<td>
-													<div class="dutyEmpImg" value="${duty.empId}" data-toggle="tooltip" data-placement="top" title="" data-original-title="${duty.empName }" style="width: 40px;height: 40px; border-radius: 50%; display: inline-block; margin: 0;padding: 0;"></div>
-												</td>
-												<td>
-													<div class="dutyManagerEmpImg" value="${dutyManager.empId}" data-toggle="tooltip" data-placement="top" title="" data-original-title="${dutyManager.empName }" style="width: 40px;height: 40px; border-radius: 50%; display: inline-block; margin: 0;padding: 0;"></div>
-													<div style="width: 40px; border-radius: 50%; display: inline-block; margin: 0;padding: 0;">외 명</div>
-												</td>
-											</tr>
-
-
-											<tr>
-												<td colspan="6" style="text-align: center;"><strong>해당 업무게시물이 존재하지 않습니다.</strong></td>
-											</tr>
-											</tbody>
-										</table>
-									</div>
-								</div>
-							</div>
-						</li>
-						<li class="dd-item" id="dashboardReservation" data-order="">
-							<div class="card">
-								<div class="header" style="padding-bottom:0px;font-family: GoyangIlsan">
-									<h3 style="display:inline-block;">
-										회의실 예약 현황
-									</h3>
-									<span class="dd-handle" style="display:none;font-size:1.5em;cursor:pointer;float:right;color: gray;padding: 0px;background-color: white;line-height: 0;height: auto;margin:0px;"><i class="icon-cursor-move"></i></span>
-									<span style="cursor: pointer;font-size: 1.8em;vertical-align: middle;margin-left: 5px;" onclick="location.href='<%=request.getContextPath()%>/reservation/reservationList'">
-                             <i class="fa fa-sign-in"></i>
-                          </span>
-								</div>
-								<div class="body" style="padding-top:10px;font-family: S-CoreDream-4Regular">
-									<h5 id="today" style="margin-left: 50px;margin-bottom: 20px;"></h5>
-									<i class="fa fa-angle-left fa-4x" style="position:absolute;left:20px;top:170px;cursor: pointer;" onclick="prevTime();"></i>
-									<i class="fa fa-angle-right fa-4x" style="position:absolute;right:20px;top:170px;cursor: pointer;" onclick="nextTime();"></i>
-									<div style="width: calc(100% - 80px); overflow: hidden; margin: 0 40px;">
-										<ul id="meetroomReservationTime" style="padding:0px;width:2420px;">
-											<li style="display:inline-block;width:220px;border: 1px solid rgb(0,0,0,0.2);border-radius:15px;padding: 10px;height: 20vh;">
-												<h5>00</h5>
-												<div class="reservationList" style="height:15vh;overflow-y: auto;">
-
-												</div>
-											</li>
-										</ul>
-									</div>
-								</div>
-
-							</div>
-						</li>
-						<li class="dd-item" id="dashboardIssue" data-order="">
-							<div class="card">
-								<div class="header" style="padding-bottom:0px;font-family: GoyangIlsan">
-									<h3 style="display:inline-block;">
-										업무이슈 목록
-									</h3>
-									<span class="dd-handle" style="display:none;font-size:1.5em;cursor:pointer;float:right;color: gray;padding: 0px;background-color: white;line-height: 0;height: auto;margin:0px;"><i class="icon-cursor-move"></i></span>
-									<span style="cursor: pointer;font-size: 1.8em;vertical-align: middle;margin-left: 5px;" onclick="location.href='<%=request.getContextPath()%>/board/issue/list'">
-	                             <i class="fa fa-sign-in"></i>
-	                          </span>
-								</div>
-								<div class="row clearfix" style="margin:10px;">
-									<div class="col-lg-6 col-md-6" style="padding:10px 20px;font-family: S-CoreDream-4Regular">
-										<div class="table-responsive">
-											<ul class="nav nav-tabs" style="position:absolute;width:93%;z-index: 10;">
-												<li class="nav-item" style="cursor:pointer;"><a class="nav-link active" data-toggle="tab" href="#openIssueList"><i class="icon-info"></i> Open</a></li>
-												<li class="nav-item" style="cursor:pointer;"><a class="nav-link" data-toggle="tab" href="#closedIssueList"><i class="fa fa-check"></i> Closed</a></li>
-											</ul>
-											<div class="tab-content p-l-0 p-r-0 p-t-0">
-												<!-- Open 이슈 -->
-												<div class="tab-pane animated fadeIn active" id="openIssueList">
-													<table class="table table-hover js-basic-example table-custom m-b-0 no-footer" role="grid">
-														<thead>
-														<tr>
-															<th style="width:60%;"></th>
-															<th style="width:40%;">작성자</th>
-														</tr>
-														</thead>
-														<tbody style="border:hidden;">
-														<tr role="row" class="issueList" style="cursor: pointer;" data-id="" onclick="showIssueHistory(this);">
-															<td class="project-title" style="padding:15px;">
-																<div>
-																	<h6 style="display:inline-block;font-weight: bold;max-width: 200px; overflow: hidden; white-space: nowrap; text-overflow: ellipsis;vertical-align: middle;">
-																		<i class="icon-info" style="color:green;"></i>
-																		<span class="issueTitle" style="cursor:pointer;margin-left:5px;font-size:1.1em;" onclick="OpenWindow('${pageContext.request.contextPath }/board/issue/detail?issueBoardId=${issue.issueBoardId }', '이슈 상세보기', 1200, 700);"></span>
-																	</h6>
-																	<i class="icon-bubble" style="margin-left:5px;"></i>
-																</div>
-																<span style="margin-left:25px;"></span>
-																<span style="margin-left:5px;"></span>
-															</td>
-															<td class="project-actions">
-																<div id="pictureView" style="display:inline-block;vertical-align:middle;margin-right:10px;width: 45px; height: 45px;" class="rounded-circle avatar" data-toggle="tooltip" data-placement="top" data-original-title=""></div>
-																<div style="display:inline-block;vertical-align:middle;">
-																	<strong></strong>
-																	<div> <span></span></div>
-																</div>
-															</td>
-														</tr>
-
-														<!-- 목록이 없을때 -->
-														<tr role="row">
-															<td class="project-title noList" style="text-align:center;font-size:1.2em;font-weight: bold;height:80px;" colspan="2">등록된 이슈가 없습니다.</td>
-														</tr>
-														</tbody>
-													</table>
-												</div>
-
-												<!-- Closed 이슈 -->
-												<div class="tab-pane animated fadeIn" id="closedIssueList">
-													<table class="table table-hover js-basic-example table-custom m-b-0 no-footer" role="grid">
-														<thead>
-														<tr>
-															<th style="width:60%;"></th>
-															<th style="width:40%;">작성자</th>
-														</tr>
-														</thead>
-														<tbody style="border:hidden;">
-														<tr role="row" class="issueList" style="cursor: pointer;" data-id="${issue.issueBoardId }" onclick="showIssueHistory(this);">
-															<td class="project-title" style="padding:15px;">
-																<div>
-																	<h6 style="display:inline-block;font-weight: bold;max-width: 200px; overflow: hidden; white-space: nowrap; text-overflow: ellipsis;vertical-align: middle;">
-																		<i class="icon-check" style="color:red;"></i>
-																		<span class="issueTitle" style="cursor:pointer;margin-left:5px;font-size:1.1em;" onclick="OpenWindow('${pageContext.request.contextPath }/board/issue/detail?issueBoardId=${issue.issueBoardId }', '이슈 상세보기', 1200, 700);"></span>
-																	</h6>
-																	<i class="icon-bubble" style="margin-left:5px;"></i>
-																</div>
-																<span style="margin-left:25px;"></span>
-																<span style="margin-left:5px;"></span>
-															</td>
-															<td class="project-actions">
-																<div id="pictureView" style="display:inline-block;vertical-align:middle;margin-right:10px; width: 45px; height: 45px;" class="rounded-circle avatar" data-toggle="tooltip" data-placement="top" data-original-title=""></div>
-																<div style="display:inline-block;vertical-align:middle;">
-																	<strong></strong>
-																	<div> <span></span></div>
-																</div>
-															</td>
-														</tr>
-
-														<!-- 목록이 없을때 -->
-														<tr role="row">
-															<td class="project-title noList" style="text-align:center;font-size:1.2em;font-weight: bold;height:80px;" colspan="2">등록된 이슈가 없습니다.</td>
-														</tr>
-														</tbody>
-													</table>
-												</div>
-											</div>
-										</div>
-									</div>
-									<div class="col-lg-6 col-md-6 issueHistory" style="padding:10px 20px;font-family: S-CoreDream-4Regular">
-										<div style="text-align:center;margin-top:150px;font-size:1.3em;">
-											<strong>히스토리를 조회할 이슈를 선택하세요.</strong>
-										</div>
-										<!-- 히스토리 뷰 -->
-									</div>
-								</div>
-							</div>
-						</li>
-						<li class="dd-item" id="dashboardProject" data-order="">
-							<div class="card">
-								<div class="header" style="padding-bottom:0px;font-family: GoyangIlsan">
-									<h3 style="display:inline-block;">
-										프로젝트 관리
-									</h3>
-									<span class="dd-handle" style="display:none;font-size:1.5em;cursor:pointer;float:right;color: gray;padding: 0px;background-color: white;line-height: 0;height: auto;margin:0px;"><i class="icon-cursor-move"></i></span>
-									<span style="cursor: pointer;font-size: 1.8em;vertical-align: middle;margin-left: 5px;" onclick="location.href='<%=request.getContextPath()%>/board/project'">
-                             <i class="fa fa-sign-in"></i>
-                          </span>
-								</div>
-								<div class="body" style="padding:0 30px;font-family: S-CoreDream-4Regular">
-									<div class="progress-container m-t-10">
-										<div class="progress progress-xs" style="height:15px;background-color:rgb(0,0,0,0.2);text-align: center;display: block;">
-											<div class="progress-bar" role="progressbar" aria-valuenow="86" aria-valuemin="0" aria-valuemax="100" style="width: 86%; height: 15px; border-radius: 2px;">
-											</div>
-											<span id="percentage" style="color: white;font-size: 1.1em;line-height: 1.2em;position: absolute;top:71px;"></span>
-										</div>
-									</div>
-								</div>
-
-								<div>
-									<div class="row clearfix" style="margin:10px; padding-bottom:10px; font-family:S-CoreDream-4Regular ">
-										<div class="top_counter col-lg-4 col-md-6" style="border-right: 1px solid rgb(0,0,0,0.2);">
-											<div style="height:40vh;">
-												<div class="body" style="padding:10px;">
-													<h5 style="display:inline-block;">해야할 일</h5>
-													<span style="font-size:1.3em;margin-left:5px;"></span>
-												</div>
-												<div style="height: 33vh;overflow-y: auto;padding: 0 10px;">
-													<div class="card" style="height:70vh;padding:10px 20px;height:auto;color:black;border:1px solid rgb(0,0,0,0.2);">
-														<div style="margin-bottom: -15px;">
-															<h6 style="display:inline-block;font-weight: bold;max-width:100%; overflow: hidden; white-space: nowrap; text-overflow: ellipsis;vertical-align: middle;">
-																<i class="icon-info" style="color:green;"></i>
-																<i class="icon-check" style="color:red;"></i>
-																<span class="issueTitle" style="font-size:1.1em;cursor:pointer;" onclick="OpenWindow('${pageContext.request.contextPath }/board/issue/detail?issueBoardId=${issue.issueBoardId}', '이슈 상세보기',1200,900);"></span>
-															</h6>
-															<span class="btn btn-secondary" style="height:auto;padding: 0px 3px;font-size:0.8em;margin-left:5px;margin-top: -10px;"></span>
-														</div>
-														<div style="margin-top:8px;margin-left:5px;">
-															<span></span>
-															<span style="margin-left:5px;"></span>
-														</div>
-													</div>
-													<div style="text-align: center;padding:20px;">
-														<strong style="font-size:1.2em;">이슈가 없습니다.</strong>
-													</div>
-												</div>
-											</div>
-										</div>
-										<div class="top_counter col-lg-4 col-md-6" style="border-right: 1px solid rgb(0,0,0,0.2);">
-											<div style="height:40vh;">
-												<div class="body" style="padding:10px;">
-													<h5 style="display:inline-block;">진행중</h5>
-													<span style="font-size:1.3em;margin-left:5px;"></span>
-												</div>
-												<div style="height: 33vh;overflow-y: auto;padding: 0 10px;">
-													<div class="card" style="height:70vh;padding:10px 20px;height:auto;color:black;border:1px solid rgb(0,0,0,0.2);">
-														<div style="margin-bottom: -15px;">
-															<h6 style="display:inline-block;font-weight: bold;max-width:100%; overflow: hidden; white-space: nowrap; text-overflow: ellipsis;vertical-align: middle;">
-																<i class="icon-info" style="color:green;"></i>
-																<i class="icon-check" style="color:red;"></i>
-																<span class="issueTitle" style="font-size:1.1em;cursor: pointer;" onclick="OpenWindow('${pageContext.request.contextPath }/board/issue/detail?issueBoardId=${issue.issueBoardId}', '이슈 상세보기',1200,900);"></span>
-															</h6>
-															<span class="btn btn-secondary" style="height:auto;padding: 0px 3px;font-size:0.8em;margin-left:5px;margin-top: -10px;"></span>
-														</div>
-														<div style="margin-top:8px;margin-left:5px;">
-															<span></span>
-															<span style="margin-left:5px;"></span>
-														</div>
-													</div>
-													<div style="text-align: center;padding:20px;">
-														<strong style="font-size:1.2em;">이슈가 없습니다.</strong>
-													</div>
-												</div>
-											</div>
-										</div>
-										<div class="top_counter col-lg-4 col-md-6">
-											<div style="height:40vh;">
-												<div class="body" style="padding:10px;">
-													<h5 style="display:inline-block;">완료</h5>
-													<span style="font-size:1.3em;margin-left:5px;"></span>
-												</div>
-												<div style="height: 33vh;overflow-y: auto;padding: 0 10px;">
-													<div class="card" style="height:70vh;padding:10px 20px;height:auto;color:black;border:1px solid rgb(0,0,0,0.2);">
-														<div style="margin-bottom: -15px;">
-															<h6 style="display:inline-block;font-weight: bold;max-width:100%; overflow: hidden; white-space: nowrap; text-overflow: ellipsis;vertical-align: middle;">
-																<i class="icon-info" style="color:green;"></i>
-																<i class="icon-check" style="color:red;"></i>
-																<span class="issueTitle" style="font-size:1.1em;cursor: pointer;" onclick="OpenWindow('${pageContext.request.contextPath }/board/issue/detail?issueBoardId=${issue.issueBoardId}', '이슈 상세보기',1200,900);"></span>
-															</h6>
-															<span class="btn btn-secondary" style="height:auto;padding: 0px 3px;font-size:0.8em;margin-left:5px;margin-top: -10px;"></span>
-														</div>
-														<div style="margin-top:8px;margin-left:5px;">
-															<span></span>
-															<span style="margin-left:5px;"></span>
-														</div>
-													</div>
-													<div style="text-align: center;padding:20px;">
-														<strong style="font-size:1.2em;">이슈가 없습니다.</strong>
-													</div>
-												</div>
-											</div>
-										</div>
-									</div>
-								</div>
-							</div>
-						</li>
-
-						<li class="dd-item" id="dashboardApproval" data-order="">
-							<div class="card">
-								<div class="header" style="padding-bottom:0px;font-family: GoyangIlsan ">
-									<h3 style="display:inline-block;">
-										전자결재
-									</h3>
-									<span class="dd-handle" style="display:none;font-size:1.5em;cursor:pointer;float:right;color: gray;padding: 0px;background-color: white;line-height: 0;height: auto;margin:0px;"><i class="icon-cursor-move"></i></span>
-								</div>
-								<div class="body">
-									<div class="row clearfix">
-										<div class="col-6" style="font-family: S-CoreDream-4Regular">
-											<div class="head">
-												<h5>
-													결재대기문서
-													<span class="float-right" style="cursor: pointer;" onclick="location.href='<%=request.getContextPath()%>/approval/lists/waitList'">
-	                                            <i class="fa fa-sign-in"></i>
-	                                         </span>
-												</h5>
-											</div>
-											<div class="table-responsive" style="overflow: hidden;">
-												<table class="table table-hover m-b-0 c_list">
-													<thead>
-													<tr>
-														<th>상신날짜</th>
-														<th>사용 양식</th>
-														<th>기안서 제목</th>
-														<th>결재상태</th>
-													</tr>
-													</thead>
-													<tbody style="cursor: pointer;">
-													<tr onclick='OpenWindow("${pageContext.request.contextPath }/approval/waitDocDetail?docId=${doc.docId}", "결재문서" ,900,900);'>
-														<td></td>
-														<td><span style="display: inline-block;max-width: 80px;overflow: hidden;white-space: nowrap;text-overflow: ellipsis;"></span></td>
-														<td>
-						                                            	<span class="text-info" style="display: inline-block;font-weight: bold;max-width: 120px;overflow: hidden;white-space: nowrap;text-overflow: ellipsis;">
-						                                            		
-						                                            	</span>
-															&nbsp;<span class="badge badge-danger">방금전</span>
-														</td>
-														<td><span class="badge badge-primary">결재대기</span></td>
-													</tr>
-													<tr>
-														<td colspan="4" style="text-align: center;"><strong>결재 대기문서가 존재하지 않습니다.</strong></td>
-													</tr>
-
-													</tbody>
-												</table>
-											</div>
-										</div>
-										<div class="col-6"  style="font-family: S-CoreDream-4Regular">
-											<div class="head">
-												<h5>
-													기안문서
-													<span class="float-right" style="cursor: pointer;" onclick="location.href='<%=request.getContextPath()%>/approval/lists/draftList'">
-	                                            <i class="fa fa-sign-in"></i>
-	                                         </span>
-												</h5>
-											</div>
-											<div class="table-responsive" style="overflow: hidden;">
-												<table class="table table-hover m-b-0 c_list">
-													<thead>
-													<tr>
-														<th>상신날짜</th>
-														<th>사용 양식</th>
-														<th>기안서 제목</th>
-														<th>결재상태</th>
-													</tr>
-													</thead>
-													<tbody style="cursor: pointer;">
-													<tr onclick='OpenWindow("${pageContext.request.contextPath }/approval/completeDocDetail?docId=${doc.docId}", "결재문서" ,900,900);'>
-														<td></td>
-														<td><span style="display: inline-block;max-width: 80px;overflow: hidden;white-space: nowrap;text-overflow: ellipsis;"></span></td>
-														<td>
-															<span class="text-info" style="display: inline-block;font-weight: bold;max-width: 120px;overflow: hidden;white-space: nowrap;text-overflow: ellipsis;"></span>
-															&nbsp;<span class="badge badge-danger">방금전</span>
-														</td>
-														<td><span class="badge badge-success">결재진행중</span></td>
-														<td><span class="badge badge-default">결재완료</span></td>
-														<td><span class="badge-purple badge">결재반려</span></td>
-													</tr>
-													<tr>
-														<td colspan="4" style="text-align: center;"><strong>해당 결재문서가 존재하지 않습니다.</strong></td>
-													</tr>
-													</tbody>
-												</table>
-											</div>
-										</div>
-									</div>
-
-								</div>
-							</div>
-						</li>
-					</ol>
-				</div>
-
-
-
-
+			<div class="modal-body">
+			  <form id="dashbodeUpdate" action="dashbodeUpdate" method="get" onsubmit="prepareForm()">
+				<p class="checkbox">
+					<input type="checkbox" id="dashboardReservation" name="dashboardReservation" <c:if test="${dashbodeList[0].dashboard_reservation eq 1}">checked</c:if> />
+					<label for="dashboardReservation">일정관리/시설예약</label>
+				</p>
+				<p class="checkbox">
+					<input type="checkbox" id="dashboardBoard" name="dashboardBoard" <c:if test="${dashbodeList[0].dashboard_board eq 1}">checked</c:if> />
+					<label for="dashboardBoard">공지사항</label>
+				</p>
+				<p class="checkbox">
+					<input type="checkbox" id="dashboardApproval" name="dashboardApproval"<c:if test="${dashbodeList[0].dashboard_approval eq 1}">checked</c:if>  />
+					<label for="dashboardApproval">전자결재</label>
+				</p>
+				<p class="checkbox">
+					<input type="checkbox" id="dashboardWeather" name="dashboardWeather" <c:if test="${dashbodeList[0].dashboard_weather eq 1}">checked</c:if> />
+					<label for="dashboardWeather">오늘의날씨</label>
+				</p>
+				<p class="checkbox">
+					<input type="checkbox" id="dashboardDuty" name="dashboardDuty" <c:if test="${dashbodeList[0].dashboard_duty eq 1}">checked</c:if> />
+					<label for="dashboardDuty">업무관리</label>
+				</p>
+				<p class="checkbox">
+					<input type="checkbox" id="dashboardIssue" name="dashboardIssue" <c:if test="${dashbodeList[0].dashboard_issue eq 1}">checked</c:if> />
+					<label for="dashboardIssue">이슈관리</label>
+				</p>
+				<p class="checkbox">
+					<input type="checkbox" id="dashboardProject" name="dashboardProject" <c:if test="${dashbodeList[0].dashboard_project eq 1}">checked</c:if> />
+					<label for="dashboardProject">프로젝트</label>
+				</p>
+			  </form>
 			</div>
-			<!-- 가운데줄 끝 -->
-
-			<!-- 오른쪽줄 시작 -->
-			<div class="col-3">
-				<div class="card">
-					<div class="header"  style="padding-bottom:0px;font-family: GoyangIlsan">
-						<h5>
-							공지사항<span class="badge badge-danger" style="font-family: S-CoreDream-4Regular">필독</span>
-							<span class="float-right" style="cursor: pointer;" onclick="location.href='<%=request.getContextPath()%>/board/notice/list'">
-                                <i class="fa fa-sign-in"></i>
-                             </span>
-						</h5>
-					</div>
-					<div class="body" style="font-family: S-CoreDream-4Regular">
-						<div class="table-responsive" style="overflow-x: hidden;">
-							<table class="table table-hover m-b-0 c_list">
-								<thead>
-								<tr>
-									<th>날짜</th>
-									<th>제목</th>
-									<th>작성자</th>
-								</tr>
-								</thead>
-								<tbody style="cursor: pointer;">
-								<tr onclick="OpenWindow('<%=request.getContextPath()%>/board/notice/detail?noticeId=${notice.noticeId }', '글 상세보기', 800, 700);">
-									<td></td>
-									<td><span style="display:inline-block;font-weight: bold;max-width: 130px; overflow: hidden; white-space: nowrap; text-overflow: ellipsis;"></span></td>
-									<td><span>&nbsp;</span></td>
-								</tr>
-
-								<tr>
-									<td colspan="6" style="text-align: center;"><strong>해당 공지사항이 존재하지 않습니다.</strong></td>
-								</tr>
-								</tbody>
-							</table>
-						</div>
-					</div>
-				</div>
-
-				<div class="card" style="height: 440px;">
-					<div class="header text-center" style="font-family: GoyangIlsan">
-						<h5 style="display: inline-block; margin-left: 100px;">일정관리</h5>
-						<span class="float-right" style="margin-right: 25px;"><i class="fa fa-circle" style="color: pink;"></i>일정표시</span>
-					</div>
-					<div id="calendar" style="margin: 0; padding: 0; font-family: GoyangDeogyang">
-					</div>
-				</div>
-
-				<div class="card" style="font-family: S-CoreDream-4Regular">
-					<div class="body">
-						<div class="row clearfix list1">
-							<div class="myShowHiddenDiv col-12">
-                                       <span class="float-right">
-                                          <span style="background-color: pink; border-radius: 50%;padding: 0 5px 0 5px; margin-right: 3px;" ></span>
-                                          <span class="showHiddenBtn" style="cursor: pointer;"><i class="fa fa-plus"></i></span>
-                                       </span>
-							</div>
-							<div class="col-3 text-center">
-								<span class="oneDate"></span>&nbsp;
-								<span class="oneDayName"></span>
-							</div>
-							<div class="col-9 scheduleList1">
-								<div class="hiddenSchedule" style="display: none;">
-									<strong style="display: inline-block;font-weight: bold;max-width: 240px;overflow: hidden;white-space: nowrap;text-overflow: ellipsis;"><i class="fa fa-check-circle"></i></strong><br>
-									<span>
-                                        
-                                          </span><br>
-								</div>
-								<div>
-									<strong style="display: inline-block;font-weight: bold;max-width: 240px;overflow: hidden;white-space: nowrap;text-overflow: ellipsis;"><i class="fa fa-check-circle"></i></strong><br>
-									<span>
-                                             
-                                          </span><br><br>
-								</div>
-								<tr>
-									<td colspan="6" style="text-align: center;"><strong>해당 일정이 존재하지 않습니다.</strong></td>
-								</tr>
-							</div>
-						</div>
-					</div>
-				</div>
-
-				<div class="card" style="font-family: S-CoreDream-4Regular">
-					<div class="body ">
-						<div class="row clearfix list2">
-							<div class="myShowHiddenDiv col-12">
-                                    <span class="float-right">
-                                       <span style="background-color: pink; border-radius: 50%;padding: 0 5px 0 5px; margin-right: 3px;" ></span>
-                                       <span class="showHiddenBtn" style="cursor: pointer;"><i class="fa fa-plus"></i></span>
-                                    </span>
-							</div>
-
-							<div class="col-3 text-center">
-								<span class="twoDate"></span>&nbsp;
-								<span class="twoDayName"></span>
-							</div>
-							<div class="col-9 scheduleList2" >
-								<i class="fa fa-sort-desc moreSchedule"></i>
-								<div class="hiddenSchedule" style="display: none;">
-									<strong style="display: inline-block;font-weight: bold;max-width: 240px;overflow: hidden;white-space: nowrap;text-overflow: ellipsis;"><i class="fa fa-check-circle"></i></strong><br>
-									<span>
-
-                                          </span><br>
-								</div>
-								<div>
-									<strong style="display: inline-block;font-weight: bold;max-width: 240px;overflow: hidden;white-space: nowrap;text-overflow: ellipsis;"><i class="fa fa-check-circle"></i></strong><br>
-									<span>
-                                             
-                                          </span><br><br>
-								</div>
-								<tr>
-									<td colspan="6" style="text-align: center;"><strong>해당 일정이 존재하지 않습니다.</strong></td>
-								</tr>
-							</div>
-						</div>
-					</div>
-				</div>
-
-				<div class="card"  style="font-family: S-CoreDream-4Regular">
-					<div class="body ">
-						<div class="row clearfix list3">
-							<div class="myShowHiddenDiv col-12">
-                                    <span class="float-right">
-                                       <span style="background-color: pink; border-radius: 50%;padding: 0 5px 0 5px; margin-right: 3px;" ></span>
-                                       <span class="showHiddenBtn" style="cursor: pointer;"><i class="fa fa-plus"></i></span>
-                                    </span>
-							</div>
-
-							<div class="col-3 text-center">
-								<span class="threeDate"></span>&nbsp;
-								<span class="threeDayName"></span>
-							</div>
-							<div class="col-9 scheduleList3">
-								<i class="fa fa-sort-desc moreSchedule"></i>
-								<div class="hiddenSchedule" style="display: none;">
-									<strong style="display: inline-block;font-weight: bold;max-width: 240px;overflow: hidden;white-space: nowrap;text-overflow: ellipsis;"><i class="fa fa-check-circle"></i></strong><br>
-									<span>
-                                            
-                                          </span><br>
-								</div>
-								<div>
-									<strong style="display: inline-block;font-weight: bold;max-width: 240px;overflow: hidden;white-space: nowrap;text-overflow: ellipsis;"><i class="fa fa-check-circle"></i></strong><br>
-									<span>
-                                            
-                                          </span><br><br>
-								</div>
-								<tr>
-									<td colspan="6" style="text-align: center;"><strong>해당 일정이 존재하지 않습니다.</strong></td>
-								</tr>
-							</div>
-						</div>
-					</div>
-				</div>
+			<div class="modal-footer">
+			  <button type="button" class="btn btn-secondary" data-dismiss="modal">닫기</button>
+			  <button type="button" class="btn btn-primary" onclick="dashbodeUpdate()">수정</button>
 			</div>
-			<!-- 오른쪽줄 끝 -->
-
+		  </div>
 		</div>
-
+	  </div>
+    </div>
+    <div class="attendContent">
+      <div class="attendTimeGroup">
+        <p class="attendTodayTextGroup">
+			<span class="attendTodayText"></span>
+			<span class="attendTodayDayText"></span>
+		</p>
+        <p class="attendTodayTime"></p>
+        <p class="attendStartTimeGroup">
+			<span class="attendStartTimeText">출근시간</span>
+			<span class="attendStartTime">00:00:00</span>
+		</p>
+        <p class="attendEndTimeGroup">
+			<span class="attendEndTimeText">퇴근시간</span>
+			<span class="attendEndTime">00:00:00</span>
+		</p>
+        <p class="attendTimeContentGroup">
+			<span class="attendTimeContentText">근무시간</span>
+			<span id="attendTimeContent">00:00:00</span>
+		</p>
+      </div>
+      <div class="attendTimeBtnGroup">
+          <button type="button" class="btn btn-primary attendStartBtn">출근하기</button>
+          <button type="button" class="btn btn-secondary attendEndBtn">퇴근하기</button>
+      </div>
+    </div>
+  </div>
+  <div class="gridContent scheduleContainer <c:if test='${dashbodeList[0].dashboard_reservation eq 0}'>none</c:if>">
+	<div class="scheduleLeftContainer">
+		<div class="calendar">
+			<div class="header">
+				<button id="prev">&#10094;</button>
+				<h2 id="month-year"></h2>
+				<button id="next">&#10095;</button>
+			</div>
+			<div class="weekdays">
+				<div>Sun</div>
+				<div>Mon</div>
+				<div>Tue</div>
+				<div>Wed</div>
+				<div>Thu</div>
+				<div>Fri</div>
+				<div>Sat</div>
+			</div>
+			<div class="days" id="days"></div>
+		</div>
 	</div>
-</div>
-
-<form name="dashboardForm">
-</form>
-
-
+	<div class="scheduleRightContainer">
+		<div style="width: 49%; margin-right: 1%;">
+			<div class="girdContentTitGroup">
+				<p class="gridContentTit">일정관리</p>
+				<i class="fa fa-sign-in" aria-hidden="true" onclick="location.href='<%=request.getContextPath()%>/schedule/main'"></i>
+			</div>
+			<div class="girdContentGroup">
+				<div class="privateScheduleGroup"></div>
+				<div class="companySchedule"></div>
+				<div class="deptScheduleGroup"></div>
+			</div>
+		</div>
+		<div style="width: 49%; margin-left: 1%;">
+			<div class="girdContentTitGroup">
+				<p class="gridContentTit">시설예약</p>
+				<i class="fa fa-sign-in" aria-hidden="true" onclick="location.href='<%=request.getContextPath()%>/reservation/main'"></i>
+			</div>
+			<div class="girdContentGroup">
+				<div class="privatereservationGroup"></div>
+				<div class="deptreservationGroup"></div>
+			</div>
+		</div>
+	</div>
+  </div>
+  <div class="gridContent <c:if test='${dashbodeList[0].dashboard_board eq 0}'>none</c:if>">
+	<div class="girdContentTitGroup">
+		<p class="gridContentTit">공지사항</p>
+		<i class="fa fa-sign-in" aria-hidden="true" onclick="location.href='<%=request.getContextPath()%>/board/notice/noticeList'"></i>
+	</div>
+	<div class="table-responsive" style="overflow:hidden;">
+		<table class="table table-hover m-b-0 c_list">
+			<tbody style="cursor: pointer;">
+			<c:if test="${!empty noticeList}">
+				<c:forEach items="${noticeList}" var="notice">
+					<tr onclick="window.location.href='<%=request.getContextPath()%>/board/notice/detail?notice_id=${notice.notice_id }'">
+						<td><span style="display: inline-block;font-weight: bold;max-width: 155px;overflow: hidden;white-space: nowrap;text-overflow: ellipsis;">
+								<c:if test="${notice.notice_important_st eq 'Y'}">
+									<span class="badge badge-danger">필독</span>
+								</c:if>
+								${notice.notice_title}</span></td>
+						<td style="text-align: right;"><fmt:formatDate value="${notice.notice_create_dt}" pattern="yyyy-MM-dd"/></td>
+					</tr>
+				</c:forEach>
+			</c:if>
+			<c:if test="${empty noticeList}">
+				<tr>
+					<td colspan="6" style="text-align: center;"><strong>사내공지가 존재하지 않습니다.</strong></td>
+				</tr>
+			</c:if>
+			</tbody>
+		</table>
+	</div>
+  </div>
+  <div class="gridContent <c:if test='${dashbodeList[0].dashboard_approval eq 0}'>none</c:if>">
+	<div class="girdContentTitGroup">
+		<p class="gridContentTit" >전자결재</p>
+		<i class="fa fa-sign-in" aria-hidden="true" onclick="location.href='<%=request.getContextPath()%>/approval/main'"></i>
+	</div>
+	<c:if test="${!empty approvalList}">
+		<c:forEach items="${approvalList}" var = "doc">
+			<div class="approvalContentGroup" onclick='window.location="<%=request.getContextPath()%>/approval/awaitDocDetail?docId=${doc.doc_Id}"'>
+				<div class="approvalGroup">
+					<p class="approvalTit"><span class="approvalNum">[${doc.doc_Id}]</span>${doc.approval_Title}</p>
+					<p class="approvalForm">${doc.form_Name}</p>
+				</div>
+				<div class="approvalGroup">
+					<p class="approvalName">${doc.emp_Name}<span class="approvalNameDept">${doc.emp_Drafter_Official}</span></p>
+					<p class="approvalDay"><fmt:formatDate value="${doc.approval_Recommand_Dt}" pattern="yyyy-MM-dd"/></p>
+				</div>
+			</div>
+		</c:forEach>
+	</c:if>
+	<c:if test="${empty approvalList}">
+		<div class="approvalGroup">
+			<p class="approvalForm" style="text-align: center; width: 100%;">전자결재가 존재하지 않습니다.</p>
+		</div>
+	</c:if>
+  </div>
+  <div class="gridContent <c:if test='${dashbodeList[0].dashboard_weather eq 0}'>none</c:if>">
+	<div class="girdContentTitGroup">
+		<p class="gridContentTit">오늘의날씨</p>
+	</div>
+	<div class = "weathertitle">
+		<h3 class="SeoulIcon"></h3>
+		<h3 class="SeoulNowtemp"></h3>
+		<h3 class="SeoulNowName"></h3>
+		<div class="weatherInfoGroup">
+			<p class="SeoulLowtemp"></p>
+			<p class="SeoulHightemp"></p>
+			<p class="Seoulhumidity"></p>
+			<p class="SeoulWindSpeed"></p>
+		</div>
+	</div>
+  </div>
+  <div class="gridContent <c:if test='${dashbodeList[0].dashboard_duty eq 0}'>none</c:if>">
+	<div class="girdContentTitGroup">
+		<p class="gridContentTit">업무관리</p>
+		<i class="fa fa-sign-in" aria-hidden="true" onclick="location.href='<%=request.getContextPath()%>/board/duty/dutyList'"></i>
+	</div>
+	<c:if test="${!empty dutyList}">
+		<c:forEach items="${dutyList}" var = "duty">
+			<div class="approvalContentGroup" onclick="window.location.href='${pageContext.request.contextPath }/board/duty/detail?duty_Board_Id=${duty.duty_Board_Id }'">
+				<div class="approvalGroup">
+					<p class="approvalTit"><span class="approvalNum">[#${duty.duty_Board_Id }]</span>${duty.duty_Board_Title }</p>
+					<p class="approvalForm">
+						<span class="Readcnt">조회:${duty.duty_Board_Readcnt}</span>
+					</p>
+				</div>
+				<div class="approvalGroup">
+					<p class="approvalName">${duty.emp_Name}<span class="approvalNameDept"></span></p>
+					<p class="approvalDay">
+						<fmt:formatDate value="${duty.duty_Board_Create_Dt }" pattern="yyyy.MM.dd"/>
+					</p>
+				</div>
+			</div>
+		</c:forEach>	
+	</c:if>
+	<c:if test="${empty dutyList}">
+		<div class="approvalGroup">
+			<p class="approvalForm" style="text-align: center; width: 100%;">업무가 존재하지 않습니다.</p>
+		</div>
+	</c:if>
+  </div>
+  <div class="gridContent <c:if test='${dashbodeList[0].dashboard_issue eq 0}'>none</c:if>">
+	<div class="girdContentTitGroup">
+		<p class="gridContentTit">이슈관리</p>
+		<i class="fa fa-sign-in" aria-hidden="true" onclick="location.href='<%=request.getContextPath()%>/board/issue/list'"></i>
+	</div>
+	<c:if test="${!empty issueList}">
+		<c:forEach items="${issueList}" var = "issue">
+			<c:if test="${issue.issue_Board_St eq 1 || issue.emp_Id eq loginUser.emp_Id}">
+				<div class="approvalContentGroup" onclick="window.location.href='${pageContext.request.contextPath }/board/issue/detail?issue_Board_Id=${issue.issue_Board_Id }';">
+					<div class="approvalGroup">
+						<p class="approvalTit"><span class="approvalNum">[#${issue.issue_Board_Id }]</span>${issue.issue_Board_Title }</p>
+						<p class="approvalForm">
+							<span class="reply_Count">댓글:${issue.reply_Count }</span>
+							<span class="Readcnt">조회:${issue.issue_Board_Readcnt }</span>
+						</p>
+					</div>
+					<div class="approvalGroup">
+						<p class="approvalName">${issue.emp_Name}<span class="approvalNameDept">${issue.officialName}</span></p>
+						<p class="approvalDay">
+							<fmt:formatDate value="${issue.issue_Board_Create_Dt}" pattern="yyyy-MM-dd"/>
+						</p>
+					</div>
+				</div>
+			</c:if>	
+		</c:forEach>	
+	</c:if>
+	<c:if test="${empty issueList}">
+		<div class="approvalGroup">
+			<p class="approvalForm" style="text-align: center; width: 100%;">이슈가 존재하지 않습니다.</p>
+		</div>
+	</c:if>
+  </div>
+  <div class="gridContent <c:if test='${dashbodeList[0].dashboard_project eq 0}'>none</c:if>">
+	<div class="girdContentTitGroup">
+		<p class="gridContentTit">프로젝트</p>
+		<i class="fa fa-sign-in" aria-hidden="true" onclick="location.href='<%=request.getContextPath()%>/board/project/list'"></i>
+	</div>
+	<c:if test="${!empty projectList}">
+		<c:forEach items="${projectList}" var = "project">
+			<div class="approvalContentGroup" onclick="window.location.href='${pageContext.request.contextPath }/board/project/detail?project_Id=${project.project_Id}'">
+				<div class="approvalGroup">
+					<p class="approvalTit"><span class="approvalNum">[#${project.project_Id }]</span>${project.project_Title }</p>
+					<p class="approvalForm">
+						<fmt:formatDate value="${project.project_Update_Dt }" pattern="yyyy-MM-dd"/>
+					</p>
+				</div>
+				<div class="approvalGroup">
+					<c:if test="${project.todoIssueCount + project.inprogressIssueCount + project.doneIssueCount eq 0 }">
+						<c:set var="percentage" value="0"></c:set>
+					</c:if>
+					<c:if test="${project.todoIssueCount + project.inprogressIssueCount + project.doneIssueCount ne 0 }">
+						<c:set var="totalWeight" value="${project.todoIssueCount * 0 + project.inprogressIssueCount * 0.5 + project.doneIssueCount * 1 }" />
+						<c:set var="totalIssueCount" value="${project.todoIssueCount + project.inprogressIssueCount + project.doneIssueCount }" />
+						<c:set var="percentage" value="${(totalWeight / totalIssueCount) * 100 }" />
+						<fmt:parseNumber var="percentage" value="${percentage}" integerOnly="true" />
+					</c:if>
+					<div class="progress progress-xs" style="width: 50%; height:10px;margin-top:5px;background-color:rgb(0,0,0,0.2);">
+						<div class="progress-bar" role="progressbar" aria-valuenow="${percentage}" aria-valuemin="0" aria-valuemax="100" style="width: ${percentage}%; height:10px;">
+					</div>
+					</div>
+					<div style="margin-top: 5px;font-size:1.1em;">
+						<span><strong style="font-size:1.1em;">${percentage }%</strong> 진행됨</span>
+						<!-- <span style="margin-left:10px;"><strong style="font-size:1.1em;">${project.todoIssueCount }</strong> Todo</span>
+						<span style="margin-left:10px;"><strong style="font-size:1.1em;">${project.inprogressIssueCount }</strong> Inprogress</span>
+						<span style="margin-left:10px;"><strong style="font-size:1.1em;">${project.doneIssueCount }</strong> Done</span> -->
+					</div>
+				</div>
+			</div>
+		</c:forEach>	
+	</c:if>
+	<c:if test="${empty projectList}">
+		<div class="approvalGroup">
+			<p class="approvalForm" style="text-align: center; width: 100%;">프로젝트가 존재하지 않습니다.</p>
+		</div>
+	</c:if>
+  </div>
+</section>
 <%@ include file="./include/footer.jsp"%>
-</body>
 
-<script defer>
-
-
-	//오늘 날짜출력
-	$(document).ready(function () {
-
-		function convertTime() {
-			let now = new Date();
-
-
-			let month = now.getMonth() + 1;
-			let date = now.getDate();
-
-			return month + '월' + date + '일';
-		}
-
-		let currentTime = convertTime();
-		$('.nowtime').append(currentTime);
-	});
-
-
-	//제이쿼리사용
-	$.getJSON("<%=request.getContextPath()%>/common/api/weather-app-key",
-			function (WeatherResult) {
-				//기온출력
-				$('.SeoulNowtemp').append(WeatherResult.main.temp);
-				$('.SeoulLowtemp').append(WeatherResult.main.temp_min);
-				$('.SeoulHightemp').append(WeatherResult.main.temp_max);
-
-				//날씨아이콘출력
-				//WeatherResult.weater[0].icon
-				let weathericonUrl =
-						'<img src= "http://openweathermap.org/img/wn/'
-						+ WeatherResult.weather[0].icon +
-						'@2x.png" alt="' + WeatherResult.weather[0].description + '"/>'
-
-				$('.SeoulIcon').html(weathericonUrl);
-			});
-
-	window.onload = function(){
-		// 대시보드 순서 변경
-		let orderList = new Array();
-		$('.dd-item').each(function(){
-			if($(this).css('display') != 'none'){
-				let dashboardVO = {};
-				let id = $(this).attr('id');
-				let order = $(this).attr('data-order');
-				dashboardVO.id = id;
-				dashboardVO.order = order;
-				orderList.push(dashboardVO);
-			}
-		});
-		// 정렬
-		let sortingField = "order";
-		orderList.sort(function(a, b) { // 오름차순
-			return a[sortingField] - b[sortingField];
-		});
-		// 재배치
-		$('#'+orderList[1].id).insertAfter('#'+orderList[0].id);
-		$('#'+orderList[2].id).insertAfter('#'+orderList[1].id);
-
-		// 회의실 예약 현황 현재 날짜 표시
-		let now = new Date();
-		let month = (now.getMonth()+1).toString().length == 1 ? '0'+ (now.getMonth()+1) : (now.getMonth()+1) ;
-		let date = now.getDate().toString().length == 1 ? '0'+now.getDate() : now.getDate();
-		let day = now.getDay();
-		let dayArr = ['일','월','화','수','목','금','토'];
-		$('#today').text(month+'/'+date+' '+dayArr[day]+'요일');
-
-
-
-		$(".fc-day-number").removeAttr("data-goto");
-		getTime();
-		showStaus();//페이지 켜질때 근무시간 계산시작하게하기
-
-		// 대시보드 설정 변경시
-		$('.dashboardEl').change(function(){
-			if($(this).is(':checked')){
-				$('#'+$(this).attr('name')).css('display','');
-			}else{
-				$('#'+$(this).attr('name')).css('display','none');
-			}
-		});
-	}
-
-
-
-</script>
-<!-- 근태 -->
-<script >
-	function setNowDate() {
-		tellMonth();
-		getAttendence();
-	}
+<script>
 	let history_Attend_Time = "${loginUser.history_Attend_Time}";
 	let history_Leaving_Time = "${loginUser.history_Leaving_Time}";
+	let splitDateTime = history_Attend_Time.split(" ");
+	let splitDateTime1 = history_Leaving_Time.split(" ");
+	let attendTodayText = splitDateTime[0];
+	let attendStartTime = splitDateTime[1];
+	let attendEndTime = splitDateTime1[1];
+	// 주어진 날짜를 Date 객체로 변환
+	let formattedDate = new Date();
+	let attendTodayDate = formattedDate.getFullYear() + '-' + ('0' + (formattedDate.getMonth() + 1)).slice(-2) + '-' + ('0' + formattedDate.getDate()).slice(-2);
+	// 요일을 가져오기 위해 getDay() 메서드를 사용
+	let attendTodayDayOfWeek = formattedDate.getDay();
+	let dayText;
+	switch (attendTodayDayOfWeek) {
+	case 0:
+		dayText = '일';
+		break;
+	case 1:
+		dayText = '월';
+		break;
+	case 2:
+		dayText = '화';
+		break;
+	case 3:
+		dayText = '수';
+		break;
+	case 4:
+		dayText = '목';
+		break;
+	case 5:
+		dayText = '금';
+		break;
+	case 6:
+		dayText = '토';
+		break;
+	}
 	let startTime;
 	let now;
 	let stopboolean = "${loginUser.attend_St_Id}"; 
@@ -1081,7 +631,14 @@
 
 	// 타이머 갱신 주기 (1초)
 	let timerInterval = 1000;
-
+	
+	$('.attendTodayText').text(attendTodayDate);
+	$('.attendStartTime').text(attendStartTime);
+	$('.attendEndTime').text(attendEndTime);
+	$('.attendTodayDayText').text("("+ dayText +")")
+	todayTimer();
+	updateTimer();
+	setInterval(todayTimer, timerInterval);
 	$('.attendStartBtn').click(function(){
 		if(history_Attend_Time == ""){
 		$.ajax({
@@ -1092,6 +649,7 @@
 			success : function(result) { 
 			alert('출근체크되었습니다.');
 			startTimer();
+			location.reload();
 			},    
 			error : function(request, status, error) {        
 			console.log(error);
@@ -1103,32 +661,58 @@
 		}
 	})
 	$('.attendEndBtn').click(function(){
-		if(history_Attend_Time != ""){
-		$.ajax({
-			type : 'get',              
-			url : '/WorkConGW/attend/attendEnd',  
-			data : {
-			},
-			success : function(result) { 
-			alert('퇴근체크되었습니다.');
-			updateTimer();
-			clearInterval(timerId);
-			},    
-			error : function(request, status, error) {        
-			console.log(error);
-			}
-		})
-		}else{
-		alert('출근부터해주세요');
-		return;
-		}
-	})
+    if(history_Attend_Time != ""){
+        let result = confirm('정말로퇴근하시겠습니까?');
+        if (result) {
+            $.ajax({
+                type : 'get',
+                url : '/WorkConGW/attend/attendEnd',
+                data : {
+                },
+                success : function(result) {
+                    alert('퇴근체크되었습니다.');
+                    updateTimer();
+                    clearInterval(timerId);
+                    sessionStorage.clear();
+                    window.location.href='${pageContext.request.contextPath }/common/logout';
+                },
+                error : function(request, status, error) {
+                    console.log(error);
+                }
+            })
+        }
+    }else{
+      alert('출근부터해주세요');
+      return;
+    }
+  })
 
 	if(stopboolean == '1' || stopboolean == '2'){
 	timerId = setInterval(updateTimer, timerInterval);
 	}else{
 	updateTimer();
 	}
+  // 타이머 갱신 함수
+	function todayTimer() {
+		// 현재 시간
+		let todaynow = new Date();
+		// 시, 분, 초 계산
+		let hours = todaynow.getHours();
+    	let minutes = todaynow.getMinutes();
+    	let seconds = todaynow.getSeconds();
+		// 시간 형식 맞추기
+		hours = padTime(hours);
+		minutes = padTime(minutes);
+		seconds = padTime(seconds);
+		if(hours == "NaN"){
+		hours = '00';
+		minutes = '00';
+		seconds = '00';
+		}
+		// 타이머 업데이트
+		$('.attendTodayTime').text(hours + ":" + minutes + ":" + seconds);
+	}
+	
 	// 타이머 갱신 함수
 	function updateTimer() {
 		if (!startTime) return;
@@ -1160,97 +744,196 @@
 		startTime = new Date().getTime(); // 현재 시간 설정
 		timerId = setInterval(updateTimer, timerInterval); // 주기적으로 타이머 업데이트
 	}
+
+	const prevButton = $('#prev');
+    const nextButton = $('#next');
+    const monthYear = $('#month-year');
+    const daysContainer = $('#days');
+
+    let dateCalendar = new Date();
+
+    function renderCalendar() {
+		let renderCalendartoday = new Date(); // 오늘 날짜 가져오기
+		let lastDay = new Date(dateCalendar.getFullYear(), dateCalendar.getMonth() + 1, 0).getDate();
+		let firstDayIndex = new Date(dateCalendar.getFullYear(), dateCalendar.getMonth(), 1).getDay();
+		let lastDayIndex = new Date(dateCalendar.getFullYear(), dateCalendar.getMonth() + 1, 0).getDay();
+		let prevLastDay = new Date(dateCalendar.getFullYear(), dateCalendar.getMonth(), 0).getDate();
+		let months = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12'];
+
+		monthYear.text(dateCalendar.getFullYear() + '.' + months[dateCalendar.getMonth()] );
+
+		let days = '';
+
+		for (let i = firstDayIndex; i > 0; i--) {
+			days += '<div class="prev-date" data-calender='+dateCalendar.getFullYear()+'-'+ padTime(months[dateCalendar.getMonth()] -1)+'-'+ padTime((prevLastDay - i + 1))+'>' + (prevLastDay - i + 1) + '</div>';
+		}
+
+		for (let i = 1; i <= lastDay; i++) {
+			if (i === dateCalendar.getDate() && dateCalendar.getMonth() === new Date().getMonth()) {
+				days += '<div class="today on" data-calender='+dateCalendar.getFullYear()+'-'+ padTime(months[dateCalendar.getMonth()])+'-'+ padTime(i)+'>' + i + '</div>';
+			} else {
+				days += '<div data-calender='+dateCalendar.getFullYear()+'-'+ padTime(months[dateCalendar.getMonth()])+'-'+ padTime(i)+'>' + i + '</div>';
+			}
+		}
+
+		for (let i = lastDayIndex; i < 6; i++) {
+			days += '<div class="next-date" data-calender='+dateCalendar.getFullYear()+'-'+ padTime(months[dateCalendar.getMonth()] +1)+'-'+ padTime((i - lastDayIndex + 1))+'>' + (i - lastDayIndex + 1) + '</div>';
+		}
+		daysContainer.html(days);
+		let calenderdata = {schedule_Start_Dt : $('.days .on').data('calender'), deptId: '${loginUser.dept_Id}'};
+		homeScheduleList(calenderdata);
+		homeReservationList(calenderdata);
+		$('.days div').click(function(){
+			$('.days div').not(this).removeClass('on');
+			$(this).addClass('on');
+			console.log($(this).data('calender'));
+			calenderdata = {schedule_Start_Dt : $(this).data('calender'),deptId: '${loginUser.dept_Id}'};
+			homeScheduleList(calenderdata);
+			homeReservationList(calenderdata);
+		})
+	}
+
+    renderCalendar();
+    prevButton.on('click', function () {
+        dateCalendar.setMonth(dateCalendar.getMonth() - 1);
+        renderCalendar();
+    });
+
+    nextButton.on('click', function () {
+        dateCalendar.setMonth(dateCalendar.getMonth() + 1);
+        renderCalendar();
+    });
 	// 시간 형식 맞추기 (한 자리 숫자일 경우 앞에 0 붙이기)
 	function padTime(time) {
 		return (time < 10 ? "0" : "") + time;
 	}
-	
+	function homeReservationList(data){
+        $.ajax({
+            type: "get",
+            url: "/WorkConGW/common/homeReservationList",
+            data: data,
+            success: function(response) {
+				$('.privatereservationGroup').find('p').remove();
+				$('.deptreservationGroup').find('p').remove();
+				let privatereservation;
+				let deptreservation;
+				response.forEach(function(e, i){
+					let text;
+					if(e.MEET_ROOM_DEPT_ID == null && !privatereservation){
+						text = `<p class="scheduleTit">나의 시설 예약</p>`
+						$('.privatereservationGroup').append(text);
+						privatereservation = true;
+					}else if(e.MEET_ROOM_DEPT_ID !== null && !deptreservation){
+						text = `<p class="scheduleTit">팀 시설 예약</p>`
+						$('.deptreservationGroup').append(text);
+						deptreservation = true;
+					}
+					if(e.MEET_ROOM_DEPT_ID == null){//개인일정
+						text = `<p class="scheduleText"><i class="fa fa-square" id="privatereservation" aria-hidden="true"></i><span>`+e.MEET_ROOM_DETAIL+`</span><span style="margin-left:5px;">/ `+e.RESERVATION_START_TIME+`시~`+e.RESERVATION_END_TIME+`시</span></p>`;
+						$('.privatereservationGroup').append(text);
+					}else if(e.MEET_ROOM_DEPT_ID !== null){//
+						text = `<p class="scheduleText"><i class="fa fa-square" id="deptreservation" aria-hidden="true"></i><span>`+e.MEET_ROOM_DETAIL+`</span><span style="margin-left:5px;">/ `+e.RESERVATION_START_TIME+`시~`+e.RESERVATION_END_TIME+`시 </span></p>`;
+						$('.deptreservationGroup').append(text);
+					}
+				})	
+            },
+            error: function(xhr, status, error) {
+            // 오류 처리
+            console.error(xhr.responseText);
+            }
+        });
+    }
+	function homeScheduleList(data){
+        $.ajax({
+            type: "get",
+            url: "/WorkConGW/common/homescheduleList",
+            data: data,
+            success: function(response) {
+				$('.privateScheduleGroup').find('p').remove();
+				$('.importantScheduleGroup').find('p').remove();
+				$('.companyScheduleGroup').find('p').remove();
+				$('.deptScheduleGroup').find('p').remove();
+				let privateScheduled;
+				let companySchedule;
+				let deptSchedule;
+				response.forEach(function(e, i){
+					let text;
+					if(e.CODE_ID == 'S01' && !privateScheduled){
+						text = `<p class="scheduleTit">나의일정</p>`
+						$('.privateScheduleGroup').append(text);
+						privateScheduled = true;
+					}else if(e.CODE_ID == 'S02' && !companySchedule){
+						text = `<p class="scheduleTit">부서일정</p>`
+						$('.companyScheduleGroup').append(text);
+						companySchedule = true;
+					}else if(e.CODE_ID == 'S03' && !deptSchedule){
+						text = `<p class="scheduleTit">팀일정</p>`
+						$('.deptScheduleGroup').append(text);
+						deptSchedule = true;
+					}	
+					if(e.CODE_ID == 'S01' && e.SCHEDULE_IMP == 0){//개인일정
+						text = `<p class="scheduleText"><i class="fa fa-square" id="privateSchedule" aria-hidden="true"></i><span>`+e.SCHEDULE_TITLE+`</span></p>`;
+						$('.privateScheduleGroup').append(text);
+					}else if(e.CODE_ID == 'S01' && e.SCHEDULE_IMP == 1){//
+						text = `<p class="scheduleText"><i class="fa fa-square" id="importantSchedule" aria-hidden="true"></i><span>`+e.SCHEDULE_TITLE+`</span></p>`;
+						$('.privateScheduleGroup').append(text);
+					}else if(e.CODE_ID == 'S02'){
+						text = `<p class="scheduleText"><i class="fa fa-square" id="companySchedule" aria-hidden="true"></i><span>`+e.SCHEDULE_TITLE+`</span></p>`;
+						$('.companyScheduleGroup').append(text);
+					}else if(e.CODE_ID == 'S03'){
+						text = `<p class="scheduleText"><i class="fa fa-square" id="deptSchedule" aria-hidden="true"></i><span>`+e.SCHEDULE_TITLE+`</span></p>`;
+						$('.deptScheduleGroup').append(text);
+					} 
+				})	
+            },
+            error: function(xhr, status, error) {
+            // 오류 처리
+            console.error(xhr.responseText);
+            }
+        });
+    }
+	$.getJSON("<%=request.getContextPath()%>/common/api/weather-app-key",
+			function (WeatherResult) {
+				//기온출력
+				console.log(WeatherResult)
+				$('.SeoulNowName').append(WeatherResult.weather[0].main);
+				$('.SeoulNowtemp').append(WeatherResult.main.temp+'&deg;C');
+				$('.SeoulLowtemp').append('<i class="fa-solid fa-temperature-low"></i>'+WeatherResult.main.temp_min+'&deg;C');
+				$('.SeoulHightemp').append('<i class="fa-solid fa-temperature-high"></i>'+WeatherResult.main.temp_max+'&deg;C');
+				$('.Seoulhumidity').append('<i class="fa-solid fa-droplet"></i>'+WeatherResult.main.humidity+'%');
+				$('.SeoulWindSpeed').append('<i class="fa-solid fa-wind"></i>'+WeatherResult.wind.speed+'m/s');
 
-	// 대시보드 설정탭 클릭시
-	function changeSettingMode(obj){
-		if($(obj).attr('href') == '#setting_menu'){
-			$('.dd-handle').css('display','');
-		}else{
-			$('.dd-handle').css('display','none');
-		}
-	}
-
-	// 대시보드 설정 저장
-	function saveDashboard(obj){
-		if($('.dashboardEl:checked').length > 3){
-			alert('대시보드에 표시할 항목은 최대 3개까지만 가능합니다.');
-			return;
-		}else if($('.dashboardEl:checked').length < 3){
-			alert('선택된 항목이 3개 미만일 경우 기본값으로 설정됩니다.');
-
-			let cnt = $('.dashboardEl:checked').length;
-			$('.defaultDashboard').each(function(){
-				if(cnt == 3) return false;
-				if($(this).is(':checked') == false){
-					$(this).prop('checked',true);
-					$('#'+$(this).attr('name')).css('display','');
-					cnt++;
-				}
+				//날씨아이콘출력
+				//WeatherResult.weater[0].icon
+				let weathericonUrl =
+						'<img src= "http://openweathermap.org/img/wn/'
+						+ WeatherResult.weather[0].icon +
+						'@2x.png" alt="' + WeatherResult.weather[0].description + '"/>'
+				
+				$('.SeoulIcon').html(weathericonUrl);
 			});
-		}
-		$(obj).text(' 저장중..');
-		$(obj).prepend($('<i class="fa fa-spinner fa-spin"></i>'));
 
-		let form = $('form[name="dashboardForm"]');
-		form.children().remove();
-
-		let order = 1;
-		$('.dd-item').each(function(){
-			if($(this).css('display') != 'none'){
-				let inputTag = $('<input>').attr({'type':'hidden','name':$(this).attr('id'),'value':order++});
-			}else{
-				let inputTag = $('<input>').attr({'type':'hidden','name':$(this).attr('id'),'value':''});
-			}
-
-			form.append(inputTag);
-		});
-
-		form.append($('<input>').attr({'type':'hidden','name':'emp_Id','value':'${loginUser.emp_Id}'}));
-
-		$.ajax({
-			url:'<c:url value="/common/saveDashboard"/>',
-			type:'post',
-			data:form.serialize(),
-			success:function(){
-				alert('설정이 저장되었습니다.');
-				$(obj).text('저장');
-			}
-		});
+	function dashbodeUpdate(){
+		let result = confirm('수정하시겠습니까?');
+		if (result) {
+			$('#dashbodeUpdate').submit();
+		}	
 	}
 
-	let meetroomFlag = 0;
-	let distance = 900;
-	// 회의실 예약시간 이전버튼
-	function prevTime(){
-		let move = meetroomFlag == 2 ? distance : distance-500;
-		if(meetroomFlag > 0){
-			meetroomFlag--;
-			$('#meetroomReservationTime').animate({
-				marginLeft : $('#meetroomReservationTime').css('margin-left').split('px')[0]*1 + move+"px"
-			});
-		}
-	}
+	function prepareForm() {
+		var checkboxes = document.querySelectorAll('input[type="checkbox"]');
+        checkboxes.forEach(function(checkbox) {
+            var value = checkbox.checked ? "1" : "0";
+            checkbox.value = value;
 
-
-
-
-	// 회의실 예약시간 다음버튼
-	function nextTime(){
-		let move = meetroomFlag == 0 ? distance : distance-500;
-		if(meetroomFlag < 2){
-			meetroomFlag++;
-			$('#meetroomReservationTime').animate({
-				marginLeft : $('#meetroomReservationTime').css('margin-left').split('px')[0]*1 - move+"px"
-			});
-		}
-
-	}
-
-
-
+            // 체크되지 않은 체크박스에 대해서는 hidden input을 추가하여 값을 전송하도록 합니다.
+            if (!checkbox.checked) {
+                var hiddenInput = document.createElement('input');
+                hiddenInput.type = 'hidden';
+                hiddenInput.name = checkbox.name;
+                hiddenInput.value = '0';
+                checkbox.parentNode.appendChild(hiddenInput);
+            }
+        });
+    }
 </script>

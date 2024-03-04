@@ -247,7 +247,19 @@
                     </li>
                   </c:if>
                 </c:forEach>
-          </ul>
+            </ul>
+        </div>
+        <div class="tab-content p-l-0 p-r-0 subsubmenu">
+          <!--서브메뉴 타이틀-->
+            <a href="messageList">메시지</a>
+            <ul class="main-menu metismenu shareAddBook">
+              <li id="li_importantSchedule" class="metismenuLI addBookGroupLi">
+                <a href="messageList" class="shareAddBookGroupListLink"><i class="fa fa-square" id="importantSchedule"></i><span>보낸메세지함</span></a>
+              </li>
+              <li id="li_importantSchedule" class="metismenuLI addBookGroupLi">
+                <a href="receiverList" class="shareAddBookGroupListLink"><i class="fa fa-square" id="importantSchedule"></i><span>받은메세지함</span></a>
+              </li>
+            </ul>
         </div>
     </div>
 </div>
@@ -256,7 +268,7 @@
   <div class="modal-dialog modal-lg" role="document">
     <div class="modal-content">
       <div class="modal-header">
-        <h4 class="title" id="largeModalLabel">수신자 추가</h4>
+        <h4 class="title" id="largeModalLabel">조직도 리스트</h4>
       </div>
       <div class="modal-body" style="display: flex; justify-content: center; align-items: center; ">
         <!-- 모달 수신자 등록 폼 -->
@@ -291,7 +303,7 @@
         <!-- 수신자 등록 폼 -->
         <div style="width: calc(100% - 305px); height: 440px; display: inline-block; top: 0px;">
           <div class="body" style="padding: 6px;">
-            <h4 id="myDutyList">수신자 목록</h4>
+            <h4 id="myDutyList">직원 목록</h4>
             <div class="tab-content" style="padding: 0;">
               <!-- 조직도 -->
               <div class="tab-pane show active" id="org">
@@ -480,26 +492,47 @@ function deleteElement(obj){
 $("#addEmp").click(function(){
   let add_book_id = $(this).closest('.modal-footer').find('input[name="share_add_book_id"]').val();
   console.log(add_book_id);
-	let recordIds = [];
+  if(add_book_id == undefined){
+    //내부 주소록 추가
+    if($('.empListTable .myReceptioner').length == 1){
+      let manage_emp_id = $('.myReceptioner').data('empid');
+      let manage_name = $('.myChecked').attr('data-name');
+      let manage_dept = $('.myChecked').attr('data-dept');
+      let manage_official_name = $('.myChecked').attr('data-position');
+      let manage_company_name = 'WorkCon';
+      $('input[name="manage_emp_id"]').val(manage_emp_id);
+      $('input[name="manage_display_name"]').val(manage_name);
+      $('input[name="manage_company_name"]').val(manage_company_name);
+      $('input[name="manage_dept_name"]').val(manage_dept);
+      $('input[name="manage_official_name"]').val(manage_official_name);
+      alert('추가되었습니다.');
+      $('#managerModal').modal('hide');
+    }else{
+      alert('직원등록은 한명만 가능합니다.');
+    }
+  }else{
+    //공유 주소록 공유
+    let recordIds = [];
     $(this).closest('.modal-content').find('.myReceptioner').each(function() {
       recordIds.push($(this).data('empid'));
     });
-  console.log(recordIds);
-
-  $.ajax({
-    type: "get",
-    url: "/WorkConGW/addBook/addBookShareInsert",
-    data: { add_book_id: add_book_id,
-            emp_id : recordIds},
-    success: function(response) {
-      // 성공적으로 처리된 후에 수행할 작업
-      console.log(response);
-    },
-    error: function(xhr, status, error) {
-      // 오류 처리
-      console.error(xhr.responseText);
-    }
-  });
+    $.ajax({
+      type: "get",
+      url: "/WorkConGW/addBook/addBookShareInsert",
+      data: { add_book_id: add_book_id,
+              emp_id : recordIds},
+      success: function(response) {
+        // 성공적으로 처리된 후에 수행할 작업
+        console.log(response);
+        alert("공유성공하였습니다.");
+        location.reload();
+      },
+      error: function(xhr, status, error) {
+        // 오류 처리
+        console.error(xhr.responseText);
+      }
+    }); 
+  }
 });
 ////숨겨놓기끝
 
@@ -526,9 +559,9 @@ function deptTrees(){
 					level = e.level;
 			    }
 			    if(position){
-					li = '<li onclick="empChecked(this);" data-deptId="'+deptSupId+'" data-name="'+deptName+" "+position+'" data-dept="'+deptSupName+'" data-state="'+(empState==null ? '' : empState)+'" ondblclick="addEmpList();" id="'+ deptId +'" lvl="'+level +'" class="myChecked" style="cursor:pointer" ><img src="<%=request.getContextPath() %>js/treeview/images/emp.png" >'+" "+ deptName + " "+e.position+'</li>';
+					li = '<li onclick="empChecked(this);" data-deptId="'+deptSupId+'" data-name="'+deptName+" "+position+'" data-dept="'+deptSupName+'" data-state="'+(empState==null ? '' : empState)+'" ondblclick="addEmpList();" id="'+ deptId +'" lvl="'+level +'" class="myChecked" style="cursor:pointer" ><img src="<%=request.getContextPath() %>/js/treeview/images/emp2.png">'+" "+ deptName + " "+e.position+'</li>';
 			    }else{
-			    	li = '<li id="'+ deptId +'" lvl="'+level +'"><a class="file code" style="cursor: pointer;" onclick="myClick(this);" >'+ deptName +'&nbsp&nbsp<i data-id="'+deptId+'" data-name="'+deptName+'" style="color:#383d41; cursor:pointer;"></i></a></li>';
+			    	li = '<li id="'+ deptId +'" lvl="'+level +'"><img src="<%=request.getContextPath() %>/js/treeview/images/dept2.png"><a class="file code" style="cursor: pointer;" onclick="myClick(this);" >'+ deptName +'&nbsp&nbsp<i data-id="'+deptId+'" data-name="'+deptName+'" style="color:#383d41; cursor:pointer;"></i></a></li>';
 			    }
         
 				// 1레벨은 그냥 추가
@@ -652,7 +685,7 @@ function addEmpList(){
 		}
 		
 		trTag +=  '<tr class="id_'+$('.myChecked').attr('id')+' myReceptioner" value="'+$('.myChecked').attr('id')+'" data-empid="'+$('.myChecked').attr('id')+'">'
-				+"<td>"+$('.myChecked').attr('data-name')+"</td>"
+				+"<td>"+$('.myChecked').attr('data-name')+ " " +$('.myChecked').attr('data-position')+"</td>"
 				+"<td>"+$('.myChecked').attr('data-dept')+"</td>"
 				+'<td style="text-align: center;">'+$('.myChecked').attr('data-state')+"</td>"
 				+'<td style="text-align: center;cursor:pointer;" onclick="removeElement(this);"><i class="fas fa-times"></i></td>'

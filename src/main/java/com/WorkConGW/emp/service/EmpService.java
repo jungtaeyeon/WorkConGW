@@ -1,8 +1,12 @@
  package com.WorkConGW.emp.service;
 
 import java.io.File;
+import java.nio.charset.Charset;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import com.WorkConGW.common.command.FileUploadCommand;
@@ -21,6 +25,8 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
+import java.util.Map;
+
 import com.WorkConGW.common.service.HomeService;
 import com.WorkConGW.emp.dao.EmpDAO;
 import com.WorkConGW.emp.dto.EmpVO;
@@ -107,7 +113,9 @@ public class EmpService {
          {
              if(empVO.getEmp_Sign()!=null)
              {
-                 signImage.transferTo(new File(rename));
+                 Path filePath = Paths.get(SignPath, rename);
+                 // 파일 저장
+                 signImage.transferTo(filePath.toFile());
              }
          }}
          else{ //실패함
@@ -145,6 +153,7 @@ public class EmpService {
         logger.info(empVO.toString());
        try{
         empDAO.register(empVO);
+
         String key = new TempKey().getKey(50,false);
         empDAO.createAuthKey(empVO.getEmp_Email(), key);
         MailUtils sendMail = new MailUtils(mailSender);
@@ -316,6 +325,28 @@ public class EmpService {
                  empDAO.updateSign(empVO);
              }
          }
+
+     }
+
+     public void registerDashBoard(EmpVO empVO) {
+         String emp_Id = empVO.getEmp_Id();
+         logger.info(emp_Id);
+         empDAO.registerDashBoard(emp_Id);
+     }
+
+     public Map<String,Object> selectGraphEmp(Map<String, Object> dataMap) {
+
+
+        List<EmpVO> empVO = empDAO.selectGraphEmp(dataMap);
+        Map<String,Object> emap = new HashMap<>();
+        emap.put("emp", empVO);
+
+        logger.info("emp", emap.toString());
+
+
+        return emap;
+
+
 
      }
  }

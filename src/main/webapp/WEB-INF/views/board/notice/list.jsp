@@ -116,7 +116,7 @@
                   <table class="table table-hover m-b-0">
                     <thead class="shadow-none p-3 mb-5 bg-light rounded">
                       <tr id="tr1">
-                        <th style="width:80px;">번호</th>
+<%--                        <th style="width:80px;">번호</th>--%>
                         <th>분류</th>
                         <th>제목</th>
                         <th>작성일자</th>
@@ -129,10 +129,6 @@
                     <c:forEach items="${importantNoticeList }" var="notice" varStatus="loop">
                       <fmt:parseNumber value="${(today.time) - (notice.notice_create_dt.time) }" integerOnly="true" var="defferTime"/>
                       <tr class="xl-pink" onclick="window.location.href='<%=request.getContextPath()%>/board/notice/detail?notice_id=${notice.notice_id}';" >
-                        <td id="notice_id" >${notice.notice_id }</td>
-<%--                        <td>${loop.index + boardFormVO.searchNoticeVO.firstIndex +1}</td>--%>
-<%--                          <td>${importantNoticeList.size() - loop.index + boardFormVO.searchNoticeVO.firstIndex}</td>--%>
-<%--                        <td>${importantNoticeList.size() - loop.index}</td>--%>
                         <c:if test="${notice.notice_important_st eq 1}">
                           <td id="noticeImportantYN"><span class="badge badge-danger">필독</span></td>
                         </c:if>
@@ -162,7 +158,6 @@
                   <table class="table table-hover m-b-0">
                     <thead class="shadow-none p-3 mb-5 bg-light rounded">
                       <tr id="tr2">
-                        <th style="width:80px;">번호</th>
                         <th>분류</th>
                         <th>제목</th>
                         <th>작성일자</th>
@@ -175,9 +170,6 @@
                     <c:forEach items="${noticeList}" var="notice" varStatus="loop">
                       <fmt:parseNumber value="${today.time - notice.notice_create_dt.time }" integerOnly="true" var="defferTime"/>
                       <tr onclick="window.location.href='<%=request.getContextPath()%>/board/notice/detail?notice_id=${notice.notice_id}';" >
-                        <td id="notice_id" >${notice.notice_id }</td>
-<%--                        <td>${loop.index + boardFormVO.searchNoticeVO.firstIndex +1}</td>--%>
-
                         <c:if test="${notice.notice_important_st eq 1}">
                           <td id="noticeImportantYN"><span class="badge badge-danger">필독</span></td>
                         </c:if>

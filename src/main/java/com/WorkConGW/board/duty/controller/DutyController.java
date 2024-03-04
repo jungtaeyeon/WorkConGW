@@ -91,7 +91,7 @@ public class DutyController extends BaseController {
             dutyList = dutyService.searchList(searchDutyVO);
             totCnt = dutyService.searchListTotalCount(searchDutyVO);
         }
-
+        logger.info(dutyList.toString());
         paginationInfo.setTotalRecordCount(totCnt);
         searchDutyVO.setEndDate(paginationInfo.getLastPageNoOnPageList());
         searchDutyVO.setStartDate(paginationInfo.getFirstPageNoOnPageList());

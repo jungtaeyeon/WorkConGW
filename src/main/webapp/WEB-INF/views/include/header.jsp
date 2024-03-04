@@ -31,7 +31,11 @@
 	<script src="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote.min.js"></script>
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.18/lang/summernote-ko-KR.min.js"></script>
 
-
+	<!--Google Fonts-->
+	<link rel="preconnect" href="https://fonts.googleapis.com">
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@100..900&display=swap" rel="stylesheet">
+	<link rel="stylesheet" href="<%=request.getContextPath() %>/css/font.css" />
 
 	<!-- Bootstrap Datepicker CSS, JS CDN -->
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.10.0/css/bootstrap-datepicker.min.css" integrity="sha512-34s5cpvaNG3BknEWSuOncX28vz97bRI59UnVtEEpFX536A7BtZSJHsDyFoCl8S7Dt2TPzcrCEoHBGeM4SUBDBw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
@@ -53,7 +57,7 @@
 
 		ul.menuList {
 			height: 100%; /* 더 높은 높이로 조절 */
-			font-size: 1.5em;
+			font-size: 1.4em;
 			display: flex;
 			align-items: center;
 		}
@@ -182,6 +186,7 @@
 		}
 		.menuProfile a{color:#000;}
 		.user-name{color: #fff;}
+		.dropdown-menu{left: -5px;}
 	</style>
 </head>
 <body class="theme-black" style="">
@@ -262,7 +267,7 @@
 				<a href="javascript:void(0);" class="user-name" data-toggle="dropdown" aria-expanded="false">
 
 					<c:if test="${loginUser.emp_Picture != null}">
-						<div id="pictureView" style="background-image:url('${pageContext.request.contextPath }/pds/empPicture/${ loginUser.emp_Picture}'); width: 55px; height: 55px;" class="rounded-circle avatar" ></div>
+						<div id="pictureView" style="background-image:url('${pageContext.request.contextPath}/pds/empPicture/${loginUser.emp_Picture}'); width: 55px; height: 55px; background-color: #fff;" class="rounded-circle avatar" ></div>
 					</c:if>
 					<c:if test = "${loginUser.emp_Picture == null}">
 						<div id="pictureViewPhoto" style="background-color: #ffffff;" class="rounded-circle user-photo">
@@ -514,24 +519,24 @@
 	}
 
 
-	function checkSession() {
-		let session = <%=session.getMaxInactiveInterval()%> ;
-		if(session > 300){
-			alert('시간이 만료되었습니다. 로그인해주세요')
-			location.href = "<%=request.getContextPath()%>/common/loginForm"
-			sessionStorage.clear()
-		}
-		else{
-			document.write(session);
-			clearTimeout(orange);
-		}
-	}
+	// function checkSession() {
+	// let session = <%=session.getMaxInactiveInterval()%> ;
+	// 	if(session > 300){
+	// 	11	alert('시간이 만료되었습니다. 로그인해주세요')
+	// 		location.href = "<%=request.getContextPath()%>/common/loginForm"
+	// 		sessionStorage.clear()
+	// 	}
+	// 	else{
+	// 		document.write(session);
+	// 		clearTimeout(orange);
+	// 	}
+	// }
 
-	function checkStart() {
-		orange = setInterval(checkSession, 300000);
-		console.log(orange)
-	}
-	checkStart();
+	// function checkStart() {
+	// 	orange = setInterval(checkSession, 300000);
+	// 	console.log(orange)
+	// }
+	// checkStart();
 
 
 

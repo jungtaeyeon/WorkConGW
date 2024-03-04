@@ -72,6 +72,11 @@ java.util.ArrayList, com.WorkConGW.addbook.dto.AddBookVO" %>
         justify-content: space-between;
         align-items: center;
       }
+      .manageinterior{
+        font-size: 15px;
+        font-weight: 500;
+        color: #d2d2d2;
+      }
     </style>
     <body>
       <!-- 헤더인클루드 -->
@@ -163,7 +168,7 @@ java.util.ArrayList, com.WorkConGW.addbook.dto.AddBookVO" %>
                       <c:if test="${loop.index == 0}">
                         <th class="tableCheckBox"><input type="checkbox" name="manage_id" value="${addBook.manage_id}" class="checkBox manage_id" /></th>
                         <td>
-                          ${addBook.manage_display_name}
+                          ${addBook.manage_display_name}<c:if test="${addBook.manage_emp_id ne null}"><span class="manageinterior">[내부연락처]</span></c:if>
                         </td>
                         <td class="listModalBtn" data-toggle="modal" data-target="#staticBackdrop${status.index}">
                           ${addBook.manage_company_name}
@@ -181,9 +186,7 @@ java.util.ArrayList, com.WorkConGW.addbook.dto.AddBookVO" %>
                           ${addBook.manage_email}
                         </td>
                         <td class="listModalBtn" data-toggle="modal" data-target="#staticBackdrop${status.index}">
-                          <c:forEach var="addBookGroup" items="${addBookList}">
-                            <c:if test="${addBookGroup.add_book_title ne ' '}"> <span class="groupTag">${addBookGroup.add_book_title}</span></c:if>
-                          </c:forEach>
+                          <c:if test="${addBook.add_book_title ne ' '}"> <span class="groupTag">${addBook.add_book_title}</span></c:if>
                         </td>
                       </tr>
                       <!-- Modal -->
@@ -233,8 +236,11 @@ java.util.ArrayList, com.WorkConGW.addbook.dto.AddBookVO" %>
 
     
     <script>
+      
       let loginUser = "${loginUser.emp_Id}";
-      let addBookList = "${addBookGroupList[0].emp_id}";
+      let addBookList = "${groupedByManageId}";
+      console.log(addBookList);
+      console.log("${loginUser.emp_Id}");
       $(".starred").click(function(){
         if(loginUser == addBookList){
           $(this).toggleClass("fa-regular");
@@ -287,7 +293,7 @@ java.util.ArrayList, com.WorkConGW.addbook.dto.AddBookVO" %>
               data: { manage_id: recordIds },
               success: function(response) {
                   // 성공적으로 처리된 후에 수행할 작업
-                  if(response == 1){
+                  if(response !== 0){
                     alert('삭제되었습니다');
                     location.reload();
                   }

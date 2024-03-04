@@ -375,7 +375,12 @@ function empChecked(obj) {
                 stSpan = "&nbsp<span class='badge badge-success'>"+attendStName+"</span>";
             }
             $("#modalName").append(stSpan);
-            getModalPicture(empPicture);
+            if (empPicture){
+                getModalPicture("${pageContext.request.contextPath }/pds/empPicture/"+empPicture);
+            } else{
+                getModalPicture("${pageContext.request.contextPath }/pds/emp.png");
+            }
+
         },
         error: function(e) {
             console.log(e);
@@ -385,7 +390,7 @@ function empChecked(obj) {
 }
 
 function getModalPicture(empPicture){
-    var imageURL = "${pageContext.request.contextPath }/pds/empPicture/"+empPicture;
+    var imageURL = empPicture;
     $('div#emp_Picture').css({'background-image':'url('+imageURL+')',
         'background-position':'center',
         'background-size':'cover',

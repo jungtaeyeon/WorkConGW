@@ -14,7 +14,11 @@ import com.WorkConGW.emp.dto.EmpVO;
 import com.WorkConGW.emp.service.EmpService;
 import com.WorkConGW.reservation.dto.ReservationComplainVO;
 import com.WorkConGW.reservation.service.MeetRoomService;
+import com.google.api.client.json.Json;
 import com.google.api.services.storage.Storage;
+import com.google.gson.Gson;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
 import io.micrometer.common.util.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -27,10 +31,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.List;
-import java.util.Map;
+import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
+import java.util.*;
 
 
 @Controller
@@ -58,6 +61,8 @@ public class AdminCommonController extends CommonController {
          noticeVO.setRecordCountPerPage(5); //5개 지정
          Map<String,Object> dataMap = noticeService.getNoticeList(noticeVO);
 
+         logger.info(dataMap.toString());
+
          ReservationComplainVO reservationComplainVO = adminFormVO.getReservationComplainVO();
          reservationComplainVO.setRecordCountPerPage(5);
          List<ReservationComplainVO> complainList = meetRoomService.getAllComplainList(reservationComplainVO);
@@ -68,10 +73,13 @@ public class AdminCommonController extends CommonController {
         logger.info(deptList.toString());
         model.addAttribute("loginUserList",loginUserList);
         model.addAttribute("deptList",deptList);
-        model.addAttribute("noticeList",dataMap.get("noticeList"));
+        model.addAttribute("noticeList",dataMap.get("importantNoticeList"));
         model.addAttribute("complainList",complainList);
         return url;
      }
+
+
+
 
      @GetMapping("/access_denied")
      public String access_denied(String msg, Model model)
@@ -138,6 +146,147 @@ public class AdminCommonController extends CommonController {
          return loginList;
 
      }
+
+
+     @ResponseBody
+     @PostMapping("/graphEmp")
+    public String graphEmp(Model model)
+     {
+         LocalDateTime now = LocalDateTime.now();
+         LocalDateTime startDt = now.minus(1, ChronoUnit.WEEKS);
+         LocalDateTime endDt = now;
+         logger.info("startDt : "+startDt.toString());
+         logger.info("endDt"+endDt.toString());
+         List<Map<String,Object>> graphList = new ArrayList<>();
+         Map<String,Object> dataMap = new HashMap<>();
+         dataMap.put("startDt",startDt);
+         dataMap.put("endDt", endDt);
+         dataMap = empService.selectGraphEmp(dataMap);
+
+         graphList.add(dataMap);
+
+         logger.info(graphList.toString());
+
+
+         ////////////////////GSON 변환/////////////////////////
+
+         Gson gson = new Gson();
+         JsonArray jArray = new JsonArray();
+         int total = 0;
+         int chaJang = 0;
+         Iterator<Map<String,Object>> it = graphList.iterator();
+         int deari = 0;
+         int sawon = 0;
+         int buJang = 0;
+         int gwaJang = 0;
+         while(it.hasNext()){
+             Map<String,Object> curMap = it.next();
+             JsonObject object = new JsonObject();
+
+             logger.info("curMap:"+curMap.toString());
+             List<EmpVO> empVOList = (List)curMap.get("emp");
+             logger.info("empVOList:"+empVOList.toString()); // 리스트로받아옴
+
+
+             for(EmpVO empVO : empVOList)
+             {
+
+                 String userId = empVO.getEmp_Id();
+                 int cnt = empVO.getCnt();
+                 total += cnt;
+
+
+                 if(("차장").equals(empVO.getcode_Name()))
+                 {
+
+                     chaJang += cnt;
+
+                 }
+
+                else if(("대리").equals(empVO.getcode_Name())){
+                     deari += cnt;
+                 }
+
+                 else if(("사원").equals(empVO.getcode_Name())){
+                     sawon += cnt;
+
+                 }
+
+                 else if(("부장").equals(empVO.getcode_Name())){
+                     buJang += cnt;
+
+                 }
+
+                 else  if(("과장").equals(empVO.getcode_Name())){
+                     gwaJang += cnt;
+
+                 }
+
+
+
+             }
+
+             JsonObject empObject = new JsonObject();
+             empObject.addProperty("ID", "사원");
+             empObject.addProperty("Count", sawon);
+             jArray.add(empObject);
+
+             empObject = new JsonObject();
+             empObject.addProperty("ID", "대리");
+             empObject.addProperty("Count", deari);
+             jArray.add(empObject);
+             
+
+             empObject = new JsonObject();
+             empObject.addProperty("ID", "차장");
+             empObject.addProperty("Count", chaJang);
+             jArray.add(empObject);
+
+             empObject = new JsonObject();
+             empObject.addProperty("ID", "과장");
+             empObject.addProperty("Count", gwaJang);
+             jArray.add(empObject);
+
+             empObject = new JsonObject();
+             empObject.addProperty("ID", "부장");
+             empObject.addProperty("Count", buJang);
+             jArray.add(empObject);
+
+
+             empObject = new JsonObject();
+             empObject.addProperty("ID","합계");
+             empObject.addProperty("Count", total);
+             jArray.add(empObject);
+
+
+
+
+
+//             object.addProperty("Sawon", sawon);
+//             object.addProperty("BuJang", buJang);
+//             object.addProperty("JwaJang", jwaJang);
+//             object.addProperty("Count", total);
+//             object.addProperty("Sawon", sawon);
+//             object.addProperty("ChaJang", chaJang);
+//             object.addProperty("Deari", deari);
+
+
+
+     }
+
+
+         String jsonGraph = gson.toJson(jArray);
+         logger.info(jsonGraph);
+
+         model.addAttribute("jsonGraph", jsonGraph);
+
+         return jsonGraph;
+
+     }
+
+
+
+
 
 
 

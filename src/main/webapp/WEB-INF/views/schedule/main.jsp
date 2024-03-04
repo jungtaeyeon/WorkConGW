@@ -3,8 +3,6 @@
          pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
-
-일정관리 메인페이지입니다.
 <html lang="ko"></html>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <head>

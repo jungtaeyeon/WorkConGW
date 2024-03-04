@@ -18,7 +18,8 @@ import com.WorkConGW.addbook.dto.AddBookVO;
 
 @Repository
 public class AddBookDAO {
-  @Autowired
+  private static final Integer Inteager = null;
+@Autowired
   private SqlSessionTemplate sqlSessionTemplate;
   Logger logger = LoggerFactory.getLogger(AddBookDAO.class);
 
@@ -135,10 +136,7 @@ public class AddBookDAO {
   public int shareAddBookGroupDelete(Map<String, Object> pmap) {
     logger.info("shareAddBookGroupDelete");
     int result = 0;
-    result = sqlSessionTemplate.delete("shareAddBookGroupManageDelete", pmap);
     result = sqlSessionTemplate.delete("shareAddBookGroupDelete", pmap);
-    logger.info(Integer.toString(result));
-    
     logger.info(Integer.toString(result));
     return result;
   }
@@ -171,11 +169,7 @@ public class AddBookDAO {
         paramMap.put("emp_id", emp_id);
         // MyBatis의 insert 쿼리를 실행합니다.
         logger.info(paramMap.toString());
-        result += sqlSessionTemplate.insert("addBookShareManageInsert", paramMap);
-        logger.info(Integer.toString(result));
         result += sqlSessionTemplate.insert("addBookShareInsert", paramMap);
-        sqlSessionTemplate.insert("addBookShareManageInsertUpdate", paramMap);
-        logger.info(Integer.toString(result));
     }
     sqlSessionTemplate.insert("addBookShareManageUpdate", paramMap);
     logger.info(Integer.toString(result));
@@ -211,6 +205,84 @@ public class AddBookDAO {
     int result = 0;
     result = sqlSessionTemplate.delete("addBookStarredDelete", pmap);
     logger.info(Integer.toString(result));
+    return result;
+  }
+
+  public int messageInsert(Map<String, Object> pmap) {
+    logger.info("messageInsert");
+    int result = 0;
+    logger.info(pmap.toString());
+
+    
+    List<String> manage_emp_id_list = (List<String>) pmap.get("manage_emp_id");
+    String messageContent = (String) pmap.get("messageContent");
+
+    // 각각의 emp_id를 처리하는데 사용할 Map을 생성합니다
+    Map<String, Object> paramMap = new HashMap<>();
+    paramMap.put("messageContent", messageContent);
+    
+    // emp_id_list에 있는 각각의 emp_id를 처리합니다.
+    for (String manage_emp_id : manage_emp_id_list) {
+        paramMap.put("manage_emp_id", manage_emp_id);
+        // MyBatis의 insert 쿼리를 실행합니다.
+        logger.info(paramMap.toString());
+        result = sqlSessionTemplate.insert("messageInsert", pmap);
+        Long sequenceKey = (Long)pmap.get("id");
+        paramMap.put("sequenceKey", sequenceKey);
+        sqlSessionTemplate.insert("receivermessageInsert", paramMap);
+    }
+    return result;
+  }
+
+  public List<AddBookVO> messageList(Map<String, Object> pmap) {
+    logger.info("messageList");
+    AddBookVO addBookVO = new AddBookVO();
+    List<AddBookVO> list = sqlSessionTemplate.selectList("messageList", pmap);
+    logger.info(list.toString());
+    return list;
+  }
+
+  public List<AddBookVO> messageDetail(Map<String, Object> pmap) {
+    logger.info("messageDetail");
+    AddBookVO addBookVO = new AddBookVO();
+    List<AddBookVO> list = sqlSessionTemplate.selectList("messageDetail", pmap);
+    logger.info(list.toString());
+    return list;
+  }
+
+  public int messageDelete(List<Long> manage_id) {
+    logger.info("messageDelete");
+    int result = 0;
+    logger.info(manage_id.toString());
+    result = sqlSessionTemplate.update("messageDelete", manage_id);
+    sqlSessionTemplate.update("receivermessageDelete", manage_id);
+    logger.info(Inteager.toString(result));
+    return result;
+  }
+
+  public List<AddBookVO> receiverList(Map<String, Object> pmap) {
+    logger.info("receiverList");
+    AddBookVO addBookVO = new AddBookVO();
+    List<AddBookVO> list = sqlSessionTemplate.selectList("receiverList", pmap);
+    logger.info(list.toString());
+    return list;
+  }
+
+  public List<AddBookVO> receiverDetail(Map<String, Object> pmap) {
+    logger.info("receiverDetail");
+    AddBookVO addBookVO = new AddBookVO();
+    List<AddBookVO> list = sqlSessionTemplate.selectList("receiverDetail", pmap);
+    sqlSessionTemplate.update("receiverRead", pmap);
+    logger.info(list.toString());
+    return list;
+  }
+
+  public int receiverDelete(List<Long> manage_id) {
+    logger.info("receiverDelete");
+    int result = 0;
+    logger.info(manage_id.toString());
+    result = sqlSessionTemplate.update("receivermessageDelete", manage_id);
+    logger.info(Inteager.toString(result));
     return result;
   }
 }

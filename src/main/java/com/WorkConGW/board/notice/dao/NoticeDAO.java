@@ -9,6 +9,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
+import java.util.Date;
 import java.util.List;
 
 
@@ -92,4 +93,5 @@ public class NoticeDAO {
     public void deleteNoticeFileById(NoticeAttachVO noticeAttach) {
         sqlSessionTemplate.delete("deleteNoticeFileById", noticeAttach);
     }
+
 }

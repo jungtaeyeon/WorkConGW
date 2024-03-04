@@ -4,41 +4,93 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.mybatis.mapper.MilestoneMapper">
 
+<!--    <select id="selectMilestoneList" parameterType="MilestoneVO" resultType="MilestoneVO">-->
+<!--        SELECT-->
+<!--        A.milestone_id-->
+<!--        ,A.milestone_name-->
+<!--        ,A.milestone_create_dt-->
+<!--        ,A.milestone_end_dt-->
+<!--        ,A.milestone_update_dt-->
+<!--        ,A.milestone_st-->
+<!--        ,A.emp_id-->
+<!--        ,A.emp_name-->
+<!--        ,NVL(B.openIssueCount,0) as openIssueCount-->
+<!--        ,NVL(C.closedIssueCount,0) as closedIssueCount-->
+<!--        FROM-->
+<!--        milestone A-->
+<!--        ,(SELECT milestone_id, count(*) as openIssueCount-->
+<!--        FROM issue_board-->
+<!--        WHERE ISSUE_OPEN_ST = 1-->
+<!--        GROUP BY milestone_id-->
+<!--        ORDER BY milestone_id) B-->
+<!--        ,(SELECT milestone_id, count(*) as closedIssueCount-->
+<!--        FROM issue_board-->
+<!--        WHERE ISSUE_OPEN_ST = 2-->
+<!--        GROUP BY milestone_id-->
+<!--        ORDER BY milestone_id) C-->
+<!--        WHERE 1=1-->
+<!--        <choose>-->
+<!--            <when test='isOpen == "open"'>-->
+<!--                AND milestone_st=1-->
+<!--            </when>-->
+<!--            <otherwise>-->
+<!--                AND milestone_st=2-->
+<!--            </otherwise>-->
+<!--        </choose>-->
+<!--        AND A.milestone_id = B.milestone_id(+)-->
+<!--        AND A.milestone_id = C.milestone_id(+)-->
+<!--        AND A.emp_id = #{emp_Id}-->
+<!--        ORDER BY milestone_update_dt DESC-->
+<!--    </select>-->
+
     <select id="selectMilestoneList" parameterType="MilestoneVO" resultType="MilestoneVO">
         SELECT
         A.milestone_id
         ,A.milestone_name
         ,A.milestone_create_dt
-        ,to_char(A.milestone_end_dt, 'yyyy-MM-dd') milestoneEndDt
+        ,A.milestone_end_dt
         ,A.milestone_update_dt
         ,A.milestone_st
         ,A.emp_id
         ,A.emp_name
-        ,NVL(B.openIssueCount,0) as openIssueCount
-        ,NVL(C.closedIssueCount,0) as closedIssueCount
+        ,NVL(B.todoIssueCount,0) as todoIssueCount
+        ,NVL(C.inprogressIssueCount,0) as inprogressIssueCount
+        ,NVL(D.doneIssueCount,0) as doneIssueCount
+        ,NVL(E.milestoneCount,0) as milestoneCount -- 마일스톤에 이슈 연결되어있으면 삭제 불가능 하게 하기위해 추가
         FROM
         milestone A
-        ,(SELECT milestone_id, count(*) as openIssueCount
-        FROM issue_board
-        WHERE issue_board_st = 'Y'
-        GROUP BY milestone_id
-        ORDER BY milestone_id) B
-        ,(SELECT milestone_id, count(*) as closedIssueCount
-        FROM issue_board
-        WHERE issue_board_st = 'N'
-        GROUP BY milestone_id
-        ORDER BY milestone_id) C
+        ,(SELECT a.MILESTONE_ID, count(*) as todoIssueCount
+        FROM ISSUE_BOARD a, MILESTONE b
+        WHERE a.ISSUE_PROJECT_ST = 'todo' AND a.MILESTONE_ID = b.MILESTONE_ID
+        GROUP BY a.MILESTONE_ID
+        ORDER BY a.MILESTONE_ID) B
+        ,(SELECT a.MILESTONE_ID, count(*) as inprogressIssueCount
+        FROM ISSUE_BOARD a, MILESTONE b
+        WHERE a.ISSUE_PROJECT_ST = 'inprogress' AND a.MILESTONE_ID = b.MILESTONE_ID
+        GROUP BY a.MILESTONE_ID
+        ORDER BY a.MILESTONE_ID) C
+        ,(SELECT a.MILESTONE_ID, count(*) as doneIssueCount
+        FROM ISSUE_BOARD a, MILESTONE b
+        WHERE a.ISSUE_PROJECT_ST = 'done' AND a.MILESTONE_ID = b.MILESTONE_ID
+        GROUP BY a.MILESTONE_ID
+        ORDER BY a.MILESTONE_ID) D
+        ,(SELECT MILESTONE_ID, count(*) as milestoneCount
+        FROM ISSUE_BOARD
+        GROUP BY MILESTONE_ID
+        ORDER BY MILESTONE_ID) E  -- 마일스톤에 이슈 연결되어있으면 삭제 불가능 하게 하기위해 추가
         WHERE 1=1
         <choose>
             <when test='isOpen == "open"'>
-                AND milestone_st='Y'
+                AND milestone_st=1
             </when>
             <otherwise>
-                AND milestone_st='N'
+                AND milestone_st=2
             </otherwise>
         </choose>
         AND A.milestone_id = B.milestone_id(+)
         AND A.milestone_id = C.milestone_id(+)
+        AND A.milestone_id = D.milestone_id(+)
+        AND A.milestone_id = E.milestone_id(+)  -- 마일스톤에 이슈 연결되어있으면 삭제 불가능 하게 하기위해 추가
         AND A.emp_id = #{emp_Id}
         ORDER BY milestone_update_dt DESC
     </select>
@@ -48,30 +100,79 @@
             A.milestone_id
              ,A.milestone_name
              ,A.milestone_create_dt
-             ,to_char(A.milestone_end_dt, 'MM/DD/YYYY') milestoneEndDt
+             ,A.milestone_end_dt
              ,A.milestone_update_dt
              ,A.milestone_st
              ,A.emp_id
              ,A.emp_name
-             ,NVL(B.openIssueCount,0) as openIssueCount
-             ,NVL(C.closedIssueCount,0) as closedIssueCount
+             ,NVL(B.todoIssueCount,0) as todoIssueCount
+             ,NVL(C.inprogressIssueCount,0) as inprogressIssueCount
+             ,NVL(D.doneIssueCount,0) as doneIssueCount
+             ,NVL(D.doneIssueCount,0) as closedIssueCount
+             ,(NVL(B.todoIssueCount,0) + NVL(C.inprogressIssueCount,0)) as openIssueCount
         FROM
             milestone A
-           ,(SELECT milestone_id, count(*) as openIssueCount
-             FROM issue_board
-             WHERE issue_board_st = 'Y'
-             GROUP BY milestone_id
-             ORDER BY milestone_id) B
-           ,(SELECT milestone_id, count(*) as closedIssueCount
-             FROM issue_board
-             WHERE issue_board_st = 'N'
-             GROUP BY milestone_id
-             ORDER BY milestone_id) C
+           ,(SELECT a.MILESTONE_ID, count(*) as todoIssueCount
+             FROM ISSUE_BOARD a, MILESTONE b
+             WHERE a.ISSUE_PROJECT_ST = 'todo' AND a.MILESTONE_ID = b.MILESTONE_ID
+             GROUP BY a.MILESTONE_ID
+             ORDER BY a.MILESTONE_ID) B
+           ,(SELECT a.MILESTONE_ID, count(*) as inprogressIssueCount
+             FROM ISSUE_BOARD a, MILESTONE b
+             WHERE a.ISSUE_PROJECT_ST = 'inprogress' AND a.MILESTONE_ID = b.MILESTONE_ID
+             GROUP BY a.MILESTONE_ID
+             ORDER BY a.MILESTONE_ID) C
+           ,(SELECT a.MILESTONE_ID, count(*) as doneIssueCount
+             FROM ISSUE_BOARD a, MILESTONE b
+             WHERE a.ISSUE_PROJECT_ST = 'done' AND a.MILESTONE_ID = b.MILESTONE_ID
+             GROUP BY a.MILESTONE_ID
+             ORDER BY a.MILESTONE_ID) D
         WHERE A.milestone_id = B.milestone_id(+)
           AND A.milestone_id = C.milestone_id(+)
+          AND A.milestone_id = D.milestone_id(+)
           AND A.milestone_id = #{milestone_Id}
     </select>
 
+    <insert id="insertMilestone" parameterType="MilestoneVO">
+        INSERT INTO milestone (
+                                   milestone_id
+                                 ,milestone_name
+                                 ,milestone_create_dt
+                                 ,milestone_end_dt
+                                 ,milestone_update_dt
+                                 ,milestone_st
+                                 ,emp_id
+                                 ,emp_name
+        ) VALUES (
+                   milestone_id_seq.nextval
+                 ,#{milestone_Name}
+                 ,sysdate
+                 ,sysdate
+                 ,sysdate
+                 ,1
+                 ,#{emp_Id}
+                 ,#{emp_Name}
+                 )
+    </insert>
+
+    <update id="updateMilestone" parameterType="MilestoneVO">
+        UPDATE milestone
+        SET
+        milestone_update_dt = sysdate
+        <if test="milestone_Name != null and milestone_Name != ''">
+            ,milestone_name = #{milestone_Name}
+        </if>
+        <if test="milestone_End_Dt != null">
+            ,milestone_end_dt = #{milestone_End_Dt}
+        </if>
+        <if test="milestone_St != null and milestone_St != ''">
+            ,milestone_st = #{milestone_St}
+        </if>
+        WHERE
+        milestone_id = #{milestone_Id}
+    </update>
+
+    <!-- 이슈 디테일에서 사용 -->
     <select id="selectMilestoneListSimple" parameterType="EmpVO" resultType="MilestoneVO">
         SELECT
             A.milestone_id

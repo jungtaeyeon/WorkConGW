@@ -95,19 +95,28 @@ public class RestAttendenceController {
         return pmap;
     }
 
-    @GetMapping("attendDeptSelect")
-    public List<Map<String, Object>> attendDeptSelect(@RequestParam Map<String, Object> pmap){
-        logger.info("attendDeptSelect");
-        logger.info(pmap.toString());
-        List<Map<String, Object>> result = attendenceService.attendDeptSelect(pmap);
-        return result;
-    }
-
     @GetMapping("attendSelect")
     public List<Map<String, Object>> attendSelect(@RequestParam Map<String, Object> pmap){
         logger.info("attendSelect");
         logger.info(pmap.toString());
         List<Map<String, Object>> result = attendenceService.attendSelect(pmap);
+        return result;
+    }
+
+    @GetMapping("attendMainSelect")
+    public List<Map<String, Object>> attendMainSelect(@RequestParam Map<String, Object> pmap, HttpSession session){
+        logger.info("attendMainSelect");
+        EmpVO empVO = (EmpVO) session.getAttribute("loginUser");
+        String empId = null;
+        if(empVO != null) {
+            empId = empVO.getEmp_Id();
+        }
+        pmap.put("empId", empId);
+        logger.info(pmap.toString());
+        List<Map<String, Object>> result = attendenceService.attendMainSelect(pmap);
+        Map<String, Object> attendenceCountList = attendenceService.attendenceCountList(pmap);
+        result.add(attendenceCountList);
+        logger.info(result.toString());
         return result;
     }
 }

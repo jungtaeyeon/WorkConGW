@@ -110,7 +110,7 @@ let timerElement = document.getElementById("attendTimeContent");
 
 // 타이머 갱신 주기 (1초)
 let timerInterval = 1000;
-
+updateTimer();
   $('.attendStartBtn').click(function(){
     if(history_Attend_Time == ""){
       $.ajax({
@@ -121,6 +121,7 @@ let timerInterval = 1000;
         success : function(result) { 
           alert('출근체크되었습니다.');
           startTimer();
+          location.reload();
         },    
         error : function(request, status, error) {        
           console.log(error);
@@ -132,11 +133,7 @@ let timerInterval = 1000;
     }
   })
   $('.attendEndBtn').click(function(){
-    if(history_Leaving_Time != ""){
-      alert('이미퇴근하셨습니다.');
-      return;
-    }
-    else if(history_Attend_Time != ""){
+    if(history_Attend_Time != ""){
         let result = confirm('정말로퇴근하시겠습니까?');
         if (result) {
             $.ajax({
@@ -148,6 +145,8 @@ let timerInterval = 1000;
                     alert('퇴근체크되었습니다.');
                     updateTimer();
                     clearInterval(timerId);
+                    sessionStorage.clear();
+                    window.location.href='${pageContext.request.contextPath }/common/logout';
                 },
                 error : function(request, status, error) {
                     console.log(error);

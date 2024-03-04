@@ -49,7 +49,7 @@
 							<div class="body project_report">
 								<button type="button" class="btn btn-light active" onclick="window.location.href='${pageContext.request.contextPath}/board/issue/list';">이슈</button>
 								<button type="button" class="btn btn-light" onclick="window.location.href='${pageContext.request.contextPath}/board/milestone/list';">마일스톤</button>
-								<button type="button" class="btn btn-light" onclick="window.location.href='${pageContext.request.contextPath}/board/project';">프로젝트</button>
+								<button type="button" class="btn btn-light" onclick="window.location.href='${pageContext.request.contextPath}/board/project/list';">프로젝트</button>
 
 								<label class="fancy-checkbox m-l-30">
 									<input type="checkbox" data-parsley-multiple="checkbox" <c:if test="${boardFormVO.searchIssueVO.searchCondition eq 'w' && boardFormVO.searchIssueVO.searchKeyword eq loginUser.emp_Name }">checked</c:if>  onchange="setSearchCondition(this);"/>

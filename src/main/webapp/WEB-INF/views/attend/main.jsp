@@ -6,9 +6,6 @@
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%> 
     <style>
 	
-        .subTitleText{
-            margin-bottom: 25px;
-        }
         .subTitleText h2{
             display: flex;
         justify-content: flex-start;
@@ -20,8 +17,9 @@
         margin-right: 5px;
         }
         .serchContain{
-            display: flex; 
-            align-items: flex-start;
+          display: flex; 
+          align-items: flex-start;
+					margin-bottom:3%;
         }
         #serchForm{display: flex;}
         .serchSelect{width: 150px;}
@@ -103,6 +101,67 @@
     		margin-left: 15px;
 			vertical-align: top;
 		}
+		.sec_cal {
+				width: 360px;
+				margin: 0 auto;
+				font-family: "NotoSansR";
+		}
+
+		.sec_cal .cal_nav {
+				display: flex;
+				justify-content: center;
+				align-items: center;
+				font-weight: 700;
+				font-size: 48px;
+				line-height: 78px;
+		}
+
+		.sec_cal .cal_nav .year-month {
+				width: 185px;
+				text-align: center;
+				line-height: 1;
+				font-size: 30px;
+		}
+
+		.sec_cal .cal_nav .nav {
+				display: flex;
+				border: 1px solid #333333;
+				border-radius: 5px;
+		}	
+		.sec_cal .cal_nav .go-prev,
+		.sec_cal .cal_nav .go-next {
+				display: block;
+				width: 50px;
+				height: 30px;
+				font-size: 0;
+				display: flex;
+				justify-content: center;
+				align-items: center;
+		}
+
+		.sec_cal .cal_nav .go-prev::before,
+		.sec_cal .cal_nav .go-next::before {
+				content: "";
+				display: block;
+				width: 15px;
+				height: 15px;
+				border: 3px solid #000;
+				border-width: 3px 3px 0 0;
+				transition: border 0.1s;
+		}
+
+		.sec_cal .cal_nav .go-prev:hover::before,
+		.sec_cal .cal_nav .go-next:hover::before {
+				border-color: #ed2a61;
+		}
+
+		.sec_cal .cal_nav .go-prev::before {
+				transform: rotate(-135deg);
+		}
+
+		.sec_cal .cal_nav .go-next::before {
+				transform: rotate(45deg);
+		}
     </style>
     <%@ include file="../include/header.jsp"%>
 
@@ -117,17 +176,15 @@
 				<h2><i class="fa-solid fa-angles-right"></i> <!--왼쪽 아이콘 폰트어썸-->내 근태관리</h2>
 			</div>
 
-			<!-- <div class="serchContain">
-				<form action="addBookSearch" id="serchForm">
-					<div class="serchSelect">
-						<input type="date" name="searchText" class="form-control" placeholder="입력해주세요" aria-label="입력해주세요"> 
+			<div class="serchContain">
+				<div class="sec_cal">
+					<div class="cal_nav">
+						<a href="javascript:;" class="nav-btn go-prev">prev</a>
+						<div class="year-month"></div>
+						<a href="javascript:;" class="nav-btn go-next">next</a>
 					</div>
-					<div class="serchTextGroup">
-						<input type="text" name="searchText" class="form-control" placeholder="입력해주세요" aria-label="입력해주세요"> 
-					</div>
-				</form>
-				<button class="btn btn-outline-secondary" onclick="serchBtn()" name="serchBtn" type="button">검색</button>
-			</div> -->
+				</div>
+			</div>
 			<table class="table table-hover"> <!-- 부트스트랩 게시판 -->
 
 				<thead class="thead-light"> <!-- 게시판 맨위 색변경 클래스-->
@@ -181,8 +238,8 @@
 				<div class="pie-chart pie-chart2"><span class="center">50%</span></div>
 				<div class="attendStatisticTextGroup">
 					<p class="attendStatisticTit">이달의 근태통계</p>
-					<p class="attendStatisticText">정상출근 일수 <span>${attendenceCountList.attendenceNormalCountList}</span></p>
-					<p class="attendStatisticText">지각 일수 <span>${attendenceCountList.attendenceTardyCountList}</span></p>
+					<p class="attendStatisticText">정상출근 일수 <span class="attendenceNormalCountList">${attendenceCountList.attendenceNormalCountList}</span></p>
+					<p class="attendStatisticText">지각/조퇴 일수 <span class="attendenceTardyCountList">${attendenceCountList.attendenceTardyCountList}</span></p>
 					<p class="attendStatisticText">정상 출근율 <span class="attendStatisticPercentText">72%</span></p>
 				</div>
 			</div>
@@ -204,31 +261,53 @@
 	<script>
 		let currentDate = new Date();
 		let year = currentDate.getFullYear(); // 현재 연도 가져오기 (네 자릿수)
-		let month = currentDate.getMonth() + 1
-
+		let month = currentDate.getMonth() + 1;
+		let now_utc = Date.now()
+		let timeOff = new Date().getTimezoneOffset()*60000;
+		let history_reason_date_today = new Date(now_utc-timeOff).toISOString().split("T")[0];
 		let weekdays = getWeekdaysInMonth(year, month);
-		let attendenceNormalCountList = "${attendenceCountList.attendenceNormalCountList}";
-		console.log("평일 수: " + weekdays);
-		let percentage = (attendenceNormalCountList / weekdays) * 100;
-		let roundedPercentage = percentage.toFixed(0);
-		console.log(roundedPercentage + "%"); // 결과 출력
+		let attendenceNormalCount = "${attendenceCountList.attendenceNormalCountList}";
+		
 
 		$(window).ready(function(){
+			roundedPercentage(attendenceNormalCount);
+			$('.year-month').text(year + '.' + month);
+			$('input[name="history_reason_date"]').val(new Date().toISOString().substring(0, 10));
+			$('input[name="history_reason_date"]').attr("max",history_reason_date_today);
+		});
+		$('.go-prev').on('click', function() {
+			thisMonth = new Date(year, month - 2, 1);
+			renderCalender(thisMonth);
+			month = month - 1;
+		});	
+		$('.go-next').click(function(){
+			thisMonth = new Date(year, month, 1);
+			renderCalender(thisMonth);
+			month = month + 1;
+		})
+		function roundedPercentage (aa){
+			let percentage = (aa / weekdays) * 100;
+			let roundedPercentage = percentage.toFixed(0);
+			console.log(roundedPercentage);
 			draw(roundedPercentage, '.pie-chart2', '#8b22ff');
 			$('span.center').text(roundedPercentage + "%");
 			$('.attendStatisticPercentText').text(roundedPercentage + "%");
-		});
-
+		}
 		function draw(max, classname, colorname){
 			let i=1;
-			let func1 = setInterval(function(){
 			if(i<max){
-				color1(i,classname,colorname);
-				i++;
-			} else{
-				clearInterval(func1);
+				let func1 = setInterval(function(){
+					if(i<max){
+						color1(i,classname,colorname);
+						i++;
+					}else{
+						clearInterval(func1);
+					}
+				},10);	
+			}else if(max==0){
+				color1('0',classname,colorname);
 			}
-			},10);
+			
 		}
 		function color1(i, classname,colorname){
 		$(classname).css({
@@ -254,4 +333,82 @@
 
 			return countWeekdays;
 		}
+
+		function renderCalender(thisMonth) {
+			// 렌더링을 위한 데이터 정리
+			currentYear = thisMonth.getFullYear();
+			currentMonth = thisMonth.getMonth() + 1;
+
+			console.log(currentYear);
+			console.log(currentMonth);
+			// 현재 월 표기
+			$('.year-month').text(currentYear + '.' +currentMonth);
+			weekdays = getWeekdaysInMonth(currentYear, currentMonth);
+			currentMonth = (currentMonth < 10 ? "0" : "") + currentMonth
+			$('.table tbody').find('.modalBtn').remove();
+      		$('.modalContainer').find('.modal').remove();
+			$.ajax({
+				type : 'get',
+				url : '/WorkConGW/attend/attendMainSelect',
+				data : {
+							attendDay : currentYear + '-' + currentMonth
+				},
+				success : function(result) {
+					console.log(result);
+					attendenceNormalCount = result[result.length - 1].attendenceNormalCountList;
+					let attendenceTardyCountList = result[result.length - 1].attendenceTardyCountList;
+					roundedPercentage(attendenceNormalCount);
+					$('.attendenceNormalCountList').text(attendenceNormalCount);
+					$('.attendenceTardyCountList').text(attendenceTardyCountList);
+					result.forEach(function(e, i) {
+						if (i < result.length - 1) {
+							e.HISTORY_ATTEND_DAY = e.HISTORY_ATTEND_DAY || '';
+							e.EMP_NAME = e.EMP_NAME || '';
+							e.CODE_NAME = e.CODE_NAME || '';
+							e.HISTORY_ATTEND_TIME = e.HISTORY_ATTEND_TIME || '';
+							e.HISTORY_LEAVING_TIME = e.HISTORY_LEAVING_TIME || '';
+							e.ATTEND_ST_NAME = e.ATTEND_ST_NAME || '';
+							e.HISTORY_REASON = e.HISTORY_REASON || '';
+							let text = `
+								<tr class="modalBtn" data-toggle="modal" data-target="#staticBackdrop`+i+`">
+									<td>`+e.HISTORY_ATTEND_DAY+`</td>
+									<td>`+e.HISTORY_ATTEND_TIME+`</td>
+									<td>`+e.HISTORY_LEAVING_TIME+`</td>
+									<td><span class="goWork goWork`+e.ATTEND_ST_ID+`">`+e.ATTEND_ST_NAME+`</span></td>
+									<td>`+e.HISTORY_REASON+`</td>
+								</tr>
+							`;
+							$('tbody').append(text);
+							let modal = `
+								<div class="modal fade" id="staticBackdrop`+i+`" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+									<div class="modal-dialog modal-dialog-centered">
+										<div class="modal-content">
+											<div class="modal-header">
+												<h5 class="modal-title" id="staticBackdropLabel">`+e.HISTORY_ATTEND_DAY+`</h5>
+												<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+													<span aria-hidden="true">&times;</span>
+												</button>
+											</div>
+											<div class="modal-body">
+												<p><span class="modalSubTit">출근시간</span>`+e.HISTORY_ATTEND_TIME+`</p>
+												<p><span class="modalSubTit">퇴근시간</span>`+e.HISTORY_LEAVING_TIME+`</p>
+												<p><span class="modalSubTit">출근상태</span><span class="goWork goWork`+e.ATTEND_ST_ID+`">`+e.ATTEND_ST_NAME+`</span></p>
+												<p><span class="modalSubTit">지각사유</span><span style="display: inline-block;">`+e.HISTORY_REASON+`</span></p>
+											</div>
+											<div class="modal-footer">
+												<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+											</div>
+										</div>
+									</div>
+								</div>
+							`;
+							$('.modalContainer').append(modal);	
+						}
+					});
+        },
+        error : function(request, status, error) {
+          console.log(error);
+      	}
+      })
+		}		
 	</script>

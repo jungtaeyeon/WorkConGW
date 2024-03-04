@@ -151,8 +151,7 @@
 					type:'post',
 					data:{projectId:'${projectVO.project_Id}',projectSt:('${projectVO.project_St}' == 1 ? 'N' : 'Y')},
 					success:function(){
-						window.opener.location.href='${pageContext.request.contextPath}/board/project/list?isOpen='+('${projectVO.project_St}' == 1 ? 'closed' : 'open');
-						window.close();
+						window.location.href='${pageContext.request.contextPath}/board/project/list?isOpen='+('${projectVO.project_St}' == 1 ? 'closed' : 'open');
 					},
 					error:function(){
 						alert('등록 실패');

@@ -408,8 +408,110 @@ public class AddBookController extends BaseController{
         return url;
     }
 
-   
+    @GetMapping("messageInsert")
+    public String messageInsert(Model model, @RequestParam Map<String, Object> pmap, @RequestParam(value = "manage_emp_id[]", required = false) List<String> manage_emp_id, HttpSession session) {
+        logger.info("messageInsert");
+        EmpVO empVO = (EmpVO) session.getAttribute("loginUser");
+        String empId = null;
+        if(empVO != null) {
+            empId = empVO.getEmp_Id();
+        }
+        pmap.put("manage_emp_id", manage_emp_id);
+        pmap.put("empId", empId);
+        int result = 0;
+        String path = "";
+        logger.info(pmap.toString());
+        result = addBookService.messageInsert(pmap);
+        if (result == 1) {// 입력이 성공했을때
+            path = "redirect:/addBook/messageList";
+        } else {// 입력이 실패 했을때
+            path = "/error";
+        }
+        return path;
+    }
 
+    @GetMapping("messageList")
+    public String messageList(Model model, @RequestParam Map<String, Object> pmap, HttpSession session) {
+        logger.info("messageList");
+        EmpVO empVO = (EmpVO) session.getAttribute("loginUser");
+        String empId = null;
+        if(empVO != null) {
+            empId = empVO.getEmp_Id();
+        }
+        pmap.put("empId", empId);
+        List<AddBookVO> messageList = addBookService.messageList(pmap);
+        List<AddBookVO> addBookGroupSelect = addBookService.addBookGroupSelect(pmap);
+        List<AddBookVO> shareAddBookGroupSelect = addBookService.shareAddBookGroupSelect(pmap);
+
+        model.addAttribute("messageList", messageList);
+        model.addAttribute("shareAddBookGroupSelect", shareAddBookGroupSelect);
+        model.addAttribute("addBookGroupSelect", addBookGroupSelect);
+        String url = "addbook/messageList";
+        return url;
+    }
+
+    @GetMapping("messageDetail")
+    public String messageDetail(Model model, @RequestParam Map<String, Object> pmap, HttpSession session) {
+        logger.info("messageDetail");
+        EmpVO empVO = (EmpVO) session.getAttribute("loginUser");
+        String empId = null;
+        if(empVO != null) {
+            empId = empVO.getEmp_Id();
+        }
+        pmap.put("empId", empId);
+        List<AddBookVO> messageDetail = addBookService.messageDetail(pmap);
+        List<AddBookVO> addBookGroupSelect = addBookService.addBookGroupSelect(pmap);
+        List<AddBookVO> shareAddBookGroupSelect = addBookService.shareAddBookGroupSelect(pmap);
+
+        model.addAttribute("messageDetail", messageDetail);
+        model.addAttribute("shareAddBookGroupSelect", shareAddBookGroupSelect);
+        model.addAttribute("addBookGroupSelect", addBookGroupSelect);
+
+        String url = "addbook/messageDetail";
+        return url;
+    }
+
+    @GetMapping("receiverList")
+    public String receiverList(Model model, @RequestParam Map<String, Object> pmap, HttpSession session) {
+        logger.info("receiverList");
+
+        EmpVO empVO = (EmpVO) session.getAttribute("loginUser");
+        String empId = null;
+        if(empVO != null) {
+            empId = empVO.getEmp_Id();
+        }
+        pmap.put("empId", empId);
+        List<AddBookVO> receiverList = addBookService.receiverList(pmap);
+        List<AddBookVO> addBookGroupSelect = addBookService.addBookGroupSelect(pmap);
+        List<AddBookVO> shareAddBookGroupSelect = addBookService.shareAddBookGroupSelect(pmap);
+
+        model.addAttribute("receiverList", receiverList);
+        model.addAttribute("shareAddBookGroupSelect", shareAddBookGroupSelect);
+        model.addAttribute("addBookGroupSelect", addBookGroupSelect);
+
+        String url = "addbook/receiverList";
+        return url;
+    }
     
+    @GetMapping("receiverDetail")
+    public String receiverDetail(Model model, @RequestParam Map<String, Object> pmap, HttpSession session) {
+        logger.info("receiverDetail");
+        EmpVO empVO = (EmpVO) session.getAttribute("loginUser");
+        String empId = null;
+        if(empVO != null) {
+            empId = empVO.getEmp_Id();
+        }
+        pmap.put("empId", empId);
+        List<AddBookVO> receiverDetail = addBookService.receiverDetail(pmap);
+        List<AddBookVO> addBookGroupSelect = addBookService.addBookGroupSelect(pmap);
+        List<AddBookVO> shareAddBookGroupSelect = addBookService.shareAddBookGroupSelect(pmap);
+        logger.info(receiverDetail.toString());
+        model.addAttribute("receiverDetail", receiverDetail);
+        model.addAttribute("shareAddBookGroupSelect", shareAddBookGroupSelect);
+        model.addAttribute("addBookGroupSelect", addBookGroupSelect);
+
+        String url = "addbook/receiverDetail";
+        return url;
+    }
 }
 

@@ -6,11 +6,15 @@
 
 
 
+
+
+
+
 <select id="selectEmpById" parameterType="String" resultType="EmpVO">
 	SELECT   A.EMP_ID					
 			,A.EMP_SUP_ID				
 			,A.EMP_NAME				
-			,A.EMP_PWD				
+			,A.EMP_PWD				 
 			,NVL(A.EMP_HP,'없음')
 			,A.EMP_SIGN				
 			,A.EMP_PICTURE			
@@ -108,6 +112,32 @@
 	where e.emp_id = #{emp_Id}  and e.dept_id = d.dept_id(+)
 
 </select>
+
+
+<select id = "selectGraphEmp" parameterType="map" resultType="EmpVO">
+
+	SELECT  EMP_CREATE_DT,EMP_ID,COUNT(DISTINCT EMP_ID) AS CNT, b.code_name
+
+	FROM (
+			 SELECT *
+			 FROM EMP
+			 WHERE EMP_CREATE_DT <![CDATA[>=]]> #{startDt} AND EMP_CREATE_DT <![CDATA[<=]]> #{endDt}
+
+
+		 )A , code b
+
+	where a.code_id = b.code_id(+)
+
+
+	GROUP BY EMP_CREATE_DT , EMP_ID, b.code_name
+
+	ORDER BY EMP_CREATE_DT DESC
+
+
+
+</select>
+
+
 
 <update id="updateEmpMyPage" parameterType="EmpVO">
  UPDATE EMP
@@ -227,6 +257,30 @@ WHERE EMP_ID = #{emp_Id} AND EMP_PWD = #{emp_Pwd}
 	UPDATE EMP SET EMP_PWD =#{emp_Pwd},EMP_UPDATE_YN = #{emp_Update_Yn} where EMP_ID = #{emp_Id}
 </update>
 
+<update id = "registerDashBoard" parameterType="string">
+	INSERT INTO DASHBOARD(
+		EMP_ID,
+		DASHBOARD_DUTY,
+		DASHBOARD_ISSUE,
+		DASHBOARD_PROJECT,
+		DASHBOARD_APPROVAL,
+		DASHBOARD_RESERVATION,
+		DASHBOARD_BOARD,
+		DASHBOARD_WEATHER
+	)
+	VALUES(
+			  #{emp_Id},
+			  1,
+			  1,
+			  1,
+			  1,
+			  1,
+			  1,
+			  1
+		  )
+
+</update>
+
 
 
 <select id = "selectEmpPagingList" resultType="EmpVO" parameterType="EmpVO">
@@ -299,7 +353,6 @@ FROM(SELECT D2.*
 	<select id = "selectEmpCount" parameterType="EmpVO" resultType="int">
 		SELECT COUNT(A.EMP_ID)
 		FROM EMP A
-		WHERE A.EMP_ST IN(1,4)
 	</select>
 
 

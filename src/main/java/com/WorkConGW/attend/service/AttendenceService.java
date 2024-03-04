@@ -23,11 +23,11 @@ public class AttendenceService{
   @Autowired
   private AttendenceDAO attendenceDAO;
 
-  public List<AttendenceVO> attendenceList(String empId) {
+  public List<AttendenceVO> attendenceList(Map<String, Object> pmap) {
     logger.info("attendenceList");
-    logger.info(empId);
+    logger.info(pmap.toString());
     List<AttendenceVO> attendenceList = null;
-    attendenceList = attendenceDAO.attendenceList(empId);
+    attendenceList = attendenceDAO.attendenceList(pmap);
     return attendenceList;
   }
 
@@ -60,10 +60,10 @@ public class AttendenceService{
     return result;
   }
 
-  public List<Map<String, Object>> attendDeptSelect(Map<String, Object> pmap) {
-    logger.info("attendDeptSelect");
+  public List<Map<String, Object>> attendMainSelect(Map<String, Object> pmap) {
+    logger.info("attendMainSelect");
     logger.info(pmap.toString());
-    List<Map<String, Object>> result = attendenceDAO.attendDeptSelect(pmap);
+    List<Map<String, Object>> result = attendenceDAO.attendMainSelect(pmap);
     return result;
   }
 

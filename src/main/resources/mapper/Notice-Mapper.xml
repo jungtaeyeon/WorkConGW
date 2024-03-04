@@ -32,46 +32,46 @@
 	<!--    사내공지 전체조회-->
 	<select id="noticeList" parameterType="NoticeVO" resultType="NoticeVO">
 		select D3.*
-		  from(
-				select D2.*
-				from(
-					  select rownum as seq, D1.*
-					  from(
-							SELECT
-								    A.notice_id
-								   ,A.notice_title
-								   ,A.notice_content
-								   ,A.notice_readcnt
-								   ,A.notice_create_dt
-								   ,A.notice_update_dt
-								   ,A.emp_writer_id
-								   ,A.notice_end_dt
-								   ,A.notice_important_st
-								   ,B.emp_name
-								   ,C.CODE_NAME officialName
-								   ,D.attachCount
-								FROM notice A
-								     ,emp B
-								     ,CODE C
-									<!-- 서브쿼리 D => notice_id에 대한 첨부파일 개수 count -->
-								     ,(
-                                        SELECT notice_id,
-                                               COUNT(*) as attachCount
-                                        FROM notice_attach
-                                        GROUP BY notice_id
-                                       ) D
-								<!-- 작성자 필터링 -->
-								WHERE A.emp_writer_id = B.emp_id
-									<!-- CODE_ID 필터링 -->
-								  AND B.code_id = C.CODE_ID
-									<!--  notice에 첨부파일이 없는 컬럼도 조회하기 위해 아우터조인 사용-->
-								  AND A.notice_id = D.notice_id(+)
-								  <include refid="search" />
-								ORDER BY A.notice_create_dt DESC
-						) D1
-				) D2
-				where seq <![CDATA[ > ]]> #{firstIndex}
-			) D3
+		from(
+		select D2.*
+		from(
+		select rownum as seq, D1.*
+		from(
+		SELECT
+		A.notice_id
+		,A.notice_title
+		,A.notice_content
+		,A.notice_readcnt
+		,A.notice_create_dt
+		,A.notice_update_dt
+		,A.emp_writer_id
+		,A.notice_end_dt
+		,A.notice_important_st
+		,B.emp_name
+		,C.CODE_NAME officialName
+		,D.attachCount
+		FROM notice A
+		,emp B
+		,CODE C
+		<!-- 서브쿼리 D => notice_id에 대한 첨부파일 개수 count -->
+		,(
+		SELECT notice_id,
+		COUNT(*) as attachCount
+		FROM notice_attach
+		GROUP BY notice_id
+		) D
+		<!-- 작성자 필터링 -->
+		WHERE A.emp_writer_id = B.emp_id
+		<!-- CODE_ID 필터링 -->
+		AND B.code_id = C.CODE_ID
+		<!--  notice에 첨부파일이 없는 컬럼도 조회하기 위해 아우터조인 사용-->
+		AND A.notice_id = D.notice_id(+)
+		<include refid="search" />
+		ORDER BY A.notice_create_dt DESC
+		) D1
+		) D2
+		where seq <![CDATA[ > ]]> #{firstIndex}
+		) D3
 		where rownum <![CDATA[ <= ]]> #{recordCountPerPage}
 	</select>
 
@@ -118,7 +118,7 @@
 				   AND A.notice_important_st = 1
 				   AND A.notice_id = D.notice_id(+)
 				 ORDER BY A.notice_create_dt DESC ) T1
-		WHERE ROWNUM <![CDATA[ <= ]]> 3
+		WHERE ROWNUM <![CDATA[ <= ]]> 5
 	</select>
 
 	<!--    사내공지 상세조회-->
@@ -190,7 +190,7 @@
 		#{emp_writer_id},
 		#{notice_important_st},
 		0,
-		sysdate,
+		current_Date,
 		sysdate
 		)
 	</insert>

@@ -28,8 +28,8 @@
 
 <form id = "find" action="<%=request.getContextPath()%>/emp/findPw" method="post">
     <div class="form-floating mb-3">
-        <input type="text" class="form-control rounded-4"  name = "emp_Id" placeholder="아이디"/>
-        <label for="emp_Id">아이디</label>
+        <input type="text" class="form-control rounded-4"  name = "emp_Id" placeholder="사번"/>
+        <label for="emp_Id">사번</label>
     </div>
     <div class="form-floating mb-3">
         <input type="text" class="form-control rounded-4" id="emp_Name" name = "emp_Name" placeholder="성명"/>

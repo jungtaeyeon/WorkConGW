@@ -2,6 +2,7 @@ package com.WorkConGW.treeview.dao;
 
 import com.WorkConGW.approval.dto.FormVO;
 import com.WorkConGW.treeview.command.OrganizationCommand;
+import com.WorkConGW.treeview.command.ProjectOrgCommand;
 import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
@@ -29,5 +30,17 @@ public class TreeViewDAO {
     public List<FormVO> selectSearchForm() {
         List<FormVO> joinList = sqlSessionTemplate.selectList("selectSearchForm");
         return joinList;
+    }
+
+    public List<ProjectOrgCommand> selectSearchProjectOrg() {
+       return sqlSessionTemplate.selectList("selectSearchProjectOrg");
+    }
+
+    public List<ProjectOrgCommand> selectSearchDuty() {
+        return sqlSessionTemplate.selectList("selectSearchDuty");
+    }
+
+    public List<ProjectOrgCommand> selectDutiesByProjectId(int project_Id) {
+        return sqlSessionTemplate.selectList("selectDutiesByProjectId", project_Id);
     }
 }

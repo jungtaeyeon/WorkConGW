@@ -12,6 +12,10 @@
         padding:0 10px 20px;
         width: 250px;
     }
+    .pagination{
+        text-align: center;
+        justify-content: center;
+    }
     .subPageContain{
         display: flex;
     }

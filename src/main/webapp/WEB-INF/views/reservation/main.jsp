@@ -420,7 +420,7 @@
                         </div>
                     </div>
 
-                    <%--@elvariable id="meetRoomFormVO" type="MeetRooMFormVO"--%>
+                        <%--@elvariable id="meetRoomFormVO" type="MeetRooMFormVO"--%>
                     <form:form modelAttribute="meetRoomFormVO" name="complainModifyForm" action="${pageContext.request.contextPath}/reservation/registComplain" enctype="multipart/form-data">
                         <form:hidden path="reservationComplainVO.complain_Create_Date" id="dateComplain"/>
                         <form:hidden path="reservationComplainVO.emp_Id" value="${loginUser.emp_Id }"/>

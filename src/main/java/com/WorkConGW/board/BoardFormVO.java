@@ -11,11 +11,15 @@ import com.WorkConGW.board.issue.dto.ProjectVO;
 import com.WorkConGW.board.notice.dto.NoticeVO;
 import com.WorkConGW.common.command.FileUploadCommand;
 import com.WorkConGW.emp.dto.EmpVO;
+import lombok.ToString;
 import org.apache.ibatis.type.Alias;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
+
+
+@ToString
 @Alias("boardFormVO")
 public class BoardFormVO {
 

@@ -10,6 +10,7 @@
     padding:0 10px 20px;
     width: 250px;
   }
+
   .subPageContain{
     display: flex;
   }
