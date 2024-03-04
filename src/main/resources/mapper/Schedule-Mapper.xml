@@ -133,7 +133,8 @@
                 inner join dept d on c.DEPT_ID = d.DEPT_SUP_ID
                 inner join emp e on d.DEPT_ID = e.DEPT_ID
         where e.emp_id = #{schedule_Writer_Id})
-                and s.CODE_ID != 'S01'
+          and s.schedule_st = 1
+          and s.CODE_ID != 'S01'
         <include refid="search"/>
         ORDER BY SCHEDULE_START_DT
     </select>

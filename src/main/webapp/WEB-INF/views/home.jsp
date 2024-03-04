@@ -385,7 +385,7 @@ p.approvalForm, p.approvalName, p.approvalDay {
 			</div>
 			<div class="girdContentGroup">
 				<div class="privateScheduleGroup"></div>
-				<div class="companySchedule"></div>
+				<div class="companyScheduleGroup"></div>
 				<div class="deptScheduleGroup"></div>
 			</div>
 		</div>
@@ -849,8 +849,8 @@ p.approvalForm, p.approvalName, p.approvalDay {
             url: "/WorkConGW/common/homescheduleList",
             data: data,
             success: function(response) {
+				console.log(response);
 				$('.privateScheduleGroup').find('p').remove();
-				$('.importantScheduleGroup').find('p').remove();
 				$('.companyScheduleGroup').find('p').remove();
 				$('.deptScheduleGroup').find('p').remove();
 				let privateScheduled;
