@@ -1,6 +1,5 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-
 <!-- jquery -->
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <!-- Bootstrap CSS, js CDN -->
@@ -10,29 +9,24 @@
 <link rel="stylesheet" href="<%=request.getContextPath() %>/js/treeview/jquery.treeview.css" />
 <link rel="stylesheet" href="<%=request.getContextPath() %>/js/treeview/screen.css" />
 <script src="<%=request.getContextPath() %>/js/treeview/jquery.treeview.js"></script>
-
 <style>
     body {
         font-family: 'Arial', sans-serif;
-        background-color: #f8f9fa;
+        background-color: #F8F9FA;
         margin: 0;
         padding: 0;
     }
-
     #codeList {
         list-style: none;
         border-radius: 5px;
         box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
     }
-
     #codeList li {
         margin-bottom: 10px;
     }
-
     #codeList img {
         margin-right: 2px;
     }
-
     .hitarea {
         width: 10px;
         height: 10px;
@@ -40,21 +34,16 @@
         cursor: pointer;
     }
 </style>
-
 <body>
-
 <ul id="codeList" name="child">
     <ul id="lvl0">
         <!-- 자식 노드가 들어올 공간-->
     </ul>
 </ul>
-
 <form id="searchForm">
     <input type="hidden" name="parent" value="0" />
 </form>
-
 </body>
-
 <script>
     function deptTrees() {
         $.ajax({
@@ -75,14 +64,12 @@
                     console.log(deptSupId)
                     console.log(position)
                     console.log(level)
-
                     let li = "";
                     if (position) {
                         li = '<li id="' + deptId + '" data-type="supervisor" lvl="' + level + '"><img src="<%=request.getContextPath() %>/js/treeview/images/emp2.png"><a class="file code myHover" id="t1">' + " " + deptName + " " + e.position + '</a></li>';
                     } else {
                         li = '<li id="' + deptId + '" data-type="dept" lvl="' + level + '"><img src="<%=request.getContextPath() %>/js/treeview/images/dept2.png"><a class="file code">' + " " + deptName + " " + '</a></li>';
                     }
-
                     // 1레벨은 그냥 추가
                     // 다음 레벨부터는 상위 li의 클래스를 폴더로 바꾸고 자기 자신을 추가
                     if (level == 1) {
@@ -93,10 +80,8 @@
                         parentLi.find("a").removeClass("file");
                         parentLi.find("a").addClass("folder");
                         let bUl = parentLi.children("ul");
-
                         // 하위 그룹이 없으면 li로 추가
                         // 하위 그룹이 있으면 ul로 추가
-                    }
                         if (bUl.length == 0) {
                             let div = "<div onclick='plusFromMinus(this);' class='hitarea expandable-hitarea lastExpandable-hitarea '></div>"
                             li = "<ul class='' style='display: none;'>" + li + "</ul>";
@@ -111,13 +96,11 @@
                         }
                     }
                 });
-
                 //#lvl0 a 요소를 클릭했을 때 발생하는 이벤트
                 $(document).on('click', '#lvl0 a', function() {
                     let selectedId = $(this).parent().attr('id');
                     //클릭한 a 요소의 부모인 li 요소의 id 속성 값을 가져와 selectedId에 저장
                     let selectedType = $(this).parent().data('type');
-
                     if (selectedType === 'dept') {
                         // 선택한 것이 부서인 경우
                         $("#dept_Id", window.opener.document).val(selectedId);
@@ -125,14 +108,12 @@
                     } else if (selectedType === 'supervisor') {
                         $("#emp_Sup_Id", window.opener.document).val(selectedId);
                     }
-
                     // 팝업 창 닫기
                     self.close();
                 });
             }
         });
     }
-
     //열고 닫는 함수
     function plusFromMinus(obj) {
         let parentLi = $(obj).parent("li");
@@ -151,7 +132,6 @@
             $(obj).parent("li").children("ul").css("display", "none");
         }
     }
-
     $(document).ready(function() {
         deptTrees();
         $("#refresh").click(function() {
@@ -163,5 +143,4 @@
         });
     });
 </script>
-
 <script type="text/javascript">
