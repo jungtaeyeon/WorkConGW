@@ -106,12 +106,12 @@ tbody{
 														<form:option value="tc">전체</form:option>
 														<form:option value="t">제목</form:option>
 														<form:option value="c">내용</form:option>
-														<form:option value="r">댓글내용</form:option>
 													</form:select>
+													<button type="button" class="btn btn-default" onclick="searchList();"><i class='fas fa-search'></i></button>
 
 													<div id="navbar-search" class="navbar-form search-form selectSearch" style="float:left;">
 														<form:input path="searchAnonyVO.searchKeyword" class="form-control" placeholder="검색어를 입력하세요" type="text" style="width: 218px;height:36px;padding-right: 40px;" onkeypress="checkEnter(searchList);"/>
-														<button type="button" class="btn btn-default" onclick="searchList();"><i class="icon-magnifier"></i></button>
+
 													</div>
 
 													<div class="form-group" style="float:right;">
