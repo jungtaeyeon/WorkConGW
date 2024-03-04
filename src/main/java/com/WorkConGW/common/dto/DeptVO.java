@@ -32,9 +32,15 @@ public class DeptVO extends BaseVO {
 
     private String flag; // deptService 이용 시 제어하기 위해 추가
 
+    private String team_Name; //일정관리에서 팀만 뽑아오기 위함
 
+    public String getTeam_Name() {
+        return team_Name;
+    }
 
-
+    public void setTeam_Name(String team_Name) {
+        this.team_Name = team_Name;
+    }
 
     public DeptVO(){}
     public DeptVO(int dept_Team_Yn,String dept_Id, String dept_Sup_Id, String dept_Name, String dept_Create_Dt, String dept_Update_Dt, String dept_St, String dept_Hp, String dept_Leader_Id, String dept_Leader_Name, String dept_Sup_Name, String emp_Email, int dept_Emp_Count, String emp_Id, String flag) {

@@ -89,18 +89,19 @@
         (SCHEDULE_WRITER_ID = #{schedule_Writer_Id}
         AND      CODE_ID IN ('S01','S02','S03')) /*3개중에 하나만 있어도 참*/
 
-        OR      (CODE_ID = 'S02'
-        AND DEPT_ID = (SELECT	DEPT_ID
-        FROM	EMP
-        WHERE	EMP_ID = #{schedule_Writer_Id})
+        OR (CODE_ID = 'S02'
+        AND dept_id = (select c.DEPT_ID
+        from dept c
+        inner join dept d on c.DEPT_ID = d.DEPT_SUP_ID
+        inner join emp e on d.DEPT_ID = e.DEPT_ID
+        where e.emp_id = #{schedule_Writer_Id})
         )
-
         OR (CODE_ID = 'S03'
         AND dept_id = (SELECT dept_id
         FROM EMP
         WHERE EMP_ID = #{schedule_Writer_Id})
         )
-            )
+        )
 
         <include refid="search"/>
         ORDER BY SCHEDULE_START_DT
@@ -122,20 +123,17 @@
              ,DEPT_ID
         from SCHEDULE s
         where DEPT_ID IN (select a.DEPT_ID
-
-                          from dept a
-                                   inner join dept b on a.dept_sup_id = b.dept_id
-                                   INNER JOIN emp e ON b.dept_id = e.dept_id
-                          where e.emp_id = #{schedule_Writer_Id}
-                          union
-
-                          select a.DEPT_ID
-
-                          from dept a
-                                   inner join dept b on a.dept_id = b.dept_sup_id
-                                   INNER JOIN emp e ON a.dept_id = e.dept_id
-                          where e.emp_id = #{schedule_Writer_Id})
-                        and s.CODE_ID != 'S01'
+        from dept a
+                inner join dept b on a.dept_sup_id = b.dept_sup_id
+                INNER JOIN emp e ON b.dept_id = e.dept_id
+        where e.emp_id = #{schedule_Writer_Id}
+        union
+        select  c.DEPT_ID
+        from dept c
+                inner join dept d on c.DEPT_ID = d.DEPT_SUP_ID
+                inner join emp e on d.DEPT_ID = e.DEPT_ID
+        where e.emp_id = #{schedule_Writer_Id})
+                and s.CODE_ID != 'S01'
         <include refid="search"/>
         ORDER BY SCHEDULE_START_DT
     </select>

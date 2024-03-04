@@ -95,59 +95,70 @@ public class ScheduleController extends BaseController {
         log.info("등록 컨트롤러 호출");
 
 
-            LocalDateTime nowTime = LocalDateTime.now(); //현재시간
-            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
-            String strNowTime = nowTime.format(formatter); //현재시간을 문자열로 변환
+        LocalDateTime nowTime = LocalDateTime.now(); //현재시간
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
+        String strNowTime = nowTime.format(formatter); //현재시간을 문자열로 변환
 //        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm");
 //        String strNowTime = nowTime.format(formatter);
         log.info("날짜형식" + strNowTime);
 
 
         LocalDateTime oneHourTime = nowTime.plusHours(1); //현재시간+1시간
-            String strOneHourTime = oneHourTime.format(formatter); //현재시간+1시간 문자열 변환
+        String strOneHourTime = oneHourTime.format(formatter); //현재시간+1시간 문자열 변환
 
-            model.addAttribute("sendStart", strNowTime);
-            model.addAttribute("sendEnd", strOneHourTime);
+        model.addAttribute("sendStart", strNowTime);
+        model.addAttribute("sendEnd", strOneHourTime);
 
 
         List<DeptVO> deptList = new ArrayList<>();
         List<DeptVO> teamList = new ArrayList<>();
-        List<DeptVO> allList = new ArrayList<>();
+        List<DeptVO> selectDeptList = new ArrayList<>();
+        List<DeptVO> selectTeamList = new ArrayList<>();
 
         // 부서장인지 아닌지 구분하는 코드 필요함
-        EmpVO user = (EmpVO)session.getAttribute("loginUser");
+        EmpVO user = (EmpVO) session.getAttribute("loginUser");
         log.info(user.toString());
         log.info(user.getCode_Id());
-        if(user.getCode_Id().equals("c01")) {
+//        List<DeptVO> selectDeptList = null;
+//        List<DeptVO> selectTeamList = null;
+        if (user.getCode_Id().equals("c01")) {
             log.info("부서장임");
-            DeptVO deptVO = new DeptVO();
-            allList = deptService.selectAllList(deptVO);
+            DeptVO list = new DeptVO();
+            //부서만 조회
+            selectTeamList = deptService.selectTeamList(list);
+            //팀만 조회
+            selectDeptList = deptService.selectDeptList(list);
+            log.info(selectTeamList.toString());
+            log.info(selectDeptList.toString());
+
         }
 
-            try {
-                log.info("일반사원임");
-                DeptVO deptVO = new DeptVO();
-                deptVO.setDept_Team_Yn(0); //0이면 부서
-                deptList = deptService.selectDeptListByTeamYn(deptVO);
-                log.info(deptList.toString());
+        try {
+            log.info("일반사원임");
+            DeptVO deptVO = new DeptVO();
+            deptVO.setDept_Team_Yn(0); //0이면 부서
+            deptList = deptService.selectDeptListByTeamYn(deptVO);
+            log.info(deptList.toString());
 
 
-                deptVO.setDept_Team_Yn(1); //1이면 팀
-                teamList = deptService.selectDeptListByTeamYn(deptVO); //팀리스트 담음
-                log.info(teamList.toString());
+            deptVO.setDept_Team_Yn(1); //1이면 팀
+            teamList = deptService.selectDeptListByTeamYn(deptVO); //팀리스트 담음
+            log.info(teamList.toString());
 
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
 
         ScheduleCommand scheduleCommand = new ScheduleCommand();
-        log.info(allList.toString());
+        log.info(selectDeptList.toString());
+        log.info(selectTeamList.toString());
 
         model.addAttribute("scheduleCommand", scheduleCommand);
         model.addAttribute("deptList", deptList);
         model.addAttribute("teamList", teamList);
-        model.addAttribute("allList", allList);
+        model.addAttribute("selectDeptList", selectDeptList);
+        model.addAttribute("selectTeamList", selectTeamList);
 
 
         return "schedule/regist";
@@ -166,18 +177,14 @@ public class ScheduleController extends BaseController {
 
         HttpSession session = request.getSession();
 //        scheduleCommand = (ScheduleCommand)session.getAttribute("loginUser");
-        log.info(scheduleCommand.getType());
-        log.info(scheduleCommand.getTeam_Id());
-        log.info(scheduleCommand.getDept_Id());
+
 
 
         try {
             ScheduleVO schedule = scheduleCommand.toScheduleVO();
             EmpVO empVO = new EmpVO();
 
-            log.info("여기가터짐");
             scheduleService.insertSchedule(schedule);
-            log.info("여기가터짐");
                 int scheduleId = schedule.getSchedule_Id();
                 dataMap.put("scheduleId", scheduleId);
 

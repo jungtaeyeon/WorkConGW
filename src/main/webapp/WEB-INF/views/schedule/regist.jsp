@@ -142,16 +142,16 @@
             <div class="row" id="deptSelect" style="display: none;">
                 <div class="col-xs-12">
                     <label class="col-xs-4" for="edit-type">부서</label>
-                    <c:choose>
-                        <c:when test="${loginUser.code_Id eq 'c01'}">
-                            <input class="form-control" type="text" name="deptName"  id="edit-dept_Name" readonly="true" value="${deptList[0].dept_Name}"/>
-                            <input class="form-control" type="text" name="deptId"  id="edit-dept_Id" readonly="true" value="${deptList[0].dept_Id}" style="display: none;"/>
-                        </c:when>
-                        <c:otherwise>
-                            <input class="form-control" type="text" name="deptName"  id="edit-dept_Name" readonly="true" value="${deptList[0].dept_Name}"/>
-                            <input class="form-control" type="text" name="deptId"  id="edit-dept_Id" readonly="true" value="${deptList[0].dept_Id}" style="display: none;"/>
-                        </c:otherwise>
-                    </c:choose>
+
+                        <c:if test="${not empty selectDeptList and loginUser.code_Id eq 'c01'}">
+                            <input class="form-control" type="text" name="deptName"  id="edit-dept_Name" readonly="true" value="${selectDeptList[0].dept_Name}"/>
+                            <input class="form-control" type="text" name="deptId"  id="edit-dept_Id" readonly="true" value="${selectDeptList[0].dept_Id}" style="display: none"/>
+                        </c:if>
+<%--                        <c:otherwise>--%>
+<%--                            <input class="form-control" type="text" name="deptName"  id="edit-dept_Name" readonly="true" value="${deptList[0].dept_Name}"/>--%>
+<%--                            <input class="form-control" type="text" name="deptId"  id="edit-dept_Id" readonly="true" value="${deptList[0].dept_Id}" style="display: none;"/>--%>
+<%--                        </c:otherwise>--%>
+
 
                 </div>
             </div>
@@ -160,17 +160,17 @@
                     <label class="col-xs-4" for="edit-type">팀</label>
                     <select class="form-control" type="text" name="teamId" id="edit-team_Id">
                         <c:choose>
-                            <c:when test="${not empty teamList[0].dept_Id}">
+                            <c:when test="${loginUser.code_Id eq 'c01'}">
+                                <c:forEach items="${selectTeamList}" var="teamList">
+                                    <%--                                    <option value="${all.dept_Id}">${all.dept_Name}</option>--%>
+                                    <%--                                    <option type="hidden", value="${all.dept_Sup_Id}" id="edit-dept_Sup_Id"></option>--%>
+                                    <option value="${teamList.dept_Id}"> ${teamList.dept_Name}</option>
+                                </c:forEach>
+                            </c:when>
+                            <c:when test="${teamList[0].dept_Id != null and loginUser.code_Id ne 'c01'}">
                                 <c:forEach items="${teamList}" var="team">
                                     <option value="${team.dept_Id}">${team.dept_Name}</option>
 <%--                                    <input class="form-control" type="text" readonly="true" name="deptSupId" id="edit-dept_Sup_Id" value="${team.dept_Sup_Id}" style="display: none">--%>
-                                </c:forEach>
-                            </c:when>
-                            <c:when test="${loginUser.code_Id eq 'c01'}">
-                                <c:forEach items="${allList}" var="all">
-<%--                                    <option value="${all.dept_Id}">${all.dept_Name}</option>--%>
-<%--                                    <option type="hidden", value="${all.dept_Sup_Id}" id="edit-dept_Sup_Id"></option>--%>
-                                    <option value="${all.dept_Id}"> ${all.dept_Name}</option>
                                 </c:forEach>
                             </c:when>
                             <c:otherwise>
@@ -215,6 +215,9 @@
 
     getContextPath('<%=request.getContextPath()%>');
 
+
+
+
     function showDeptSelect(){
         var selectGroup = $('#edit-type option:selected').val();
         var loginUserDeptId = "${loginUser.dept_Id}";
@@ -222,11 +225,11 @@
         if(selectGroup == 'S02'){ // 부서
             $('#teamSelect').css('display','none');
             $('#deptSelect').css('display','');
-            $('#edit-team_Id').val("");
+            $('#edit-dept_Id').val("${selectDeptList[0].dept_Id}");
         }else if(selectGroup == 'S03'){ // 팀
             $('#deptSelect').css('display','none');
             $('#teamSelect').css('display','');
-            $('#edit-dept_Id').val("");
+            $('#edit-team_Id').val("");
         }else{
             $('#deptSelect').css('display','none');
             $('#teamSelect').css('display','none');
@@ -315,6 +318,7 @@
 
         console.dir(JSON.stringify(eventData));
         console.log(selectGroup + " , " + editTeamId.val());
+        console.log("deptId" + eventData.dept_Id);
 
         //새로운 일정 저장
         $.ajax({

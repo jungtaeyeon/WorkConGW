@@ -356,7 +356,7 @@
                     </div>
                 </div>
                 <div class="card">
-                    <h4 style="margin-top: 15px;margin-left: 15px; font-family: S-CoreDream-4Regular">부서 예약</h4>
+                    <h4 style="margin-top: 15px;margin-left: 15px; font-family: S-CoreDream-4Regular">팀 예약</h4>
                     <div class="body" style="font-family: S-CoreDream-6Bold">
                         <div class="table-responsive" style="overflow-x: hidden;">
                             <table class="table table-hover m-b-0 c_list">

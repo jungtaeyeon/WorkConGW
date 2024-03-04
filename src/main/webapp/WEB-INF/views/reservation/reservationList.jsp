@@ -43,7 +43,7 @@
     <div>
       <c:choose>
         <c:when test="${type eq 'user' }"><h3>나의 예약</h3></c:when>
-        <c:when test="${type eq 'dept' }"><h3>부서 예약</h3></c:when>
+        <c:when test="${type eq 'dept' }"><h3>팀 예약</h3></c:when>
       </c:choose>
     </div>
     <div class="row clearfix">
@@ -117,11 +117,11 @@
                   <c:choose>
                     <c:when test = "${type == 'user' }" >
                       <li class="nav-item " style="cursor:pointer;"><a class="nav-link active" id="user" onclick="changeCategory(this);"> <span style="margin-left:5px;"></span>나의 예약</a></li>
-                      <li class="nav-item" style="cursor:pointer;"><a class="nav-link" id="dept" onclick="changeCategory(this);"> <span style="margin-left:5px;"></span> 부서 예약</a></li>
+                      <li class="nav-item" style="cursor:pointer;"><a class="nav-link" id="dept" onclick="changeCategory(this);"> <span style="margin-left:5px;"></span> 팀 예약</a></li>
                     </c:when>
                     <c:when test = "${type == 'dept' }" >
                       <li class="nav-item " style="cursor:pointer;"><a class="nav-link " id="user" onclick="changeCategory(this);"> <span style="margin-left:5px;"></span>나의 예약</a></li>
-                      <li class="nav-item" style="cursor:pointer;"><a class="nav-link active" id="dept" onclick="changeCategory(this);"> <span style="margin-left:5px;"></span> 부서 예약</a></li>
+                      <li class="nav-item" style="cursor:pointer;"><a class="nav-link active" id="dept" onclick="changeCategory(this);"> <span style="margin-left:5px;"></span> 팀 예약</a></li>
                     </c:when>
                   </c:choose>
                 </ul>

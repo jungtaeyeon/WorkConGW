@@ -56,7 +56,7 @@ public class ScheduleDAO {
         log.info("insertDao");
         log.info(scheduleVO.getCode_Id());
         log.info(scheduleVO.getDept_Id());
-        log.info(scheduleVO.getTeam_Id());
+//        log.info(scheduleVO.getTeam_Id());
         sqlSessionTemplate.insert("insertSchedule", scheduleVO);
         log.info("성공");
     }

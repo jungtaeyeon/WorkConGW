@@ -47,7 +47,7 @@ public class ScheduleVO extends BaseVO {
         this.code_Id = code_Id;
         this.dept_Id = dept_Id;
         this.schedule_Background_Color = schedule_Background_Color;
-        this.team_Id = team_Id;
+//        this.team_Id = team_Id;
     }
 
     public ScheduleVO() {

@@ -27,10 +27,17 @@ public class DeptDAO {
     }
 
     /** 부서장일 경우 전체 조회 **/
-    public List<DeptVO> selectAllList(DeptVO deptVO) {
-        List<DeptVO> selectAllList = sqlSessionTemplate.selectList("selectAllList", deptVO);
-        log.info(selectAllList.toString());
-        return selectAllList;
+    public List<DeptVO> selectTeamList(DeptVO deptVO) {
+        List<DeptVO> selectTeamList = sqlSessionTemplate.selectList("selectTeamList", deptVO);
+        log.info(selectTeamList.toString());
+        return selectTeamList;
+    }
+
+    /** 부서장일 경우 전체 조회 **/
+    public List<DeptVO> selectDeptList(DeptVO deptVO) {
+        List<DeptVO> selectDeptList = sqlSessionTemplate.selectList("selectDeptList", deptVO);
+        log.info(selectDeptList.toString());
+        return selectDeptList;
     }
 
 

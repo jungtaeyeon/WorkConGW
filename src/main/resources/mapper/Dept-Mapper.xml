@@ -40,15 +40,20 @@ AND     dept_st = 0
 -- ORDER BY dept_id
 </select>
 
-    <select id ="selectAllList" parameterType="DeptVO" resultType="DeptVO">
-        select a.dept_name, a.DEPT_ID, e.emp_name, a.DEPT_SUP_ID
-
+    <select id ="selectTeamList" parameterType="DeptVO" resultType="DeptVO">
+        select a.dept_name, a.DEPT_ID, a.DEPT_SUP_ID
         from dept a
-                 inner join dept b on a.dept_sup_id = b.dept_id
+                 inner join dept b on a.dept_sup_id = b.dept_sup_id
                  INNER JOIN emp e ON b.dept_id = e.dept_id
         where e.emp_id = #{emp_Id}
+    </select>
 
-
+    <select id ="selectDeptList" parameterType="DeptVO" resultType="DeptVO">
+        select c.dept_name, c.DEPT_ID, c.DEPT_SUP_ID
+        from dept c
+                 inner join dept d on c.DEPT_ID = d.DEPT_SUP_ID
+                 inner join emp e on d.DEPT_ID = e.DEPT_ID
+        where e.emp_id = #{emp_Id}
     </select>
 
 <select id = "checkName" parameterType="String" resultType="int">

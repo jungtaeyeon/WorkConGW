@@ -97,14 +97,22 @@ public class ScheduleService {
         EmpVO emp = (EmpVO) session.getAttribute("loginUser");
 
         String empId = emp.getEmp_Id();
-        String deptId = emp.getDept_Id();
-        log.info(empId);
-        log.info(emp.getDept_Id());
+        String deptId = emp.getDept_Id(); //개인일정 등록을 위한 deptId
+
+
+        /** 여기서 개인일정, 부서일정, 팀일정 나눠서 deptID를 등록함**/
+        if(scheduleVO.getCode_Id().equals("S01")) {
+            log.info("개인일정아이디등록");
+            scheduleVO.setDept_Id(deptId);
+        } else if (scheduleVO.getCode_Id().equals("S02")) {
+            log.info("부서일정아이디등록");
+            scheduleVO.setDept_Id(scheduleVO.getDept_Id());
+        } else if (scheduleVO.getCode_Id().equals("S03")) {
+            log.info("팀일정아이디등록");
+            scheduleVO.setDept_Id(scheduleVO.getTeam_Id());
+        }
         scheduleVO.setSchedule_Writer_Id(empId); //작성자 사원번호에 사원번호 입력
-        scheduleVO.setDept_Id(deptId);
-        log.info(scheduleVO.getSchedule_Writer_Id());
-        log.info(scheduleVO.getDept_Id());
-        log.info(scheduleVO.getTeam_Id());
+//        scheduleVO.setDept_Id(deptId);
 
         scheduleDAO.insertSchedule(scheduleVO);
     }

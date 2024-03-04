@@ -56,7 +56,9 @@ public class DeptService {
         // 조회를 하게 되면
         return DeptList;
     }
-    public List<DeptVO> selectAllList(DeptVO deptVO) throws Exception {
+
+    //관리자일때 부서 목록만 조회
+    public List<DeptVO> selectDeptList(DeptVO deptVO) throws Exception {
         ServletRequestAttributes servletRequestAttribute = (ServletRequestAttributes) RequestContextHolder.currentRequestAttributes();
         //Request 가지고 오기
         HttpSession session = servletRequestAttribute.getRequest().getSession(true);
@@ -65,9 +67,26 @@ public class DeptService {
         String empId = emp.getEmp_Id();
 
         deptVO.setEmp_Id(empId);
-        List<DeptVO> deptList = deptDAO.selectAllList(deptVO);
+        List<DeptVO> deptList = deptDAO.selectDeptList(deptVO);
+        log.info(deptList.toString());
         return deptList;
     }
+
+    //관리자일때 팀 목록만 조회
+    public List<DeptVO> selectTeamList(DeptVO deptVO) throws Exception {
+        ServletRequestAttributes servletRequestAttribute = (ServletRequestAttributes) RequestContextHolder.currentRequestAttributes();
+        //Request 가지고 오기
+        HttpSession session = servletRequestAttribute.getRequest().getSession(true);
+        //Session 가지고 오기
+        EmpVO emp = (EmpVO)session.getAttribute("loginUser");
+        String empId = emp.getEmp_Id();
+
+        deptVO.setEmp_Id(empId);
+        List<DeptVO> teamList = deptDAO.selectTeamList(deptVO);
+        log.info(teamList.toString());
+        return teamList;
+    }
+
 
     public void registDept(DeptVO deptVO) {
         deptDAO.registDept(deptVO);
