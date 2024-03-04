@@ -331,7 +331,8 @@
         </c:if>
 
         <c:if test="${empty loginUser.emp_Picture}" >
-            <img src="<%=request.getContextPath() %>/pds/user1.jpg" id="profileImage">
+            <div id="pictureView" style="background-image:url('${pageContext.request.contextPath }/pds/emp.png'); width: 100px; height: 100px;" ></div>
+<%--            <img src="<%=request.getContextPath() %>/pds/emp.png" id="profileImage">--%>
         </c:if>
             <div id = "admin">관리자:${loginUser.emp_Name}</div>
         </div>
