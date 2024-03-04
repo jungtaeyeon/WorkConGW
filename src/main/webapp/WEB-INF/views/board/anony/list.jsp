@@ -106,7 +106,6 @@ tbody{
 														<form:option value="tc">전체</form:option>
 														<form:option value="t">제목</form:option>
 														<form:option value="c">내용</form:option>
-														<form:option value="r">댓글내용</form:option>
 													</form:select>
 
 													<div id="navbar-search" class="navbar-form search-form selectSearch" style="float:left;">
