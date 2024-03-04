@@ -216,7 +216,6 @@ java.util.ArrayList, com.WorkConGW.addbook.dto.AddBookVO" %>
                             </div>
                             <div class="modal-footer">
                               <button type="button" class="btn btn-secondary" data-dismiss="modal">닫기</button>
-                              <a href="addBookListUpdate?manage_id=${addBook.manage_id}" class="btn btn-primary">수정</a>
                             </div>
                           </div>
                         </div>

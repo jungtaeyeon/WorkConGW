@@ -559,7 +559,7 @@ function deptTrees(){
 					level = e.level;
 			    }
 			    if(position){
-					li = '<li onclick="empChecked(this);" data-deptId="'+deptSupId+'" data-name="'+deptName+" "+position+'" data-dept="'+deptSupName+'" data-state="'+(empState==null ? '' : empState)+'" ondblclick="addEmpList();" id="'+ deptId +'" lvl="'+level +'" class="myChecked" style="cursor:pointer" ><img src="<%=request.getContextPath() %>/js/treeview/images/emp2.png">'+" "+ deptName + " "+e.position+'</li>';
+					li = '<li onclick="empChecked(this);" data-deptId="'+deptSupId+'" data-name="'+deptName+'" data-position="'+ position +'" data-dept="'+deptSupName+'" data-state="'+(empState==null ? '' : empState)+'" ondblclick="addEmpList();" id="'+ deptId +'" lvl="'+level +'" class="myChecked" style="cursor:pointer" ><img src="<%=request.getContextPath() %>/js/treeview/images/emp2.png">'+" "+ deptName + " "+e.position+'</li>';
 			    }else{
 			    	li = '<li id="'+ deptId +'" lvl="'+level +'"><img src="<%=request.getContextPath() %>/js/treeview/images/dept2.png"><a class="file code" style="cursor: pointer;" onclick="myClick(this);" >'+ deptName +'&nbsp&nbsp<i data-id="'+deptId+'" data-name="'+deptName+'" style="color:#383d41; cursor:pointer;"></i></a></li>';
 			    }

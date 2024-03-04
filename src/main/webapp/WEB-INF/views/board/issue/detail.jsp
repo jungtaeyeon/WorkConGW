@@ -110,7 +110,14 @@
                         		<li class="online" style="clear:both;border:1.5px solid rgb(0,0,0,0.2);border-radius:15px;">
 	                                <div class="media" style="margin:0px;border-bottom:1px solid rgb(0,0,0,0.2);padding:10px 20px;">
 										<%-- 작성자 프로필 이미지 (헤더에서 그대로 따옴) --%>
-	                                	<div  class="rounded-circle avatar pictureView" style="background-image:url('${pageContext.request.contextPath }/pds/empPicture/${loginUser.emp_Picture}');width: 60px; height: 60px;"></div>
+											<c:choose>
+												<c:when test="${empty issue.emp_Picture }">
+	                                				<div  class="rounded-circle avatar pictureView" style="background-image:url('${pageContext.request.contextPath }/pds/emp.png');width: 60px; height: 60px;"></div>
+												</c:when>
+												<c:otherwise>
+													<div  class="rounded-circle avatar pictureView" style="background-image:url('${pageContext.request.contextPath }/pds/empPicture/${issue.emp_Picture}');width: 60px; height: 60px;"></div>
+												</c:otherwise>
+											</c:choose>
 	                                    <div class="media-body" style="margin-top: 7px;">
 											<%-- 이름: emp_Name 받아올 예정 --%>
 	                                        <strong class="name" style="font-size:1.2em;display:inline;vertical-align: middle;">${issue.emp_Name}</strong>
@@ -159,7 +166,14 @@
 									</c:if>
 									<li id="li_${issueReply.reply_Id }" class="online" style="clear:both;border:1.5px solid rgb(0,0,0,0.2);border-radius:15px;">
 										<div class="media" style="margin:0px;border-bottom:1px solid rgb(0,0,0,0.2);padding:10px 20px;">
-											<div  class="rounded-circle avatar pictureView" style="background-image:url('${pageContext.request.contextPath }/pds/empPicture/${issueReply.emp_Picture}');width: 60px; height: 60px;"></div>
+											<c:choose>
+												<c:when test="${empty issueReply.emp_Picture }">
+													<div  class="rounded-circle avatar pictureView" style="background-image:url('${pageContext.request.contextPath }/pds/emp.png');width: 60px; height: 60px;"></div>
+												</c:when>
+												<c:otherwise>
+													<div  class="rounded-circle avatar pictureView" style="background-image:url('${pageContext.request.contextPath }/pds/empPicture/${issueReply.emp_Picture}');width: 60px; height: 60px;"></div>
+												</c:otherwise>
+											</c:choose>
 											<div class="media-body" style="margin-top: 7px;">
 												<strong class="name" style="font-size:1.2em;display:inline;vertical-align: middle;">${issueReply.emp_Name}</strong>
 												<%-- 이슈 작성자인 경우 노출 --%>

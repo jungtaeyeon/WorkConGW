@@ -146,10 +146,13 @@
 																<td class="project-actions">
 																	<c:choose>
 																		<c:when test="${empty issue.emp_Picture }">
-																			<img src="<%=request.getContextPath() %>/resources/image/NO_IMAGE.png" data-toggle="tooltip" data-placement="top" title="" alt="Avatar" class="width45 rounded" data-original-title="${issue.emp_Name }">
+																			<div id="pictureView" style="display:inline-block;vertical-align:middle;margin-right:10px;background-image:url('${pageContext.request.contextPath }/pds/emp.png'); width: 45px; height: 45px;" class="rounded-circle avatar" data-toggle="tooltip" data-placement="top" data-original-title="${issue.emp_Name }"></div>
+<%--																			<img src="${pageContext.request.contextPath }/pds/emp.png" data-toggle="tooltip" data-placement="top" title="" alt="Avatar" class="width45 rounded" data-original-title="${issue.emp_Name }">--%>
 																		</c:when>
 																		<c:otherwise>
 																			<div id="pictureView" style="display:inline-block;vertical-align:middle;margin-right:10px;background-image:url('${pageContext.request.contextPath }/pds/empPicture/${issue.emp_Picture}'); width: 45px; height: 45px;" class="rounded-circle avatar" data-toggle="tooltip" data-placement="top" data-original-title="${issue.emp_Name }"></div>
+																		</c:otherwise>
+																	</c:choose>
 																			<div style="display:inline-block;vertical-align:middle;">
 																				<strong>${issue.emp_Name }&nbsp;${issue.officialName }</strong>
 																				<div>
@@ -159,8 +162,6 @@
 																					<span>${issue.teamName }</span>
 																				</div>
 																			</div>
-																		</c:otherwise>
-																	</c:choose>
 																</td>
 																<td class="project-actions" style="font-size:1.3em;">
 																		<i class="fas fa-comment" style="margin-left:5px;"></i> ${issue.reply_Count }
