@@ -799,6 +799,10 @@ function submit_go(){
 			$('.note-editable').focus();
 			return;
 		}
+		if($.trim($('#selectProject').val())==0){
+			alert('프로젝트를 선택하세요.');
+			return;
+		}
 	
 		if($.trim($('#boardEndDt').val())==""){
 			alert('완료 기한을 선택하세요.');
