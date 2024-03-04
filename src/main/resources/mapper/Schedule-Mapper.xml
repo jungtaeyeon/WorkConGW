@@ -122,7 +122,8 @@
              ,CODE_ID
              ,DEPT_ID
         from SCHEDULE s
-        where DEPT_ID IN (select a.DEPT_ID
+        where s.schedule_st = 1
+        AND DEPT_ID IN (select a.DEPT_ID
         from dept a
                 inner join dept b on a.dept_sup_id = b.dept_sup_id
                 INNER JOIN emp e ON b.dept_id = e.dept_id
@@ -132,9 +133,13 @@
         from dept c
                 inner join dept d on c.DEPT_ID = d.DEPT_SUP_ID
                 inner join emp e on d.DEPT_ID = e.DEPT_ID
-        where e.emp_id = #{schedule_Writer_Id})
-          and s.schedule_st = 1
-          and s.CODE_ID != 'S01'
+        where e.emp_id = #{schedule_Writer_Id}
+        )
+        OR (CODE_ID = 'S01' AND schedule_st = 1
+        AND schedule_writer_id = (SELECT emp_id
+        FROM EMP
+        WHERE EMP_ID = #{schedule_Writer_Id})
+        )
         <include refid="search"/>
         ORDER BY SCHEDULE_START_DT
     </select>

@@ -37,9 +37,9 @@ var calendar = $('#calendar').fullCalendar({
 	  weekNumberCalculation     : "ISO",
 	  eventLimit                : true,
 	  views                     : { 
-	                                month : { eventLimit : 12 } // 한 날짜에 최대 이벤트 12개, 나머지는 + 처리됨
+	                                month : { eventLimit : 5 } // 한 날짜에 최대 이벤트 12개, 나머지는 + 처리됨
 	                              },
-	  eventLimitClick           : 'week', //popover
+	  eventLimitClick           : 'agendaDay', //popover
 	  navLinks                  : true,
 	  defaultDate               : inputDate, //실제 사용시 현재 날짜로 수정
 	  // timeFormat                : 'HH:mm',
@@ -50,7 +50,7 @@ var calendar = $('#calendar').fullCalendar({
 	  maxTime                   : '24:00:00',
 	  slotLabelFormat           : 'HH:mm:a',
 	  weekends                  : true,
-	  nowIndicator              : true,
+	  // nowIndicator              : true,
 	  dayPopoverFormat          : 'MM/DD dddd',
 	  longPressDelay            : 0,
 	  eventLongPressDelay       : 0,
@@ -231,7 +231,6 @@ var calendar = $('#calendar').fullCalendar({
 	             }
 				   */
 
-	         
 	             // 드랍시 수정된 날짜반영
 	             var newDates = calDateWhenDragnDrop(event);
 
@@ -349,6 +348,9 @@ var calendar = $('#calendar').fullCalendar({
 		  window.location.href ='detail?schedule_Id='+event.id;
 		  //editEvent(event);
 
+		  if (event.el.classList.contains('fc-more')) {
+			  console.log("+버튼클릭")
+		  }
 		  return false;
 	  }
 	
