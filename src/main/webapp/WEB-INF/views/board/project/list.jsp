@@ -115,7 +115,7 @@ tr:hover{
 																		<c:if test="${project.project_St eq 2 }">
 																			<span class="btn btn-success" style="height: 25px;margin-left:10px;padding: 0px 10px;font-size:1.1em;" onclick="modifyProject('${project.project_Id}',1);">재시작</span>
 																		</c:if>
-																		<c:if test="${project.duty_Count eq 0 }">
+																		<c:if test="${project.dutyCount eq 0 }">
 																			<span class="btn btn-danger" style="height: 25px;margin-left:10px;padding: 0px 10px;font-size:1.1em;" onclick="removeProject('${project.project_Id}');">삭제</span>
 																		</c:if>
 																	</div>

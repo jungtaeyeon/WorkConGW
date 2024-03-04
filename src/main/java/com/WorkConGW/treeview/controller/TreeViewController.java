@@ -1,7 +1,10 @@
 package com.WorkConGW.treeview.controller;
 
 import com.WorkConGW.approval.dto.FormVO;
+import com.WorkConGW.board.duty.dto.DutyVO;
 import com.WorkConGW.treeview.command.OrganizationCommand;
+import com.WorkConGW.treeview.command.ProjectOrgCommand;
+import com.WorkConGW.treeview.command.ProjectWithDuties;
 import com.WorkConGW.treeview.service.TreeViewService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -41,12 +44,26 @@ public class TreeViewController {
         return url;
     }
 
-    // 전자결재 구현할 때 사용 예정 - 미완
+    // 전자결재 구현할 때 사용 예정
     @ResponseBody
     @RequestMapping(value="/getFormTreeView")
     public List<FormVO>  getFormTreeView() throws SQLException {
         List<FormVO> forms = tvService.getFormList();
         return forms;
+    }
+
+//    @ResponseBody
+//    @RequestMapping(value="/getProjectTreeView")
+//    public List<ProjectOrgCommand>  getProjectTreeView() throws SQLException {
+//        List<ProjectOrgCommand> projectOrgList = tvService.getProjectOrgList();
+//        return projectOrgList;
+//    }
+
+    @ResponseBody
+    @RequestMapping(value="/getProjectTreeView")
+    public List<ProjectWithDuties> getProjectTreeView() throws SQLException {
+        List<ProjectWithDuties> projectTree = tvService.getProjectTree();
+        return projectTree;
     }
 
 }

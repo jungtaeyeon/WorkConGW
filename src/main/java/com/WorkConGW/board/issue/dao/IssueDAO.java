@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import java.sql.SQLException;
+import java.util.Date;
 import java.util.List;
 
 @Repository
@@ -85,5 +86,17 @@ public class IssueDAO {
 
     public void deleteIssueVO(IssueVO issueVO) {
         sqlSessionTemplate.delete("deleteIssueVO", issueVO);
+    }
+
+    public List<IssueVO> selectIssueListByMilestoneId(MilestoneVO milestoneVO) {
+       return sqlSessionTemplate.selectList("selectIssueListByMilestoneId", milestoneVO);
+    }
+
+    public void updateIssueByDeleteMilestone(MilestoneVO milestoneVO) {
+        sqlSessionTemplate.update("updateIssueByDeleteMilestone", milestoneVO);
+    }
+
+    public Date getPostTimeIssue(int reply_Id) {
+        return sqlSessionTemplate.selectOne("getPostTimeIssue", reply_Id);
     }
 }

@@ -3,6 +3,8 @@ package com.WorkConGW.treeview.service;
 
 import com.WorkConGW.approval.dto.FormVO;
 import com.WorkConGW.treeview.command.OrganizationCommand;
+import com.WorkConGW.treeview.command.ProjectOrgCommand;
+import com.WorkConGW.treeview.command.ProjectWithDuties;
 import com.WorkConGW.treeview.dao.TreeViewDAO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -44,5 +46,39 @@ public class TreeViewService {
         return forms;
     }
 
+    public List<ProjectWithDuties> getProjectTree() {
+        List<ProjectWithDuties> projectTree = new ArrayList<>();
+
+        List<ProjectOrgCommand> projectList = treeViewDAO.selectSearchProjectOrg();
+        for (ProjectOrgCommand project : projectList) {
+            ProjectWithDuties projectWithDuties = new ProjectWithDuties();
+            projectWithDuties.setProject(project);
+
+            List<ProjectOrgCommand> duties = treeViewDAO.selectDutiesByProjectId(project.getProject_Id());
+            projectWithDuties.setDuties(duties);
+
+            projectTree.add(projectWithDuties);
+        }
+
+        return projectTree;
+    }
+
+
+
+//    public List<ProjectOrgCommand> getProjectOrgList() {
+//        List<ProjectOrgCommand> projectOrgList = new ArrayList<>();
+//
+//        List<ProjectOrgCommand> projectList = treeViewDAO.selectSearchProjectOrg();
+//        List<ProjectOrgCommand> dutyList = treeViewDAO.selectSearchDuty();
+//
+//        logger.info(projectList.toString());
+//        logger.info(dutyList.toString());
+//
+//        projectOrgList.addAll(projectList);
+//        projectOrgList.addAll(dutyList);
+//        logger.info(projectOrgList.toString());
+//
+//        return projectOrgList;
+//    }
 }
 

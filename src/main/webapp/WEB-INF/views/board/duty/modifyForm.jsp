@@ -110,7 +110,7 @@
 									<td style="width:200px;">
 										<div style="padding-left:15px;border-left: 1px dotted gray;">
 											<div class="input-group date" data-date-autoclose="true" data-provide="datepicker">
-												<form:input path="dutyVO.duty_Board_End_Dt" id="dutyBoardEndDt" class="form-control" placeholder="마감기한 선택" readonly="true"/>
+												<form:input path="dutyVO.duty_Board_End_Dt" id="dutyBoardEndDt" class="form-control" placeholder="완료일자 선택" readonly="true"/>
 
 												<div class="input-group-append">
 				                                    <button class="btn btn-outline-secondary" type="button"><i class="fa fa-calendar"></i></button>
@@ -368,9 +368,9 @@ function deptTrees(){
 					level = e.level;
 				}
 				if(position){
-					li = '<li onclick="empChecked(this);" data-deptId="'+deptSupId+'" data-name="'+deptName+" "+position+'" data-dept="'+deptSupName+'" data-state="'+(empState==null ? '' : empState)+'" ondblclick="addEmpList();" id="'+ deptId +'" lvl="'+level +'" class="myChecked" style="cursor:pointer" ><img src="<%=request.getContextPath() %>js/treeview/images/emp.png" >'+" "+ deptName+ " "+e.position+'</li>';
+					li = '<li onclick="empChecked(this);" data-deptId="'+deptSupId+'" data-name="'+deptName+" "+position+'" data-dept="'+deptSupName+'" data-state="'+(empState==null ? '' : empState)+'" ondblclick="addEmpList();" id="'+ deptId +'" lvl="'+level +'" class="myChecked" style="cursor:pointer" ><img src="<%=request.getContextPath() %>/js/treeview/images/emp2.png">'+" "+ deptName+ " "+e.position+'</li>';
 				}else{
-					li = '<li id="'+ deptId +'" lvl="'+level +'"><a class="file code" style="cursor: pointer;" onclick="myClick(this);" >'+ deptName +'&nbsp&nbsp<i data-id="'+deptId+'" data-name="'+deptName+'" style="color:#383d41; cursor:pointer;"></i></a></li>';
+					li = '<li id="'+ deptId +'" lvl="'+level +'"><img src="<%=request.getContextPath() %>/js/treeview/images/dept2.png"><a class="file code" style="cursor: pointer;" onclick="myClick(this);" >'+ deptName +'&nbsp&nbsp<i data-id="'+deptId+'" data-name="'+deptName+'" style="color:#383d41; cursor:pointer;"></i></a></li>';
 				}
 
 				// 1레벨은 그냥 추가
@@ -744,6 +744,6 @@ function modify_go(){
 }
 
 </script>
-	</div>
+</div>
 </section>
 </body>

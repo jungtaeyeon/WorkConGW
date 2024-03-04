@@ -3,6 +3,8 @@ package com.WorkConGW.board.issue.dao;
 
 import com.WorkConGW.board.issue.dto.ProjectVO;
 import org.mybatis.spring.SqlSessionTemplate;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
@@ -11,6 +13,7 @@ import java.util.List;
 
 @Repository
 public class ProjectDAO {
+    Logger logger = LoggerFactory.getLogger(ProjectDAO.class);
     final SqlSessionTemplate sqlSessionTemplate;
 
     @Autowired
@@ -27,6 +30,7 @@ public class ProjectDAO {
     }
 
     public void updateProject(ProjectVO projectVO) {
+        logger.info(String.valueOf(projectVO.getProject_End_Dt()));
         sqlSessionTemplate.update("updateProject", projectVO);
     }
 

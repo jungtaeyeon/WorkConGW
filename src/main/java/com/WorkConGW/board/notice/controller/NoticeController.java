@@ -63,7 +63,6 @@ public class NoticeController extends BaseController{
         searchNoticeVO.setNext(paginationInfo.getXnext());
 
 
-
         model.addAttribute("noticeList", dataMap.get("noticeList"));
         model.addAttribute("importantNoticeList", dataMap.get("importantNoticeList"));
         model.addAttribute("paginationInfo", paginationInfo);//목록페이징

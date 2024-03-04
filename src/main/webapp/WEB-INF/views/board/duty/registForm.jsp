@@ -76,11 +76,10 @@
 										</div>
 									</div>
 									<div class="col-md-3 col-sm-12 formGroup issueForm">
-										<label>관련 업무 번호(선택)</label>
+										<label>관련 업무 번호</label>
 										<div class="form-group">
-											<input type="text" id="dutyBoardIdForIssue"
-												class="form-control" placeholder="업무 글번호를 입력하세요."
-												maxlength="6">
+											<input type="text" id="dutyBoardIdForIssue" class="form-control" placeholder="업무를 선택하세요." maxlength="6" disabled>
+											<a href="#largeModal" id="addDuty" data-toggle="modal" data-target="#dutyModal"> + 업무 선택하기</a><br>
 										</div>
 									</div>
 									<div class="col-md-3 col-sm-12 formGroup issueForm">
@@ -197,8 +196,6 @@
 		</div>
 	</div>
 
-
-
 	<!----------------------------------------------- 모달--------------------------------------------->
 	<!-- Modal -->
 	<div class="modal fade" id="managerModal" tabindex="-1" role="dialog"
@@ -289,7 +286,48 @@
 			</div>
 		</div>
 	</div>
-</div>
+
+
+		<!-----------------------------------------------업무 추가 모달--------------------------------------------->
+		<!-- Modal -->
+		<div class="modal fade" id="dutyModal" tabindex="-1" role="dialog" aria-hidden="true">
+			<div class="modal-dialog" role="document" style="max-width: 400px;">
+				<div class="modal-content">
+					<div class="modal-header">
+						<h4 class="title" id="largeProjectModalLabel">업무 추가</h4>
+					</div>
+					<div class="modal-body">
+						<!-- 모달 수신자 등록 폼 -->
+						<div class="body" style="padding: 6px;">
+							<ul class="nav nav-tabs">
+								<li class="nav-item"><a class="nav-link show active" data-toggle="tab" href="#projectOrg">프로젝트</a></li>
+							</ul>
+							<div class="tab-content" style="padding: 0;">
+								<!-- 조직도 -->
+								<div class="tab-pane show active" id="projectOrg">
+									<div class="header" style="height: 5px; margin-top: 15px;">
+									</div>
+									<div class="body" style="overflow-y: scroll; height: 300px;">
+										<div>
+											<ul id="projectList" class="treeview">
+												<li>
+													프로젝트 리스트&nbsp
+													<ul id="project"></ul>
+												</li>
+											</ul>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-secondary" data-dismiss="modal" id="closeProjectModal">닫기</button>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
 
 
 	<!-- Javascript -->
@@ -313,12 +351,22 @@ window.onload = function(){
 		startDate: tomorrow, // 내일 이후의 날짜만 선택 가능하도록 설정
 	});
 	deptTrees();
+	displayProjectTree();
+}
 
-	var tomorrow = new Date();
-	tomorrow.setDate(tomorrow.getDate() + 1); // 내일의 날짜를 가져옴
-	$('.date').datepicker({
-		startDate: tomorrow, // 내일 이후의 날짜만 선택 가능하도록 설정
-	});
+function OpenWindow(UrlStr, WinTitle, WinWidth, WinHeight){
+	winleft = (screen.width - WinWidth) / 2;
+	wintop = (screen.height - WinHeight) / 2;
+	var winX      = window.screenX || window.screenLeft || 0;// 현재창의 x좌표
+	var winY      = window.screenY || window.screenTop || 0; // 현재창의 y좌표
+
+	winleft = winX + winleft;
+	wintop = winY + wintop;
+
+	var win = window.open(UrlStr, WinTitle, "scrollbars=yes,width="+ WinWidth +", "
+			+"height="+WinHeight + ", top=" + wintop +", left="
+			+ winleft +", resizable=yes, status=yes");
+	win.focus();
 }
 
 function myClick(obj){
@@ -427,6 +475,96 @@ $("#addEmp").click(function(){
 });
 ////숨겨놓기끝
 
+// 업무 번호 추가 !
+function displayProjectTree(projectTree) {
+	var projectList = $("#project");
+
+	projectTree.forEach(function(projectWithDuties) {
+		var project = projectWithDuties.project;
+		var duties = projectWithDuties.duties;
+
+		var projectLink = $("<a>").addClass("project-link").attr("href", "#").attr("data-project-id", project.project_Id).text(project.project_Title);
+		var imgSrc = $("<img>").attr("src", "<%=request.getContextPath() %>/js/treeview/images/file.gif");
+		var projectItem = $("<li>").addClass("project-item").attr("id", project.project_Id).append(imgSrc).append(projectLink);
+
+		var dutyList = $("<ul>").addClass("duty-list");
+
+		duties.forEach(function(duty) {
+			var dutyLink = $("<a>").addClass("duty-link").attr("href", "#").attr("data-duty-id", duty.duty_Board_Id).text(duty.duty_Board_Title);
+			var dutyItem = $("<li>").addClass("duty-item").attr("id", duty.duty_Board_Id).append(dutyLink);
+
+			// 이미지 요소를 생성하고 업무 아이템에 추가합니다.
+			var imgSrc = $("<img>").attr("src", "<%=request.getContextPath() %>/js/treeview/images/file.gif");
+			dutyLink.prepend(imgSrc);
+
+			dutyList.append(dutyItem);
+
+			// 클릭된 업무 아이템에서 duty-Board-Id를 가져옵니다.
+			dutyLink.click(function() {
+				var dutyBoardId = $(this).attr('data-duty-id');
+
+				// 가져온 duty-Board-Id를 입력란에 넣습니다.
+				$('#dutyBoardIdForIssue').val(dutyBoardId);
+
+				// 모달을 닫습니다.
+				$('#dutyModal').modal('hide');
+			});
+		});
+
+		// 클릭된 프로젝트 아이템에서 project-Id를 가져옵니다.
+		projectLink.click(function() {
+			toggleExpandCollapse(this);
+		});
+
+		var expandIcon = $("<div>").addClass("hitarea expandable-hitarea").attr("onclick", "toggleExpandCollapse(this);");
+		projectItem.prepend(expandIcon);
+
+		if (duties.length > 0) {
+			projectItem.addClass("expandable").append(dutyList).find(".hitarea").addClass("collapsable-hitarea");
+			dutyList.hide();
+		} else {
+			projectItem.addClass("collapsable").find(".hitarea").addClass("expandable-hitarea");
+		}
+
+		projectList.append(projectItem);
+	});
+}
+
+
+
+
+function toggleExpandCollapse(element) {
+	var $element = $(element);
+	var $dutyList = $element.siblings(".duty-list");
+
+	$element.toggleClass("expandable-hitarea collapsable-hitarea");
+	$dutyList.toggle();
+
+	if ($dutyList.is(":hidden")) {
+		$element.removeClass("collapsable-hitarea").addClass("expandable-hitarea");
+	} else {
+		$element.removeClass("expandable-hitarea").addClass("collapsable-hitarea");
+	}
+}
+
+$(document).ready(function() {
+	$.ajax({
+		type: "GET",
+		url: "<c:url value='/getProjectTreeView' />",
+		contentType: "application/json",
+		processData: true,
+		success: function(data) {
+			displayProjectTree(data);
+		},
+		error: function(xhr, status, error) {
+			console.error("Failed to retrieve project tree:", error);
+		}
+	});
+
+	// 모든 프로젝트를 닫힌 상태로 표시
+	$(".duty-list").hide();
+});
+
 //조직도 출력
 function deptTrees(){
 	$.ajax({
@@ -450,9 +588,9 @@ function deptTrees(){
 					level = e.level;
 			    }
 			    if(position){
-					li = '<li onclick="empChecked(this);" data-deptId="'+deptSupId+'" data-name="'+deptName+" "+position+'" data-dept="'+deptSupName+'" data-state="'+(empState==null ? '' : empState)+'" ondblclick="addEmpList();" id="'+ deptId +'" lvl="'+level +'" class="myChecked" style="cursor:pointer" ><img style ="width:20px; height:20px" src="<%=request.getContextPath() %>/js/treeview/images/emp.png" >'+" "+ deptName + " "+e.position+'</li>';
+					li = '<li onclick="empChecked(this);" data-deptId="'+deptSupId+'" data-name="'+deptName+" "+position+'" data-dept="'+deptSupName+'" data-state="'+(empState==null ? '' : empState)+'" ondblclick="addEmpList();" id="'+ deptId +'" lvl="'+level +'" class="myChecked" style="cursor:pointer" ><img src="<%=request.getContextPath() %>/js/treeview/images/emp2.png">'+" "+ deptName + " "+e.position+'</li>';
 			    }else{
-			    	li = '<li id="'+ deptId +'" lvl="'+level +'"><a class="file code" style="cursor: pointer;" onclick="myClick(this);" >'+ deptName +'&nbsp&nbsp<i data-id="'+deptId+'" data-name="'+deptName+'" style="color:#383d41; cursor:pointer;"></i></a></li>';
+			    	li = '<li id="'+ deptId +'" lvl="'+level +'"><img src="<%=request.getContextPath() %>/js/treeview/images/dept2.png"><a class="file code" style="cursor: pointer;" onclick="myClick(this);" >'+ deptName +'&nbsp&nbsp<i data-id="'+deptId+'" data-name="'+deptName+'" style="color:#383d41; cursor:pointer;"></i></a></li>';
 			    }
 				
 				// 1레벨은 그냥 추가

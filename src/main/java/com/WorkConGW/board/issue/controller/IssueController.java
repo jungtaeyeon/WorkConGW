@@ -118,6 +118,8 @@ public class IssueController extends BaseController {
 	@PostMapping("modify")
 	public String modify(BoardFormVO boardFormVO) throws Exception{
 		IssueVO issueVO = boardFormVO.getIssueVO();
+		logger.info(String.valueOf(issueVO.getMilestone_Id()));
+		logger.info(String.valueOf(issueVO.getIssue_Board_St()));
 		issueService.modify(issueVO);
 
 		IssueVO resultVO = issueService.getIssue(issueVO);

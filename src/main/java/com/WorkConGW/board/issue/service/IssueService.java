@@ -5,15 +5,21 @@ import com.WorkConGW.board.issue.dto.IssueReplyVO;
 import com.WorkConGW.board.issue.dto.IssueVO;
 import com.WorkConGW.board.issue.dto.ProjectVO;
 import com.WorkConGW.emp.dto.EmpVO;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.sql.SQLException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
+import java.util.TimeZone;
 
 @Service
 public class IssueService {
+    Logger logger = LoggerFactory.getLogger(IssueService.class);
 
 	private final IssueDAO issueDAO;
 

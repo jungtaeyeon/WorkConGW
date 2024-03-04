@@ -26,6 +26,8 @@ public class NoticeVO extends BaseVO{
     private int attachCount;
     private String searchDt;
 
+    private long notice_Hangle_Dt;
+
     public NoticeVO(){}
 
     public NoticeVO(int notice_id, String notice_title, String notice_content, int notice_readcnt, Date notice_create_dt, Date notice_update_dt, String notice_important_st, String emp_writer_id, String emp_Name, String officialName, List<AttachVO> noticeAttachList, int attachCount, String searchDt) {
@@ -148,6 +150,14 @@ public class NoticeVO extends BaseVO{
 
     public void setSearchDt(String searchDt) {
         this.searchDt = searchDt;
+    }
+
+    public long getNotice_Hangle_Dt() {
+        return notice_Hangle_Dt;
+    }
+
+    public void setNotice_Hangle_Dt(long notice_Hangle_Dt) {
+        this.notice_Hangle_Dt = notice_Hangle_Dt;
     }
 
 }

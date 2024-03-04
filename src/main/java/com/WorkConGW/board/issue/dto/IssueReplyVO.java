@@ -15,6 +15,17 @@ public class IssueReplyVO {
 	private String emp_Name;
 	private String emp_Picture;
 
+	public String getKoreanTime() {
+		return koreanTime;
+	}
+
+	public void setKoreanTime(String koreanTime) {
+		this.koreanTime = koreanTime;
+	}
+
+	private String koreanTime;
+	private long issue_Hangle_Dt;
+
 	public String getReply_Content() {
 		return reply_Content;
 	}
@@ -87,6 +98,12 @@ public class IssueReplyVO {
 		this.emp_Picture = emp_Picture;
 	}
 
-	
-	
+
+	public void setIssue_Hangle_Dt(long issue_Hangle_Dt) {
+		this.issue_Hangle_Dt = issue_Hangle_Dt;
+	}
+
+	public long getIssue_Hangle_Dt() {
+		return issue_Hangle_Dt;
+	}
 }

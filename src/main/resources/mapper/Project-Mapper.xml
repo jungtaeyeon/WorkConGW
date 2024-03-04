@@ -14,10 +14,11 @@
         ,A.PROJECT_ST
         ,A.EMP_ID
         ,A.EMP_NAME
-        ,A.DUTY_Count
+--         ,A.DUTY_Count -- 삭제 필요
         ,NVL(B.todoIssueCount,0) as todoIssueCount
         ,NVL(C.inprogressIssueCount,0) as inprogressIssueCount
         ,NVL(D.doneIssueCount,0) as doneIssueCount
+        ,NVL(E.dutyCount,0) as dutyCount -- 프로젝트에 업무 연결되어있으면 삭제 불가능 하게 하기위해 추가
         FROM
         PROJECT A
         ,(SELECT a.PROJECT_ID, count(*) as todoIssueCount
@@ -35,6 +36,10 @@
         WHERE b.ISSUE_PROJECT_ST = 'done' and a.DUTY_BOARD_ID = b.DUTY_BOARD_ID
         GROUP BY a.PROJECT_ID
         ORDER BY a.PROJECT_ID) D
+        ,(SELECT PROJECT_ID, count(*) as dutyCount
+        FROM DUTY
+        GROUP BY PROJECT_ID
+        ORDER BY PROJECT_ID) E  -- 프로젝트에 업무 연결되어있으면 삭제 불가능 하게 하기위해 추가
         WHERE 1=1
         <choose>
             <when test='isOpen == "open"'>
@@ -47,6 +52,7 @@
         AND A.PROJECT_ID = B.PROJECT_ID(+)
         AND A.PROJECT_ID = C.PROJECT_ID(+)
         AND A.PROJECT_ID = D.PROJECT_ID(+)
+        AND A.PROJECT_ID = E.PROJECT_ID(+)  -- 프로젝트에 업무 연결되어있으면 삭제 불가능 하게 하기위해 추가
         ORDER BY PROJECT_UPDATE_DT DESC
     </select>
 
@@ -60,7 +66,7 @@
                                  ,PROJECT_ST
                                  ,EMP_ID
                                  ,EMP_NAME
-                                 ,DUTY_Count
+--                                  ,DUTY_Count
         ) VALUES (
                   PROJECT_ID_SEQ.nextval
                  ,#{project_Title}
@@ -70,7 +76,7 @@
                  ,1
                  ,#{emp_Id}
                  ,#{emp_Name}
-                 ,0
+--                  ,0
                  )
     </insert>
 
@@ -100,7 +106,7 @@
              ,A.PROJECT_ST
              ,A.EMP_ID
              ,A.EMP_NAME
-             ,A.DUTY_Count
+--              ,A.DUTY_Count
              ,NVL(B.todoIssueCount,0) as todoIssueCount
              ,NVL(C.inprogressIssueCount,0) as inprogressIssueCount
              ,NVL(D.doneIssueCount,0) as doneIssueCount

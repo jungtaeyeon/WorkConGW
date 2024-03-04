@@ -93,7 +93,7 @@
         ORDER BY issue_board_create_dt DESC
         ) D1
         ) D2
-        where seq <![CDATA[ >= ]]> #{firstIndex}
+        where seq <![CDATA[ > ]]> #{firstIndex}
         ) D3
         where rownum <![CDATA[ <= ]]> #{recordCountPerPage}
     </select>
@@ -176,63 +176,6 @@
         ORDER BY A.issue_board_update_dt DESC
     </select>
 
-    <select id="selectIssueListByMilestoneId" parameterType="MilestoneVO" resultType="IssueVO">
-        SELECT  A.issue_board_id
-        ,A.issue_board_title
-        ,A.issue_board_content
-        ,A.issue_board_readcnt
-        ,to_char(A.issue_board_create_dt,'YYYY.MM.DD') issue_board_create_dt
-        ,to_char(A.issue_board_update_dt,'YYYY.MM.DD') issue_board_update_dt
-        ,A.issue_board_updater_id
-        ,A.emp_id
-        ,A.duty_board_id
-        ,A.milestone_id
-        ,A.ISSUE_OPEN_ST
-        ,B.milestone_name
-        ,C.emp_name
-        ,NVL(D.oppListCount,0) oppIssueCount
-        ,NVL(E.reply_Count,0) as reply_Count
-        ,F.duty_board_title
-        FROM issue_board A, milestone B, emp C, duty F
-        ,(
-        SELECT COUNT(*) oppListCount
-        ,milestone_id
-        FROM issue_board
-        WHERE 1=1
-        <choose>
-            <when test='isOpen == "open"'>
-                AND ISSUE_OPEN_ST=2
-            </when>
-            <otherwise>
-                AND ISSUE_OPEN_ST=1
-            </otherwise>
-        </choose>
-        GROUP BY milestone_id
-        ) D
-        ,(
-        SELECT issue_board_id,
-        COUNT(*) AS reply_Count
-        FROM issue_reply
-        WHERE reply_group_code = 1
-        GROUP BY issue_board_id
-        ) E
-        WHERE A.milestone_id = B.milestone_id(+)
-        AND A.emp_id = C.emp_id
-        AND A.milestone_id = D.milestone_id(+)
-        AND A.issue_board_id = E.issue_board_id(+)
-        AND A.duty_board_id = F.duty_board_id(+)
-        AND A.milestone_id = #{milestone_Id}
-        <choose>
-            <when test='isOpen == "open"'>
-                AND A.ISSUE_OPEN_ST=1
-            </when>
-            <otherwise>
-                AND A.ISSUE_OPEN_ST=2
-            </otherwise>
-        </choose>
-        ORDER BY issue_board_update_dt DESC
-    </select>
-
     <!-- 프로젝트에서 사용 -->
     <select id="selectIssueListByProjectId" parameterType="ProjectVO" resultType="IssueVO">
         SELECT
@@ -310,14 +253,9 @@
         <if test="issue_Board_St != 0">
             ,issue_board_st = #{issue_Board_St}
         </if>
-        <choose>
-            <when test="milestone_Id != 0">
-                ,milestone_id = #{milestone_Id}
-            </when>
-            <otherwise>
-                ,milestone_id = 0
-            </otherwise>
-        </choose>
+        <if test="milestone_Id != -1">
+            ,milestone_id = #{milestone_Id}
+        </if>
         WHERE
         issue_board_id = #{issue_Board_Id}
     </update>
@@ -422,7 +360,7 @@
         ,reply_group_code
         ) VALUES (
         #{reply_Content}
-        ,sysdate
+        ,current_Date
         ,sysdate
         ,#{reply_Id}
         ,#{issue_Board_Id}
@@ -443,5 +381,80 @@
         WHERE
             reply_id = #{reply_Id}
     </update>
+
+    <!-- 마일스톤에서 사용 -->
+    <select id="selectIssueListByMilestoneId" parameterType="MilestoneVO" resultType="IssueVO">
+        SELECT  A.issue_board_id
+        ,A.issue_board_title
+        ,A.issue_board_content
+        ,A.issue_board_readcnt
+        ,A.issue_board_create_dt
+        ,A.issue_board_update_dt
+        ,A.issue_board_updater_id
+        ,A.emp_id
+        ,A.duty_board_id
+        ,A.milestone_id
+        ,A.ISSUE_OPEN_ST
+        ,B.milestone_name
+        ,C.emp_name
+        ,NVL(D.oppListCount,0) oppIssueCount
+        ,NVL(E.reply_Count,0) as reply_Count
+        ,F.duty_board_title
+        FROM issue_board A, milestone B, emp C, duty F
+        ,(
+        SELECT COUNT(*) oppListCount
+        ,milestone_id
+        FROM issue_board
+        WHERE 1=1
+        <choose>
+            <when test='isOpen == "open"'>
+                AND ISSUE_OPEN_ST=2
+            </when>
+            <otherwise>
+                AND ISSUE_OPEN_ST=1
+            </otherwise>
+        </choose>
+        GROUP BY milestone_id
+        ) D
+        ,(
+        SELECT issue_board_id,
+        COUNT(*) AS reply_Count
+        FROM issue_reply
+        WHERE reply_group_code = 1
+        GROUP BY issue_board_id
+        ) E
+        WHERE A.milestone_id = B.milestone_id(+)
+        AND A.emp_id = C.emp_id
+        AND A.milestone_id = D.milestone_id(+)
+        AND A.issue_board_id = E.issue_board_id(+)
+        AND A.duty_board_id = F.duty_board_id(+)
+        AND A.milestone_id = #{milestone_Id}
+        <choose>
+            <when test='isOpen == "open"'>
+                AND A.ISSUE_OPEN_ST=1
+            </when>
+            <otherwise>
+                AND A.ISSUE_OPEN_ST=2
+            </otherwise>
+        </choose>
+        ORDER BY issue_board_update_dt DESC
+    </select>
+
+    <update id="updateIssueByDeleteMilestone" parameterType="MilestoneVO">
+        UPDATE issue_board
+        SET
+            milestone_id = 0
+          ,issue_board_update_dt = sysdate
+        WHERE
+            milestone_id = #{milestone_Id}
+    </update>
+
+    <select id="getPostTimeIssue" parameterType="int" resultType="Date">
+        SELECT REPLY_CREATE_DT
+
+        FROM ISSUE_REPLY
+
+        WHERE REPLY_ID = #{reply_Id}
+    </select>
 
 </mapper>

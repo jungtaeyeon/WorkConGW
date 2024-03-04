@@ -190,7 +190,7 @@
 		#{emp_writer_id},
 		#{notice_important_st},
 		0,
-		sysdate,
+		current_Date,
 		sysdate
 		)
 	</insert>

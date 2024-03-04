@@ -82,9 +82,9 @@ public class DutyDAO {
     }
 
     /* 업무에 프로젝트 연결할 때 마다 프로젝트에 DutyCount +1 증가 */
-    public void plusProjectDutyCount(int project_Id) {
-        sqlSessionTemplate.update("plusProjectDutyCount", project_Id);
-    }
+//    public void plusProjectDutyCount(int project_Id) {
+//        sqlSessionTemplate.update("plusProjectDutyCount", project_Id);
+//    }
 
 
     public void increaseDutyReadcnt(DutyVO dutyVO) {
@@ -143,9 +143,9 @@ public class DutyDAO {
         sqlSessionTemplate.delete("deleteDuty", dutyVO);
     }
 
-    public void minusProjectDutyCount(int project_Id) {
-        sqlSessionTemplate.update("minusProjectDutyCount", project_Id);
-    }
+//    public void minusProjectDutyCount(int project_Id) {
+//        sqlSessionTemplate.update("minusProjectDutyCount", project_Id);
+//    }
 
     public void updateDuty(DutyVO dutyVO) {
         sqlSessionTemplate.update("updateDuty", dutyVO);
