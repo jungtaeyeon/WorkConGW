@@ -1,11 +1,13 @@
 package com.WorkConGW.attend.dao;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.text.SimpleDateFormat;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Date;
 import java.util.List;
+import java.util.ArrayList;
 import java.util.Map;
 import java.util.HashMap;
 
@@ -15,6 +17,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
+import com.WorkConGW.approval.dto.ApprovalVO;
 import com.WorkConGW.attend.dto.AttendenceVO;
 import com.WorkConGW.emp.dto.EmpVO;
 import com.google.api.client.util.Data;
@@ -139,6 +142,34 @@ public class AttendenceDAO {
     List<Map<String, Object>> result = sqlSessionTemplate.selectList("attendSelect", pmap);
     logger.info(result.toString());
     return result;
+  }
+
+  public void attendinsertApproval(Map<String, Object> pmap) {
+    logger.info(pmap.toString());
+    String startDt = (String)pmap.get("startDt");
+    String endDt = (String)pmap.get("endDt");
+    String empName = (String)pmap.get("empName");
+    String approvalContent = (String)pmap.get("approvalContent");
+
+    LocalDate startDate = LocalDate.parse(startDt);
+    LocalDate endDate = LocalDate.parse(endDt);
+
+    List<String> dateRange = new ArrayList<>();
+    LocalDate currentDate = startDate;
+    
+    while (!currentDate.isAfter(endDate)) {
+      dateRange.add(currentDate.format(DateTimeFormatter.ISO_DATE));
+      currentDate = currentDate.plusDays(1);
+    }
+
+    Map<String, Object> paramMap = new HashMap<>();
+    paramMap.put("approvalContent", approvalContent);
+    paramMap.put("empId", empName);
+    for (String date : dateRange) {
+      paramMap.put("date", date);
+      logger.info(date);
+      sqlSessionTemplate.insert("attendinsertApproval",paramMap);
+    }
   }
 
 }

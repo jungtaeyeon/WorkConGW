@@ -158,7 +158,7 @@
                                             신청자
                                         </td>
                                         <td style="background: rgb(255, 255, 255); padding: 5px; border: 1px solid black; text-align: left; color: rgb(0, 0, 0); font-size: 12px; font-weight: normal; vertical-align: middle;">
-                                            <div contenteditable="false" id="empName">${history.emp_Name}</div>
+                                            <div contenteditable="false" id="empName" data-empid="${history.emp_Id}">${history.emp_Name}</div>
                                         </td>
                                     </tr>
                                     <tr>
@@ -608,6 +608,9 @@
         let docId = '${approval.doc_Id}'
         let content = $("#contents").html();
         let title = $("#title").text();
+        let startDt = $(".startDt").val();
+        let endDt = $(".endDt").val();
+        let empName = $("#empName").data('empid');
         let obj = {};
         let referArray = [];
 
@@ -625,10 +628,14 @@
         obj.docId = docId;
         obj.referArr = referArray;
 
-        console.log(obj)
+        
         obj.approvalContent = content;
         obj.approvalTitle = title;
         obj.docId = docId;
+        obj.startDt = startDt;
+        obj.endDt = endDt;
+        obj.empName = empName;
+        console.log(obj)
 
         let empId = "";
         let myData;

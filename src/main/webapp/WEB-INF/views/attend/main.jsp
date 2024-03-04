@@ -239,7 +239,7 @@
 				<div class="attendStatisticTextGroup">
 					<p class="attendStatisticTit">이달의 근태통계</p>
 					<p class="attendStatisticText">정상출근 일수 <span class="attendenceNormalCountList">${attendenceCountList.attendenceNormalCountList}</span></p>
-					<p class="attendStatisticText">지각 일수 <span class="attendenceTardyCountList">${attendenceCountList.attendenceTardyCountList}</span></p>
+					<p class="attendStatisticText">지각/조퇴 일수 <span class="attendenceTardyCountList">${attendenceCountList.attendenceTardyCountList}</span></p>
 					<p class="attendStatisticText">정상 출근율 <span class="attendStatisticPercentText">72%</span></p>
 				</div>
 			</div>

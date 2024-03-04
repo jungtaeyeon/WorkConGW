@@ -52,7 +52,7 @@
                 from 
                         attend_history a 
                 where 
-                        emp_id = #{empId} and attend_st_id IN (0,1,4) and TO_CHAR(history_attend_time, 'YYYY-MM') = #{attendDay}
+                        emp_id = #{empId} and attend_st_id IN (0,1,4,5) and TO_CHAR(history_attend_time, 'YYYY-MM') = #{attendDay}
         </select>
 
         <select id="attendenceTardyCountList" resultType="int" parameterType="String">
@@ -132,4 +132,9 @@
                 </where>
                 order by c.history_attend_time desc
         </select>
+
+        <insert id="attendinsertApproval" parameterType="java.util.Map">
+                INSERT INTO attend_history(history_id, emp_id, attend_st_id, history_attend_time, history_reason, history_leaving_time)
+                VALUES(ATTEND_HISTORY_SEQ.nextval, #{empId}, 5, TO_DATE(#{date}, 'YYYY-MM-DD'),#{approvalContent}, TO_DATE(#{date}, 'YYYY-MM-DD'))
+        </insert>
 </mapper>

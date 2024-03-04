@@ -113,6 +113,7 @@
 
                         // 하위 그룹이 없으면 li로 추가
                         // 하위 그룹이 있으면 ul로 추가
+                    }
                         if (bUl.length == 0) {
                             let div = "<div onclick='plusFromMinus(this);' class='hitarea expandable-hitarea lastExpandable-hitarea '></div>"
                             li = "<ul class='' style='display: none;'>" + li + "</ul>";

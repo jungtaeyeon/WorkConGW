@@ -661,27 +661,31 @@ p.approvalForm, p.approvalName, p.approvalDay {
 		}
 	})
 	$('.attendEndBtn').click(function(){
-		if(history_Attend_Time != ""){
-		$.ajax({
-			type : 'get',              
-			url : '/WorkConGW/attend/attendEnd',  
-			data : {
-			},
-			success : function(result) { 
-			alert('퇴근체크되었습니다.');
-			updateTimer();
-			clearInterval(timerId);
-			location.reload();
-			},    
-			error : function(request, status, error) {        
-			console.log(error);
-			}
-		})
-		}else{
-		alert('출근부터해주세요');
-		return;
-		}
-	})
+    if(history_Attend_Time != ""){
+        let result = confirm('정말로퇴근하시겠습니까?');
+        if (result) {
+            $.ajax({
+                type : 'get',
+                url : '/WorkConGW/attend/attendEnd',
+                data : {
+                },
+                success : function(result) {
+                    alert('퇴근체크되었습니다.');
+                    updateTimer();
+                    clearInterval(timerId);
+                    sessionStorage.clear();
+                    window.location.href='${pageContext.request.contextPath }/common/logout';
+                },
+                error : function(request, status, error) {
+                    console.log(error);
+                }
+            })
+        }
+    }else{
+      alert('출근부터해주세요');
+      return;
+    }
+  })
 
 	if(stopboolean == '1' || stopboolean == '2'){
 	timerId = setInterval(updateTimer, timerInterval);

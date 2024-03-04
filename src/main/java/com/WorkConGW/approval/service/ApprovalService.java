@@ -5,6 +5,7 @@ import com.WorkConGW.approval.dao.ApprovalDAO;
 import com.WorkConGW.approval.dto.*;
 import com.WorkConGW.common.command.FileUploadCommand;
 import com.WorkConGW.emp.dao.EmpDAO;
+import com.WorkConGW.attend.dao.AttendenceDAO;
 import com.WorkConGW.emp.dto.EmpVO;
 import com.beust.ah.A;
 import com.google.api.Http;
@@ -32,6 +33,9 @@ public class ApprovalService{
 
     @Autowired
     private ApprovalDAO approvalDAO = null;
+    
+    @Autowired
+    private AttendenceDAO attendenceDAO = null;
 
     @Autowired
     private EmpDAO empDAO = null;
@@ -477,7 +481,9 @@ public class ApprovalService{
                 approval.setApproval_Content((String)dataMap.get("approvalContent"));
                 approval.setApproval_St(2); // 결재 진행중인 상태
                 approval.setDoc_Id((Integer.parseInt((String) dataMap.get("docId"))));
-
+                if (historyStep == 2 && result == 0) {
+                    attendenceDAO.attendinsertApproval(dataMap);
+                }
                 approvalDAO.updateApproval(approval);
 
             }
@@ -512,6 +518,9 @@ public class ApprovalService{
             approval.setApproval_St(2);
             approval.setDoc_Id((Integer.parseInt((String)dataMap.get("docId"))));
             logger.info("approval >>> 여기들어오니? : "+approval.toString());
+            if (historyStep == 3) {
+                attendenceDAO.attendinsertApproval(dataMap);
+            }
             approvalDAO.updateApproval(approval);
 
 
