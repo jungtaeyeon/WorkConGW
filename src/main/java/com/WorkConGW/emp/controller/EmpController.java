@@ -84,16 +84,18 @@ public class EmpController {
 
 
     @PostMapping("/register")
-    public String register(EmpVO empVO, RedirectAttributes rttr,Model model)
+    public String register(EmpVO empVO,Model model)
     {
         logger.info("register");
+        logger.info(empVO.getEmp_Id());
+        empService.registerDashBoard(empVO);
         String hashedPw = BCrypt.hashpw(empVO.getEmp_Pwd(), BCrypt.gensalt());
         empVO.setEmp_Pwd(hashedPw); // 암호화된 정보를 넣는다.
+
         empService.register(empVO);
+
         model.addAttribute("emp",empVO);
-        rttr.addFlashAttribute("msg", "가입이 완료되었습니다.");
-        rttr.addFlashAttribute("emp_Email",empVO.getEmp_Email());
-        rttr.addFlashAttribute("emp_Id", empVO.getEmp_Id());
+
 
         
         return "redirect:/admin/emp/empInsert";
@@ -293,10 +295,37 @@ public class EmpController {
         return "/common/join";
     }
 
+//    @PostMapping("registSign")
+//    public ResponseEntity<String> updateSign(@RequestParam(value = "myEmpSign" , required=false) MultipartFile SignImage, @SessionAttribute("loginUser")EmpVO empVO,RedirectAttributes attr) throws IOException,IllegalStateException
+//    {
+//
+//        logger.info("registSign");
+//        int result = empService.updateSign(SignImage,SignPath,empVO);
+//        String msg = "";
+//        ResponseEntity<String> entity = null;
+//        if(result > 0)
+//        {
+//            msg = "서명 이미지가 등록 되었습니다.";
+//            entity = new ResponseEntity<>(msg , HttpStatus.OK);
+//
+//        }
+//        else{
+//            msg = "서명 이미지가 없습니다.";
+//            entity = new ResponseEntity<>(msg, HttpStatus.OK);
+//
+//        }
+//
+//        return entity;
+//
+//
+//
+//    }
+
     @PostMapping("registSign")
     public ResponseEntity<String> updateSign(@RequestParam(value = "myEmpSign" , required=false) MultipartFile SignImage, @SessionAttribute("loginUser")EmpVO empVO,RedirectAttributes attr) throws IOException,IllegalStateException
     {
 
+        logger.info("registSign");
         int result = empService.updateSign(SignImage,SignPath,empVO);
         String msg = "";
         ResponseEntity<String> entity = null;
@@ -317,6 +346,7 @@ public class EmpController {
 
 
     }
+
    @GetMapping("/registerAuth")
     public String loginView(HttpServletRequest request, Model model, String emp_Email, String emp_Id){
         logger.info("loginView");

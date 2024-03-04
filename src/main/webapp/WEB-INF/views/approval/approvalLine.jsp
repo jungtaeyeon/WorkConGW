@@ -91,8 +91,8 @@
         text-align: center; /* 가운데 정렬 */
         border: 1px solid #ccc; /* 테두리 스타일 */
         border-radius: 5px; /* 테두리 둥글게 처리 */
-        padding: 10px; /* 내부 여백 */
         margin-bottom: 20px; /* 하단 여백 */
+
     }
 
     .header {
@@ -383,9 +383,10 @@
             {
                 referObj.name = $("option:selected").eq(i).parent().parent().parent().find(".myName").text().split(" ")[0] // 이름출력
                 referObj.official = $("option:selected").eq(i).parent().parent().parent().find(".myName").text().split(" ")[1] // 직책출력
-                referObj.empId = $('option:selected').eq(i).parent().parent().parent().find(".empId").attr("value") // 사번 출력
+                referObj.empId = $('option:selected').eq(i).parent().parent().parent().find(".empTd").attr("value") // 사번 출력
                 referObj.st = $('option:selected').eq(i).parent().parent().parent().find(".st").children().text() // 상태 출력
                 referArr.push(referObj);
+                console.log(referArr)
                 referObj = {}; // 여기서 초기화 시켜야함. 그래야 다음에 사용할 때 반영이 된다.
             }
         }
@@ -463,9 +464,11 @@
                 str2 +='<button class="btn btn-outline-secondary referBtn" style="padding:0;font-size:0; margin-right: 10px;">';
                 str2 +='<span class="refer" style="font-size: 11px;" value="'+referArr[i].empId+'">'+referArr[i].name+" "+referArr[i].official+'</span>';
                 str2 +='</button>';
-                console.log(referArr)
                 opener.document.querySelector("#refer").innerHTML = str2;
             }
+
+            console.log(empId)
+
 
         }
         opener.document.querySelector("#approval-line").innerHTML=str;
@@ -481,7 +484,7 @@
 
         opener.document.querySelector("#empName").innerHTML = '${emp.emp_Name}'
         opener.document.querySelector("#deptName").innerHTML = '${emp.dept_Name}'
-        opener.document.querySelector("#docId").innerHTML = '${docId}'
+        opener.document.querySelector("#docId").innerHTML = '${docId+1}'
 
         window.close()
 
@@ -515,13 +518,13 @@
                     if (position) {
                         li = '<li id="' + deptId + '" data-type="supervisor" lvl="' + level + '"><img src="<%=request.getContextPath() %>/js/treeview/images/file.gif"><a class="file code myHover" id="t1">' + " " + deptName + " " + e.position + '</a></li>';
                         if(stName == '휴가중') {
-                            li = '<li onclick = "empChecked(this);" ondblclick="moveRight();" stName="' + stName + '" id="' + deptId + '" lvl="' + level + '" class ="" style="cursor: pointer"><img src="<%=request.getContextPath() %>/js/treeview/images/folder-closed.gif">'+" "+deptName +" "+'</a></li>'
+                            li = '<li onclick = "empChecked(this);" ondblclick="moveRight();" stName="' + stName + '" id="' + deptId + '" lvl="' + level + '" class ="" style="cursor: pointer"><img src="<%=request.getContextPath() %>/js/treeview/images/dept2.png">'+" "+deptName +" "+'</a></li>'
                         }
                         else{
                             li = '<li onclick="empChecked(this);" ondblclick="moveRight();" stName="'+stName+'" id="'+ deptId +'" lvl="'+level +'" class="" style="cursor:pointer" ><img src = "<%=request.getContextPath()%>/js/treeview/images/emp2.png">'+" "+ deptName + " "+e.position+'</li>';
                         }
                     } else {
-                        li = '<li id="' + deptId + '" data-type="dept" lvl="' + level + '"><img src="<%=request.getContextPath() %>/js/treeview/images/folder-closed.gif"><a class="file code" onclick="myClick(this)">' + " " + deptName + " " + '</a></li>';
+                        li = '<li id="' + deptId + '" data-type="dept" lvl="' + level + '"><img src="<%=request.getContextPath() %>/js/treeview/images/dept2.png"><a class="file code" onclick="myClick(this)">' + " " + deptName + " " + '</a></li>';
                     }
 
                     // 1레벨은 그냥 추가

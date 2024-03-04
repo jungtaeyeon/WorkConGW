@@ -69,6 +69,7 @@ public class NoticeService {
 
     // 글등록 폼에서 등록
     public void regist(NoticeVO notice) throws SQLException {
+        logger.info("관리자페이지 오류 : >> 여기 들어오니?");
         logger.info("시퀀스로 id 채번 전 => " + String.valueOf(notice.getNotice_id()));
 
         logger.info(notice.toString());

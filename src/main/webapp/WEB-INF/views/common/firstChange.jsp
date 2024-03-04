@@ -156,6 +156,9 @@
             font-size: 1.2rem;
             margin: 10px 0;
             transition: .5s;
+            display: flex;
+            justify-content: center;
+            align-items: center; /* Center vertically */
         }
 
         .login-btn:hover {
@@ -173,10 +176,7 @@
             font-weight: 500;
         }
 
-        .save-id {
-            color: #0f0f0f;
-            padding-top: 2px;
-        }
+
 
         .find-idpwd,
         .find-idpwd button {
@@ -190,22 +190,7 @@
             font-weight: 600;
         }
 
-        .panel-container {
-            position: absolute;
-            width: 65%;
-            height: 100%;
-            top: 0;
-            left: 0;
-        }
 
-        .panel {
-            height: 100%;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: space-around;
-            padding: 6rem 4% 2rem;
-        }
 
         .panel .content {
             position: absolute;
@@ -227,27 +212,7 @@
             padding: 0.7rem 0;
         }
 
-        .btn.login-btn.transparent {
-            margin: 0;
-            width: 150px;
-            height: 40px;
-            font-size: 1.1rem;
-            color: #0f0f0f;
-            background: #F4F3FF;
-            border: 1px solid #0f0f0f;
-        }
 
-        .btn.login-btn.transparent:hover {
-            text-decoration: none;
-            font-weight: 600;
-            color: #fff;
-            background: #0f0f0f;
-            border: 1px solid #0f0f0f;
-        }
-
-        .image {
-            width: 100%;
-        }
 
         .media-panel {
             display: none;
@@ -340,7 +305,7 @@
                 <div id="checkPwd1VsPwd2" class="float-left">
                     <span></span>
                 </div>
-                <input value="최초비밀번호변경" onclick="updatePwdgo()" class="login-btn solid" />
+                <input value="최초비밀번호변경" onclick="updatePwdgo()" class="login-btn solid" style="padding: 20px;"/>
 
             </form>
             <div class="media-panel">
@@ -430,7 +395,7 @@
 
         if(pwd2 !== pwd1)
         {
-            str = "<span style='color: red'>입력한 비밃번호가 서로 일치하지 않습니다.</span>"
+            str = "<span style='color: red'>입력한 비밀번호가 서로 일치하지 않습니다.</span>"
             flag_compare = false
         }
 

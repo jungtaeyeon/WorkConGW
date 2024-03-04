@@ -1,5 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
+<%@ taglib prefix="input" uri="http://www.springframework.org/tags/form" %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -184,7 +186,7 @@
         }
 
         .input-btn {
-            border: 1.5px solid #0f0f0f;
+            border: 1.5px solid ;
             background-color: #fff;
             color: #0f0f0f;
             height: 35px;
@@ -195,7 +197,7 @@
         }
 
         .input-btn:hover {
-            background-color: #0f0f0f;
+            background-color: #d9d2ff3d
         }
     </style>
 </head>
@@ -203,7 +205,7 @@
 <div class="container">
     <div class="signup">
         <form action="<%=request.getContextPath()%>/emp/register" class="signup-form" method="post" id="join">
-            <h1 class="title"><a href="${root}/admin/emp/empList">WorkConGW</a></h1>
+            <h1 class="title">WorkConGW</h1>
             <h3 class="sub-title">사원등록</h3>
 
 
@@ -303,7 +305,7 @@
             </div>
 
             <div>
-                <button class="btn btn-dark" data-type="success" onclick="fnSubmit()">등록 완료</button>
+                <button type="button" class="btn btn-dark" data-type="success" onclick="fnSubmit()">등록 완료</button>
                 <button type="button" class="btn btn-dark" onclick="list_go();">목록으로</button>
             </div>
 
@@ -423,15 +425,7 @@
         }
 
         if ($("#emp_Pwd2").val() == null || $("#emp_Pwd2").val() == "") {
-            alert("비밀번호 확인을 입력해주세요.");
-            $("#emp_Pwd2").focus();
-
-            return false;
-        }
-
-
-        if ($("#emp_Pwd").val() != $("#emp_Pwd2").val()) {
-            alert("비밀번호가 일치하지 않습니다.");
+            alert("비밀번호 확인하세요 .");
             $("#emp_Pwd2").focus();
 
             return false;
@@ -443,18 +437,34 @@
             return false;
         }
 
-        if (confirm("회원가입하시겠습니까?")) {
 
+        if (validateAndSubmit()) {
             $("#join").submit();
-
-            alert('회원가입이 완료되었습니다.');
-
-            return false;
+            alert('사원을 등록했습니다.');
         }
 
 
 
+
     }
+
+
+    function validateAndSubmit() {
+        // 비밀번호 확인
+        let pwd1 = document.getElementById("emp_Pwd").value;
+        let pwd2 = document.getElementById("emp_Pwd2").value;
+
+        // 비밀번호가 다르면 submit 막기
+        if (pwd1 !== pwd2) {
+            // 비밀번호가 다릅니다. 모달창으로 알림 등을 표시할 수 있습니다.
+            alert("비밀번호가 일치하지 않습니다.");
+            return false;
+        }
+
+        return true;
+
+    }
+
 
 
     //유효성 체크

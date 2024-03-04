@@ -3,17 +3,16 @@ package com.WorkConGW.approval.controller;
 
 
 import com.WorkConGW.YAMLConfig;
-import com.WorkConGW.admin.controller.AdminCommonController;
 import com.WorkConGW.approval.dto.ApprovalFormVO;
 import com.WorkConGW.approval.dto.ApprovalVO;
 import com.WorkConGW.approval.dto.FormVO;
 import com.WorkConGW.approval.service.ApprovalService;
-import com.WorkConGW.common.controller.BaseController;
+import com.WorkConGW.common.PaginationInfo;
 import com.WorkConGW.common.controller.CommonController;
 import com.WorkConGW.emp.dto.EmpVO;
 import com.WorkConGW.emp.service.EmpService;
-import com.google.api.Http;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpSession;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,7 +28,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -55,10 +54,44 @@ public class ApprovalController extends CommonController {
 
     @Autowired
     private EmpService empService = null;
-    @GetMapping("/lists/waitList")
-    public String waitList()
+    @GetMapping("/awaitDocDetail")
+    public String awaitDocDetail(String docId, Model model, HttpServletRequest request)
     {
+        logger.info("awaitDocDetail");
+        logger.info(docId);
+        Map<String,Object> dataMap = approvalService.getWithDocById(docId);
+        List<Map<String,Object>> approvalList = new ArrayList<>();
+        List<Map<String,Object>> getApprovalList = (List)dataMap.get("pList");
+        logger.info("getApprovalList : "+getApprovalList.toString());
+        logger.info("approval" + dataMap.get("approval"));
+        approvalList.add(dataMap);
+        int getApprovalListCnt = getApprovalList.size();
+        model.addAttribute("approvalList",approvalList);
+        model.addAttribute("approval",dataMap.get("approval"));
+        model.addAttribute("history", dataMap.get("approvalHistoryVO"));
+        model.addAttribute("getApprovalList",getApprovalList);
+
+
+        String url = "approval/awaitDocDetail";
+        return url;
+    }
+
+    @GetMapping("/lists/waitList")
+    public String waitList(ApprovalFormVO approvalFormVO, Model model)
+    {
+        logger.info("awaitDocDetail");
         String url = "approval/lists/waitList";
+        ApprovalVO searchApprovalVO = approvalFormVO.getSearchApprovalVO();
+
+        Map<String,Object> dataMap = approvalService.getWaitList(searchApprovalVO);
+        List<Map<String,Object>> approvalList = (List)dataMap.get("waitDocs");
+
+        logger.info(approvalList.toString());
+        model.addAttribute("approvalList",approvalList);
+        model.addAttribute("dataMap",dataMap);
+
+
+
         return url;
     }
 
@@ -76,27 +109,148 @@ public class ApprovalController extends CommonController {
         return url;
     }
 
+
+
+
+
     @GetMapping("/lists/draftList")
     public String draftList(@ModelAttribute("approvalFormVO") ApprovalFormVO approvalFormVO, Model model)
     {
 
         String url = "approval/lists/draftList";
+        ApprovalVO searchApprovalVO = approvalFormVO.getSearchApprovalVO();
+        logger.info("pageIndex:"+approvalFormVO.getSearchApprovalVO().getPageIndex());
+
+
+
+
+        PaginationInfo paginationInfo = new PaginationInfo();
+        paginationInfo.setCurrentPageNo(searchApprovalVO.getPageIndex());
+
+
+        paginationInfo.setRecordCountPerPage(searchApprovalVO.getPageUnit()); //한 페이지당 게시되는 게시물 수에 pageunit의 디폴트 값인 10 을 넣는다.
+        paginationInfo.setPageSize(searchApprovalVO.getPageSize());
+
+        searchApprovalVO.setFirstIndex(paginationInfo.getFirstRecordIndex());
+        searchApprovalVO.setRecordCountPerPage(paginationInfo.getRecordCountPerPage());
+
+        Map<String,Object> dataMap = approvalService.getDraftList(searchApprovalVO);
+        int totCnt = (Integer)dataMap.get("totCnt");
+        logger.info("totCnt :" + totCnt);
+        List<ApprovalVO> approvalList = (List)dataMap.get("draftDocs");
+
+        paginationInfo.setTotalRecordCount(totCnt);
+
+
+        searchApprovalVO.setEndDate(paginationInfo.getLastPageNoOnPageList());
+        searchApprovalVO.setStartDate(paginationInfo.getFirstPageNoOnPageList());
+        searchApprovalVO.setPrev(paginationInfo.getXprev());
+        searchApprovalVO.setNext(paginationInfo.getXnext());
+
+
+
+        logger.info("pageInfo SearchApprovalVO :" + searchApprovalVO.toString());
+
+        model.addAttribute("paginationInfo", paginationInfo);
+        model.addAttribute("approvalList",approvalList);
+        model.addAttribute("totCnt",totCnt);
+        model.addAttribute("dataMap",dataMap);
+        model.addAttribute("searchApprovalVO", searchApprovalVO);
+        model.addAttribute("totalPageCnt", (int)Math.ceil(totCnt/(double)searchApprovalVO.getPageUnit()));
+
+        return url;
+    }
+    @RequestMapping(value = "/referDetail")
+    public String referDetail(String docId, Model model)
+    {
+        ApprovalVO approval = approvalService.getCompleteDocByDocId(docId);
+
+        Map<String,Object> dataMap = approvalService.getWithDocById(docId);
+        List<Map<String,Object>> approvalList = new ArrayList<>();
+        List<Map<String,Object>> getApprovalList = (List)dataMap.get("pList");
+        approvalList.add(dataMap);
+        int getApprovalListCnt = getApprovalList.size();
+        model.addAttribute("approvalList",approvalList);
+        model.addAttribute("approval",dataMap.get("approval"));
+        model.addAttribute("history", dataMap.get("approvalHistoryVO"));
+        model.addAttribute("getApprovalList",getApprovalList);
+
+        String url = "approval/detail/referDetail";
         return url;
     }
 
+
+
+
     @GetMapping("/lists/referList")
-    public String referList()
+    public String referList(@ModelAttribute("approvalFormVO") ApprovalFormVO approvalFormVO, Model model)
     {
         String url = "approval/lists/referList";
+        ApprovalVO searchApprovalVO = approvalFormVO.getSearchApprovalVO();
+        logger.info("pageIndex:"+approvalFormVO.getSearchApprovalVO().getPageIndex());
+
+
+
+
+        PaginationInfo paginationInfo = new PaginationInfo();
+        paginationInfo.setCurrentPageNo(searchApprovalVO.getPageIndex());
+
+
+        paginationInfo.setRecordCountPerPage(searchApprovalVO.getPageUnit()); //한 페이지당 게시되는 게시물 수에 pageunit의 디폴트 값인 10 을 넣는다.
+        paginationInfo.setPageSize(searchApprovalVO.getPageSize());
+
+        searchApprovalVO.setFirstIndex(paginationInfo.getFirstRecordIndex());
+        searchApprovalVO.setRecordCountPerPage(paginationInfo.getRecordCountPerPage());
+
+        Map<String,Object> dataMap = approvalService.getReferList(searchApprovalVO);
+        int totCnt = (Integer)dataMap.get("totCnt");
+        List<ApprovalVO> approvalList = (List)dataMap.get("refer");
+
+        paginationInfo.setTotalRecordCount(totCnt);
+
+
+        searchApprovalVO.setEndDate(paginationInfo.getLastPageNoOnPageList());
+        searchApprovalVO.setStartDate(paginationInfo.getFirstPageNoOnPageList());
+        searchApprovalVO.setPrev(paginationInfo.getXprev());
+        searchApprovalVO.setNext(paginationInfo.getXnext());
+
+
+
+        logger.info("pageInfo SearchApprovalVO :" + searchApprovalVO.toString());
+
+        model.addAttribute("paginationInfo", paginationInfo);
+        model.addAttribute("approvalList",approvalList);
+        model.addAttribute("totCnt",totCnt);
+        model.addAttribute("dataMap",dataMap);
+        model.addAttribute("searchApprovalVO", searchApprovalVO);
+        model.addAttribute("totalPageCnt", (int)Math.ceil(totCnt/(double)searchApprovalVO.getPageUnit()));
+
         return url;
     }
 
     @RequestMapping(value = "/main")
-    public ModelAndView approvalMain()
+    public ModelAndView approvalMain(@ModelAttribute("approvalFormVO") ApprovalFormVO approvalFormVO,Model model, HttpServletRequest request)
     {
+
+        HttpSession session = request.getSession();
+        EmpVO emp = (EmpVO) session.getAttribute("loginUser");
+        String empId = "";
+        if(emp != null ) empId = emp.getEmp_Id();
+        ApprovalVO searchApprovalVO = approvalFormVO.getSearchApprovalVO();
+        searchApprovalVO.setEmp_Id(empId);
+
+
+        Map<String,Object> dataMap = approvalService.getSaveFormsById(searchApprovalVO);
+        model.addAttribute("dataMap",dataMap);
+        model.addAttribute("today",new Date());
+
         ModelAndView mnv = new ModelAndView();
         String url = "approval/main";
         mnv.setViewName(url);
+
+
+
+
         return mnv;
     }
     @RequestMapping(value = "/approvalInsert")
@@ -155,14 +309,10 @@ public class ApprovalController extends CommonController {
             approvalService.registApprovalLine(dataMap);
     }
 
-    @ResponseBody
-    @PostMapping("/getApprovalLines")
-    public Map<String,Object> getApprovalLines(){
-        Map<String,Object> dataMap = approvalService.getApprovalLines();
-        return dataMap;
 
 
-    }
+
+
 
     @ResponseBody
     @PostMapping("/registApproval")
@@ -170,6 +320,29 @@ public class ApprovalController extends CommonController {
             logger.info("dataObj : "+dataObj.toString());
             ApprovalVO approvalVO = approvalService.registApproval(dataObj);
             return approvalVO;
+    }
+
+    @PostMapping("/approvalReivew")
+    @ResponseBody
+    public Object approvalReview(@RequestBody Map<String,Object> obj)
+    {
+        ApprovalVO approvalVO = approvalService.modifyApprovalReview(obj);
+        logger.info(approvalVO.toString());
+        return  approvalVO;
+    }
+
+    @PostMapping("/approvalReturn")
+    @ResponseBody
+    public void approvalReturn(@RequestBody  Map<String,Object> dataMap)
+    {
+        ResponseEntity<String> entity = null;
+
+        logger.info(dataMap.toString());
+        approvalService.approvalReturn(dataMap);
+
+
+
+
     }
 
 
@@ -212,26 +385,203 @@ public class ApprovalController extends CommonController {
         return url;
     }
 
-    @RequestMapping(value = "/detail")
-    public String detail()
+    @RequestMapping(value = "/draftDetail")
+    public String draftDetail(String docId, Model model)
     {
-        String url = "approval/detail";
+        ApprovalVO approval = approvalService.getCompleteDocByDocId(docId);
+
+        Map<String,Object> dataMap = approvalService.getWithDocById(docId);
+        List<Map<String,Object>> approvalList = new ArrayList<>();
+        List<Map<String,Object>> getApprovalList = (List)dataMap.get("pList");
+        approvalList.add(dataMap);
+        int getApprovalListCnt = getApprovalList.size();
+        model.addAttribute("approvalList",approvalList);
+        model.addAttribute("approval",dataMap.get("approval"));
+        model.addAttribute("history", dataMap.get("approvalHistoryVO"));
+        model.addAttribute("getApprovalList",getApprovalList);
+
+        String url = "approval/detail/draftDetail";
         return url;
     }
 
     @GetMapping("lists/temporaryList")
-    public String temporaryList()
+    public String temporaryList(@ModelAttribute("approvalFormVO")ApprovalFormVO approvalFormVO, Model model)
     {
         String url = "approval/lists/temporaryList";
+        ApprovalVO searchApprovalVO = approvalFormVO.getSearchApprovalVO();
+        logger.info("pageIndex:"+approvalFormVO.getSearchApprovalVO().getPageIndex());
+
+
+
+
+        PaginationInfo paginationInfo = new PaginationInfo();
+        paginationInfo.setCurrentPageNo(searchApprovalVO.getPageIndex());
+
+
+        paginationInfo.setRecordCountPerPage(searchApprovalVO.getPageUnit()); //한 페이지당 게시되는 게시물 수에 pageunit의 디폴트 값인 10 을 넣는다.
+        paginationInfo.setPageSize(searchApprovalVO.getPageSize());
+
+        searchApprovalVO.setFirstIndex(paginationInfo.getFirstRecordIndex());
+        searchApprovalVO.setRecordCountPerPage(paginationInfo.getRecordCountPerPage());
+
+        Map<String,Object> dataMap = approvalService.gettemporaryList(searchApprovalVO);
+        int totCnt = (Integer)dataMap.get("totCnt");
+        logger.info("totCnt :" + totCnt);
+        List<ApprovalVO> approvalList = (List)dataMap.get("temporary");
+
+        paginationInfo.setTotalRecordCount(totCnt);
+
+
+        searchApprovalVO.setEndDate(paginationInfo.getLastPageNoOnPageList());
+        searchApprovalVO.setStartDate(paginationInfo.getFirstPageNoOnPageList());
+        searchApprovalVO.setPrev(paginationInfo.getXprev());
+        searchApprovalVO.setNext(paginationInfo.getXnext());
+
+
+
+        logger.info("pageInfo SearchApprovalVO :" + searchApprovalVO.toString());
+
+        model.addAttribute("paginationInfo", paginationInfo);
+        model.addAttribute("approvalList",approvalList);
+        model.addAttribute("totCnt",totCnt);
+        model.addAttribute("dataMap",dataMap);
+        model.addAttribute("searchApprovalVO", searchApprovalVO);
+        model.addAttribute("totalPageCnt", (int)Math.ceil(totCnt/(double)searchApprovalVO.getPageUnit()));
+
+        return url;
+    }
+    @GetMapping("lists/rejectList")
+    public String rejectList(@ModelAttribute("approvalFormVO")ApprovalFormVO approvalFormVO,Model model)
+    {
+        String url = "approval/lists/rejectList";
+        ApprovalVO searchApprovalVO = approvalFormVO.getSearchApprovalVO();
+        logger.info("pageIndex:"+approvalFormVO.getSearchApprovalVO().getPageIndex());
+
+
+
+
+        PaginationInfo paginationInfo = new PaginationInfo();
+        paginationInfo.setCurrentPageNo(searchApprovalVO.getPageIndex());
+
+
+        paginationInfo.setRecordCountPerPage(searchApprovalVO.getPageUnit()); //한 페이지당 게시되는 게시물 수에 pageunit의 디폴트 값인 10 을 넣는다.
+        paginationInfo.setPageSize(searchApprovalVO.getPageSize());
+
+        searchApprovalVO.setFirstIndex(paginationInfo.getFirstRecordIndex());
+        searchApprovalVO.setRecordCountPerPage(paginationInfo.getRecordCountPerPage());
+
+        Map<String,Object> dataMap = approvalService.getRejectList(searchApprovalVO);
+        int totCnt = (Integer)dataMap.get("totCnt");
+        logger.info("totCnt :" + totCnt);
+        List<ApprovalVO> approvalList = (List)dataMap.get("reject");
+
+        paginationInfo.setTotalRecordCount(totCnt);
+
+
+        searchApprovalVO.setEndDate(paginationInfo.getLastPageNoOnPageList());
+        searchApprovalVO.setStartDate(paginationInfo.getFirstPageNoOnPageList());
+        searchApprovalVO.setPrev(paginationInfo.getXprev());
+        searchApprovalVO.setNext(paginationInfo.getXnext());
+
+
+
+        logger.info("pageInfo SearchApprovalVO :" + searchApprovalVO.toString());
+
+        model.addAttribute("paginationInfo", paginationInfo);
+        model.addAttribute("approvalList",approvalList);
+        model.addAttribute("totCnt",totCnt);
+        model.addAttribute("dataMap",dataMap);
+        model.addAttribute("searchApprovalVO", searchApprovalVO);
+        model.addAttribute("totalPageCnt", (int)Math.ceil(totCnt/(double)searchApprovalVO.getPageUnit()));
 
         return url;
     }
 
-    @GetMapping("lists/completeList")
-    public String completeList()
+    @GetMapping("/rejectDetail")
+    public String rejectDetail(String docId, Model model)
     {
+        ApprovalVO approval = approvalService.getCompleteDocByDocId(docId);
+
+        Map<String,Object> dataMap = approvalService.getWithDocById(docId);
+        List<Map<String,Object>> approvalList = new ArrayList<>();
+        List<Map<String,Object>> getApprovalList = (List)dataMap.get("pList");
+        approvalList.add(dataMap);
+        int getApprovalListCnt = getApprovalList.size();
+        model.addAttribute("approvalList",approvalList);
+        model.addAttribute("approval",dataMap.get("approval"));
+        model.addAttribute("history", dataMap.get("approvalHistoryVO"));
+        model.addAttribute("getApprovalList",getApprovalList);
+
+        String url = "approval/detail/rejectDetail";
+        return url;
+    }
+
+
+
+    @GetMapping("/completeDetail")
+    public String completeDetail(String docId, Model model)
+    {
+        ApprovalVO approval = approvalService.getCompleteDocByDocId(docId);
+
+        Map<String,Object> dataMap = approvalService.getWithDocById(docId);
+        List<Map<String,Object>> approvalList = new ArrayList<>();
+        List<Map<String,Object>> getApprovalList = (List)dataMap.get("pList");
+        approvalList.add(dataMap);
+        int getApprovalListCnt = getApprovalList.size();
+        model.addAttribute("approvalList",approvalList);
+        model.addAttribute("approval",dataMap.get("approval"));
+        model.addAttribute("history", dataMap.get("approvalHistoryVO"));
+        model.addAttribute("getApprovalList",getApprovalList);
+
+        String url = "approval/detail/completeDetail";
+        return url;
+    }
+
+
+    @GetMapping("lists/completeList")
+    public String completeList(@ModelAttribute("approvalFormVO") ApprovalFormVO approvalFormVO, Model model) {
+        ApprovalVO searchApprovalVO = approvalFormVO.getSearchApprovalVO();
+        logger.info(searchApprovalVO.toString());
+        PaginationInfo paginationInfo = new PaginationInfo();
+
+        paginationInfo.setCurrentPageNo(searchApprovalVO.getPageIndex());
+        paginationInfo.setRecordCountPerPage(searchApprovalVO.getPageUnit());
+        paginationInfo.setPageSize(searchApprovalVO.getPageSize());
+
+        searchApprovalVO.setFirstIndex(paginationInfo.getFirstRecordIndex());
+        searchApprovalVO.setRecordCountPerPage(paginationInfo.getRecordCountPerPage());
+
+        Map<String, Object> dataMap = approvalService.getCompleteList(searchApprovalVO);
+
+        List<ApprovalVO> approvalList = (List<ApprovalVO>) dataMap.get("completeDocs"); // 데이터 맵에서 ApprovalVO 리스트를 가져옴
+        int totCnt = (Integer)dataMap.get("totCnt");
+        logger.info(approvalList.toString());
+
+        paginationInfo.setTotalRecordCount(totCnt);
+
+
+        searchApprovalVO.setEndDate(paginationInfo.getLastPageNoOnPageList());
+        searchApprovalVO.setStartDate(paginationInfo.getFirstPageNoOnPageList());
+        searchApprovalVO.setPrev(paginationInfo.getXprev());
+        searchApprovalVO.setNext(paginationInfo.getXnext());
+
+        model.addAttribute("paginationInfo", paginationInfo);
+        model.addAttribute("approvalList", approvalList);
+        model.addAttribute("totCnt",totCnt);
+        model.addAttribute("searchApprovalVO", searchApprovalVO);
+        model.addAttribute("totalPageCnt", (int)Math.ceil(totCnt/(double)searchApprovalVO.getPageUnit()));
+
         String url = "approval/lists/completeList";
         return url;
+    }
+
+    @ResponseBody
+    @PostMapping("/getApprovalLines")
+    public Map<String,Object> getApprovalLines(){
+        Map<String,Object> dataMap = approvalService.getApprovalLines();
+        return dataMap;
+
+
     }
 	
 }

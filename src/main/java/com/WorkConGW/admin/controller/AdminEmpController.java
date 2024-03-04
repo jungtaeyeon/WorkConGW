@@ -1,6 +1,7 @@
 package com.WorkConGW.admin.controller;
 
 import com.WorkConGW.common.PaginationInfo;
+import com.WorkConGW.common.controller.CommonController;
 import com.WorkConGW.emp.dto.EmpFormVO;
 import com.WorkConGW.emp.dto.EmpVO;
 import com.WorkConGW.emp.service.EmpService;
@@ -23,7 +24,7 @@ import java.util.List;
 
 @Controller
 @RequestMapping("/admin/emp/*")
-public class  AdminEmpController  {
+public class  AdminEmpController extends CommonController {
     Logger logger = LoggerFactory.getLogger(AdminEmpController.class);
 
 
@@ -73,6 +74,9 @@ public class  AdminEmpController  {
 
         return url;
     }
+
+
+
 
     @GetMapping("empDetail")
     public String empDetail(EmpVO emp,Model model)

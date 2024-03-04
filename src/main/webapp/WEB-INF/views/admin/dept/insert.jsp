@@ -74,68 +74,68 @@
 <body>
 <!-- 헤더인클루드 -->
 
-    <section class="subPageContain">
-        <!-- 사이드바 -->
-        <%@ include file="../sidebar.jsp"%>
-        <!--컨텐츠 영역-->
-        <div class="contentConteiner">
-            <!-- 메인 content -->
-            <div class="container-fluid">
-                <!-- 메인 content 넣는 곳 -->
-                <div class="row clearfix">
-                    <div class="col-lg-12 whole">
-                        <div class="card">
-                            <div class="header">
-                                <div id="headDiv">
-                                    <h3>부서/팀 추가</h3>
+<section class="subPageContain">
+    <!-- 사이드바 -->
+    <%@ include file="../sidebar.jsp"%>
+    <!--컨텐츠 영역-->
+    <div class="contentConteiner">
+        <!-- 메인 content -->
+        <div class="container-fluid">
+            <!-- 메인 content 넣는 곳 -->
+            <div class="row clearfix">
+                <div class="col-lg-12 whole">
+                    <div class="card">
+                        <div class="header">
+                            <div id="headDiv">
+                                <h3>부서/팀 추가</h3>
+                            </div>
+                            <input type="button" onclick="regist();" class="btn float-right" style="background-color: #0c1e35; color: #ffffff;" id="realRegistBtn" value="저장"> <!-- float-right 클래스 추가 -->
+                        </div>
+                        <br>
+                        <hr/>
+
+                        <div class="body"  id="registBody">
+                            <form:form modelAttribute="deptVO" id="basicForm" name="basicForm" class="horizontal" method="post" autocomplete="off">
+                                <div class="form-group row">
+                                    <label class="col-sm-2 float-left" id="deptNameLabel" style="margin-top: 10px;" for="dept_Name" >명칭</label>
+                                    <div class="col-sm-10 input-group input-group-sm ">
+                                        <form:input type="text" path="dept_Name" id="dept_Name" class="form-control float-left" required="true" placeholder="명칭을 입력하세요"/>
+                                        <button type="button" class="btn" style="background-color: #0c1e35; color: #ffffff;" onclick="checkName()">중복확인</button>
+                                        <input type="hidden" value="0" id="dupleYN">
+                                    </div>
                                 </div>
-                                <input type="button" onclick="regist();" class="btn btn-info float-right" id="realRegistBtn" value="저장">
-                            </div>
-                            <br>
-                            <hr/>
-
-                            <div class="body"  id="registBody">
-                                <form:form modelAttribute="deptVO" id="basicForm" name="basicForm" class="horizontal" method="post" autocomplete="off">
-                                    <div class="form-group row">
-                                        <label class="col-sm-2 float-left" id="deptNameLabel" style="margin-top: 10px;" for="dept_Name" >명칭</label>
-                                        <div class="col-sm-10 input-group input-group-sm ">
-                                            <form:input type="text" path="dept_Name" id="dept_Name" class="form-control float-left" required="true" placeholder="명칭을 입력하세요"/>
-                                            <button type="button" class="btn btn-sm btn-info float-right" onclick="checkName()">중복확인</button>
-                                            <input type="hidden" value="0" id="dupleYN">
-                                        </div>
+                                <div class="form-group row">
+                                    <label class="col-sm-2 float-left" for="dept_Sup_Id" >상위부서</label>
+                                    <div class="col-sm-10 input-group input-group-sm "><!-- 부서목록 select -->
+                                        <form:input type="text" path="dept_Sup_Id" id="dept_Sup_Id" class="form-control float-left" required="true" placeholder="부서추가일 경우 d000를 입력해주세요"/>
+                                        <button type="button" class="btn input-btn" style="background-color: #0c1e35; color: #ffffff;" onclick="OpenWindow('<%=request.getContextPath()%>/organization', 'WorkConGW', 700,700)">조직도</button>
                                     </div>
-                                    <div class="form-group row">
-                                        <label class="col-sm-2 float-left" for="dept_Sup_Id" >상위부서</label>
-                                        <div class="col-sm-10 input-group input-group-sm "><!-- 부서목록 select -->
-                                            <form:input type="text" path="dept_Sup_Id" id="dept_Sup_Id" class="form-control float-left" required="true" placeholder="부서추가일 경우 d000를 입력해주세요"/>
-                                            <button type="button"  class="input-btn" onclick="OpenWindow('<%=request.getContextPath()%>/organization', 'WorkConGW', 700,700)">조직도</button>
-                                        </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-sm-2 float-left" for="dept_Hp" >연락처</label>
+                                    <div class="col-sm-10 input-group input-group-sm ">
+                                        <form:input type="text" path="dept_Hp" id="dept_Hp" class="form-control float-left" required="true" placeholder="연락처를 입력해주세요"/>
                                     </div>
-                                    <div class="form-group row">
-                                        <label class="col-sm-2 float-left" for="dept_Hp" >연락처</label>
-                                        <div class="col-sm-10 input-group input-group-sm ">
-                                            <form:input type="text" path="dept_Hp" id="dept_Hp" class="form-control float-left" required="true" placeholder="연락처를 입력해주세요"/>
-                                        </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-sm-2 float-left"  >팀/부서 여부</label>
+                                    <div class="col-sm-10 input-group input-group-sm " id="deptTeamYnDiv" required="true"><!-- 팀일경우 체크 -->
+                                        <form:select path="dept_Team_Yn" id="dept_Team_Yn" cssClass="form-control float-left" style="width:75px;" multiple="false">
+                                            <form:option value="1">팀</form:option>
+                                            <form:option value="0">부서</form:option>
+                                        </form:select>
                                     </div>
-                                    <div class="form-group row">
-                                        <label class="col-sm-2 float-left"  >팀/부서 여부</label>
-                                        <div class="col-sm-10 input-group input-group-sm " id="deptTeamYnDiv" required="true"><!-- 팀일경우 체크 -->
-                                            <form:select path="dept_Team_Yn" id="dept_Team_Yn" cssClass="form-control float-left" style="width:75px;" multiple="false">
-                                                <form:option value="">-선택-</form:option>
-                                                <form:option value="1">팀</form:option>
-                                                <form:option value="0">부서</form:option>
-
-                                            </form:select>
-                                        </div>
-                                    </div>
-                                </form:form>
-                            </div>
+                                </div>
+                            </form:form>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-    </section>
+    </div>
+</section>
+<!-- 푸터 인클루드 -->
+<!-- 푸터 인클루드 -->
     <!-- 푸터 인클루드 -->
 
 

@@ -1,6 +1,7 @@
 package com.WorkConGW.admin.controller;
 
 
+import com.WorkConGW.common.controller.CommonController;
 import com.WorkConGW.common.dto.DeptVO;
 import com.WorkConGW.common.service.DeptService;
 import org.slf4j.Logger;
@@ -15,7 +16,7 @@ import org.springframework.web.bind.annotation.*;
 
 @Controller
 @RequestMapping("/admin/dept/*")
-public class AdminDeptController {
+public class AdminDeptController extends CommonController {
     Logger logger = LoggerFactory.getLogger(AdminCommonController.class);
 
 
@@ -27,7 +28,6 @@ public class AdminDeptController {
     public ResponseEntity<String> regist(@ModelAttribute("deptVO")DeptVO deptVO)
     {
         logger.info("여기들어오니?");
-        logger.info(deptVO.toString());
         ResponseEntity<String> entity = null;
 
         try {

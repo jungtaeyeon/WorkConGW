@@ -35,7 +35,7 @@
                         <input type="email" class="form-control rounded-4" id="emp_Email" name = "emp_Email" />
                         <label for="emp_Email">이메일</label>
                     </div>
-                    <button class="w-100 mb-2 btn btn-lg rounded-4 btn-secondary" type="button" onclick="findId();">아이디 찾기</button>
+                    <button class="w-100 mb-2 btn btn-lg rounded-4 btn-secondary" type="button" onclick="findId();">사번 찾기</button>
                     <hr id="findid-hr" class="my-4" style="display:none"/>
                     <strong class="text-muted" id="foundId">
                         <div id="findid-spinner" class="spinner-border spinner-border-sm text-primary" style="display: none" role="status">

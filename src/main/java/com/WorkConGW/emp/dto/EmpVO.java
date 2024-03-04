@@ -26,6 +26,10 @@ public class EmpVO extends BaseVO{
 
 
 
+    int cnt;
+
+
+
     private String emp_ZipCode;
     private String dept_Id;
     private Date emp_Create_Dt;
@@ -42,6 +46,8 @@ public class EmpVO extends BaseVO{
     private String team_Id;
     private String auth_Name;
     private FileUploadCommand fileUploadCommand;
+
+
 
     private String search_code;
     private String flag;
@@ -89,7 +95,26 @@ public class EmpVO extends BaseVO{
             this.history_Leaving_Time = history_Leaving_Time;
 
     }
-    
+
+
+    public int getCnt() {
+        return cnt;
+    }
+
+    public void setCnt(int cnt) {
+        this.cnt = cnt;
+    }
+
+
+    public String getSearch_code() {
+        return search_code;
+    }
+
+    public void setSearch_code(String search_code) {
+        this.search_code = search_code;
+    }
+
+
     public EmpVO(){
         this.fileUploadCommand = new FileUploadCommand();
     }

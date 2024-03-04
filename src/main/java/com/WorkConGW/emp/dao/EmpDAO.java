@@ -178,4 +178,14 @@ public class EmpDAO {
     public String selectDeptNameById(String empId) {
         return sqlSessionTemplate.selectOne("selectDeptNameById", empId);
     }
+
+    public void registerDashBoard(String empId) {
+         sqlSessionTemplate.update("registerDashBoard",empId);
+    }
+
+
+    public List<EmpVO> selectGraphEmp(Map<String, Object> dataMap) {
+
+        return sqlSessionTemplate.selectList("selectGraphEmp",dataMap);
+    }
 }

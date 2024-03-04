@@ -288,6 +288,10 @@ body, input {
   </head>
   <body>
 
+<%--  <img src="<%=request.getContextPath() %>/images/user1.jpg" id="profileImage">--%>
+<%--  <img src="<%=request.getContextPath() %>/pdsee/00001_05593.png" id="profileImage">--%>
+
+
     <div class="container">
       <div class="form-container">
         <div class="signin">
@@ -296,7 +300,7 @@ body, input {
             <h5 class="sub-title">업무도 내 회사 생활도 완벽하게</h5>
             <div class="input-field">
               <i class="fas fa-user"></i>
-              <input id = "emp_Id" name="emp_Id" value="${cookie.id.value}" type="text" placeholder="아이디" required />
+              <input id = "emp_Id" name="emp_Id" value="${cookie.id.value}" type="text" placeholder="사번" required />
             </div>
             <div class="input-field">
               <i class="fa-solid fa-shield-halved"></i>
@@ -304,7 +308,7 @@ body, input {
             </div>
             <div class="login-info">
               <div class="find-idpwd">
-                <button type="button" class="btn btn-sm" onclick="OpenWindow('<%=request.getContextPath()%>/emp/findIdView', 'WorkConGW', 700,700)">아이디 찾기</button>
+                <button type="button" class="btn btn-sm" onclick="OpenWindow('<%=request.getContextPath()%>/emp/findIdView', 'WorkConGW', 700,700)">사번 찾기 </button>
                 <button type="button" class="btn btn-sm" onclick="OpenWindow('<%=request.getContextPath()%>/emp/findPwView', 'WorkConGW', 700,700)">비밀번호 찾기</button>
 
               </div>
