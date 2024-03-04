@@ -284,9 +284,16 @@
     }
 
     function conditionReset() {
-      $("#resetBtn").click();
-      $('.myConditions').css("display", "none");
-      $('input#searchNoticeVO.searchKeyword').val("");
+      $("#resetBtn").click(); // 버튼을 클릭하여 폼을 리셋
+      $('.myConditions').css("display", "none"); // 특정 클래스를 가진 요소를 숨김
+
+      // 검색어 입력란을 초기화
+      $('input[name="searchNoticeVO.searchKeyword"]').val("");
+
+      // 검색 조건을 초기화
+      $('select[name="searchNoticeVO.searchCondition"]').val("tcm");
+
+      // 이하 추가적인 초기화 작업들
       $("input:checkbox:checked").click();
       $("#inputSearchDt").val("");
     }

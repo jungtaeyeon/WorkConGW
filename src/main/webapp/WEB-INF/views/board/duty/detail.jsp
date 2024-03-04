@@ -66,10 +66,17 @@
                    </div>
                    <div class="col-sm-4" style="font-family: S-CoreDream-6Bold">
                         <div style="float:right;">
-                           <c:if test="${loginUser.emp_Id == duty.emp_Writer_Id || loginUser.emp_Id == dutyEnforcer.emp_Id }">
-	                            	<button type="button" class="btn btn-info" style="width:80px;" onclick="modify_go();">수정</button>
-	                            <button type="button" class="btn btn-danger" style="width:80px;" onclick="remove_go();">삭제</button>
-                           </c:if>
+                            <c:set var="showButtons" value="false" />
+                            <c:forEach items="${duty.dutyEnforcerList}" var="dutyEnforcer" varStatus="status">
+                                <c:if test="${loginUser.emp_Id == duty.emp_Writer_Id || loginUser.emp_Id == dutyEnforcer.emp_Id}">
+                                    <c:set var="showButtons" value="true" />
+                                </c:if>
+                            </c:forEach>
+
+                            <c:if test="${showButtons}">
+                                <button type="button" class="btn btn-info" style="width:80px;" onclick="modify_go();">수정</button>
+                                <button type="button" class="btn btn-danger" style="width:80px;" onclick="remove_go();">삭제</button>
+                            </c:if>
                           <button type="button" onclick="window.location.href='<%=request.getContextPath()%>/board/duty/dutyList'" class="btn btn-secondary" style="width:80px;">목록</button>
                       </div>
                    </div>

@@ -62,7 +62,9 @@
 											<select id="selectBoard" class="form-control show-tick"
 												onchange="changeCategory(this);">
 												<option value="default">업무 선택</option>
+												<c:if test="${loginUser.auth_Id == 's' }">
 												<option value="duty">업무 제안</option>
+												</c:if>
 												<option value="issue">업무 이슈</option>
 											</select>
 										</div>
