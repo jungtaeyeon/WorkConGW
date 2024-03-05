@@ -78,7 +78,7 @@
 										</div>
 									</div>
 									<div class="col-md-3 col-sm-12 formGroup issueForm">
-										<label>관련 업무 번호</label>
+										<label>관련 업무 번호(선택)</label>
 										<div class="form-group">
 											<input type="text" id="dutyBoardIdForIssue" class="form-control" placeholder="업무를 선택하세요." maxlength="6" disabled>
 											<a href="#largeModal" id="addDuty" data-toggle="modal" data-target="#dutyModal"> + 업무 선택하기</a><br>
@@ -836,20 +836,20 @@ function submit_go(){
 	}
 	// 업무 이슈 게시판
 	else if(boardCategory=='issue'){
-		if($.trim($('#dutyBoardIdForIssue').val())==""){
-			alert('업무 번호를 입력해주세요.');
-			$('#dutyBoardIdForIssue').focus();
-			return;
-		}
-		if($.trim($('#dutyBoardIdForIssue').val())!=""){
-			var dutyBoardIdForIssue = $('#dutyBoardIdForIssue').val();
-			// 숫자가 아닌 경우 얼럿 띄우기
-			if (!$.isNumeric(dutyBoardIdForIssue)) {
-				alert('업무 번호는 숫자만 입력가능합니다.');
-				$('#dutyBoardIdForIssue').focus();
-				return;
-			}
-		}
+		// if($.trim($('#dutyBoardIdForIssue').val())==""){
+		// 	alert('업무 번호를 입력해주세요.');
+		// 	$('#dutyBoardIdForIssue').focus();
+		// 	return;
+		// }
+		// if($.trim($('#dutyBoardIdForIssue').val())!=""){
+		// 	var dutyBoardIdForIssue = $('#dutyBoardIdForIssue').val();
+		// 	// 숫자가 아닌 경우 얼럿 띄우기
+		// 	if (!$.isNumeric(dutyBoardIdForIssue)) {
+		// 		alert('업무 번호는 숫자만 입력가능합니다.');
+		// 		$('#dutyBoardIdForIssue').focus();
+		// 		return;
+		// 	}
+		// }
 		
 		if($.trim($('.note-editable').text())==""){
 			alert('이슈 내용을 입력하세요.');

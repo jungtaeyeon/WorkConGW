@@ -445,7 +445,7 @@
 
                     title:{
                         display : true,
-                        text : '이번주 신규입사자 수'
+                        text : '이번 달 신규입사자 수'
 
                     }
 

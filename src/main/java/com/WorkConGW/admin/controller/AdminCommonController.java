@@ -153,7 +153,7 @@ public class AdminCommonController extends CommonController {
     public String graphEmp(Model model)
      {
          LocalDateTime now = LocalDateTime.now();
-         LocalDateTime startDt = now.minus(1, ChronoUnit.WEEKS);
+         LocalDateTime startDt = now.minus(1, ChronoUnit.MONTHS);
          LocalDateTime endDt = now;
          logger.info("startDt : "+startDt.toString());
          logger.info("endDt"+endDt.toString());
