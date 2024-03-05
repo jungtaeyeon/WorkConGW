@@ -287,8 +287,8 @@
                         	<div class="m-t-10 detailModeTask">
                         		<span id="spanduty_Board_Title" style="max-width:75%;vertical-align:middle;display:inline-block;overflow: hidden; white-space: nowrap; text-overflow: ellipsis;">
                         			<c:if test="${!empty issue.duty_Board_Title }">
-                        				${issue.duty_Board_Title }
-                        			</c:if>
+										<span onmouseover="this.style.cursor='pointer';" onclick="window.location.href='<%=request.getContextPath()%>/board/duty/detail?duty_Board_Id=${issue.duty_Board_Id }'">${issue.duty_Board_Title }</span>
+									</c:if>
                         			<c:if test="${empty issue.duty_Board_Title }">
 		                        		관련 업무가 없습니다.
                         			</c:if>
@@ -316,7 +316,7 @@
 	                            <!-- 마일스톤 이름 -->
 	                            <div style="margin-top:10px;">
 	                            	<c:if test="${!empty issue.milestone_Name }">
-		                            	<span>${issue.milestone_Name }</span>
+										<span onmouseover="this.style.cursor='pointer';" onclick="window.location.href='<%=request.getContextPath()%>/board/milestone/detail?milestone_Id=${issue.milestone_Id }'">${issue.milestone_Name }</span>
 	                            	</c:if>
 	                            	<c:if test="${empty issue.milestone_Name }">
 		                            	<span>등록된 마일스톤이 없습니다.</span>
