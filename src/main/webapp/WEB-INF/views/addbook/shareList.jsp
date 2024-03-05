@@ -124,7 +124,7 @@ java.util.ArrayList, com.WorkConGW.addbook.dto.AddBookVO" %>
               </form>
 
               <!-- 검색 button 클래스 --><button
-                class="btn btn-outline-secondary"
+                class="btn btn-secondary"
                 onclick="serchBtn()"
                 name="serchBtn"
                 type="button"
@@ -134,6 +134,9 @@ java.util.ArrayList, com.WorkConGW.addbook.dto.AddBookVO" %>
             </div>
 
             <div class="delectBtnGroup">
+              <button class="btn btn-primary messageBtn" type="button" >
+                메시지 전송
+              </button>
               <button class="btn btn-primary delectBtn" onclick="deleteBtn()" name="serchBtn" type="button" >
                 주소록 삭제
               </button>
@@ -166,7 +169,7 @@ java.util.ArrayList, com.WorkConGW.addbook.dto.AddBookVO" %>
                 <c:set var="processedIds" value="${processedIds},${manageId}" />
                 <c:forEach var="addBook" items="${addBookList}" varStatus="loop">
                       <c:if test="${loop.index == 0}">
-                        <th class="tableCheckBox"><input type="checkbox" name="manage_id" value="${addBook.manage_id}" class="checkBox manage_id" /></th>
+                        <th class="tableCheckBox"><input type="checkbox" name="manage_id" data-name="${addBook.manage_display_name}" data-manageempid="${addBook.manage_emp_id}" value="${addBook.manage_id}" class="checkBox manage_id" /></th>
                         <td>
                           ${addBook.manage_display_name}<c:if test="${addBook.manage_emp_id ne null}"><span class="manageinterior">[내부연락처]</span></c:if>
                         </td>
@@ -228,6 +231,42 @@ java.util.ArrayList, com.WorkConGW.addbook.dto.AddBookVO" %>
           </table>
         </div>
       </section>
+      <!-- Modal -->
+      <div class="modal fade" id="messageModal" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="staticBackdropLabel">메세지 전송</h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="modal-body">
+              <form action="messageInsert" id="messageInsert">
+                <input type="hidden" name="manage_emp_id[]">
+                <p class="manage_emp_name">받는사람 : <span></span></p>
+                <div class="input-group mb-3">
+                  <div class="input-group-prepend">
+                    <span class="input-group-text" id="message_title">제목</span>
+                  </div>
+                  <input type="text" class="form-control" name="message_title">
+                </div>
+                <div class="input-group mb-3">
+                  <div class="input-group-prepend">
+                    <span class="input-group-text">내용</span>
+                  </div>
+                    <textarea textarea id="messageContent" name="messageContent" maxlength="200" style="border: 1px solid #ced4da; width: 410px; height: 160px; resize: none; font-size: 15px;"></textarea>
+                </div>
+                <div id="charCount" style="text-align: right; margin-top: -1rem;">0/200</div>
+              </form>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-dismiss="modal">닫기</button>
+              <button type="button" onclick="messageInsert()" class="btn btn-primary">전송</button>
+            </div>
+          </div>
+        </div>
+      </div>
       <!-- 푸터 인클루드 -->
       <%@ include file="../include/footer.jsp"%>
     </body>
@@ -314,4 +353,46 @@ java.util.ArrayList, com.WorkConGW.addbook.dto.AddBookVO" %>
         // tbody 내의 모든 체크박스를 선택 상태로 설정합니다.
         $('.checkBox').prop('checked', isChecked);
       });
+      $('.messageBtn').click(function(){
+        let manageempid = [];
+        let name = "";
+        let allIdsAreValid = true; 
+        $("input:checkbox[name='manage_id']:checked").each(function() {
+          let empId = $(this).data('manageempid');
+          if (empId !== '') {
+              name += $(this).data('name') + ',';
+              manageempid.push(empId);
+          } else {
+              allIdsAreValid = false; // 적어도 하나의 manageempid가 없는 경우 표시하지 않기 위해 false로 설정
+          }
+        });
+        if (allIdsAreValid && $("input:checkbox[name='manage_id']").is(":checked")) {
+        // 모든 manageempid가 유효한 경우
+          $('input[name="manage_emp_id[]"]').val(manageempid);
+
+          if (name !== "") {
+              name = name.slice(0, -1); // 마지막 쉼표 제거
+          }
+
+          $('#messageModal .manage_emp_name span').text(name);
+          $('#messageModal').modal('show');
+        } else {
+          // 적어도 하나의 manageempid가 없는 경우
+          alert("내부연락처를 선택해주세요");
+        }
+      })
+      $('#messageContent').on('input', function() {
+        var text = $(this).val();
+        var charCount = text.length;
+        
+        if (charCount > 200) {
+            $(this).val(text.substring(0, 200));
+            charCount = 200;
+        }
+        
+        $('#charCount').text(charCount + '/200');
+      });
+      const messageInsert= () =>{
+        $('#messageInsert').submit();
+      }
     </script>

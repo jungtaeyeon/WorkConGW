@@ -76,7 +76,7 @@
         </c:choose>
         "> 
         <input type="hidden" name="manage_id" value="${param.manage_id}">
-        <input type="hidden" name="manage_emp_id" value="${param.manage_emp_id}">
+        <input type="hidden" name="manage_emp_id" value="">
             <div class="input-group mb-3">
               <div class="input-group-prepend">
                 <span class="input-group-text" id="manage_display_name">이름</span>
