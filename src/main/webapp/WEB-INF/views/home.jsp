@@ -542,7 +542,7 @@ p.approvalForm, p.approvalName, p.approvalDay {
 		<i class="fa fa-sign-in" aria-hidden="true" onclick="location.href='<%=request.getContextPath()%>/board/project/list'"></i>
 	</div>
 	<c:if test="${!empty projectList}">
-		<c:forEach items="${projectList}" var = "project">
+		<c:forEach items="${projectList}" var = "project" begin="1" end="3">
 			<div class="approvalContentGroup" onclick="window.location.href='${pageContext.request.contextPath }/board/project/detail?project_Id=${project.project_Id}'">
 				<div class="approvalGroup">
 					<p class="approvalTit"><span class="approvalNum">[#${project.project_Id }]</span>${project.project_Title }</p>

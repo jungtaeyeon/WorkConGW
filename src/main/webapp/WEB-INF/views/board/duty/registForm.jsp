@@ -57,7 +57,7 @@
 								<div class="row clearfix">
 									<!-- 게시판 선택 -->
 									<div class="col-md-3">
-										<label>업무선택</label>
+										<label>업무 선택</label>
 										<div class="form-group">
 											<select id="selectBoard" class="form-control show-tick"
 												onchange="changeCategory(this);">
@@ -479,6 +479,7 @@ $("#addEmp").click(function(){
 
 // 업무 번호 추가 !
 function displayProjectTree(projectTree) {
+	projectTree.sort((a, b) => a.project.project_Title.localeCompare(b.project.project_Title));
 	var projectList = $("#project");
 
 	projectTree.forEach(function(projectWithDuties) {
@@ -1024,4 +1025,6 @@ function removeEl(obj){
 </script>
 </div>
 </section>
+<!-- 푸터 인클루드 -->
+<%@ include file="../../include/footer.jsp"%>
 </body>

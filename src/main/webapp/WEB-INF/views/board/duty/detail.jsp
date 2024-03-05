@@ -559,4 +559,6 @@ function remove_go(){
 </script>
         </div>
 </section>
+<!-- 푸터 인클루드 -->
+<%@ include file="../../include/footer.jsp"%>
 </body>

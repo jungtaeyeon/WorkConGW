@@ -86,11 +86,11 @@ tr:hover{
 																					없음
 																				</c:if>
 																				</span>
-																				<div style="font-size: 1.1em;">
-																					<i class="far fa-clock"></i><span style="margin-left:5px;">최근 수정일
-																		 				: <fmt:formatDate value="${milestone.milestone_Update_Dt }" pattern="yyyy-MM-dd"/>
-						                                                		</span>
-																				</div>
+																			</div>
+																			<div style="font-size: 1.1em;">
+																				<i class="far fa-clock"></i><span style="margin-left:5px;">최근 수정일
+																				: <fmt:formatDate value="${milestone.milestone_Update_Dt }" pattern="yyyy-MM-dd"/>
+																			</span>
 																			</div>
 																		</td>
 																		<td class="project-title" style="padding:5px 30px;width:50%;">

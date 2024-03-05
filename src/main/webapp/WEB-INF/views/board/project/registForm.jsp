@@ -71,7 +71,7 @@
 									<div class="row clearfix" style="margin-left: 5px">
 										<div class="col-sm-4">
 											<div class="form-group">
-												<label>마감 기한(선택)</label>
+												<label>마감 기한</label>
 												<div class="input-group date" data-date-autoclose="true" data-provide="datepicker">
 													<form:input path="project_End_Dt" id="projectEndDt" class="form-control" placeholder="마감기한 선택" readonly="true"/>
 													<div class="input-group-append">
