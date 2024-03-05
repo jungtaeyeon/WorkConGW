@@ -217,7 +217,6 @@
             <div class="input-field id-field">
                 <label>* 이메일</label>
                 <input id = "emp_Email" name="emp_Email" type="text" placeholder="이메일를 입력해주세요" required />
-                <button type="button" id="id-dup-check" class="input-btn" onclick="checkDup();">중복확인</button>
                 <input type="hidden" value="N" id="isDup" />
             </div>
             <div class="input-field">

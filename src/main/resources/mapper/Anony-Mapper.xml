@@ -58,7 +58,7 @@
 
 <update id = "updateAnonyReply" parameterType="anonyReply">
 	UPDATE ANONY_REPLY
-	SET REPLY_CONTENT = #{reply_Content}, REPLY_UPDATE_DT = sysdate
+	SET REPLY_CONTENT = #{reply_Content}, REPLY_UPDATE_DT = current_date
 	WHERE REPLY_ID = #{reply_Id}
 </update>
 
@@ -77,7 +77,7 @@
 
 <insert id = "insertAnonyReply" parameterType="anonyReply">
 	INSERT INTO ANONY_REPLY(REPLY_CONTENT, REPLY_CREATE_DT, REPLY_UPDATE_DT, REPLY_ID, ANONY_BOARD_ID)
-	VALUES (#{reply_Content}, sysdate, sysdate, reply_Id.nextval,#{anony_Board_Id})
+	VALUES (#{reply_Content}, current_date, current_date, reply_Id.nextval,#{anony_Board_Id})
 </insert>
 
 
@@ -137,14 +137,14 @@ WHERE  1=1
 
 <insert id ="insertAnony" parameterType="anonyVO">
 INSERT INTO ANONY_BOARD(ANONY_BOARD_ID, ANONY_BOARD_TITLE, ANONY_BOARD_CONTENT, ANONY_BOARD_READCNT, ANONY_BOARD_CREATE_DT, ANONY_BOARD_UPDATE_DT) VALUES
-(anony_board_seq.nextval, #{anony_Board_Title}, #{anony_Board_Content}, 0, sysdate,   sysdate)
+(anony_board_seq.nextval, #{anony_Board_Title}, #{anony_Board_Content}, 0, current_date,   current_date)
 </insert>
 
 <update id="updateAnony" parameterType="anonyVO">
     UPDATE ANONY_BOARD 
     SET ANONY_BOARD_TITLE = #{anony_Board_Title}, 
         ANONY_BOARD_CONTENT = #{anony_Board_Content}, 
-        ANONY_BOARD_UPDATE_DT = sysdate
+        ANONY_BOARD_UPDATE_DT = current_date
     WHERE ANONY_BOARD_ID = #{anony_Board_Id}
 </update>
 
