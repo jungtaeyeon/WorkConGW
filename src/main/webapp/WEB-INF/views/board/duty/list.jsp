@@ -299,5 +299,7 @@
         $('form[name="listForm"]').submit();
     }
 </script>
+<!-- 푸터 인클루드 -->
+<%@ include file="../../include/footer.jsp"%>
 </body>
 </html>

@@ -33,10 +33,10 @@
         <if test="searchState != null and searchState != ''">
             <choose>
                 <when test='searchState == "Y"'>
-                    AND sysdate <![CDATA[ < ]]> A.duty_board_end_dt
+                    AND current_Date <![CDATA[ < ]]> NVL(A.duty_board_end_dt, current_Date)
                 </when>
                 <when test='searchState == "N"'>
-                    AND sysdate <![CDATA[ >= ]]> A.duty_board_end_dt
+                    AND NVL(A.duty_board_end_dt, current_Date) <![CDATA[ < ]]> current_Date
                 </when>
             </choose>
         </if>
