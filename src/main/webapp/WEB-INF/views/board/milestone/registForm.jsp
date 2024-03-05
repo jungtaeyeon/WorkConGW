@@ -64,7 +64,7 @@
 		                                 <div class="form-group">
 		                                 <label>마일스톤 이름</label>
 											 <%-- milestone_Name값이 있으면 받아올 예정(수정) --%>
-											 <form:input path="milestone_Name" class="form-control" />
+											 <form:input path="milestone_Name" id="milestoneTitle" class="form-control" />
 		                                 </div>
 		                             </div>
 								</div>
@@ -75,7 +75,7 @@
 	                                 		<label>마감 기한</label>
 	                                 		<div class="input-group date" data-date-autoclose="true" data-provide="datepicker">
 												<%-- milestone_End_Dt값이 있으면 받아올 예정(수정) --%>
-													<form:input path="milestone_End_Dt" class="form-control" placeholder="마감기한 선택" readonly="true"/>
+													<form:input path="milestone_End_Dt" id="milestoneEndDt" class="form-control" placeholder="마감기한 선택" readonly="true"/>
 												<div class="input-group-append">
 				                                    <button class="btn btn-outline-secondary" type="button"><i class="fas fa-calendar"></i></button>
 				                                </div>
@@ -93,8 +93,26 @@
 </div>
 
 <script>
+	$(document).ready(function(){
+		var tomorrow = new Date();
+		tomorrow.setDate(tomorrow.getDate() + 1); // 내일의 날짜를 가져옴
+		$('.date').datepicker({
+			startDate: tomorrow, // 내일 이후의 날짜만 선택 가능하도록 설정
+		});
+	});
 // 등록
 function registMilestone(){
+	let milestoneEndDt = $('#milestoneEndDt').val();
+	let milestoneTitle = $('#milestoneTitle').val();
+
+	if(milestoneTitle==''){
+		alert('제목을 입력하세요.');
+		return;
+	}
+	if(milestoneEndDt==''){
+		alert('마감기한을 선택하세요.');
+		return;
+	}
 	$.ajax({
 		url: '<c:url value="/board/milestone/regist"/>',
 		type:'POST',
