@@ -259,6 +259,10 @@ public class ScheduleController extends BaseController {
         EmpVO user = (EmpVO)session.getAttribute("loginUser");
         if(user.getCode_Id().equals("c01")) {
             log.info("부서장 일정조회");
+            log.info(schedule.getSearchType());
+            log.info(schedule.getSearchCondition());
+            log.info(schedule.getSearchKeyword());
+            log.info(Integer.toString(schedule.getSearchImportant()));
             scheduleList = scheduleService.selectScheduleAllList(schedule);
             return scheduleList;
         } else {

@@ -56,7 +56,6 @@
             <h3 class="form-title">${meetRoomVO.meet_Room_Name } 회의실</h3>
             <div>
                 <c:if test="${loginUser.emp_Id == meetRoomVO.emp_Id}">
-                    <button type="button" id="modifyBtn" onclick="javascript:location.href='<%=request.getContextPath() %>/reservation/modifyForm?meet_Room_Id=${meetRoomVO.meet_Room_Id}';" class="btn btn-info header-btn">&nbsp;&nbsp;&nbsp;수 &nbsp;&nbsp;정&nbsp;&nbsp;&nbsp;</button>
                     <button type="button" class="btn btn-danger" onclick="removeRoom();">취소</button>
                 </c:if>
 

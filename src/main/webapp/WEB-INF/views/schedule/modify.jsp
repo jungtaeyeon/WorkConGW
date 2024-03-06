@@ -83,7 +83,7 @@
                 <h3 class="form-title">일정 수정</h3>
                 <div>
                                         <c:if test="${loginUser.emp_Id eq schedule.username }">
-                    <button type="button" class="btn btn-info" onclick="modifySchedule();">수정</button>
+                    <button type="button" class="btn btn-info" onclick="modifySchedule();">수정완료</button>
                                         </c:if>
                     <button type="button" class="btn btn-secondary" onclick="javascript:history.back(-1);" style="border: 1px solid gray">취소</button>
                 </div>

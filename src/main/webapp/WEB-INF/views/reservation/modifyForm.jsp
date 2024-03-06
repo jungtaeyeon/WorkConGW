@@ -52,9 +52,9 @@
             <h3 class="form-title">${meetRoomVO.meet_Room_Name } 회의실 수정</h3>
 
             <div>
-                <button type="button" id="modifyBtn" onclick="modifyRoom();" class="btn btn-info header-btn">&nbsp;&nbsp;&nbsp;수 &nbsp;&nbsp;정&nbsp;&nbsp;&nbsp;</button>
+                <button type="button" id="modifyBtn" onclick="modifyRoom();" class="btn btn-info header-btn">수정완료</button>
                 <button type="button" class="btn btn-danger" onclick="removeRoom();">삭제</button>
-                <button type="button" class="btn btn-default" onclick="location.href='<%=request.getContextPath()%>/reservation/adminMain';">닫기</button>
+                <button type="button" class="btn btn-secondary" onclick="location.href='<%=request.getContextPath()%>/reservation/adminMain';">닫기</button>
             </div>
         </div>
         <hr>

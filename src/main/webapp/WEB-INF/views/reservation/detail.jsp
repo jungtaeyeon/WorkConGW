@@ -53,7 +53,7 @@
         <div class="form-header container-fluid-header" style="font-family: S-CoreDream-4Regular ">
             <h3 class="form-title">${meetRoomVO.meet_Room_Name } 회의실</h3>
             <div>
-                <button type="button" id="modifyBtn" onclick="javascript:location.href='<%=request.getContextPath() %>/reservation/modifyForm?meet_Room_Id=${meetRoomVO.meet_Room_Id}';" class="btn btn-info header-btn">&nbsp;&nbsp;&nbsp;수 &nbsp;&nbsp;정&nbsp;&nbsp;&nbsp;</button>
+                <button type="button" id="modifyBtn" onclick="javascript:location.href='<%=request.getContextPath() %>/reservation/modifyForm?meet_Room_Id=${meetRoomVO.meet_Room_Id}';" class="btn btn-info header-btn">수정</button>
                 <button type="button" class="btn btn-danger" onclick="removeRoom();">삭제</button>
                 <button type="button" class="btn btn-secondary" onclick="location.href='${pageContext.request.contextPath}/reservation/adminMain'">닫기</button>
             </div>

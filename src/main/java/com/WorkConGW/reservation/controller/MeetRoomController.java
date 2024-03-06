@@ -153,11 +153,11 @@ public String registRoom(MeetRoomFormVO meetRoomFormVO, Model model, HttpSession
 
 
 		/** 전체 예약 가져오기**/
-
-		/**내 예약**/
 		searchMeetRoomReservationVO.setEmp_Id(user.getEmp_Id());
-		List<MeetRoomReservationVO> meetRoomReservationList = meetRoomService.getSearchReservation(searchMeetRoomReservationVO);
+		List<MeetRoomReservationVO> meetRoomReservationList = meetRoomService.getSearchReservationAll(searchMeetRoomReservationVO);
 		model.addAttribute("reservationList", meetRoomReservationList);
+
+
 
 
 		/** 공지 리스트 가져오기 **/
@@ -284,9 +284,16 @@ public String registRoom(MeetRoomFormVO meetRoomFormVO, Model model, HttpSession
 	@PostMapping("/registNotice")
 	public void regist(MeetRoomFormVO meetRoomFormVO) throws Exception {
 		log.info("공지등록");
-		meetRoomService.registNotice(meetRoomFormVO.getReservationNoticeVO());
 		log.info(meetRoomFormVO.getReservationNoticeVO().toString());
 
+
+//		ReservationNoticeVO reservationNoticeVO = new ReservationNoticeVO();
+//		reservationNoticeVO = meetRoomFormVO.getReservationNoticeVO();
+//
+//		meetRoomFormVO.getFileUploadCommand().setFileUploadPath(fileUploadPath);
+//		List<ReservationNoticeVO> attachList = saveNoticeFile(meetRoomFormVO.getFileUploadCommand(), reservationNoticeVO);
+//		meetRoomFormVO.getReservationNoticeVO().setAttachList(attachList);
+		meetRoomService.registNotice(meetRoomFormVO.getReservationNoticeVO());
 	}
 
 
@@ -629,6 +636,40 @@ public String registRoom(MeetRoomFormVO meetRoomFormVO, Model model, HttpSession
 
 		return attachList;
 	}
+
+
+
+//	protected List<ReservationNoticeVO> saveNoticeFile(FileUploadCommand fileUploadCommand, ReservationNoticeVO reservationNoticeVO) throws Exception {
+//
+//		List<ReservationNoticeVO> attachList = new ArrayList<ReservationNoticeVO>();
+//
+//		if(fileUploadCommand.getUploadFile() != null) {
+//
+//			for(MultipartFile multi : fileUploadCommand.getUploadFile()) {
+//				if(multi.isEmpty()) continue;
+//				String attachName = RandomStringUtils.randomAlphanumeric(20) +"!!"
+//						+ multi.getOriginalFilename();
+//				File target = new File(fileUploadCommand.getFileUploadPath(), attachName);
+//
+//				if (!target.exists()) {
+//					target.mkdirs();
+//				}
+//
+//				multi.transferTo(target);
+//
+//				ReservationNoticeVO attach = new ReservationNoticeVO();
+//
+//				reservationNoticeVO.setAttach_Origin(attachName);
+//				reservationNoticeVO.setAttach_Name(multi.getOriginalFilename());
+//				reservationNoticeVO.setAttach_Type(attachName.substring(attachName.lastIndexOf(".")+1).toUpperCase());
+//
+//
+//				attachList.add(attach);
+//			}
+//		}
+//
+//		return attachList;
+//	}
 
 	@PostMapping("/reservationComplainRemove")
 	@ResponseBody

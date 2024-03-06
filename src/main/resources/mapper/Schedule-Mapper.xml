@@ -122,24 +122,29 @@
              ,CODE_ID
              ,DEPT_ID
         from SCHEDULE s
-        where s.schedule_st = 1
+        WHERE 1=1
+
+        AND SCHEDULE_START_DT <![CDATA[ >= ]]>  TO_DATE(#{schedule_Start_Dt},'yyyy-mm-dd HH24:mi')
+        AND SCHEDULE_START_DT  <![CDATA[ >= ]]> TO_DATE(#{schedule_Start_Dt},'yyyy-mm-dd HH24:mi') + INTERVAL '1' HOUR
+        AND SCHEDULE_ST IN(1)
+        AND(
+        (SCHEDULE_WRITER_ID = #{schedule_Writer_Id}
+        AND CODE_ID IN ('S01','S02','S03')) /*3개중에 하나만 있어도 참*/
+
         AND DEPT_ID IN (select a.DEPT_ID
         from dept a
-                inner join dept b on a.dept_sup_id = b.dept_sup_id
-                INNER JOIN emp e ON b.dept_id = e.dept_id
+        inner join dept b on a.dept_sup_id = b.dept_sup_id
+        INNER JOIN emp e ON b.dept_id = e.dept_id
         where e.emp_id = #{schedule_Writer_Id}
         union
-        select  c.DEPT_ID
+        select c.DEPT_ID
         from dept c
-                inner join dept d on c.DEPT_ID = d.DEPT_SUP_ID
-                inner join emp e on d.DEPT_ID = e.DEPT_ID
+        inner join dept d on c.DEPT_ID = d.DEPT_SUP_ID
+        inner join emp e on d.DEPT_ID = e.DEPT_ID
         where e.emp_id = #{schedule_Writer_Id}
         )
-        OR (CODE_ID = 'S01' AND schedule_st = 1
-        AND schedule_writer_id = (SELECT emp_id
-        FROM EMP
-        WHERE EMP_ID = #{schedule_Writer_Id})
         )
+
         <include refid="search"/>
         ORDER BY SCHEDULE_START_DT
     </select>

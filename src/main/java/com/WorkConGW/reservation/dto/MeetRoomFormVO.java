@@ -2,8 +2,9 @@ package com.WorkConGW.reservation.dto;
 
 
 import com.WorkConGW.common.command.FileUploadCommand;
+import com.WorkConGW.common.dto.BaseVO;
 
-public class MeetRoomFormVO {
+public class MeetRoomFormVO extends BaseVO {
 
     private MeetRoomVO meetRoomVO;
     private MeetRoomVO searchMeetRoomVO;
