@@ -33,7 +33,13 @@ public class ScheduleDAO {
      */
     public List<ScheduleVO> selectScheduleAllList(ScheduleVO scheduleVO) {
         log.info("부서장리스트dao연결");
-         return sqlSessionTemplate.selectList("selectScheduleAllList", scheduleVO);
+        log.info(scheduleVO.getSearchKeyword());
+        log.info(scheduleVO.getSearchType());
+        log.info(scheduleVO.getSearchCondition());
+        log.info(Integer.toString(scheduleVO.getSearchImportant()));
+         List<ScheduleVO> schedule =  sqlSessionTemplate.selectList("selectScheduleAllList", scheduleVO);
+        log.info(schedule.toString());
+         return schedule;
     }
 
     /**

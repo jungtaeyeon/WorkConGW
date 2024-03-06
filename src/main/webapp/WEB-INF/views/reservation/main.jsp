@@ -35,6 +35,7 @@
         font-size: 10px;
     }
     .fc-today-button {
+        content: "이번주";
 
     }
     .fc-toolbar {
@@ -471,6 +472,7 @@
 <script src="<%=request.getContextPath() %>/resources/js/etcSetting.js"></script>
 
 <script>
+
 
     <%--let imageURL = "<%=request.getContextPath()%>/pds/Sign/${}--%>
 
