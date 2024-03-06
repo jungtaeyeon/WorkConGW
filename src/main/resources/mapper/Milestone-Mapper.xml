@@ -147,7 +147,7 @@
                    milestone_id_seq.nextval
                  ,#{milestone_Name}
                  ,sysdate
-                 ,sysdate
+                 ,#{milestone_End_Dt}
                  ,sysdate
                  ,1
                  ,#{emp_Id}

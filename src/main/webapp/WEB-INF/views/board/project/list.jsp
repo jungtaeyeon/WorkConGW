@@ -43,8 +43,9 @@ tr:hover{
 								<button type="button" class="btn btn-light" onclick="window.location.href='${pageContext.request.contextPath}/board/issue/list';">이슈</button>
 								<button type="button" class="btn btn-light " onclick="window.location.href='${pageContext.request.contextPath}/board/milestone/list';">마일스톤</button>
 								<button type="button" class="btn btn-light active" onclick="window.location.href='${pageContext.request.contextPath}/board/project/list';">프로젝트</button>
+								<c:if test="${loginUser.auth_Id == 's' }">
 								<button type="button" class="btn btn-primary float-right" onclick="window.location.href='${pageContext.request.contextPath}/board/project/registForm';">프로젝트 생성하기</button>
-
+								</c:if>
 								<form:form modelAttribute="projectVO" name="listForm" action="${pageContext.request.contextPath }/board/project/list">
 									<form:hidden path="isOpen" id="isOpenForTab" />
 									<div class="table-responsive" style="margin-top:20px;">
@@ -108,6 +109,7 @@ tr:hover{
 																		<span style="margin-left:10px;"><strong style="font-size:1.1em;">${project.doneIssueCount }</strong> Done</span>
 																	</div>
 																	<div style="margin-top: 10px;">
+																		<c:if test="${loginUser.auth_Id == 's' }">
 																		<span class="btn btn-info" style="height: 25px;padding: 0px 10px;font-size:1.1em;" onclick="window.location.href='${pageContext.request.contextPath }/board/project/modifyForm?project_Id=${project.project_Id }';">수정</span>
 																		<c:if test="${project.project_St eq 1 }">
 																			<span class="btn btn-secondary" style="height: 25px;margin-left:10px;padding: 0px 10px;font-size:1.1em;" onclick="modifyProject('${project.project_Id}',2);">종료</span>
@@ -117,6 +119,7 @@ tr:hover{
 																		</c:if>
 																		<c:if test="${project.dutyCount eq 0 }">
 																			<span class="btn btn-danger" style="height: 25px;margin-left:10px;padding: 0px 10px;font-size:1.1em;" onclick="removeProject('${project.project_Id}');">삭제</span>
+																		</c:if>
 																		</c:if>
 																	</div>
 																</td>

@@ -359,7 +359,8 @@
                         manage_company_name = #{manage_company_name},
                         manage_official_name = #{manage_official_name},
                         manage_dept_name = #{manage_dept_name},
-                        manage_add_book_id = #{manage_add_book_id}
+                        manage_add_book_id = #{manage_add_book_id},
+                        manage_emp_id = #{manage_emp_id}
                 WHERE emp_id = #{empId}
                 and manage_id = #{manage_id}
         </update>

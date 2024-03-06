@@ -12,7 +12,8 @@
                 FROM (
                     SELECT schedule_title,code_id,schedule_imp,schedule_start_dt 
                     FROM SCHEDULE
-                    WHERE TO_CHAR(SCHEDULE_START_DT, 'YYYY-MM-DD') = #{schedule_Start_Dt}
+                    WHERE 
+                    (TO_DATE(#{schedule_Start_Dt}, 'YYYY-MM-DD') BETWEEN TRUNC(SCHEDULE_START_DT) AND TRUNC(SCHEDULE_END_DT))
                     AND SCHEDULE_ST = 1
                     AND SCHEDULE_WRITER_ID = #{empId}
                     AND CODE_ID = 'S01'
@@ -24,7 +25,8 @@
                     dept b
                     on 
                     b.DEPT_SUP_ID = A.DEPT_ID
-                    WHERE TO_CHAR(SCHEDULE_START_DT, 'YYYY-MM-DD') = #{schedule_Start_Dt}
+                    WHERE 
+                    (TO_DATE(#{schedule_Start_Dt}, 'YYYY-MM-DD') BETWEEN TRUNC(SCHEDULE_START_DT) AND TRUNC(SCHEDULE_END_DT))
                     AND SCHEDULE_ST = 1
                     AND b.dept_id= #{deptId}
                     AND CODE_ID = 'S02'
@@ -32,7 +34,8 @@
                     UNION ALL
                     SELECT schedule_title,code_id,schedule_imp,schedule_start_dt 
                     FROM SCHEDULE
-                    WHERE TO_CHAR(SCHEDULE_START_DT, 'YYYY-MM-DD') = #{schedule_Start_Dt}
+                    WHERE 
+                    (TO_DATE(#{schedule_Start_Dt}, 'YYYY-MM-DD') BETWEEN TRUNC(SCHEDULE_START_DT) AND TRUNC(SCHEDULE_END_DT)) 
                     AND SCHEDULE_ST = 1
                     AND DEPT_ID = #{deptId}
                     AND CODE_ID = 'S03'

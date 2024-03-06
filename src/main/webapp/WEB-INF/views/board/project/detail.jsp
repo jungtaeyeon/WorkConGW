@@ -50,7 +50,7 @@ h5.number {
 	<div class="container-fluid">
 			<div class="row clearfix">
                 <div class="col-12" style="margin-top: 2%; font-family: 'S-CoreDream-6Bold">
-                    <h2><i class="fa fa-clipboard"></i>&nbsp;프로젝트 관리</h2>
+                    <h2><i class="fa fa-clipboard"></i>&nbsp;${project.project_Title}</h2>
                     <hr>
                 </div>
 		 	</div>

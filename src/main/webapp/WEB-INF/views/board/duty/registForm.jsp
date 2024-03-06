@@ -57,12 +57,14 @@
 								<div class="row clearfix">
 									<!-- 게시판 선택 -->
 									<div class="col-md-3">
-										<label>업무선택</label>
+										<label>업무 선택</label>
 										<div class="form-group">
 											<select id="selectBoard" class="form-control show-tick"
 												onchange="changeCategory(this);">
 												<option value="default">업무 선택</option>
+												<c:if test="${loginUser.auth_Id == 's' }">
 												<option value="duty">업무 제안</option>
+												</c:if>
 												<option value="issue">업무 이슈</option>
 											</select>
 										</div>
@@ -76,7 +78,7 @@
 										</div>
 									</div>
 									<div class="col-md-3 col-sm-12 formGroup issueForm">
-										<label>관련 업무 번호</label>
+										<label>관련 업무 번호(선택)</label>
 										<div class="form-group">
 											<input type="text" id="dutyBoardIdForIssue" class="form-control" placeholder="업무를 선택하세요." maxlength="6" disabled>
 											<a href="#largeModal" id="addDuty" data-toggle="modal" data-target="#dutyModal"> + 업무 선택하기</a><br>
@@ -477,6 +479,7 @@ $("#addEmp").click(function(){
 
 // 업무 번호 추가 !
 function displayProjectTree(projectTree) {
+	projectTree.sort((a, b) => a.project.project_Title.localeCompare(b.project.project_Title));
 	var projectList = $("#project");
 
 	projectTree.forEach(function(projectWithDuties) {
@@ -797,6 +800,10 @@ function submit_go(){
 			$('.note-editable').focus();
 			return;
 		}
+		if($.trim($('#selectProject').val())==0){
+			alert('프로젝트를 선택하세요.');
+			return;
+		}
 	
 		if($.trim($('#boardEndDt').val())==""){
 			alert('완료 기한을 선택하세요.');
@@ -829,20 +836,20 @@ function submit_go(){
 	}
 	// 업무 이슈 게시판
 	else if(boardCategory=='issue'){
-		if($.trim($('#dutyBoardIdForIssue').val())==""){
-			alert('업무 번호를 입력해주세요.');
-			$('#dutyBoardIdForIssue').focus();
-			return;
-		}
-		if($.trim($('#dutyBoardIdForIssue').val())!=""){
-			var dutyBoardIdForIssue = $('#dutyBoardIdForIssue').val();
-			// 숫자가 아닌 경우 얼럿 띄우기
-			if (!$.isNumeric(dutyBoardIdForIssue)) {
-				alert('업무 번호는 숫자만 입력가능합니다.');
-				$('#dutyBoardIdForIssue').focus();
-				return;
-			}
-		}
+		// if($.trim($('#dutyBoardIdForIssue').val())==""){
+		// 	alert('업무 번호를 입력해주세요.');
+		// 	$('#dutyBoardIdForIssue').focus();
+		// 	return;
+		// }
+		// if($.trim($('#dutyBoardIdForIssue').val())!=""){
+		// 	var dutyBoardIdForIssue = $('#dutyBoardIdForIssue').val();
+		// 	// 숫자가 아닌 경우 얼럿 띄우기
+		// 	if (!$.isNumeric(dutyBoardIdForIssue)) {
+		// 		alert('업무 번호는 숫자만 입력가능합니다.');
+		// 		$('#dutyBoardIdForIssue').focus();
+		// 		return;
+		// 	}
+		// }
 		
 		if($.trim($('.note-editable').text())==""){
 			alert('이슈 내용을 입력하세요.');
@@ -1018,4 +1025,6 @@ function removeEl(obj){
 </script>
 </div>
 </section>
+<!-- 푸터 인클루드 -->
+<%@ include file="../../include/footer.jsp"%>
 </body>
