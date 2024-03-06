@@ -52,10 +52,8 @@
     width: 14rem; 
     height: 3.8rem; 
     border-radius: 10px; 
-    font-family: InfinitySans-RegularA1;
   }
   .metismenuLI a{
-    font-family: S-CoreDream-4Regular; 
     font-size: 20px;
   }
   .metismenuLI .dropdown-item{font-size: 16px; transition: 0.3s; margin-bottom: 0; cursor: pointer;}

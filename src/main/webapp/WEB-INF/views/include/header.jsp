@@ -61,7 +61,7 @@
 			display: flex;
 			align-items: center;
 		}
-
+		.modal.show{background-color: rgba(0, 0, 0, 0.7);}
 
 
 		.btn.btn-outline-secondary {

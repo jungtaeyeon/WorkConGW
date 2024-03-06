@@ -3,8 +3,6 @@
          pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
-<html lang="ko"></html>
-<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <head>
 <link rel=" shortcut icon" href="<%=request.getContextPath()%>/resources/image/favicon.ico">
 <link rel="stylesheet" href="<%=request.getContextPath()%>/resources/vendor/css/fullcalendar.min.css" />
@@ -14,21 +12,26 @@
 <link rel="stylesheet" href="<%=request.getContextPath()%>/resources/css/schedule.css" />
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:400,500,600">
 <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
-
-
-    <title>일정</title>
     <style>
-        html, body {
-            margin: 0;
-            padding: 0;
-            font-family: Arial, Helvetica Neue, Helvetica, sans-serif;
-            font-size: 14px;
-        }
         #calendar {
             width: 100%;
             height: 100%;
         }
-
+        .subTitleText {
+            margin-bottom: 25px;
+        }
+        .subTitleText h2 {
+            display: flex;
+            justify-content: flex-start;
+            align-items: center;
+            font-size: 27px;
+            padding: 10px 0;
+            font-family: "Noto Sans KR", sans-serif;
+        }
+        .subTitleText i {
+            font-size: 24px;
+            margin-right: 5px;
+        } 
         #external-events {
             position: fixed;
             z-index: 2;
@@ -73,6 +76,7 @@
         .sidebar-scroll{
             padding-left: 10px;
             padding-right: 10px;
+            width: 250px;
         }
 
         .panel-body{
@@ -104,15 +108,11 @@
             margin-left: 0px;
             margin-right: 0px;
         }
-
-        #searchType, #keywordInput, #searchBtn{
-            height: 36px;
-        }
         #type_filter.select2{
             width: 180px;
         }
         #commonHeader{
-            margin-top: 100px;
+            /* margin-top: 100px; */
         }
         .privateSp , .commonSp{
             width: 180px;
@@ -124,50 +124,43 @@
         }
         #privateSchedule{
             color: #74c0fc;
-            margin: 3px 10px 10px 50px;
-            font-size: large;
-            float: right;
         }
         #importantSchedule{
             color: #D25565;
-            margin: 3px 10px 10px 50px;
-            font-size: large;
-            float: right;
         }
         #deptSchedule{
             color: #b070db;
-            margin: 3px 10px 10px 50px;
-            font-size: large;
-            float: right;
         }
         #teamSchedule{
             color: #ffa94d;
-            margin: 3px 10px 10px 67px;
-            font-size: large;
-            float: right;
         }
         #companySchedule{
             color: #a9e34b;
-            margin: 3px 10px 10px 50px;
-            font-size: large;
-            float: right;
-        }
-        strong {
-            font-size: 1.2em;
         }
         .scheduleInfo{
             display: flex;
             vertical-align: middle;
             justify-content: space-between;
         }
-        .fc-center h2{
-            padding-left: 10px;
+        .fc-center{
+            display: flex !important;
+            justify-content: center;
+            align-items: center;
+        }
+        .fc .fc-toolbar>*>*{margin-left: 0;}
+        .fc-center h2 {
+            text-transform: uppercase;
+            font-size: 25px;
+            font-weight: 600;
+            color: #505363;
+            line-height: 1.2;
+            font-family: "Noto Sans KR", sans-serif;
+        }
+        .fc-next-button, .fc-prev-button{
+            height: 3.1em !important;
         }
         .theme-blue #wrapper:before, .theme-blue #wrapper:after, .theme-blue:before, .theme-blue:after{
             background: #449cff00;
-        }
-        .form-control{
-            font-family: S-CoreDream-7ExtraBold;
         }
         .selectSearchDate{
             height: 36px;
@@ -205,7 +198,7 @@
         #zoomDiv:before {
             content: "";
             display: block;
-            padding-top: 100%;
+            padding-top: 84%;
         }
         #zoomContent{
             position: absolute;
@@ -239,45 +232,45 @@
         .importantStrong {
             text-align: center;
         }
-
+        .fc-state-default{
+            background-image: none;
+        }
     </style>
 </head>
 
 
 
 <body>
-    <%@ include file="../include/header.jsp"%>
+<%@ include file="../include/header.jsp"%>
 <section style="display: flex;">
 <!-- 사이드바 -->
-<div id="left-sidebar" class="sidebar" style="border-right:2px solid rgb(0,0,0,0.1); margin-top: 50px; left:0px;">
+<div id="left-sidebar" class="sidebar" style="border-right:2px solid rgb(0,0,0,0.1); margin-right: 10px;">
     <div class="sidebar-scroll">
-        <div class="tab-content p-l-0 p-r-0 text-align" style="font-size: 25px; ">
-            <button type="button"  id="schedule_go_btn" onclick="schedule_go()" style="background-color: #2980b9; color: white; border: 0px; width: 14rem; height: 3.8rem; margin-left: 3.5%; border-radius: 5%; margin-top: 12%; font-family: InfinitySans-RegularA1">새 일정</button>
+        <div class="tab-content p-l-0 p-r-0 text-align" style="font-size: 25px; margin-bottom: 15px;">
+            <button type="button"  id="schedule_go_btn" onclick="schedule_go()" style="background-color: #2980b9; color: white; border: 0px; width: 14rem; height: 3.8rem; border-radius: 10px;">일정 등록</button>
         </div>
 
-        <div class="tab-content p-l-0 p-r-0" style="font-size: 25px; margin-left: 3%; padding-bottom: 0; font-family: S-CoreDream-4Regular">
+        <div class="tab-content p-l-0 p-r-0" style="font-size: 25px; color: #000; font-weight: 400; padding-bottom: 0;">
             나의 일정
         </div>
-
-
-
         <ul class="main-menu metismenu">
             <li id="li_mySchedule">
-                <a href="javascript:event.preventDefault();"  style="font-family: S-CoreDream-4Regular; font-size: 20px;"><i class="fa fa-square" id="privateSchedule"></i></i> <span>개인일정</span></a>
+                <p style=" font-size: 20px; margin-bottom: 0;"><i class="fa fa-square" id="privateSchedule"></i></i> <span>개인일정</span></p>
             </li>
             <li id="li_importantSchedule">
-                <a href="javascript:event.preventDefault();" class="" style="font-family: S-CoreDream-4Regular; font-size: 20px;"><i class="fa fa-square" id="importantSchedule"></i> <span>중요일정</span></a>
+                <p class="" style=" font-size: 20px; margin-bottom: 0;"><i class="fa fa-square" id="importantSchedule"></i> <span>중요일정</span></p>
             </li>
-        </ul>
-        <div id="commonHeader" class="tab-content p-l-0 p-r-0" style="font-size: 25px; margin-left: 3%; padding-bottom: 0; font-family: S-CoreDream-4Regular">
+        </ul>   
+
+        <div id="commonHeader" class="tab-content p-l-0 p-r-0" style="font-size: 25px; color: #000; font-weight: 400; padding-bottom: 0; ">
             공유 일정
         </div>
         <ul class="main-menu metismenu">
             <li id="li_companySchedule">
-                <a href="javascript:event.preventDefault();" class="" style="font-family: S-CoreDream-4Regular; font-size: 20px;"><i class="fa fa-square" id="companySchedule"></i> <span>부서일정</span></a>
+                <p class="" style=" font-size: 20px; margin-bottom: 0;"><i class="fa fa-square" id="companySchedule"></i> <span>부서일정</span></p>
             </li>
             <li id="li_deptSchedule">
-                <a href="javascript:event.preventDefault();" class="" style="font-family: S-CoreDream-4Regular; font-size: 20px;"><i class="fa fa-square" id="deptSchedule"></i> <span>팀일정</span></a>
+                <p class="" style=" font-size: 20px; margin-bottom: 0;"><i class="fa fa-square" id="deptSchedule"></i> <span>팀일정</span></p>
             </li>
         </ul>
     </div>
@@ -290,39 +283,41 @@
 <!-- 메인 content -->
 <section id="main-content" style="width: 100%">
     <div class="container-fluid">
-        <div class="row clearfix">
-            <div class="col-12" style="margin-top: 2%;font-family: S-CoreDream-6Bold">
-                <h2 style="font-size: 2.3rem;"><i class="fa fa-calendar"></i>&nbsp;일정 관리</h2>
-                <hr>
-            </div>
+        <div class="clearfix">
+            <div class="subTitleText">
+                <h2>
+                  <i class="fa-solid fa-angles-right"></i>
+                  일정관리
+                </h2>
+              </div>
         </div>
         <div class="row clearfix ">
             <div class="col-lg-12 col-md-12">
-                <div class="card">
+                <div class="">
                     <div class="body schedule_body">
                         <!-- 검색 조건 설정 -->
                         <form:form modelAttribute="scheduleFormVO" id="scheduleForm">
-                            <h5 style="display:inline-block; font-weight: bold; font-family: S-CoreDream-7ExtraBold">검색 조건</h5>
-                            <div class="alert alert-light" role="alert" style="display:inline-block;padding-top:0;margin-bottom:0; font-family: S-CoreDream-6Bold">
+                            <h5 style="display:inline-block; font-weight: bold;">검색 조건</h5>
+                            <div class="alert alert-light" role="alert" style="padding:0;margin-bottom:0;">
 
-<%--                                <label class="fancy-checkbox">--%>
+<%--                                <label class="fancy-checkbox" style="font-size:15px;">--%>
 <%--                                    <input type="checkbox" id="checkboxSearchType" class="searchCheck filterCheck" data="selectSearchType" data-parsley-multiple="checkbox" onchange="changeForm(this);searchSetting(this);"/>--%>
 <%--                                    <span>일정그룹</span>--%>
 <%--                                </label>--%>
-                                <label class="fancy-checkbox">
+                                <label class="fancy-checkbox"  style="font-size:15px;">
                                     <input type="checkbox" name="important" id="checkboxImportant" class="searchCheck searchElement filterCheck" data-parsley-multiple="checkbox" value="1" onchange="searchSetting(this);"/>
                                     <span>중요일정</span>
                                 </label>
 
                                 <!-- 리셋버튼 -->
                                 <button id="resetBtn" type="reset" class="btn btn-default" title="Refresh" style="display: none;"></button>
-                                <label class="searchElement filter" onclick="conditionReset();"  style="cursor: pointer;">
+                                <label class="searchElement filter" onclick="conditionReset();"  style="cursor: pointer; font-size:15px; margin-left: 8px">
                                     <i class="fa fa-refresh"></i>&nbsp&nbsp검색 조건 초기화
                                 </label>
 
                             </div>
                             <div id="keyword" class="box" style="width:350px;">
-                                <div class="input-group row" style="width: 75em;">
+                                <div class="input-group" style="width: 75em;">
                                     <!-- 일정검색타입 searchType -->
                                     <select class="form-control col-2 selectSearchType myConditions searchElement filter  " name="searchType" id="searchType" onchange="searchSetting(this);" style="display: inline-block;">
                                         <option value="">전체일정</option>
@@ -354,7 +349,7 @@
 
                         <div id="zoomDiv">
                             <div id="zoomContent">
-                                <div class="card mb-4" style="font-family: S-CoreDream-4Regular">
+                                <div class="card mb-4" style="padding: 0px 15px;">
                                     <div id="wrapper">
                                         <div id="loading"></div>
                                        <div id="calendar" style="font-family: S-CoreDream-4Regular"></div>

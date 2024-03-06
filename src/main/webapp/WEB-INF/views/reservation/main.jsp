@@ -3,10 +3,7 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
-<!DOCTYPE html>
-<html>
-<head>
-    <link href="https://cdn.bootcss.com/noUiSlider/8.5.1/nouislider.min.css" rel="stylesheet">
+<link href="https://cdn.bootcss.com/noUiSlider/8.5.1/nouislider.min.css" rel="stylesheet">
 <script src="https://cdn.bootcss.com/noUiSlider/8.5.1/nouislider.js"></script>
 
     <link rel="stylesheet" href="<%=request.getContextPath()%>/resources/vendor/css/fullcalendar.min.css" />
@@ -154,6 +151,21 @@
     #hiddenFillBtn:hover{
         background-color: #ffffff00;
     }
+    .subTitleText {
+        margin-bottom: 25px;
+      }
+      .subTitleText h2 {
+        display: flex;
+        justify-content: flex-start;
+        align-items: center;
+        font-size: 27px;
+        padding: 10px 0;
+        font-family: "Noto Sans KR", sans-serif;
+      }
+      .subTitleText i {
+        font-size: 24px;
+        margin-right: 5px;
+      }
 </style>
 </head>
 
@@ -173,11 +185,13 @@
 <%--메인 컨텐츠--%>
     <div id="main-content" class="contentConteiner">
 
-    <div class="row clearfix">
-        <div class="col-12" style="margin-top: 2%; font-family: S-CoreDream-6Bold" >
-            <h2 style="font-size: 2rem; padding-left: 15px;"><i class="fa fa-university"></i>&nbsp;예약</h2> <!-- icon-home -->
-            <!-- color:#0B2161; -->
-            <hr>
+    <div class="clearfix">
+        <div class="subTitleText">
+            <!--컨텐츠 부분 타이틀 클래스(이건 부트스트랩 클래스 아니고 임의로 만든 클래스)-->
+            <h2>
+              <i class="fa-solid fa-angles-right"></i>
+              <!--왼쪽 아이콘 폰트어썸-->회의실예약
+            </h2>
         </div>
     </div>
 
@@ -198,10 +212,9 @@
                 <div class="card single_post ">
                     <div class="body">
                         <div class="card" style="height: 440px;">
-                            <div class="header text-center" style="padding-top: 5px;padding-bottom: 0px;">
-                                <h5 style="margin-left: 100px;font-family: S-CoreDream-6Bold;text-align: center;">회의실 예약</h5>
+                            <div class="header text-center" style="padding:15px; margin-bottom: 15px; border-bottom:2px solid rgba(0,0,0,.125);">
+                                <h5 style="text-align: center; margin-bottom: 0;">회의실 예약</h5>
                             </div>
-                            <hr>
                             <div class="row">
                                 <div class="col-md-6 ">
                                     <div id="calendar" style="margin: 0; padding: 0; font-family: GoyangDeogyang" class="fc fc-unthemed fc-ltr">
@@ -231,25 +244,23 @@
                                     <button type="button" onclick="searchRoom();" class="btn btn-block btn-primary" style="width: 400px; font-family: S-CoreDream-6Bold; ">회의실 조회</button>
                                 </div>
                                 <hr>
-                                <div>
-
+                                <div class="row" style="display: none;" id="searchAvailableRoom">
+                                    <div class="header cl-md-8" style="margin-left: 40px;">
+                                        <h4 style="font-family: S-CoreDream-4Regular">사용 가능한 회의실을 확인해주세요.</h4>
+                                    </div>
+            
+                                    <div class="header cl-md-4" >
+                                        <section>
+                                            <select id="availableRoom" name="DataTables_Table_0_length" aria-controls="DataTables_Table_0" class="form-control" style="width: 340px; margin-left: 100px;">
+                                            </select>
+                                        </section>
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     </div>
 
-                    <div class="row" style="display: none;" id="searchAvailableRoom">
-                        <div class="header cl-md-8" style="margin-left: 40px;">
-                            <h4 style="font-family: S-CoreDream-4Regular">사용 가능한 회의실을 확인해주세요.</h4>
-                        </div>
-
-                        <div class="header cl-md-4" >
-                            <section>
-                                <select id="availableRoom" name="DataTables_Table_0_length" aria-controls="DataTables_Table_0" class="form-control" style="width: 340px; margin-left: 100px;">
-                                </select>
-                            </section>
-                        </div>
-                    </div>
+                    
                     <div class="body">
                         <div class="card"  id="infoOfRoom" style="display: none;">
                             <div class="header" >
