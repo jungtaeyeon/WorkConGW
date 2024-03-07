@@ -17,54 +17,40 @@
 ## 프로젝트 소개 : 
 - #### WorkConGW(신 그룹웨어)
 
-## 팀원 
+## 팀원 구성
 
-오지환:
-이휘재:
-강우형:
-정태연: 
+<div align="center">
 
+| **오지환** | **정태연** | **강우형** | **이휘재** |
+| :------: |  :------: | :------: | :------: |
+| [ <br/> @Ohsaam](https://github.com/Ohsaam) | [ <br/> @jungtaeyeon](https://github.com/jungtaeyeon) | [ <br/> @woohyungkang](https://github.com/woohyungkang) | [ <br/> @ihwijae](https://github.com/ihwijae) |
 
-
-## 주요 기능 
-
-요구사항 정의서
-
-[https://docs.google.com/spreadsheets/d/1t9sCLtStfEMNKuizDF3dDLgz1X0qXi81/edit#gid=1407741134](https://docs.google.com/spreadsheets/d/1t9sCLtStfEMNKuizDF3dDLgz1X0qXi81/edit?usp=sharing&ouid=103153274856581790178&rtpof=true&sd=true)
-
-기능 정의서
-
-[https://docs.google.com/spreadsheets/d/1t9sCLtStfEMNKuizDF3dDLgz1X0qXi81/edit?rtpof=true&sd=true#gid=1407741134](https://docs.google.com/spreadsheets/d/1t9sCLtStfEMNKuizDF3dDLgz1X0qXi81/edit?usp=sharing&ouid=103153274856581790178&rtpof=true&sd=true)
-
-테이블 정의서
-
-[https://docs.google.com/spreadsheets/d/1pY1IP5v8_gybodaf7DKnVunPz3uuKo3y/edit?rtpof=true&sd=true#gid=1005822265](https://docs.google.com/spreadsheets/d/1pY1IP5v8_gybodaf7DKnVunPz3uuKo3y/edit?usp=sharing&ouid=103153274856581790178&rtpof=true&sd=true)
-
-ERD 설명서 
-
-[https://docs.google.com/document/d/1I6B-KR6E1cbvvs06qihpd0k8c3JOK3uv6tsXh5Z9KSs/edit](https://docs.google.com/document/d/1I6B-KR6E1cbvvs06qihpd0k8c3JOK3uv6tsXh5Z9KSs/edit?usp=sharing)
-
-화면정의서 
-
-https://drive.google.com/file/d/1cKeWUpvTD8EjLoB5c0bL1biyGofqAQZ1/view?usp=drive_link
-
-깃가이드
-
-[https://drive.google.com/file/d/1rGDMJYlF2u-pF5uoDLwvY60jcaqz_HLm/view?usp=drive_link](https://docs.google.com/spreadsheets/d/1EW7PuX2PxorMzBvYbAOlof--QnCtCH8KSBfUw-rqTLo/edit#gid=358787070)
-
-개발표준 정의서 
-
-https://drive.google.com/file/d/1RwOCXNiztO3RVaGKxmyQvaHM2BfOfq_k/view?usp=drive_link
+</div>
 
 
-ERD
+## 주요 문서
 
-https://drive.google.com/file/d/1tmVxgWeTPdpik4eZoBsmNUPutNNP-KlE/view?usp=drive_link
+🎯 요구사항 정의서 [링크](https://docs.google.com/spreadsheets/d/1t9sCLtStfEMNKuizDF3dDLgz1X0qXi81/edit#gid=1407741134) 
+
+🎯 기능 정의서: [링크](https://docs.google.com/spreadsheets/d/1t9sCLtStfEMNKuizDF3dDLgz1X0qXi81/edit?rtpof=true&sd=true#gid=1407741134)
+
+🎯 테이블 정의서: [링크](https://docs.google.com/spreadsheets/d/1pY1IP5v8_gybodaf7DKnVunPz3uuKo3y/edit?rtpof=true&sd=true#gid=1005822265)
+
+🎯 화면정의서: [링크](https://drive.google.com/file/d/1cKeWUpvTD8EjLoB5c0bL1biyGofqAQZ1/view?usp=drive_link)
+
+🎯 깃가이드: [링크](https://drive.google.com/file/d/1rGDMJYlF2u-pF5uoDLwvY60jcaqz_HLm/view?usp=drive_link)
+
+🎯 개발표준 정의서: [링크](https://drive.google.com/file/d/1RwOCXNiztO3RVaGKxmyQvaHM2BfOfq_k/view?usp=drive_link)
+
+🎯 ERD: [링크](https://drive.google.com/file/d/1tmVxgWeTPdpik4eZoBsmNUPutNNP-KlE/view?usp=drive_link)
+
+🎯 시나리오 테스트: [링크](https://docs.google.com/spreadsheets/d/1PHrXVvg8TP9mZmxk2nB1vjP4XR8Di0oMY5H7lgmpUBo/edit#gid=2087633204)
 
 
-시나리오 테스트
+## 논 외 </br>
+🎆 ERD 설명서: [링크](https://docs.google.com/document/d/1I6B-KR6E1cbvvs06qihpd0k8c3JOK3uv6tsXh5Z9KSs/edit) </br>
 
-https://docs.google.com/spreadsheets/d/1PHrXVvg8TP9mZmxk2nB1vjP4XR8Di0oMY5H7lgmpUBo/edit#gid=2087633204
+🎆 상관 모델링 [링크](https://docs.google.com/spreadsheets/d/1t9sCLtStfEMNKuizDF3dDLgz1X0qXi81/edit#gid=1407741134) 
 
 ## 시작 가이드
 
