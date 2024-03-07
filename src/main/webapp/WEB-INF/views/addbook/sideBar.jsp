@@ -231,7 +231,8 @@
         <div class="tab-content p-l-0 p-r-0 subsubmenu">
             <div class="modalBtnGroup">
               <!--서브메뉴 타이틀--> 
-              <a href="addBookShare">공유주소록</a>
+              <p style="margin-bottom: 0; color: #000;">공유주소록</p>
+              <!-- <a href="addBookShare">공유주소록</a> -->
             </div>
             <ul class="main-menu metismenu shareAddBook">
               <c:forEach var="list" items="${shareAddBookGroupSelect}" varStatus="status">

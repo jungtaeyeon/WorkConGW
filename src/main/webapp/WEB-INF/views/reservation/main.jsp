@@ -211,11 +211,11 @@
             <div class="col-lg-8 col-md-12 left-box">
                 <div class="card single_post ">
                     <div class="body">
-                        <div class="card" style="height: 440px;">
-                            <div class="header text-center" style="padding:15px; margin-bottom: 15px; border-bottom:2px solid rgba(0,0,0,.125);">
+                        <div style="padding-bottom: 40px;">
+                            <div class="header text-center" style="padding:15px; margin-bottom: 15px; border-bottom:1px solid rgba(0,0,0,.125);">
                                 <h5 style="text-align: center; margin-bottom: 0;">회의실 예약</h5>
                             </div>
-                            <div class="row">
+                            <div style="display: flex;">
                                 <div class="col-md-6 ">
                                     <div id="calendar" style="margin: 0; padding: 0; font-family: GoyangDeogyang" class="fc fc-unthemed fc-ltr">
                                         <!-- 일단 그냥 넣어놓은 달력 -->
@@ -233,7 +233,7 @@
                                     </div>
                                     <br>
                                     <div class="row">
-                                        <div class="col-md-6" style="font-family: ">
+                                        <div class="col-md-6">
                                             <h3>시작시간</h3><div id="slider-margin-value-min" class="" style="font-size: x-large; padding-left: 47px;"></div>
                                         </div>
                                         <div class="col-md-6">
@@ -244,11 +244,12 @@
                                     <button type="button" onclick="searchRoom();" class="btn btn-block btn-primary" style="width: 400px; font-family: S-CoreDream-6Bold; ">회의실 조회</button>
                                 </div>
                                 <hr>
-                                <div class="row" style="display: none;" id="searchAvailableRoom">
-                                    <div class="header cl-md-8" style="margin-left: 40px;">
+                            </div>
+                            <div style="display: none;" id="searchAvailableRoom">
+                                <div style="display: flex;justify-content: center;align-items: center; margin-top: 30px;">
+                                    <div class="header cl-md-8">
                                         <h4 style="font-family: S-CoreDream-4Regular">사용 가능한 회의실을 확인해주세요.</h4>
                                     </div>
-            
                                     <div class="header cl-md-4" >
                                         <section>
                                             <select id="availableRoom" name="DataTables_Table_0_length" aria-controls="DataTables_Table_0" class="form-control" style="width: 340px; margin-left: 100px;">
@@ -257,57 +258,55 @@
                                     </div>
                                 </div>
                             </div>
+                            <div id="infoOfRoom" style="display: none;">
+                                <div style="padding: 46px 46px 0;">
+                                    <div class="header" >
+                                        <h4 id="roomName"></h4>
+                                    </div>
+                                    <div class="body">
+                                        <div class="comment-form">
+                                            <form class="row clearfix">
+                                                <div class="col-sm-12">
+                                                    <div class="form-group">
+                                                        <ul class="comment-reply list-unstyled">
+                                                            <li class="row clearfix">
+                                                                <div class="icon-box col-md-6 col-4" id="roomImg" >
+                                                                    <!-- 						                                        사진 들어가는 곳 -->
+                                                                </div>
+                                                                <div class="text-box col-md-6 col-8 p-l-0 p-r0">
+                                                                    <h3 >회의실 정보</h3>
+                                                                    <h4 id="roomCapacity" class="m-b-0"></h4>
+                                                                    <ul class="list-inline" id="roomContent">
+        
+        
+                                                                    </ul>
+                                                                    <p style="margin-bottom: 0px; color: red; font-size: 15px;">*회의실 사용 목적을 적으시오</p>
+                                                                    <input type="text" class="form-control" placeholder="회의실 사용 목적을 작성하시오" id="roomReason">
+                                                                    <div style="margin-top: 15px;">
+                                                                        <button type="button" onclick="makeReservation();" class="btn btn-block btn-primary">예&nbsp;&nbsp;약&nbsp;&nbsp;&nbsp;&nbsp; 하&nbsp;&nbsp;기</button>
+                                                                    </div>
+                                                                </div>
+                                                            </li>
+                                                        </ul>
+                                                    </div>
+                                                </div>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
 
                     
                     <div class="body">
-                        <div class="card"  id="infoOfRoom" style="display: none;">
-                            <div class="header" >
-                                <h4 style="font-family: S-CoreDream-6Bold" id="roomName"></h4>
-                            </div>
-                            <div class="body" style="font-family: S-CoreDream-4Regular">
-                                <div class="comment-form">
-                                    <form class="row clearfix">
-                                        <div class="col-sm-12">
-                                            <div class="form-group">
-                                                <ul class="comment-reply list-unstyled">
-                                                    <li class="row clearfix">
-                                                        <div class="icon-box col-md-7 col-4" id="roomImg" >
-                                                            <!-- 						                                        사진 들어가는 곳 -->
-                                                        </div>
-                                                        <div class="text-box col-md-5 col-8 p-l-0 p-r0">
-                                                            <h3 >회의실 정보</h3>
-                                                            <h4 id="roomCapacity" class="m-b-0"></h4>
-                                                            <ul class="list-inline" id="roomContent">
-
-
-                                                            </ul>
-                                                        </div>
-                                                    </li>
-                                                </ul>
-                                                <p style="margin-bottom: 0px; color: red;">*회의실 사용 목적을 적으시오</p>
-                                                <input type="text" class="form-control" placeholder="회의실 사용 목적을 작성하시오" id="roomReason">
-                                            </div>
-                                        </div>
-
-                                        <div class="col-sm-12">
-                                            <div class="form-group">
-
-                                            </div>
-                                            <button type="button" class="btn btn-outline-light" id="hiddenFillBtn" onclick="presentationFill();" style="position:absolute;right:33em;top:-1em;color:#ffffff; z-index: 100; border: 0px;">시연용버튼</button>
-                                            <button type="button" onclick="makeReservation();" class="btn btn-block btn-primary">예&nbsp;&nbsp;약&nbsp;&nbsp;&nbsp;&nbsp; 하&nbsp;&nbsp;기</button>
-                                        </div>
-                                    </form>
-                                </div>
-                            </div>
-                        </div>
+                        
                     </div>
                 </div>
             </div>
             <div class="col-lg-4 col-md-12 right-box">
-                <div class="card" style="font-family: S-CoreDream-4Regular">
-                    <h3 style="margin-top: 10px;margin-left: 10px; font-family: ">내 예약</h3>
+                <div class="card" style="padding: 5px 15px;">
+                    <h3 style="margin-top: 10px; font-size: 22px;">내 예약</h3>
                     <div class="body" style="font-family: S-CoreDream-6Bold">
                         <div class="table-responsive" style="overflow-x: hidden;">
                             <table class="table table-hover m-b-0 c_list">
@@ -367,8 +366,8 @@
                         </div>
                     </div>
                 </div>
-                <div class="card">
-                    <h4 style="margin-top: 15px;margin-left: 15px; font-family: S-CoreDream-4Regular">팀 예약</h4>
+                <div class="card" style="padding: 5px 15px;">
+                    <h4 style="margin-top: 10px; font-size: 22px;">팀 예약</h4>
                     <div class="body" style="font-family: S-CoreDream-6Bold">
                         <div class="table-responsive" style="overflow-x: hidden;">
                             <table class="table table-hover m-b-0 c_list">
@@ -383,9 +382,9 @@
                                 <c:forEach items="${deptReservationList  }" var="deptReservation" varStatus="status">
                                     <c:if test="${status.count <5}">
                                         <tr role="row" class="odd" onclick="location.href='<%=request.getContextPath()%>/reservation/reservationDetail?meet_Room_Reservation_Id=${deptReservation.meet_Room_Reservation_Id}', 'WorkConGW', 1000, 700;">
-                                            <td>${deptReservation.meet_Room_Name } (${deptReservation.meet_Room_No})</td>
+                                            <td style="width: 115px;">${deptReservation.meet_Room_Name }<br/>(${deptReservation.meet_Room_No})</td>
                                             <td><span style="text-overflow: ellipsis;">${deptReservation.emp_Name }</span><span class="badge badge-danger">${deptReservation.dept_Name }</span></td>
-                                            <td>${deptReservation.reservation_Date } / ${deptReservation.reservation_Start_Time }시 ~ ${deptReservation.reservation_End_Time }시</td>
+                                            <td style="width: 205px;">${deptReservation.reservation_Date } / ${deptReservation.reservation_Start_Time }시 ~ ${deptReservation.reservation_End_Time }시</td>
                                         </tr>
                                     </c:if>
                                 </c:forEach>
@@ -401,8 +400,8 @@
                 </div>
 
                 <div class="card">
-                    <div class="body" style="padding-bottom: 0px;">
-                        <h4 style="font-family: S-CoreDream-4Regular">공지사항</h4>
+                    <div class="body" style="padding: 5px 15px;">
+                        <h4 style="margin-top: 10px; font-size: 22px;">공지사항</h4>
                         <div class="body" style="font-family: S-CoreDream-6Bold">
                             <div class="table-responsive" style="overflow-x: hidden;">
                                 <table class="table table-hover m-b-0 c_list">
@@ -431,16 +430,18 @@
                             </div>
                         </div>
                     </div>
-
-                        <%--@elvariable id="meetRoomFormVO" type="MeetRooMFormVO"--%>
+                </div>
+                <div class="card" style="padding: 5px 15px;">
+                    <%--@elvariable id="meetRoomFormVO" type="MeetRooMFormVO"--%>
                     <form:form modelAttribute="meetRoomFormVO" name="complainModifyForm" action="${pageContext.request.contextPath}/reservation/registComplain" enctype="multipart/form-data">
                         <form:hidden path="reservationComplainVO.complain_Create_Date" id="dateComplain"/>
                         <form:hidden path="reservationComplainVO.emp_Id" value="${loginUser.emp_Id }"/>
                         <p style="display: none;" id="dateComplain"></p>
                         <div class="header" style="padding-top: 0px; padding-bottom: 0px; ">
-                            <h2 style="font-family: S-CoreDream-6Bold">
-                                회의실 민원 함<small style="font-family: S-CoreDream-4Regular">회의실 관련 이슈를 적어주시면 개선에 최선을 다하겠습니다</small>
-                            </h2>
+                            <h4 style="margin-top: 10px; font-size: 22px; padding: 0;">
+                                회의실 민원함
+                            </h4>
+                            <span style="font-size: 13px; margin-bottom: 15px; display: inline-block;">*회의실 관련 이슈를 적어주시면 개선에 최선을 다하겠습니다</span>
                         </div>
                         <div class="form-group body widget newsletter" style="padding-top: 0px;padding-bottom: 0px;margin-bottom: 0px; font-family: S-CoreDream-6Bold" >
                             <form:select path="reservationComplainVO.meet_Room_Id" class="form-control show-tick" >
@@ -760,6 +761,7 @@
             url:"<c:url value='/reservation/searchRoomInfo?meet_Room_id='/>"+meet_Room_Id,
             data: allData,
             success: function(room) {
+                console.log(room);
                 $('#roomName').text(room.meet_Room_Name);
                 $('#roomCapacity').text("정원 : "+room.meet_Room_Capacity+"명");
                 makeContent(room.meet_Room_Content);
@@ -775,13 +777,13 @@
         var ulList = $("#roomContent");
         ulList.empty();
         for (var i = 0; i < content.length; i++) {
-            ulList.append("<li><a href='javascript:void(0);' >"+content[i]+"</a></li>"); //ul_list안쪽에 li추가
+            ulList.append("<li><p>"+content[i]+"</p></li>"); //ul_list안쪽에 li추가
         }
     }
     function makeImage(str) {
         var image =  $("#roomImg");
         image.empty();
-        image.append("<img class='img-fluid img-thumbnail' alt='Awesome Image' src='getPicture?picture="+str+"' style='width: 800px; height: 480px;' >");
+        image.append("<img class='img-fluid img-thumbnail' alt='Awesome Image' src='getPicture?picture="+str+"' style='width: 400px; height: 300px;' >");
     }
 
     //최종 예약을 해주는 함수

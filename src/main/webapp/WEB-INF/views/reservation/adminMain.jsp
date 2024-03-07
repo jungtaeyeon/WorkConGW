@@ -3,10 +3,6 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
-<!DOCTYPE html>
-<html>
-<head>
-
     <style>
         .highlight{
             background-color: #f8f9fa;
@@ -58,230 +54,312 @@
         #hiddenFillBtn:hover{
             background-color: #ffffff;
         }
-
+        .subTitleText {
+        margin-bottom: 25px;
+      }
+      .subTitleText h2 {
+        display: flex;
+        justify-content: flex-start;
+        align-items: center;
+        font-size: 27px;
+        padding: 10px 0;
+        font-family: "Noto Sans KR", sans-serif;
+      }
+      .subTitleText i {
+        font-size: 24px;
+        margin-right: 5px;
+      }
+      .badge{
+        font-size: 14px !important;
+        padding: 8px 10px !important;
+      }
+      
     </style>
-</head>
 
 <body>
 <!-- 헤더인클루드 -->
 <%@ include file="../include/header.jsp"%>
 <section class="subPageContain">
-
-<button type="button" class="btn btn-outline-light" id="hiddenFillBtn" onclick="presentationFill();" style="position:absolute;right:25px;top:160px;color:#ffffff; z-index: 100; border: 0px;width:100px;height:50px;"></button>
-<div id="main-content" class="profilepage_1">
+    <%@ include file="./sideBar.jsp"%>
+<div id="main-content" class="profilepage_1" style="width: 100%;">
     <div class="container-fluid">
         <div class="block-header">
             <div class="row">
                 <div class="col-lg-6 col-md-8 col-sm-12">
-                    <h2 style="font-family: S-CoreDream-6Bold; font-size: 30px;" ><a onclick="location.href='<%=request.getContextPath()%>/reservation/main';" class=""><i class="fa fa-home" style="font-size: 30px;" ></i></a> 관리자 회의실 관리</h2>
+                    <div class="subTitleText">
+                        <h2>
+                          <i class="fa-solid fa-angles-right"></i>관리자 회의실 관리
+                        </h2>
+                      </div>
                 </div>
             </div>
         </div>
-
-        <div class="row clearfix">
-            <div class="col-lg-4 col-md-12">
-                <div class="card">
-                    <div class="body">
-                        <div class="row">
-                            <h5 style="font-family: S-CoreDream-4Regular" class="col-md-10">공지사항 </h5>
+        <div class="col-lg-12 card" style="padding: 10px 15px;">
+            <%--@elvariable id="meetRoomFormVO" type="MeetRoomFormVO"--%>
+            <form:form modelAttribute="meetRoomFormVO" id="listForm" name="listForm">
+                <div class="row">
+                    <div class="header col-12" style="padding-bottom: 0px; margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center;">
+                        <h3 style="font-size: 22px; margin: 0;">회의실 현황</h3>
+                        <div>
+                            <a href="roomInsert" class="btn btn-success"style="border-right-width: 0px; margin-right: 10px;">회의실생성</a>
+                            <form:button path="searchMeetRoomVO.meet_Room_St" type="submit"  value="1" class="btn btn-primary" style="border-right-width: 0px; margin-right: 10px;" name="meetRoomSt">사용중인 회의실</form:button>
+                            <form:button path="searchMeetRoomVO.meet_Room_St" type="submit"   value="2" class="btn btn-danger" style="border-right-width: 0px; margin-right: 10px;" name="meetRoomSt">미사용 회의실</form:button>
+                            <%--                                    									<button type="button" onclick="getRomList(1);" class="btn btn-primary"style="border-right-width: 0px; margin-right: 10px;">사용중인회의실</button>--%>
+                            <%--                                     									<button type="button" onclick="getRomList(0);" class="btn btn-danger">미사용 회의실</button>--%>
                         </div>
-                        <div class="body" style="font-family: S-CoreDream-6Bold">
-                            <div class="table-responsive" style="overflow-x: hidden;">
-                                <table class="table table-hover m-b-0 c_list">
-                                    <thead>
+                    </div>
+                    <div class="col-12" style="font-family: S-CoreDream-6Bold">
+                        <form:select path="searchMeetRoomVO.searchCondition" class="form-control selectSearch" style="width:125px;float:left;">
+                            <form:option value="tcw">전체</form:option>
+                            <form:option value="t">회의실 명</form:option>
+                            <form:option value="c">내용</form:option>
+                        </form:select>
+                        <div id="navbar-search" class="navbar-form search-form selectSearch" style="float:left;">
+                            <form:input path="searchMeetRoomVO.searchKeyword" class="form-control" placeholder="검색해주세요." type="text" style="width: 218px;padding-right: 40px;" onkeypress="checkEnter(searchMeetRoomList());"/>
+                        </div>
+                        <div class="form-group" style="float:right;">
+                            <form:select path="searchMeetRoomVO.pageUnit" class="form-control" style="width:110px;margin-right: 10px;" onchange="searchMeetRoomList(1);">
+                                <form:options items="${meetRoomFormVO.searchMeetRoomVO.pageUnitSelector}" itemValue="pageUnitValue" itemLabel="pageUnitLabel"/>
+                            </form:select>
+                        </div>
+                        <button type="button" class="btn btn-secondary" onclick="resetAndSubmitForm();">
+                            <i class="fas fa-sync-alt"></i> <!-- 초기화 아이콘 -->
+                            초기화
+                        </button>
+                    </div>
+                </div>
+                <div class="row clearfix" style="font-family: S-CoreDream-7ExtraBold">
+                    <div class="col-lg-12">
+                        <div class="body project_report">
+                            <div class="table-responsive" >
+                              
+                              <div class="p-l-0 p-r-0 p-t-0">
+                                <!-- Open 이슈 -->
+                                <div>
+                                  <table class="table table-hover">
+                                    <thead class="thead-light">
                                     <tr>
-                                        <th>날짜</th>
-                                        <th>제목</th>
+                                      <th>이름</th>
+                                      <th>인원수</th>
+                                      <th>회의실내용</th>
+                                      <th>회의실이미지</th>
+                                      <th>사용여부</th>
                                     </tr>
                                     </thead>
-                                    <tbody style="cursor: pointer;">
-<%--                                    여기도 수정 예정--%>
-                                    <c:forEach items="${reservationNoticeList}" var="notice" varStatus="status">
-                                        <c:if test="${status.count <12}">
-                                            <tr role="row" class="odd" onclick="location.href='<%=request.getContextPath()%>/reservation/reservationNoticeDetail?reservation_Notice_Id=${notice.reservation_Notice_Id}', 'WorkConGW', 1000, 700;">
-                                                <td>${notice.reservation_Notice_Create_Date }</td>
-                                                <td style="text-overflow: ellipsis;">${notice.reservation_Notice_Title }</td>
+                                    <tbody>
+                                    <c:if test="${!empty meetRoomList}">
+                                      
+                                      <c:forEach items="${meetRoomList }" var="room">
+                                            <tr style="cursor:pointer;" onclick="location.href='<%=request.getContextPath()%>/reservation/detail?meet_Room_Id=${room.meet_Room_Id}', 'WorkConGW', 1000, 700;">
+                                              <td class="project-title">
+                                                <div>
+                                                  <span class="roomTitle" >${room.meet_Room_Name}</span>
+                                                </div>
+                                              </td>
+                                              <td class="project-actions">
+                                                ${room.meet_Room_Capacity}인용
+                                              </td>
+                                              <td class="project-actions">
+                                                <div style="display:inline-block;vertical-align:middle;">
+                                                    ${room.meet_Room_Content}
+                                                </div>
+                                              </td>
+                                              <td>
+                                                <img alt="" src="getPicture?picture=${room.meet_Room_Attach_Origin}" style="width: 50px;border-top-width: 10px;">
+                                              </td>
+                                              <td>
+                                                <c:choose>
+                                                    <c:when test="${room.meet_Room_St == 1}"><span class="badge badge-primary">사용중</span></c:when>
+                                                    <c:when test="${room.meet_Room_St == 0}"><span class="badge badge-danger">미사용</span></c:when>
+                                                </c:choose>
+                                              </td>
                                             </tr>
-                                        </c:if>
-                                    </c:forEach>
-                                        <%--여기도 수정--%>
-                                    <c:if test="${empty reservationNoticeList}">
-                                        <tr>
-                                            <td colspan="6" style="text-align: center;"><strong>공지가  존재하지 않습니다.</strong></td>
-                                        </tr>
+                                        </c:forEach>
                                     </c:if>
                                     </tbody>
-                                </table>
-                            </div>
-                        </div>
-
-                        <button class="btn btn-primary" style="font-family: S-CoreDream-4Regular" onclick="location.href='<%=request.getContextPath() %>/reservation/noticeRegistForm';">공지사항 작성</button></div>
-                </div>
-
-
-                <div class="card">
-                    <div class="body" style="font-family: S-CoreDream-6Bold">
-                        <h5 style="font-family: S-CoreDream-4Regular">들어온 민원</h5>
-                        <div class="table-responsive" style="overflow-x: hidden;">
-                            <table class="table table-hover m-b-0 c_list">
-                                <thead>
-                                <tr>
-                                    <th>날짜</th>
-                                    <th>민원내용</th>
-                                </tr>
-                                </thead>
-                                <tbody style="cursor: pointer;">
-<%--                                여긴 수정 예정--%>
-                                <c:forEach items="${complainList}" var="complain" varStatus="status">
-                                    <c:if test="${status.count <12}">
-                                        <tr role="row" class="odd" onclick="location.href='${pageContext.request.contextPath}/reservation/complain/detail?complain_Id=${complain.complain_Id}','민원상세창',500,400;">
-                                            <td>${complain.complain_Create_Date }</td>
-                                            <td>
-			                                            <span style="display: inline-block;font-weight: bold;max-width: 280px;overflow: hidden;white-space: nowrap;text-overflow: ellipsis;">
-                                                                ${complain.complain_Content }
-                                                        </span>
-                                            </td>
-                                        </tr>
-                                    </c:if>
-                                </c:forEach>
-                                <%--여기도 수정예정--%>
-                                <c:if test="${empty complainList}">
-                                    <tr>
-                                        <td colspan="6" style="text-align: center;"><strong>민원이  존재하지 않습니다.</strong></td>
-                                    </tr>
-                                </c:if>
-                                </tbody>
-                            </table>
-                            </table>
-                        </div>
-                    </div>
-                </div>
-                <div class="card">
-                    <div class="body" style="font-family: S-CoreDream-6Bold">
-
-                        <c:forEach items="${reservationList  }" var="reservation" varStatus="status">
-                            <c:if test="${status.count <8}">
-                                <div class="timeline-item green" onclick="OpenWindow('<%=request.getContextPath()%>/reservation/reservationDetail?meetRoomVO.meetRoomReservationId=${reservation.meet_Room_Reservation_Id}', 'WorkConGW', 1000, 700);">
-                                    <span class="date">${reservation.meet_Room_Name }(${reservation.meet_Room_No })</span>
-                                    <h6>${reservation.meet_Room_Detail }</h6>
-                                    <span>직원 : <a href="javascript:void(0);" title="Fidel Tonn">${reservation.emp_Name }</a><span class="badge badge-primary">${reservation.emp_Id }</span></span>
-                                    <span>사용 시간 : ${reservation.reservation_Date }/ ${reservation.reservation_Start_Time }시 ~ ${reservation.reservation_End_Time }시</span>
+                                  </table>
                                 </div>
-                            </c:if>
-                        </c:forEach>
-                    </div>
-                </div>
+                              </div>
+                              </div>
+                          </div>
+                      </div>
+                  </div>
+            </form:form>
+        </div>
+        <!-- 예약리스트 -->
+        <div class="col-lg-12 card" style="padding: 10px 15px;">
+            <div>
+                <h3 style="font-size: 22px; margin-bottom: 20px;">예약리스트</h3>
             </div>
-
-            <!--                 회의실 생성 -->
-            <div class="col-lg-8 col-md-12">
-                <div class="card" style="padding-top: 0px;">
-                    <div class="header" style="padding-bottom: 5px;">
-                        <h4 style="font-family: S-CoreDream-4Regular">회의실 생성</h4>
-                    </div>
-                    <div class="body" style="padding-top: 10px; font-family: S-CoreDream-4Regular">
-                        <form:form modelAttribute="meetRoomFormVO" name="meetRoomModifyForm"  enctype="multipart/form-data" id="registRoom">
-                            <form:hidden path="meetRoomVO.meet_Room_Id"/>
-                            <div class="form-group">
-
-                                <form:input path="meetRoomVO.meet_Room_Name" class="form-control roomName" style="width: 100%;margin-bottom: 5px" placeholder="회의실 명 "></form:input>
-                                <form:input class="form-control roomNo" path="meetRoomVO.meet_Room_No" style="width: 100%;margin-bottom: 5px" placeholder="회의실 호"></form:input>
-                                <p style="color: red;margin-bottom: 0px;">*숫자만 입력해주세요</p>
-                                <form:input class="form-control roomCapacity" path="meetRoomVO.meet_Room_Capacity" style="width: 100%;" placeholder="수용 가능 인원" value="" id="Capacity"></form:input>
-                                <p style="color: red;margin-bottom: 0px;">*100자 내로 적어주세요</p>
-                                <form:textarea id="text" name="text" class="form-control roomContent" path="meetRoomVO.meet_Room_Content" style="height: 150px;" placeholder="회의실 정보 작성"></form:textarea>
-                            </div>
-                            <p style="color: red;margin-bottom: 0px;">*이미지는 필수입니다</p>
-                            <div>
-                                <form:input type="file" name="fileUploadCommand.uploadFile" class="dropify image"  style="height: 200px;"  path="fileUploadCommand.uploadFile"/>
-<%--                                <!-- 									<input type="file" name="fileUploadCommand.uploadFile" class="dropify"  style="height: 200px;"> -->--%>
-                            </div>
-                        </form:form>
-                        <div >
-                            <button  type="button" class="btn btn-primary" onclick="regist_go();" style="margin-top: 5px; width: 100%;">회의실 생성</button>
+            <div class="row clearfix" style="font-family: S-CoreDream-7ExtraBold">
+              <div class="col-lg-12">
+                  <div class="body project_report">
+                      <div class="table-responsive" >
+                        
+                        <div class="p-l-0 p-r-0 p-t-0">
+                          <!-- Open 이슈 -->
+                          <div>
+                            <table class="table table-hover">
+                              <thead class="thead-light">
+                              <tr>
+                                <th>제목</th>
+                                <th>예약위치</th>
+                                <th>예약자</th>
+                                <th>날짜</th>
+                                <th>시간</th>
+                              </tr>
+                              </thead>
+                              <tbody>
+                              <c:if test="${!empty reservationList}">
+                                
+                                <c:forEach items="${reservationList }" var="room">
+                                      <tr style="cursor:pointer;" onclick="location.href='<%=request.getContextPath()%>/reservation/reservationDetail?meet_Room_Reservation_Id=${room.meet_Room_Reservation_Id }', 'WorkConGW', 1200, 700;">
+                                        <td class="project-title">
+                                          <div>
+                                            <span class="roomTitle" >${room.meet_Room_Detail }</span>
+                                          </div>
+                                        </td>
+                                        <td class="project-actions">
+                                            ${room.meet_Room_Name } / ${room.meet_Room_No}
+                                        </td>
+                                        <td class="project-actions">
+                                          <div style="display:inline-block;vertical-align:middle;">
+                                            ${room.emp_Name } ${room.official_Name }
+                                            <div>${room.dept_Name }</div>
+                                          </div>
+                                        </td>
+                                        <td>
+                                          <span>${room.reservation_Date }  </span>
+                                        </td>
+                                        <td>
+                                          <span>${room.reservation_Start_Time }시 ~ ${room.reservation_End_Time }시</span>
+                                        </td>
+                                      </tr>
+                                  </c:forEach>
+                              </c:if>
+                              <!-- 검색결과가 없을때 -->
+                              <c:if test="${empty reservationList }">
+                                <tr role="row">
+                                  <td class="project-title noList" style="text-align:center;font-size:1.2em;font-weight: bold;height:80px;" colspan="8">검색 결과가 없습니다.</td>
+                                </tr>
+                              </c:if>
+                              </tbody>
+                            </table>
+                          </div>
+                        </div>
                         </div>
                     </div>
-
-
-
                 </div>
-                <div class="card">
-                    <%--@elvariable id="meetRoomFormVO" type="MeetRoomFormVO"--%>
-                    <form:form modelAttribute="meetRoomFormVO" id="listForm" name="listForm">
-                        <div class="row">
-                            <div class="header col-12" style="padding-bottom: 0px; font-family: S-CoreDream-4Regular; padding-left: 40px;">
-                                <h4>회의실 현황 </h4>
-                                <button type="button" class="btn btn-outline-secondary" onclick="resetAndSubmitForm();">
-                                    <i class="fas fa-sync-alt"></i> <!-- 초기화 아이콘 -->
-                                </button>
-                            </div>
-                            <div class="col-12" style="font-family: S-CoreDream-6Bold">
-                                <form:select path="searchMeetRoomVO.searchCondition" class="form-control selectSearch" style="width:80px;font-size: 1.2em;float:left;margin-left: 10px;">
-                                    <form:option value="tcw">전체</form:option>
-                                    <form:option value="t">회의실 명</form:option>
-                                    <form:option value="c">내용</form:option>
-                                </form:select>
-                                <div id="navbar-search" class="navbar-form search-form selectSearch" style="float:left;">
-                                    <form:input path="searchMeetRoomVO.searchKeyword" class="form-control" placeholder="Search here..." type="text" style="width: 218px;height:36px;padding-right: 40px;" onkeypress="checkEnter(searchMeetRoomList());"/>
-
-
-                                </div>
-                                <div class="form-group" style="float:right;">
-                                    <form:select path="searchMeetRoomVO.pageUnit" class="form-control" style="width:110px;font-size: 1.2em;margin-right: 10px;" onchange="searchMeetRoomList(1);">
-                                        <form:options items="${meetRoomFormVO.searchMeetRoomVO.pageUnitSelector}" itemValue="pageUnitValue" itemLabel="pageUnitLabel"/>
-                                    </form:select>
-                                </div>
-                            </div>
-                            <div class="col-12" style="font-family: S-CoreDream-6Bold">
-                                <div class="header" style="text-align: right;padding-bottom: 0px;padding-top: 0px;margin-top: 0px;">
-                                    <form:button path="searchMeetRoomVO.meet_Room_St" type="submit"  value="1" class="btn btn-primary" style="border-right-width: 0px; margin-right: 10px;" name="meetRoomSt">사용중인 회의실</form:button>
-                                    <form:button path="searchMeetRoomVO.meet_Room_St" type="submit"   value="2" class="btn btn-danger" style="border-right-width: 0px; margin-right: 10px;" name="meetRoomSt">비활성 회의실</form:button>
-                                        <%--                                    									<button type="button" onclick="getRomList(1);" class="btn btn-primary"style="border-right-width: 0px; margin-right: 10px;">사용중인회의실</button>--%>
-                                        <%--                                     									<button type="button" onclick="getRomList(0);" class="btn btn-danger">비활성 회의실</button>--%>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="body" style="padding-top: 0px; font-family: S-CoreDream-6Bold">
-                            <hr>
-                            <div class="w_user"></div>
-
-                            <ul class="right_chat list-unstyled mb-0">
-                                <c:forEach items="${meetRoomList}" var="room">
-                                    <li class="online">
-                                        <a href="javascript:void(0);">
-                                            <div class="media">
-                                                <div class="media-body">
-													<span class="name">${room.meet_Room_Name}
-														<c:choose>
-                                                            <c:when test="${room.meet_Room_St == 1}"><span class="badge badge-primary">활성화</span></c:when>
-                                                            <c:when test="${room.meet_Room_St == 0}"><span class="badge badge-danger">비활성화</span></c:when>
-                                                        </c:choose>
-													</span>
-                                                    <span class="message" onclick="location.href='<%=request.getContextPath()%>/reservation/detail?meet_Room_Id=${room.meet_Room_Id}', 'WorkConGW', 1000, 700;">>${room.meet_Room_Capacity}인용/${room.meet_Room_Content}</span>
-                                                    <img alt="" src="getPicture?picture=${room.meet_Room_Attach_Origin}" style="width: 50px;border-top-width: 10px;margin-top: 50px;">
-                                                </div>
-                                                <div>
-<%--                                                    <button type="button" class="btn btn-outline-secondary" onclick="location.href='<%=request.getContextPath()%>/reservation/detail?meet_Room_Id=${room.meet_Room_Id}', 'WorkConGW', 1000, 700;">조회</button>--%>
-<%--                                                    <button type="button" class="btn btn-outline-secondary" onclick="location.href='<%=request.getContextPath()%>/reservation/detail?meet_Room_Id=${room.meet_Room_Id}', 'WorkConGW', 1000, 700;">조회</button>--%>
-                                                </div>
-                                            </div>
-                                        </a>
-                                    </li>
-                                </c:forEach>
-                            </ul>
-                        </div>
-                        <!-- Pagination -->
-                        <nav aria-label="Page navigation example" style="height:45px;text-align: center;margin-top:5px;">
-                                <%--                            <ul class="pagination" style="display: inline-block;">--%>
-                                <%--                                <ui:pagination paginationInfo = "${paginationInfo}" type="image" jsFunction="searchMeetRoomList" />--%>
-                                <%--                            </ul>--%>
-                        </nav>
-                        <form:hidden path="searchMeetRoomVO.pageIndex" />
-                    </form:form>
-                </div>
-
             </div>
         </div>
+        <!--회의실의 공자사항 -->
+      <div class="col-lg-12 card" style="padding: 10px 15px;">
+        <div class="">
+          <div class="body project_report" >
+            <div style=" margin-bottom: 10px;display: flex; justify-content: space-between; align-items: center;">
+              <h3 id="reservationType" style="font-size: 22px;">공지사항</h3>
+              <button class="btn btn-primary" style="font-family: S-CoreDream-4Regular" onclick="location.href='<%=request.getContextPath() %>/reservation/noticeRegistForm';">공지사항 작성</button>
+            </div>
+            <form:form modelAttribute="meetRoomFormVO" name="listForm2">
+              <form:hidden path="searchReservationNoticeVO.isType" id="isReservationNoticeType"/>
+              <!--                         	예약탭 -->
+              <div class="table-responsive">
+                <div class="p-l-0 p-r-0 p-t-0">
+                  <!-- Open 이슈 -->
+                  <div>
+                    <table class="table table-hover">
+                      <thead class="thead-light">
+                        <tr>
+                          <th>제목</th>
+                          <th>날짜</th>
+                          <th>작성자</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                      <c:if test="${!empty reservationNoticeList}">
+                        <c:forEach items="${reservationNoticeList }" var="notice">
+                          <tr style="cursor:pointer;" onclick="location.href='${pageContext.request.contextPath }/reservation/reservationNoticeDetail?reservation_Notice_Id=${notice.reservation_Notice_Id}', 'WorkConGW', 1200, 700;">
+                            <td class="project-title">
+                              <div>
+                                  <span class="roomTitle">${notice.reservation_Notice_Title }</span>
+                              </div>
+                            </td>
+                            <td class="project-actions">
+                                ${notice.reservation_Notice_Create_Date }
+                            </td>
+                            <td class="project-actions">
+                              <div style="display:inline-block;vertical-align:middle;">관리자
+                              </div>
+                            </td>
+                          </tr>
+                        </c:forEach>
+                      </c:if>
+                      <!-- 검색결과가 없을때 -->
+                      <c:if test="${empty reservationNoticeList }">
+                        <tr role="row">
+                          <td class="project-title noList" style="text-align:center;font-size:1.2em;font-weight: bold;height:80px;" colspan="8">검색 결과가 없습니다.</td>
+                        </tr>
+                      </c:if>
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              </div>
+            </form:form>
+          </div>
+        </div>
+      </div>
+      <!--회의실 민원을 접수하는 곳 -->
+      <div class="col-lg-12 card" style="padding: 10px 15px;">
+        <div class="">
+          <div class="body project_report">
+            <div>
+              <h3 id="reservationType" style="font-size: 22px; margin-bottom: 20px;">회의실민원</h3>
+            </div>
+            <form:form modelAttribute="meetRoomFormVO" name="listForm3">
+              <!--                         	예약탭 -->
+              <div class="table-responsive">
+                <div class="p-l-0 p-r-0 p-t-0">
+                  <!-- Open 이슈 -->
+                  <div>
+                    <table class="table table-hover">
+                      <thead class="thead-light">
+                      <tr>
+                        <th style="width:40%;">제목</th>
+                        <th style="width:20%;">작성 날짜</th>
+                      </tr>
+                      </thead>
+                      <tbody>
+                      <c:if test="${!empty complainList}">
+                        <c:forEach items="${complainList }" var="complain">
+                          <tr style="cursor:pointer;" onclick="location.href='${pageContext.request.contextPath}/reservation/complain/detail?complain_Id=${complain.complain_Id}','민원상세창',500,400;">
+                            <td class="project-title">
+                              <div>
+                                  <span class="complainTitle">${complain.complain_Content}</span>
+                              </div>
+                            </td>
+                            <td class="project-actions">
+                                ${complain.complain_Create_Date }
+                            </td>
+                          </tr>
+                        </c:forEach>
+                      </c:if>
+                      <!-- 검색결과가 없을때 -->
+                      <c:if test="${empty complainList }">
+                        <tr role="row">
+                          <td class="project-title noList" style="text-align:center;font-size:1.2em;font-weight: bold;height:80px;" colspan="8">검색 결과가 없습니다.</td>
+                        </tr>
+                      </c:if>
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              </div>
+            </form:form>
+            <!-- 	                         -->
+          </div>
+        </div>
+      </div>
     </div>
 </div>
 </section>

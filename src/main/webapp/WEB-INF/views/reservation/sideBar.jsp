@@ -92,13 +92,14 @@
         <!--큰버튼이 필요한 페이지에 쓰임-->
         <div class="tab-content p-l-0 p-r-0 subsubmenu">
           <!--서브메뉴 타이틀-->
-            <a href="reservationList">예약 관리</a>
+            <a href="reservationList">통합내역조회</a>
         </div>
 
         <div class="tab-content p-l-0 p-r-0 subsubmenu">
             <div class="modalBtnGroup">
-              <!--서브메뉴 타이틀--> 
-              <a href="adminMain">회의실 관리</a>
+              <c:if test="${loginUser.auth_Id == 's'}">
+                <a href="adminMain">회의실 관리</a>
+              </c:if>
             </div>
         </div>
     </div>

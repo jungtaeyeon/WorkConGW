@@ -14,13 +14,9 @@
     .container-fluid-header, .container-fluid-footer{
         display: flex;
         justify-content: space-between;
-        padding-top: 15px;
     }
     body {
         padding: 0px 30px 30px 30px;
-    }
-    .form-header > div {
-        margin-top: 20px;
     }
     .col-xs-12 {
         padding: 5px;
@@ -30,7 +26,6 @@
         border-radius: 1%;
         background-color: #ffffff;
         padding: 0px 10px 10px;
-        margin-top: 20px;
     }
     body{
         padding: 0px 30px 30px 30px;
@@ -42,14 +37,36 @@
     #edit-participater{
         cursor: pointer;
     }
+    .subTitleText h2 {
+        display: flex;
+        justify-content: flex-start;
+        align-items: center;
+        font-size: 27px;
+        padding: 10px 0;
+        font-family: "Noto Sans KR", sans-serif;
+      }
+      .subTitleText i {
+        font-size: 24px;
+        margin-right: 5px;
+      }
+      .row.reservationDeteailText {
+            font-size: 17px;
+        }
 </style>
 
 <body>
 <%@ include file="../include/header.jsp"%>
-<div id="main-content">
+<section class="subPageContain">
+<%@ include file="./sideBar.jsp"%>
+<!-- 메인 content -->
+<div id="main-content" style="width: 100%;">
     <div class="container-fluid">
         <div class="form-header container-fluid-header">
-            <h3 class="form-title">${meetRoomVO.meet_Room_Name } 회의실 수정</h3>
+            <div class="subTitleText">
+                <h2>
+                  <i class="fa-solid fa-angles-right"></i>${meetRoomVO.meet_Room_Name } 회의실 수정
+                </h2>
+            </div>
 
             <div>
                 <button type="button" id="modifyBtn" onclick="modifyRoom();" class="btn btn-info header-btn">수정완료</button>
@@ -62,11 +79,11 @@
             <div class="col-md-4">
                 <form:form modelAttribute="meetRoomVO" id="detailForm" name="meetRoomModifyForm" class="form-horizontal" >
                     <form:hidden id="" path="meet_Room_Id" value="${meetRoomVO.meet_Room_Id}"/>
-                    <div class="row">
+                    <div class="row reservationDeteailText">
                         <div class="col-xs-12">
                             <label class="col-xs-4" for="edit-title">활성화 상태</label>
                             <br>
-                            <form:select path="meet_Room_St" class="form-control selectSearch RoomSt" style="width:150px;font-size: 1.2em;float:left;margin-left: 10px;">
+                            <form:select path="meet_Room_St" class="form-control selectSearch RoomSt" style="width:150px;font-size: 17px;float:left;margin-left: 10px;">
 <%--                                <form:option value="${meetRoomVO.meet_Room_St}">--%>
 <%--                                    <c:if test="${meetRoomVO.meet_Room_St} == 1" > 활성화</c:if>--%>
 <%--                                    <c:if test="${meetRoomVO.meet_Room_St} == 0" > 비활성화</c:if>--%>
@@ -76,7 +93,7 @@
                             </form:select>
                         </div>
                     </div>
-                    <div class="row">
+                    <div class="row reservationDeteailText">
                         <div class="col-xs-12">
                             <label class="col-xs-4" for="edit-title">회의실명</label>
                             <div class="col-sm-10 input-group-sm">
@@ -84,7 +101,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="row">
+                    <div class="row reservationDeteailText">
                         <div class="col-xs-12">
                             <label class="col-xs-4" for="edit-start">회의실 위치</label>
                             <div class="col-sm-10 input-group-sm">
@@ -92,7 +109,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="row">
+                    <div class="row reservationDeteailText">
                         <div class="col-xs-12">
                             <label class="col-xs-4" for="edit-end">수용인원</label>
                             <div class="col-sm-10 input-group-sm">
@@ -100,7 +117,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="row">
+                    <div class="row reservationDeteailText">
                         <div class="col-xs-12">
                             <label class="col-xs-4" for="edit-end">내용</label>
                             <div class="col-sm-10 input-group-sm">
