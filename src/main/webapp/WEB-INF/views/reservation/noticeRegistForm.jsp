@@ -5,10 +5,6 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <!DOCTYPE html>
 <html>
-<head>
-
-
-</head>
 
 <body>
 <!-- 헤더인클루드 -->
@@ -42,7 +38,6 @@
                     <div class="body">
                         <div class="row clearfix">
                             <div class="table-responsive" style="padding:5px 15px;">
-
                                 <table class="table table-hover m-b-0">
                                     <thead class="shadow-none p-3 mb-5 bg-light rounded">
                                     <!-- 게시판 선택 -->
@@ -80,12 +75,14 @@
                                     <!-- 내용 -->
                                     <tr>
                                         <th colspan="6" style="padding:15px;">
-                                            <div class="summernote">
-                                            </div>
+
                                         </th>
                                     </tr>
                                     </thead>
                                 </table>
+                            </div>
+                            <div class="col-sm-12 formGroup noticeForm anonyForm">
+                                <div class="summernote"style="height: 200px;"></div>
                             </div>
                         </div>
                     </div>
@@ -114,12 +111,12 @@
 
     function regist_go(){
         var modifyForm = $('form[name="noticeModifyForm"]')[0];
-        if($.trim($('.note-editable').text())==""){
+        if($.trim($('.note-editable').html())==""){
             alert('공지 내용을 입력하세요.');
             $('.note-editable').focus();
             return;
         }
-        $('#noticeContent').val($('.note-editable').text());
+        $('#noticeContent').val($('.note-editable').html());
         $('#noticeDate').val($('#date').text());
 
 

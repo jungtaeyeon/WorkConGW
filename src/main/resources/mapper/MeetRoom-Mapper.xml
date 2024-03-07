@@ -87,6 +87,49 @@
 
     </select>
 
+    <select id="getAllReservationList" parameterType="MeetRoomReservationVO" resultType="MeetRoomReservationVO">
+        SELECT
+            A.MEET_ROOM_ID
+             ,C.MEET_ROOM_NAME
+             ,A.RESERVATION_START_TIME
+             ,A.RESERVATION_END_TIME
+             ,A.RESERVATION_DATE
+             ,A.MEET_ROOM_RESERVATION_ID
+             ,A.MEET_ROOM_DETAIL
+             ,C.MEET_ROOM_ST
+             ,C.MEET_ROOM_NO
+             ,C.MEET_ROOM_CAPACITY
+             ,C.MEET_ROOM_ATTACH_ORIGIN
+             ,a.emp_id
+             ,B.emp_name
+             ,B.emp_picture
+             ,B.code_name as official_Name
+             ,B.dept_name
+             ,B.team_name
+             ,B.dept_id
+        FROM
+            MEET_ROOM_RESERVATION A
+                LEFT OUTER JOIN (
+                SELECT  D1.emp_id
+                     ,D1.emp_name
+                     ,D1.emp_picture
+                     ,D1.code_id
+                     ,D2.code_name
+                     ,D3.dept_name
+                     ,D3.dept_id
+
+                     ,D4.dept_name team_Name
+                FROM emp D1, code D2, dept D3, dept D4
+                WHERE D1.code_id = D2.code_id
+                  AND D1.dept_id = D3.dept_id
+                  AND D1.dept_id = D4.dept_id(+)
+                ORDER BY D1.code_id DESC
+            ) B
+                                ON A.emp_id = B.emp_id
+           , MEET_ROOM  C
+        where A.MEET_ROOM_ID= C.MEET_ROOM_ID
+    </select>
+
 
     <select id="getReservationNoticeList" parameterType="ReservationNoticeVO" resultType="ReservationNoticeVO">
         select D3.*

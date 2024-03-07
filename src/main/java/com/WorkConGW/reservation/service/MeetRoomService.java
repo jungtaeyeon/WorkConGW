@@ -70,6 +70,11 @@ public class MeetRoomService {
         return reservationList;
     }
 
+    public List<MeetRoomReservationVO> getSearchReservationAll(MeetRoomReservationVO searchAllMeetRoomVO)throws SQLException {
+        List<MeetRoomReservationVO> reservationAllList = meetRoomDAO.getSearchReservationAll(searchAllMeetRoomVO);
+        return reservationAllList;
+    }
+
     public MeetRoomVO getMeetRoomVOForDetail(int meetRoomId)throws SQLException {
         MeetRoomVO roomVO = meetRoomDAO.getMeetRoomVOForDetail(meetRoomId);
         return roomVO;

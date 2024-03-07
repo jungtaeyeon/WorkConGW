@@ -8,9 +8,6 @@
 	.formGroup{
 		display:none;
 	}
-	.dropdown-toggle::after{
-		display: none;
-	}
 </style>
 
 <body>
@@ -275,7 +272,7 @@
 				var extension = getExtensionOfFilename(fileName);
 				var fileSize = (inputFileTag.eq(filesLength-1)[0].files[0].size / 1000) / 1000; // MB
 				var fileType;
-
+				console.log("11")
 				if(fileSize > 50){
 					alert("50MB 이하로 업로드해 주세요.");
 					inputFileTag.eq(filesLength-1).remove();

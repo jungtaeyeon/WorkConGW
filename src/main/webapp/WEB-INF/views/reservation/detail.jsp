@@ -15,13 +15,9 @@
     .container-fluid-header, .container-fluid-footer{
         display: flex;
         justify-content: space-between;
-        padding-top: 15px;
     }
     body {
         padding: 0px 30px 30px 30px;
-    }
-    .form-header > div {
-        margin-top: 20px;
     }
     .col-xs-12 {
         padding: 5px;
@@ -31,7 +27,6 @@
         border-radius: 1%;
         background-color: #ffffff;
         padding: 0px 10px 10px;
-        margin-top: 20px;
     }
     body{
         padding: 0px 30px 30px 30px;
@@ -43,17 +38,38 @@
     #edit-participater{
         cursor: pointer;
     }
+    .subTitleText h2 {
+        display: flex;
+        justify-content: flex-start;
+        align-items: center;
+        font-size: 27px;
+        padding: 10px 0;
+        font-family: "Noto Sans KR", sans-serif;
+      }
+      .subTitleText i {
+        font-size: 24px;
+        margin-right: 5px;
+      }
+      .row.reservationDeteailText {
+            font-size: 17px;
+        }
 </style>
 
 
 <%@ include file="../include/header.jsp"%>
-<body>
-<div id="main-content">
+<section class="subPageContain">
+    <%@ include file="./sideBar.jsp"%>
+  <!-- 메인 content -->
+  <div id="main-content" style="width: 100%;">
     <div class="container-fluid">
-        <div class="form-header container-fluid-header" style="font-family: S-CoreDream-4Regular ">
-            <h3 class="form-title">${meetRoomVO.meet_Room_Name } 회의실</h3>
+        <div class="form-header container-fluid-header">
+            <div class="subTitleText">
+                <h2>
+                  <i class="fa-solid fa-angles-right"></i>${meetRoomVO.meet_Room_Name } 회의실
+                </h2>
+            </div>
             <div>
-                <button type="button" id="modifyBtn" onclick="javascript:location.href='<%=request.getContextPath() %>/reservation/modifyForm?meet_Room_Id=${meetRoomVO.meet_Room_Id}';" class="btn btn-info header-btn">&nbsp;&nbsp;&nbsp;수 &nbsp;&nbsp;정&nbsp;&nbsp;&nbsp;</button>
+                <button type="button" id="modifyBtn" onclick="javascript:location.href='<%=request.getContextPath() %>/reservation/modifyForm?meet_Room_Id=${meetRoomVO.meet_Room_Id}';" class="btn btn-info header-btn">수정</button>
                 <button type="button" class="btn btn-danger" onclick="removeRoom();">삭제</button>
                 <button type="button" class="btn btn-secondary" onclick="location.href='${pageContext.request.contextPath}/reservation/adminMain'">닫기</button>
             </div>
@@ -64,7 +80,7 @@
                 <form:form modelAttribute="meetRoomVO" id="detailForm" name="detailForm" class="form-horizontal" autocomplete="off">
                     <form:hidden path="meet_Room_Id" />
                 </form:form>
-                <div class="row">
+                <div class="row reservationDeteailText" >
                     <div class="col-xs-12">
                         <label class="col-xs-4" for="edit-title">회의실명</label>
                         <div class="col-sm-10 input-group-sm">
@@ -72,7 +88,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="row">
+                <div class="row reservationDeteailText">
                     <div class="col-xs-12">
                         <label class="col-xs-4" for="edit-start">회의실 위치</label>
                         <div class="col-sm-10 input-group-sm">
@@ -80,7 +96,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="row">
+                <div class="row reservationDeteailText">
                     <div class="col-xs-12">
                         <label class="col-xs-4" for="edit-end">수용인원</label>
                         <div class="col-sm-10 input-group-sm">
@@ -88,7 +104,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="row">
+                <div class="row reservationDeteailText">
                     <div class="col-xs-12">
                         <label class="col-xs-4" for="edit-end">내용</label>
                         <div class="col-sm-10 input-group-sm">
@@ -104,6 +120,7 @@
         </div>
     </div>
 </div>
+</section>
 <%@ include file="../include/footer.jsp"%>
 
 <script>

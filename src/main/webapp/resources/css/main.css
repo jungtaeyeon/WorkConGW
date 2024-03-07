@@ -103,13 +103,7 @@ body {
   color: #505363;
 }
 
-.fc-center h2 {
-  text-transform: uppercase;
-  font-size: 18px;
-  font-weight: 600;
-  color: #505363;
-  line-height: 32px;
-}
+
 
 .fc-toolbar.fc-header-toolbar {
   margin-bottom: 22px;

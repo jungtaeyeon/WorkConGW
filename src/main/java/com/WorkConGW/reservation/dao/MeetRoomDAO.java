@@ -71,6 +71,11 @@ public class MeetRoomDAO {
         return meetRoomReservationList;
     }
 
+    public List<MeetRoomReservationVO> getSearchReservationAll(MeetRoomReservationVO searchAllMeetRoomVO) throws SQLException {
+        List<MeetRoomReservationVO> meetRoomReservationAllList = sqlSessionTemplate.selectList("getAllReservationList", searchAllMeetRoomVO);
+        return meetRoomReservationAllList;
+    }
+
     public MeetRoomVO getMeetRoomVOForDetail(int meetRoomId)throws SQLException {
         List<MeetRoomVO> meetRoomVObyId = sqlSessionTemplate.selectList("getMeetRoomVOForDetail", meetRoomId);
         MeetRoomVO meetRoomVO = meetRoomVObyId.get(0);
