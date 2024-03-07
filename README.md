@@ -61,6 +61,11 @@ ERD
 
 https://drive.google.com/file/d/1tmVxgWeTPdpik4eZoBsmNUPutNNP-KlE/view?usp=drive_link
 
+
+시나리오 테스트
+
+https://docs.google.com/spreadsheets/d/1PHrXVvg8TP9mZmxk2nB1vjP4XR8Di0oMY5H7lgmpUBo/edit#gid=2087633204
+
 ## 시작 가이드
 
 ### Installation
