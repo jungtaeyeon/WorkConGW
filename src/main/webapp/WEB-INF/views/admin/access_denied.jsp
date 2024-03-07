@@ -5,8 +5,10 @@
     if('${msg}')
     {
         alert('시스템 관리자 권한이 없습니다.')
+        history.back(-1)
     }
     else{
         alert('관리자 권한이 없습니다.')
+        history.back(-1)
     }
 </script>

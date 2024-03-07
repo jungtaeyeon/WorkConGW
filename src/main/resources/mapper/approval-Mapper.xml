@@ -421,7 +421,7 @@ where rownum <![CDATA[ <= ]]> #{recordCountPerPage}
                            WHERE A.DOC_ID = D.DOC_ID(+) AND
                                A.DOC_ID = E.DOC_ID  AND
                                E.EMP_ID =#{emp_Drafter_Id} AND
-                               NOT A.APPROVAL_ST IN (1,4,5)
+                               NOT A.APPROVAL_ST IN (1,3,4,5)
                              <include refid="search" />
                            GROUP BY
                                A.APPROVAL_TITLE,

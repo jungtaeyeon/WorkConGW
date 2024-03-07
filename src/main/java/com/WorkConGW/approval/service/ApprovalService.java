@@ -440,9 +440,9 @@ public class ApprovalService{
 
         history = approvalDAO.selectStepByEmpIdAndDocId(history); // 문서 번호에 맞는 사원에 대해 step를 가져온다.
         /*
-        * 1. 문서 번호에 맞는 사원에 대해 step를 가져온다.
-        * 2. history에는 setDoc_Id/setEmp_Id/set_History_St가 박혀있다. 즉, 결재자에 대한 정보가 꽂혀있음.
-        * */
+         * 1. 문서 번호에 맞는 사원에 대해 step를 가져온다.
+         * 2. history에는 setDoc_Id/setEmp_Id/set_History_St가 박혀있다. 즉, 결재자에 대한 정보가 꽂혀있음.
+         * */
 
         int historyStep = (Integer.parseInt(history.getHistory_Step())+1);
         // 결재가 완료되면, Step를  하나 증가시킨다.
@@ -493,7 +493,7 @@ public class ApprovalService{
 
         }
 
-
+        else{
             List<String> refers = (List<String>)dataMap.get("referArr"); // 사번을 가져옴
             logger.info("refers :" + refers);
             for(String refer : refers)
@@ -524,11 +524,16 @@ public class ApprovalService{
             approvalDAO.updateApproval(approval);
 
 
+        }
+
+
+
+
+
 
         return returnApproval;
-        
-    }
 
+    }
 
     public void approvalReturn(Map<String, Object> dataMap) {
         ApprovalHistoryVO approvalHistoryVO = new ApprovalHistoryVO();
