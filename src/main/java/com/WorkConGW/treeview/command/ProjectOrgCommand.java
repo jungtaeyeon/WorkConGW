@@ -6,6 +6,8 @@ import org.apache.ibatis.type.Alias;
 @ToString
 @Alias("ProjectOrgCommand")
 public class ProjectOrgCommand {
+
+    private String emp_Id;
     private int project_Id;
     private String project_Title;
     private int duty_Board_Id;
@@ -41,6 +43,14 @@ public class ProjectOrgCommand {
 
     public void setDuty_Board_Title(String duty_Board_Title) {
         this.duty_Board_Title = duty_Board_Title;
+    }
+
+    public String getEmp_Id() {
+        return emp_Id;
+    }
+
+    public void setEmp_Id(String emp_Id) {
+        this.emp_Id = emp_Id;
     }
 
 }

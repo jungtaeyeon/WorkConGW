@@ -40,7 +40,7 @@ public class TreeViewDAO {
         return sqlSessionTemplate.selectList("selectSearchDuty");
     }
 
-    public List<ProjectOrgCommand> selectDutiesByProjectId(int project_Id) {
-        return sqlSessionTemplate.selectList("selectDutiesByProjectId", project_Id);
+    public List<ProjectOrgCommand> selectDutiesByProjectId(ProjectOrgCommand project) {
+        return sqlSessionTemplate.selectList("selectDutiesByProjectId", project);
     }
 }

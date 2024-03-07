@@ -55,6 +55,10 @@
 	<style type="text/css">
 		@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@100;300;400;500;700;900&family=Passion+One:wght@400;700&display=swap');
 
+		.note-toolbar .dropdown-toggle::after{
+			display: none;
+		}
+
 		ul.menuList {
 			height: 100%; /* 더 높은 높이로 조절 */
 			font-size: 1.4em;
@@ -62,6 +66,18 @@
 			align-items: center;
 		}
 		.modal.show{background-color: rgba(0, 0, 0, 0.7);}
+
+		.note-editor .modal-header {
+			flex-direction: row-reverse !important;
+		}
+
+		.modal-title {
+			margin: 0; /* 기본 마진 제거 */
+		}
+
+		.close {
+			margin-left: auto; /* 오른쪽으로 이동 */
+		}
 
 
 		.btn.btn-outline-secondary {
