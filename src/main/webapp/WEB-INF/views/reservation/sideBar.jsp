@@ -88,19 +88,19 @@
 
         <!--큰버튼이 필요한 페이지에 쓰임(주소록, 전자결재, 일정관리 등)-->
         <div class="tab-content p-l-0 p-r-0 text-align go_btn">
-            <a href="main"  id="go_btn">회의실 예약</a>
+            <a href="/WorkConGW/reservation/main"  id="go_btn">회의실 예약</a>
         </div>
 
         <!--큰버튼이 필요한 페이지에 쓰임-->
         <div class="tab-content p-l-0 p-r-0 subsubmenu">
           <!--서브메뉴 타이틀-->
-            <a href="reservationList">통합내역조회</a>
+            <a href="/WorkConGW/reservation/reservationList">통합내역조회</a>
         </div>
 
         <div class="tab-content p-l-0 p-r-0 subsubmenu">
             <div class="modalBtnGroup">
               <c:if test="${loginUser.auth_Id == 's'}">
-                <a href="adminMain">회의실 관리</a>
+                <a href="/WorkConGW/reservation/adminMain">회의실 관리</a>
               </c:if>
             </div>
         </div>
