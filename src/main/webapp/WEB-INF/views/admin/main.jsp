@@ -145,11 +145,11 @@
     <div class="row clearfix">
         <div class="col-lg-8 col-md-12">
 
-            <div class="card" style="margin-bottom:15px; ">
+            <div class="card" style="margin-bottom:15px; padding: 10px 15px;">
                 <div class="body" style="font-family: S-CoreDream-6Bold">
                     <div class="row clearfix" >
                         <div class="col-6" style="font-family: S-CoreDream-4Regular">
-                            <div class="head">
+                            <div class="head" style="margin-bottom: 10px;">
                                 <h5>사내공지
                                     <span class="float-right" style="cursor: pointer;" onclick="location.href='<%=request.getContextPath()%>/board/notice/noticeList'">
                                     <i class="fa fa-sign-in"></i>
@@ -158,7 +158,7 @@
                             </div>
                             <div class="table-responsive" style="overflow:hidden;">
                                 <table class="table table-hover m-b-0 c_list">
-                                    <thead>
+                                    <thead class="thead-light">
                                     <tr>
                                         <th>게시날짜</th>
                                         <th>제목</th>
@@ -196,7 +196,7 @@
                             </div>
                         </div>
                         <div class="col-6"  style="font-family: S-CoreDream-4Regular">
-                            <div class="head">
+                            <div class="head" style="margin-bottom: 10px;">
                                 <h5>민원함
                                     <span class="float-right" style="cursor: pointer;" onclick="location.href='${pageContext.request.contextPath}/reservation/adminMain';">
                                  	<i class="fa fa-sign-in"></i>
@@ -205,7 +205,7 @@
                             </div>
                             <div class="table-responsive" style="overflow: hidden;">
                                 <table class="table table-hover m-b-0 c_list">
-                                    <thead>
+                                    <thead class="thead-light">
                                     <tr>
                                         <th>날짜</th>
                                         <th>제목</th>
@@ -239,7 +239,7 @@
                 </div>
             </div>
 
-            <div class="card">
+            <div class="card" style="padding: 10px 15px;">
                 <div class="header" style="font-family: S-CoreDream-4Regular">
                     <h5>공지글 작성</h5>
                     <button type="button" class="btn hiddenFillBtn" onclick="presentationFill_1();" style="position:absolute;right:0px;top:0px;color:#ffffff">시연용버튼 1</button>
@@ -303,7 +303,7 @@
 
         <!-- 우측 메뉴 -->
         <div class="col-lg-4 col-md-12 right-box" style="padding-left:0px; ">
-            <div class="card" style="margin-bottom:15px; font-family: S-CoreDream-6Bold">
+            <div class="card" style="margin-bottom:15px; padding: 10px 15px;">
                 <div class="body">
                     <div class="row clearfix" style="margin-bottom:15px;">
                         <div class="col-12" style="font-family: S-CoreDream-4Regular">

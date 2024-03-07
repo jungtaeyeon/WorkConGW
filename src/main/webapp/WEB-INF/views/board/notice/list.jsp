@@ -40,6 +40,26 @@
     max-height: 300px; /* 원하는 높이 지정 */
     overflow-y: auto; /* 세로 스크롤이 필요한 경우만 스크롤 표시 */
   }
+  .subTitleText {
+        margin-bottom: 25px;
+      }
+      .subTitleText h2 {
+        display: flex;
+        justify-content: flex-start;
+        align-items: center;
+        font-size: 27px;
+        padding: 10px 0;
+        font-family: "Noto Sans KR", sans-serif;
+      }
+      .subTitleText i {
+        font-size: 24px;
+        margin-right: 5px;
+      }
+      #noticeImportantYN{vertical-align: middle;}
+      .badge {
+          font-size: 14px !important;
+          padding: 8px 10px !important;
+      }
 </style>
 
 <body>
@@ -50,34 +70,36 @@
   <%@ include file="../boardSidebar.jsp"%>
   <!--컨텐츠 영역-->
 
-  <div class="contentConteiner">
+<div class="contentConteiner" style="width: 100%;">
 
 <!-- 메인 content -->
-<div id="main-content" >
+<div id="main-content"   style="width: 100%;">
   <div class="container-fluid">
     <div class="row clearfix">
-      <div class="col-12" style="margin-top: 2%;">
-        <h2 style="font-family: S-CoreDream-6Bold"><i class="fa fa-bullhorn" ></i>&nbsp;사내공지</h2>
-        <hr>
+      <div class="subTitleText">
+        <h2>
+          <i class="fa-solid fa-angles-right"></i>
+          사내공지
+        </h2>
       </div>
     </div>
 
-    <div class="row clearfix" style="font-family: S-CoreDream-7ExtraBold">
-      <div class="col-lg-12 col-md-12">
-        <div class="card">
+    <div class="row clearfix" style="width: 100%;">
+      <div style="width: 100%;">
+        <div>
           <div class="body project_report">
             <form:form modelAttribute="boardFormVO" id="listForm" name="listForm">
               <!-- 검색 조건 설정 -->
               <h5 style="display:inline-block; font-weight: bold;">검색 조건</h5>
-              <div class="alert alert-light" role="alert" style="display:inline-block;padding-top:0;margin-bottom:0;">
-                <label class="fancy-checkbox">
+              <div class="alert alert-light" role="alert" style="padding:0;margin-bottom:0;">
+                <label class="fancy-checkbox" style="font-size:15px;">
                   <input type="checkbox" data="selectDt" id="dateCheckBox" data-parsley-multiple="checkbox" onchange="changeForm(this);"/>
                   <span>작성 날짜</span>&nbsp&nbsp
                 </label>
 
                 <!-- 리셋버튼 -->
                 <button id="resetBtn" type="reset" class="btn btn-default" title="Refresh" style="display: none;"></button>
-                <label onclick="conditionReset();"  style="cursor: pointer;">
+                <label onclick="conditionReset();"  style="cursor: pointer; font-size:15px; margin-left: 8px">
                   <i class="fas fa-refresh"></i>검색 조건 초기화
                 </label>
 
@@ -86,35 +108,36 @@
                 </div>
               </div>
               <!-- 설정된 검색 조건 입력 폼 표시 -->
-              <div>
-                <div class="input-group date searchCri searchDt selectDt myConditions" data-date-autoclose="true" data-provide="datepicker" style="font-size:1.2em;width:200px;margin-right:15px;float:left;display:none;">
-                  <form:input path="searchNoticeVO.searchDt" id="inputSearchDt" type="text" class="form-control" placeholder="작성날짜 선택" readonly="true"/>
-                  <div class="input-group-append">
-                    <button class="btn btn-outline-secondary" type="button"><i class="fas fa-calendar"></i></button>
+              <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                <div>
+                  <div class="input-group date searchCri searchDt selectDt myConditions" data-date-autoclose="true" data-provide="datepicker" style="font-size:1.2em;width:200px;margin-right:15px;float:left;display:none;">
+                    <form:input path="searchNoticeVO.searchDt" id="inputSearchDt" type="text" class="form-control" placeholder="작성날짜 선택" readonly="true"/>
+                    <div class="input-group-append">
+                      <button class="btn btn-outline-secondary" type="button"><i class="fas fa-calendar"></i></button>
+                    </div>
                   </div>
-                </div>
 
-                <form:select path="searchNoticeVO.searchCondition" class="form-control selectSearch" style="width:130px;font-size: 0.92em;float:left;">
-                  <form:option value="tcm">전체</form:option>
-                  <form:option value="t">제목</form:option>
-                  <form:option value="c">내용</form:option>
-                  <form:option value="m">작성자</form:option>
-                </form:select>
-                <div id="navbar-search" class="navbar-form search-form selectSearch" style="float:left;">
-                  <form:input path="searchNoticeVO.searchKeyword" class="form-control" placeholder="검색어를 입력하세요" type="text" style="width: 168px; height: 36px; display: inline-block;" onkeypress="checkEnter(searchNoticeList);"/>
-                  <button type="button" class="btn btn-default" onclick="searchNoticeList();"><i class='fas fa-search'></i></button>
+                  <form:select path="searchNoticeVO.searchCondition" class="form-control selectSearch" style="width:130px; float:left;">
+                    <form:option value="tcm">전체</form:option>
+                    <form:option value="t">제목</form:option>
+                    <form:option value="c">내용</form:option>
+                    <form:option value="m">작성자</form:option>
+                  </form:select>
+                  <div id="navbar-search" class="navbar-form search-form selectSearch" style="float:left; display: flex;">
+                    <form:input path="searchNoticeVO.searchKeyword" class="form-control" placeholder="검색어를 입력하세요" type="text" style="width: 168px; display: inline-block;" onkeypress="checkEnter(searchNoticeList);"/>
+                    <button class="btn btn-secondary" onclick="searchNoticeList()" type="button"><i class='fas fa-search'></i>검색</button>
+                  </div>  
                 </div>
-
                 <div class="form-group" style="float:right;">
                   <div style="display: inline-block;float:left;font-size: 1.2em;margin:6px 20px 0 0">
                     <span>${paginationInfo.currentPageNo} </span>/<span> ${totalPageCnt} 페이지 중</span>
                   </div>
                 </div>
               </div>
-              <div class="body" style="padding: 0;">
+              <div class="body card" style="padding: 20px 25px;">
                 <div class="table-responsive" style="overflow: hidden;">
                   <table class="table table-hover m-b-0">
-                    <thead class="shadow-none p-3 mb-5 bg-light rounded">
+                    <thead class="thead-light">
                       <tr id="tr1">
 <%--                        <th style="width:80px;">번호</th>--%>
                         <th>분류</th>
@@ -142,9 +165,9 @@
                         <td id="empName">${notice.emp_Name }&nbsp${notice.officialName }</td>
                         <td>${notice.notice_readcnt }
                         </td>
-                        <td>
+                        <td style="vertical-align: middle;">
                           <c:if test="${notice.attachCount ne 0}">
-                            <i class="fa fa-file-text fa-2x text-info"></i>
+                            <i class="fa fa-file-text text-info" style="font-size: 20px;"></i>
                           </c:if>
                         </td>
                       </tr>
@@ -156,7 +179,7 @@
 
                     <%--                    일반 공지 + 필독공지 --%>
                   <table class="table table-hover m-b-0">
-                    <thead class="shadow-none p-3 mb-5 bg-light rounded">
+                    <thead class="thead-light">
                       <tr id="tr2">
                         <th>분류</th>
                         <th>제목</th>
@@ -171,7 +194,7 @@
                       <fmt:parseNumber value="${today.time - notice.notice_create_dt.time }" integerOnly="true" var="defferTime"/>
                       <tr onclick="window.location.href='<%=request.getContextPath()%>/board/notice/detail?notice_id=${notice.notice_id}';" >
                         <c:if test="${notice.notice_important_st eq 1}">
-                          <td id="noticeImportantYN"><span class="badge badge-danger">필독</span></td>
+                          <td id="noticeImportantYN" ><span class="badge badge-danger">필독</span></td>
                         </c:if>
                         <c:if test="${notice.notice_important_st eq 0}">
                           <td id="noticeImportantYN"><span class="badge badge-success">공지</span></td>
@@ -185,9 +208,9 @@
                         <td id="notice_Create_Dt"><fmt:formatDate value="${notice.notice_create_dt}" pattern="yyyy-MM-dd"/></td>
                         <td id="empName">${notice.emp_Name}&nbsp${notice.officialName }</td>
                         <td>${notice.notice_readcnt }</td>
-                        <td>
+                        <td style="vertical-align: middle;">
                           <c:if test="${notice.attachCount ne 0}">
-                            <i class="fa fa-file-text fa-1x text-info"></i>
+                            <i class="fa fa-file-text fa-1x text-info" style="font-size: 20px;"></i>
                           </c:if>
                         </td>
                       </tr>
@@ -200,7 +223,7 @@
                     </tbody>
                   </table>
                 </div>
-              </div>
+              
               <!-- Pagination -->
               <div class="col-sm-12 col-md-12" style="text-align:right">
                 <div class="dataTables_paginate paging_simple_numbers" id="dataTable_paginate" >
@@ -226,7 +249,7 @@
                   </ul>
                 </div>
               </div>
-
+            </div>
               <form:hidden path="searchNoticeVO.pageIndex" />
             </form:form>
           </div>
@@ -238,6 +261,7 @@
   </div>
 </section>
 <%-- 푸터 인클루드 --%>
+<%@ include file="../../include/footer.jsp"%>
 </body>
 
 <script>

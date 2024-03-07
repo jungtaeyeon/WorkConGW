@@ -17,6 +17,7 @@
         justify-content: flex-start;
         align-items: center;
         font-size: 27px;
+        font-family: "Noto Sans KR", sans-serif;
     }
     .subTitleText i{
         font-size: 24px;

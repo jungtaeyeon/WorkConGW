@@ -5,7 +5,7 @@
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
   <style>
-  a{text-decoration: none;}
+   a{text-decoration: none;}
   .sidebar{
     border-right:2px solid rgb(0,0,0,0.1);
     margin-right: 10px;
@@ -22,11 +22,10 @@
     padding:0 10px;
   }
   .tab-content{
-    font-size: 25px;  
+    font-size: 23px;  
     padding-bottom: 0; 
-    font-family: S-CoreDream-4Regular
   }
-  .subsubmenu{margin-bottom: 20px;}
+  .subsubmenu{margin-bottom: 10px;}
   .tab-content a{color: #000;}
   .metismenuLI{
     display: flex;
@@ -49,9 +48,12 @@
     align-items: center;
     background-color: #2980b9; 
     color: white; 
-    width: 14rem; 
-    height: 3.8rem; 
+    height: 3rem; 
     border-radius: 10px; 
+    margin: 0 auto;
+    border: none;
+    font-size: 20px;
+    width: 100%;
   }
   .metismenuLI a{
     font-size: 20px;

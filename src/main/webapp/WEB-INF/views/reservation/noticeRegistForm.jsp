@@ -3,21 +3,36 @@
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<!DOCTYPE html>
-<html>
-
-<body>
+<style>
+    .subTitleText h2 {
+        display: flex;
+        justify-content: flex-start;
+        align-items: center;
+        font-size: 27px;
+        padding: 10px 0;
+        font-family: "Noto Sans KR", sans-serif;
+    }
+    .subTitleText i {
+        font-size: 24px;
+        margin-right: 5px;
+    }
+    </style>
 <!-- 헤더인클루드 -->
 <%@ include file="../include/header.jsp"%>
 
 <section class="subPageContain">
+<%@ include file="./sideBar.jsp"%>
 <!-- 메인 content -->
-<div id="main-content">
+<div id="main-content" style="width: 100%;">
     <div class="container-fluid">
         <div class="block-header">
-            <div class="row">
+            <div class="row" style="margin-bottom: 20px; align-items: center;">
                 <div class="col-sm-5">
-                    <h2 style="padding-left:10px;font-size:2em; font-family: S-CoreDream-4Regular"><i class="icon-note"></i>&nbsp;공지 작성</h2>
+                    <div class="subTitleText">
+                        <h2>
+                            <i class="fa-solid fa-angles-right"></i>공지 작성
+                        </h2>
+                    </div>
                 </div>
                 <div class="col-sm-7" >
                     <div style="float:right; font-family: S-CoreDream-4Regular">
@@ -95,7 +110,7 @@
 
 
 </section>
-
+<%@ include file="../include/footer.jsp"%>
 <script>
     var today = new Date();
     var year = today.getFullYear();

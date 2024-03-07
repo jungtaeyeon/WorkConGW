@@ -27,13 +27,11 @@
     align-items: center;
     background-color: #2980b9; 
     color: white; 
-    width: 14rem; 
-    height: 3.8rem; 
+    width: 80%; 
+    height: 3rem; 
     border-radius: 5%; 
-    font-family: InfinitySans-RegularA1;
   }
   .metismenuLI a{
-    font-family: S-CoreDream-4Regular; 
     font-size: 20px;
   }
   .go_btn{margin-bottom: 15px;}
@@ -42,8 +40,8 @@
     <div class="sidebar-scroll">
 
         <!--큰버튼이 필요한 페이지에 쓰임-->
-        <div class="tab-content p-l-0 p-r-0 text-align" style="font-size: 20px; text-align: center;">
-            <button style="font-family: paybooc-Bold; background-color: #2980b9; color: white; border: 0px; width: 80%; height: 3rem; border-radius: 5%; margin: 4% 0;" onclick="location.href='<%=request.getContextPath()%>/board/registForm'">글 작성</button>
+        <div class="tab-content p-l-0 p-r-0 text-align">
+            <button onclick="location.href='<%=request.getContextPath()%>/board/registForm'">글 작성</button>
         </div>
 
         <div class="tab-content p-l-0 p-r-0" style="font-size: 25px; margin-left: 3%; padding-bottom: 0; font-family: S-CoreDream-4Regular">

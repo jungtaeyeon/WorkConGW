@@ -17,6 +17,28 @@
         background-color: white;
         cursor: default;
     }
+    .subTitleText {
+        margin-bottom: 25px;
+    }
+    .subTitleText h2 {
+        display: flex;
+        justify-content: flex-start;
+        align-items: center;
+        font-size: 27px;
+        padding: 10px 0;
+        font-family: "Noto Sans KR", sans-serif;
+    }
+    .subTitleText i {
+        font-size: 24px;
+        margin-right: 5px;
+    }
+    .table td, .table th{
+        font-size: 15px;
+    }
+    .badge {
+        font-size: 13px !important;
+        padding: 5px 7px !important;
+    }
 </style>
 
 </head>
@@ -30,50 +52,51 @@
 
     <!-- 메인 content -->
 <div id="main-content" style="width: 100%">
-    <div class="container-fluid">
-        <div class="row clearfix">
-            <div class="col-12" style="margin-top: 2%; font-family: S-CoreDream-6Bold">
-                <h2>
-                    <c:choose>
-                        <c:when test="${empty param.dutyType }">
-                            <i class="fa fa-th-list"></i>&nbsp;업무 목록
-                        </c:when>
-                        <c:otherwise>
-                            <c:if test="${param.dutyType eq 'receive' }">
-                                <i class="fas fa-envelope"></i>&nbsp;받은 업무목록
-                            </c:if>
-                            <c:if test="${param.dutyType eq 'send' }">
-                                <i class="fa fa-send-o"></i>&nbsp;보낸 업무목록
-                            </c:if>
-                            <c:if test="${param.dutyType eq 'reception' }">
-                                <i class="fa fa-chain"></i>&nbsp;참조 업무목록
-                            </c:if>
-                        </c:otherwise>
-                    </c:choose>
-                </h2>
-                <hr>
+    <div class="contentConteiner">
+        <div class="clearfix">
+            <div class="col-12" style="padding: 0;">
+                <div class="subTitleText">
+                    <h2><i class="fa-solid fa-angles-right"></i>
+                        <c:choose>
+                            <c:when test="${empty param.dutyType }">
+                                업무 목록
+                            </c:when>
+                            <c:otherwise>
+                                <c:if test="${param.dutyType eq 'receive' }">
+                                    받은 업무목록
+                                </c:if>
+                                <c:if test="${param.dutyType eq 'send' }">
+                                    보낸 업무목록
+                                </c:if>
+                                <c:if test="${param.dutyType eq 'reception' }">
+                                    참조 업무목록
+                                </c:if>
+                            </c:otherwise>
+                        </c:choose>
+                    </h2>
+                </div>
             </div>
         </div>
 
-        <div class="row clearfix" style="font-family: S-CoreDream-7ExtraBold">
-            <div class="col-lg-12 col-md-12">
-                <div class="card">
+        <div class="clearfix">
+            <div class="col-lg-12 col-md-12" style="padding: 0;">
+                <div>
                     <div class="body project_report">
                         <form:form modelAttribute="boardFormVO" id="listForm" name="listForm">
                             <!-- 검색 조건 설정 -->
                             <h5 style="display:inline-block; font-weight: bold;">검색 조건</h5>
-                            <div class="alert alert-light" role="alert" style="display:inline-block;padding-top:0;margin-bottom:0;">
-                                <label class="fancy-checkbox">
+                            <div class="alert alert-light" role="alert" style="padding: 0; margin: 0;">
+                                <label class="fancy-checkbox" style="font-size:15px;">
                                     <input type="checkbox" id="checkboxDeadline" data="selectDeadline" data-parsley-multiple="checkbox" onchange="changeForm(this);"/>
                                     <span>완료 기한(까지)</span>
                                 </label>
-                                <label class="fancy-checkbox">
+                                <label class="fancy-checkbox" style="font-size:15px;  margin-left: 8px;">
                                     <input type="checkbox" id="checkboxState" data="selectState" data-parsley-multiple="checkbox" onchange="changeForm(this);"/>
                                     <span>진행 상태</span>
                                 </label>
 
                                 <!-- 리셋버튼 -->
-                                <label onclick="conditionReset();"  style="cursor: pointer;">
+                                <label onclick="conditionReset();"  style="cursor: pointer; font-size:15px;  margin-left: 8px;">
                                     <i class="fa fa-refresh"></i>&nbsp;&nbsp;검색 조건 초기화
                                 </label>
 
@@ -83,30 +106,32 @@
                             </div>
 
                             <!-- 설정된 검색 조건 입력 폼 표시 -->
-                            <div>
-                                <div class="input-group date selectDeadline myConditions" data-date-autoclose="true" data-provide="datepicker" style="font-size:1.2em;width:200px;margin-right:15px;float:left;display:none;">
-                                    <form:input path="searchDutyVO.searchDeadline" id="inputSearchDeadline" type="text" class="form-control selectDeadline" placeholder="완료날짜 선택" readonly="true"/>
-                                    <div class="input-group-append">
-                                        <button class="btn btn-outline-secondary" type="button"><i class="fas fa-calendar"></i></button>
+                            <div style="margin-bottom: 20px; display: flex; justify-content: space-between;">
+                                <div>
+                                    <div class="input-group date selectDeadline myConditions" data-date-autoclose="true" data-provide="datepicker" style="font-size:1.2em;width:200px;margin-right:15px;float:left;display:none;">
+                                        <form:input path="searchDutyVO.searchDeadline" id="inputSearchDeadline" type="text" class="form-control selectDeadline" placeholder="완료날짜 선택" readonly="true"/>
+                                        <div class="input-group-append">
+                                            <button class="btn btn-outline-secondary" type="button"><i class="fas fa-calendar"></i></button>
+                                        </div>
                                     </div>
-                                </div>
-                                <form:select path="searchDutyVO.searchState" id="selectSearchState" class="form-control selectState myConditions" style="width:200px;font-size: 1.2em;margin-right:15px;float:left;display: none;">
-                                    <form:option value="">진행 상태 선택</form:option>
-                                    <form:option value="Y">진행중</form:option>
-                                    <form:option value="N">종료</form:option>
-                                </form:select>
+                                    <form:select path="searchDutyVO.searchState" id="selectSearchState" class="form-control selectState myConditions" style="width:200px;margin-right:15px;float:left;display: none;">
+                                        <form:option value="">진행 상태 선택</form:option>
+                                        <form:option value="Y">진행중</form:option>
+                                        <form:option value="N">종료</form:option>
+                                    </form:select>
 
-                                <form:select path="searchDutyVO.searchCondition" class="form-control selectSearch" style="width:130px;font-size: 1.2em;float:left;">
-                                    <form:option value="tcmn">전체</form:option>
-                                    <form:option value="t">제목</form:option>
-                                    <form:option value="c">내용</form:option>
-                                    <form:option value="m">수신자</form:option>
-                                    <form:option value="n">업무번호</form:option>
-                                </form:select>
+                                    <form:select path="searchDutyVO.searchCondition" class="form-control selectSearch" style="width:130px;float:left;">
+                                        <form:option value="tcmn">전체</form:option>
+                                        <form:option value="t">제목</form:option>
+                                        <form:option value="c">내용</form:option>
+                                        <form:option value="m">수신자</form:option>
+                                        <form:option value="n">업무번호</form:option>
+                                    </form:select>
 
-                                <div id="navbar-search" class="navbar-form search-form selectSearch" style="float:left;">
-                                    <form:input path="searchDutyVO.searchKeyword" class="form-control" placeholder="검색어 입력" type="text" style="display: inline-block; width: 400px;height:36px;padding-right: 40px;" onkeypress="checkEnter(searchDutyList);"/>
-                                    <button type="button" class="btn btn-default" onclick="searchDutyList();"><i class="fas fa-search"></i></button>
+                                    <div id="navbar-search" class="navbar-form search-form selectSearch" style="float:left; display: flex; align-items: center;">
+                                        <form:input path="searchDutyVO.searchKeyword" class="form-control" placeholder="검색어 입력" type="text" style="display: inline-block; width: 400px;padding-right: 40px;" onkeypress="checkEnter(searchDutyList);"/>
+                                        <button class="btn btn-secondary" onclick="searchDutyList()" type="button"><i class='fas fa-search'></i>검색</button>
+                                    </div>
                                 </div>
 
                                 <div class="form-group" style="float:right;">
@@ -118,8 +143,8 @@
 
                             <!-- 게시판 목록 -->
                             <div class="table-responsive">
-                                <table class="table table-hover js-basic-example dataTable table-custom m-b-0 no-footer" id="DataTables_Table_0" role="grid" aria-describedby="DataTables_Table_0_info">
-                                    <thead>
+                                <table class="table table-hover" id="DataTables_Table_0" role="grid" aria-describedby="DataTables_Table_0_info">
+                                    <thead class="thead-light">
                                     <tr role="row">
                                         <th class="sorting_desc" tabindex="0" aria-controls="DataTables_Table_0" rowspan="1" colspan="1" aria-sort="descending" aria-label="Deadline: activate to sort column descending" style="width: 50px;text-align: center;">업무 번호</th>
                                         <th class="sorting" tabindex="0" aria-controls="DataTables_Table_0" rowspan="1" colspan="1" aria-label="Project: activate to sort column ascending" style="width: 300px;">업무 제목</th>

@@ -246,11 +246,11 @@
 <!-- 사이드바 -->
 <div id="left-sidebar" class="sidebar" style="border-right:2px solid rgb(0,0,0,0.1); margin-right: 10px;">
     <div class="sidebar-scroll">
-        <div class="tab-content p-l-0 p-r-0 text-align" style="font-size: 25px; margin-bottom: 15px;">
-            <button type="button"  id="schedule_go_btn" onclick="schedule_go()" style="background-color: #2980b9; color: white; border: 0px; width: 14rem; height: 3.8rem; border-radius: 10px;">일정 등록</button>
+        <div class="tab-content p-l-0 p-r-0 text-align" style="font-size: 20px; margin-bottom: 15px;">
+            <button type="button"  id="schedule_go_btn" onclick="schedule_go()" style="background-color: #2980b9; color: white; border: 0px; width: 100%; height: 3rem; border-radius: 10px;">일정 등록</button>
         </div>
 
-        <div class="tab-content p-l-0 p-r-0" style="font-size: 25px; color: #000; font-weight: 400; padding-bottom: 0;">
+        <div class="tab-content p-l-0 p-r-0" style="font-size: 23px; color: #000; font-weight: 400; padding-bottom: 0;">
             나의 일정
         </div>
         <ul class="main-menu metismenu">
@@ -262,7 +262,7 @@
             </li>
         </ul>   
 
-        <div id="commonHeader" class="tab-content p-l-0 p-r-0" style="font-size: 25px; color: #000; font-weight: 400; padding-bottom: 0; ">
+        <div id="commonHeader" class="tab-content p-l-0 p-r-0" style="font-size: 23px; color: #000; font-weight: 400; padding-bottom: 0; ">
             공유 일정
         </div>
         <ul class="main-menu metismenu">

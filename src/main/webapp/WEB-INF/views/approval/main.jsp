@@ -26,6 +26,26 @@
         margin: 3% 0;
     }
     .tableGroup{width: 49%;}
+    .subTitleText h2 {
+        display: flex;
+        justify-content: flex-start;
+        align-items: center;
+        font-size: 27px;
+        padding: 10px 0;
+        font-family: "Noto Sans KR", sans-serif;
+    }
+    .subTitleText i {
+        font-size: 24px;
+        margin-right: 5px;
+    }
+    .header{margin-bottom: 10px;}
+    .header h5{margin-bottom: 0;}
+    .table td, .table th{font-size: 15px;}
+    .badge {
+        font-size: 13px !important;
+        padding: 5px 7px !important;
+    }
+    .contentConteiner{margin-bottom: 25px;}
 </style>
 <section class="subPageContain">
 
@@ -38,10 +58,10 @@
             <div class="container-fluid">
                 <!-- 메인 content 넣는 곳 -->
                 <div class="row clearfix" >
-                    <div class="col-12" style="margin-top: 2%; font-family: S-CoreDream-6Bold">
-                        <!--                     <h2>전자 결재</h2> -->
-                        <h2 style="font-family: S-CoreDream-6Bold"><i class="icon-note" ></i>&nbsp;전자 결재</h2>
-                        <hr>
+                    <div class="col-12" style="padding: 0;">
+                        <div class="subTitleText">
+                            <h2><i class="fa-solid fa-angles-right"></i>전자결재</h2>
+                        </div>
                     </div>
 
 
@@ -49,22 +69,21 @@
                 </div>
 
                 <div class="row clearfix " style="font-family: S-CoreDream-4Regular" >
-                    <div class="col-lg-6 col-md-12" style="padding-right: 4px;">
+                    <div class="col-lg-6 col-md-12" style="padding-left:0; padding-right: 4px;">
 
-                        <div class="card" >
-                            <div class="header">
-                                <h5 >
-                                    결재 대기 문서
-                                    <span class="float-right" style="cursor: pointer; " onclick="location.href='<%=request.getContextPath()%>/approval/lists/waitList'">
+                        <div class="card" style="padding: 10px 15px;">
+                            <div class="header" style="display: flex; justify-content: space-between; align-items: center;">
+                                <h5 style="display: flex; align-items: center;">
+                                    <i class="fa fa-square" style="margin-right: 5px; font-size: 14px;" aria-hidden="true"></i>결재 대기 문서
+                                </h5>
+                                <span class="float-right" style="cursor: pointer; font-size: 20px;" onclick="location.href='<%=request.getContextPath()%>/approval/lists/waitList'">
 		                    		<i class="fa fa-sign-in"></i>
 		                    	</span>
-                                </h5>
-
                             </div>
                             <div class="body">
                                 <div class="table-responsive" style="overflow: hidden;">
                                     <table class="table table-hover m-b-0 c_list">
-                                        <thead>
+                                        <thead class="thead-light">
                                         <tr>
                                             <th>상신날짜</th>
                                             <th>사용 양식</th>
@@ -112,19 +131,19 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="card">
-                            <div class="header">
-                                <h5>
-                                    기안 문서함
-                                    <span class="float-right" style="cursor: pointer;" onclick="location.href='<%=request.getContextPath()%>/approval/lists/draftList'">
+                        <div class="card" style="padding: 10px 15px;">
+                            <div class="header" style="display: flex; justify-content: space-between; align-items: center;">
+                                <h5 style="display: flex; align-items: center;">
+                                    <i class="fa fa-square" style="margin-right: 5px; font-size: 14px;" aria-hidden="true"></i>기안 문서함
+                                </h5>
+                                <span class="float-right" style="cursor: pointer; font-size: 20px;" onclick="location.href='<%=request.getContextPath()%>/approval/lists/waitList'">
 		                    		<i class="fa fa-sign-in"></i>
 		                    	</span>
-                                </h5>
                             </div>
                             <div class="body">
                                 <div class="table-responsive" style="overflow: hidden;">
                                     <table class="table table-hover m-b-0 c_list">
-                                        <thead>
+                                        <thead class="thead-light">
                                         <tr>
                                             <th>상신날짜</th>
                                             <th>사용 양식</th>
@@ -181,20 +200,20 @@
 
                     </div>
                     <div class="col-lg-6 col-md-12" style="padding-right: 4px;">
-                        <div class="card">
-                            <div class="header">
-                                <h5>
-                                    결재완료문서
-                                    <span class="float-right" style="cursor: pointer;" onclick="location.href='<%=request.getContextPath()%>/approval/lists/completeList'">
-	                    		<i class="fa fa-sign-in"></i>
-	                    	</span>
+                        <div class="card" style="padding: 10px 15px;">
+                            <div class="header" style="display: flex; justify-content: space-between; align-items: center;">
+                                <h5 style="display: flex; align-items: center;">
+                                    <i class="fa fa-square" style="margin-right: 5px; font-size: 14px;" aria-hidden="true"></i>결재완료문서
                                 </h5>
+                                <span class="float-right" style="cursor: pointer; font-size: 20px;" onclick="location.href='<%=request.getContextPath()%>/approval/lists/waitList'">
+		                    		<i class="fa fa-sign-in"></i>
+		                    	</span>
                             </div>
 
                             <div class="body">
                                 <div class="table-responsive" style="overflow: hidden;">
                                     <table class="table table-hover m-b-0 c_list">
-                                        <thead>
+                                        <thead class="thead-light">
                                         <tr>
                                             <th>상신날짜</th>
                                             <th>사용 양식</th>
@@ -246,20 +265,20 @@
 
 
 
-                        <div class="card">
-                            <div class="header">
-                                <h5>
-                                    참조 문서함
-                                    <span class="float-right" style="cursor: pointer;" onclick="location.href='<%=request.getContextPath()%>/approval/lists/referList'">
-	                    		<i class="fa fa-sign-in"></i>
-	                    	</span>
+                        <div class="card" style="padding: 10px 15px;">
+                            <div class="header" style="display: flex; justify-content: space-between; align-items: center;">
+                                <h5 style="display: flex; align-items: center;">
+                                    <i class="fa fa-square" style="margin-right: 5px; font-size: 14px;" aria-hidden="true"></i>참조 문서함
                                 </h5>
+                                <span class="float-right" style="cursor: pointer; font-size: 20px;" onclick="location.href='<%=request.getContextPath()%>/approval/lists/waitList'">
+		                    		<i class="fa fa-sign-in"></i>
+		                    	</span>
                             </div>
 
                             <div class="body">
                                 <div class="table-responsive" style="overflow: hidden;">
                                     <table class="table table-hover m-b-0 c_list">
-                                        <thead>
+                                        <thead class="thead-light">
                                         <tr>
                                             <th>상신날짜</th>
                                             <th>사용 양식</th>

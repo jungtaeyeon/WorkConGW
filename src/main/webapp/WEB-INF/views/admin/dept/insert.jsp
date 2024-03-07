@@ -67,7 +67,7 @@
     #deptTeamYnDiv label{
         margin: 10px 40px 0px 40px;
     }
-
+    .form-group input{padding: 20px 10px !important;}
 
 
 </style>
@@ -84,12 +84,11 @@
             <!-- 메인 content 넣는 곳 -->
             <div class="row clearfix">
                 <div class="col-lg-12 whole">
-                    <div class="card">
+                    <div class="card" style="padding: 5px 15px;">
                         <div class="header">
                             <div id="headDiv">
                                 <h3>부서/팀 추가</h3>
                             </div>
-                            <input type="button" onclick="regist();" class="btn float-right" style="background-color: #0c1e35; color: #ffffff;" id="realRegistBtn" value="저장"> <!-- float-right 클래스 추가 -->
                         </div>
                         <br>
                         <hr/>
@@ -128,6 +127,7 @@
                                 </div>
                             </form:form>
                         </div>
+                        <input type="button" onclick="regist();" class="btn" style="background-color: #0c1e35; color: #ffffff;" id="realRegistBtn" value="저장"> <!-- float-right 클래스 추가 -->
                     </div>
                 </div>
             </div>

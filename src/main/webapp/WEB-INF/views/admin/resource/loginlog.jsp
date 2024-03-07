@@ -48,7 +48,7 @@
         height: 500px;
     }
     .body{
-        max-width: 1500px; /* 예시로 1200px로 설정 */
+        margin-top: 15px; 
     }
 
 
@@ -66,7 +66,7 @@
     th:nth-child(7) { width: 230px; }
     /* 나머지 th에 대한 너비 설정 계속... */
 
-
+    .card{padding: 5px 15px;}
 </style>
 
 
@@ -104,7 +104,7 @@
                     <h3 style="display:inline-block; font-family: S-CoreDream-6Bold">사용자 로그인 기록</h3>
                     <div class="row clearfix">
                         <div class="col-lg-12 col-md-12">
-                            <div class="card" style="font-family: S-CoreDream-6Bold">
+                            <div class="" style="font-family: S-CoreDream-6Bold">
                                 <div class="body">
                                     <div class="table-responsive">
                                         <table class="table table-hover js-basic-example dataTable table-custom table-striped m-b-0 c_list">

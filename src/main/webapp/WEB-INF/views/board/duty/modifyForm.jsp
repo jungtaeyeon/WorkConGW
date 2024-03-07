@@ -3,8 +3,20 @@
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-
-<body>
+<style>
+	.subTitleText h2 {
+        display: flex;
+        justify-content: flex-start;
+        align-items: center;
+        font-size: 27px;
+        padding: 10px 0;
+        font-family: "Noto Sans KR", sans-serif;
+    }
+    .subTitleText i {
+        font-size: 24px;
+        margin-right: 5px;
+    }
+</style>
 <%--헤더--%>
 <%@ include file="../../include/header.jsp"%>
 <section class="subPageContain">
@@ -17,7 +29,11 @@
 		<div class="block-header">
             <div class="row">
             	<div class="col-sm-5">
-                	<h2 style="padding-left:10px;font-size:2em; font-family: S-CoreDream-6Bold"><i class="fas fa-sticky-note"></i>&nbsp;업무 상세 #${boardFormVO.dutyVO.duty_Board_Id } </h2>
+					<div class="subTitleText">
+						<h2>
+							<i class="fa-solid fa-angles-right"></i>&nbsp;업무 상세 #${boardFormVO.dutyVO.duty_Board_Id } 
+						</h2>
+					</div>
                 </div>
                 <div class="col-sm-7 " style="font-family: S-CoreDream-6Bold">
                		<div style="float:right;">

@@ -60,12 +60,8 @@
 		padding: 50px;
 	}
 
-	#listForm{
-		width: 1423px;
-		height: 500px;
-	}
-	.body{
-		max-width: 1500px; /* 예시로 1200px로 설정 */
+	.contentConteiner{
+		width: 100%;
 	}
 
 
@@ -89,6 +85,7 @@
 		justify-content: center;
 		margin-left : 550px
 	}
+	.container-fluid{padding: 15px;}
 
 </style>
 <!-- 메인 content -->
@@ -102,11 +99,11 @@
 	<!--컨텐츠 영역-->
 	<div class="contentConteiner">
 
-		<div class="container-fluid">
+		<div class="container-fluid" >
 			<!-- 메인 content 넣는 곳 -->
 			<div class="row clearfix" >
 				<div class="col-lg-12" >
-					<div class="card">
+					<div style="width: 100%;">
 						<div class="header-group" id="header-group">
 							<div class="header col-lg-6">
 								<span style="color: #a9a9a9; font-family: S-CoreDream-4Regular">조직 관리</span>

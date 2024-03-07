@@ -59,6 +59,18 @@ th{
 	vertical-align: bottom;
     border-bottom: 2px solid #dee2e6;
 }
+.subTitleText h2 {
+        display: flex;
+        justify-content: flex-start;
+        align-items: center;
+        font-size: 27px;
+        padding: 10px 0;
+        font-family: "Noto Sans KR", sans-serif;
+      }
+      .subTitleText i {
+        font-size: 24px;
+        margin-right: 5px;
+      }
 
 </style>
 
@@ -68,6 +80,7 @@ th{
 <!-- 헤더인클루드 -->
 <%@ include file="/WEB-INF/views/include/header.jsp"%>
 <section class="subPageContain">
+	<%@ include file="../boardSidebar.jsp"%>
 	<!--컨텐츠 영역-->
 	<div class="contentConteiner">
 
@@ -81,9 +94,11 @@ th{
 					<form:hidden path="anonyVO.anony_Board_Create_Dt"/>
 					<form:hidden path="searchanonyReplyVO.pageIndex" />
 					<div class="row clearfix">
-						<div class="col-12" style="margin-top: 2%;">
-							<h2 style="font-family: S-CoreDream-6Bold">
-								<i class="icon-bubbles"></i>&nbsp;익명 게시판
+						<div class="col-12" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+							<div class="subTitleText">
+								<h2><i class="fa-solid fa-angles-right"></i>익명게시판</h2>
+							</div>
+							<div>
 								<button type="button" class="btn btn-secondary float-right" onclick="location.href='<%=request.getContextPath()%>/board/anony/list';"
 										style="margin-right: 22px; font-family: S-CoreDream-4Regular" >
 									<i class="icon-close"></i> <span>목록</span>
@@ -101,9 +116,9 @@ th{
 										</button>
 									</c:if>
 								</c:if>
-							</h2>
-							<hr>
+							</div>
 						</div>
+						<hr>
 					</div>
 					<div class="div2">
 						<div class="row clearfix" >
@@ -146,98 +161,88 @@ th{
 													</tr>
 												</table>
 												<!-- 내용 -->
-												<div style="margin-top: 20spx; margin-top: 20px;padding-left: 13px;padding-right: 13px;">${anony.anony_Board_Content}</div>
+												<div style="margin-top: 20spx; margin-top: 20px;padding-left: 13px;padding-right: 13px; font-size: 16px;">${anony.anony_Board_Content}</div>
 											</div>
 										</div>
 									</div>
-
-									<div class="header" style="padding-bottom: 0px;">
-										<h4><b>💬 댓글 ${paginationInfo.totalRecordCount}</b></h4>
-									</div>
+									<div style="margin-top: 20px;">
+										<div class="header" style="margin: 0 17px; border-top: 1px solid rgba(0, 0, 0, 0.125); padding-top: 10px;">
+											<h4><b>💬 댓글 ${paginationInfo.totalRecordCount}</b></h4>
+										</div>
 									<!-- 댓글 등록 -->
-									<div class="body">
-										<form>
-											<div class="form-group">
-												<textarea id="reply_Content" rows="4" class="form-control no-resize" placeholder="댓글을 입력해주세요"></textarea>
-											</div>
-											<div class="btn1">
-												<button class="btn btn-primary" onclick="registAnonyReply();"><i class="fa fa-check-square"></i> 등록</button>
-												<!--     <a href="javascript:void(0);" class="float-right">13K users active</a> -->
-											</div>
-										</form>
-										<c:if test="${anonyReplyVOList.size() == 0 }">
-											<hr>
-											<div style="height:70px;text-align: center;padding:10px;">
-												<span>등록된 댓글이 없습니다.</span>
-											</div>
-										</c:if>
-										<br>
-										<c:if test="${anonyReplyVOList.size() > 0 }">
-											<c:forEach items="${anonyReplyVOList}" var="anonyReply">
-												<ul class="right_chat list-unstyled mb-0" id="replyList_${anonyReply.reply_Id}">
-													<li class="offline">
-														<a href="javascript:void(0);">
-															<div class="media">
-																<i class="icon-user" style="font-size: large;"></i>
-																<div class="media-body">
-	                                                <span class="name" style="padding-left: 5px;">익명
-	                                               	<small class="float-right"><i class="fa fa-clock-o"></i>
-	                                                </small>
-	                                                </span>
-																	<c:if test="${loginUser.auth_Id == 's' }">
-																		<div class="float-right">
-																			<a href="javascript:void(0);" style="margin-left:10px;" onclick="removeReply(${anonyReply.reply_Id});"><i class="fa fa-trash-o"></i> 삭제</a>
-																		</div>
-																	</c:if>
-
-
-
-
-
-																	<span class="message">
-	                                                	<h6 style="margin-bottom:5px; color: grey;">${anonyReply.reply_Content }</h6>
-	                                                </span>
-																	<span class="badge badge-outline status"></span>
-																</div>
-															</div>
-														</a>
-													</li>
-												</ul>
-											</c:forEach>
-											<%--//////////////////////////페이징 처리구간/////////////////////////////////////////////////--%>
-											<nav aria-label="Page navigation example" style="height:45px;text-align: center;margin-top:15px;">
-												<div class="col-sm-12 col-md-7" style="text-align:right">
-													<div class="dataTables_paginate paging_simple_numbers" id="dataTable_paginate">
-														<ul class="pagination">
-
-															<c:if test="${searchanonyReplyVO.prev}">
-																<li class="paginate_button page-item previous" id="dataTable_previous">
-																	<a href="javascript:void(0);" onclick="searchList(${searchanonyReplyVO.startDate - 1}); return false;" aria-controls="dataTable" data-dt-idx="0" tabindex="0" class="page-link">Previous</a>
-																</li>
-															</c:if>
-
-															<c:forEach var="num" begin="${searchanonyReplyVO.startDate}" end="${searchanonyReplyVO.endDate}">
-																<li class="paginate_button page-item">
-																	<a href="javascript:void(0);" onclick="searchList(${num}); return false;" aria-controls="dataTable" data-dt-idx="0" tabindex="0" class="page-link">${num}</a>
-																</li>
-															</c:forEach>
-
-															<c:if test="${searchanonyReplyVO.next}">
-																<li class="paginate_button page-item next" id="dataTable_next">
-																	<a href="javascript:void(0);" onclick="searchList(${searchanonyReplyVO.endDate + 1}); return false;" aria-controls="dataTable" data-dt-idx="0" tabindex="0" class="page-link">Next</a>
-																</li>
-															</c:if>
-														</ul>
-													</div>
+										<div class="body">
+											<form>
+												<div class="form-group">
+													<textarea id="reply_Content" rows="4" class="form-control no-resize" placeholder="댓글을 입력해주세요"></textarea>
 												</div>
-											</nav>
+												<div class="btn1">
+													<button class="btn btn-primary" onclick="registAnonyReply();"><i class="fa fa-check-square"></i> 등록</button>
+													<!--     <a href="javascript:void(0);" class="float-right">13K users active</a> -->
+												</div>
+											</form>
+											<c:if test="${anonyReplyVOList.size() == 0 }">
+												<hr>
+												<div style="height:70px;text-align: center;padding:10px;">
+													<span>등록된 댓글이 없습니다.</span>
+												</div>
+											</c:if>
+											<br>
+											<c:if test="${anonyReplyVOList.size() > 0 }">
+												<c:forEach items="${anonyReplyVOList}" var="anonyReply">
+													<ul class="right_chat list-unstyled" style="border: 1px solid #d2d2d2; padding:5px 15px; margin-bottom: 10px;" id="replyList_${anonyReply.reply_Id}">
+														<li class="offline">
+															<a href="javascript:void(0);">
+																<div class="media">
+																	<i class="icon-user" style="font-size: large;"></i>
+																	<div class="media-body">
+																		<span class="name" style="font-size: 16px;">익명<i class="fa fa-clock-o"></i></span>
+																		<c:if test="${loginUser.auth_Id == 's' }">
+																			<div class="float-right">
+																				<a href="javascript:void(0);" style="margin-left:10px; font-size: 16px;" onclick="removeReply(${anonyReply.reply_Id});"><i class="fa fa-trash-o"></i> 삭제</a>
+																			</div>
+																		</c:if>
+																		<span class="message">
+																			<h6 style="margin-bottom:5px; color: grey;">${anonyReply.reply_Content }</h6>
+																		</span>
+																		<span class="badge badge-outline status"></span>
+																	</div>
+																</div>
+															</a>
+														</li>
+													</ul>
+												</c:forEach>
+												<%--//////////////////////////페이징 처리구간/////////////////////////////////////////////////--%>
+												<nav aria-label="Page navigation example" style="height:45px;text-align: center;margin-top:15px;">
+													<div class="col-sm-12 col-md-7" style="text-align:right">
+														<div class="dataTables_paginate paging_simple_numbers" id="dataTable_paginate" style="display: flex; justify-content: center;">
+															<ul class="pagination">
+																<c:if test="${searchanonyReplyVO.prev}">
+																	<li class="paginate_button page-item previous" id="dataTable_previous">
+																		<a href="javascript:void(0);" onclick="searchList(${searchanonyReplyVO.startDate - 1}); return false;" aria-controls="dataTable" data-dt-idx="0" tabindex="0" class="page-link">Previous</a>
+																	</li>
+																</c:if>
+																<c:forEach var="num" begin="${searchanonyReplyVO.startDate}" end="${searchanonyReplyVO.endDate}">
+																	<li class="paginate_button page-item">
+																		<a href="javascript:void(0);" onclick="searchList(${num}); return false;" aria-controls="dataTable" data-dt-idx="0" tabindex="0" class="page-link">${num}</a>
+																	</li>
+																</c:forEach>
 
-											<%--//////////////////////////페이징 처리구간/////////////////////////////////////////////////--%>
-										</c:if>
-										<div class="button1" >
-											<!-- 								<button type="button" class="btn btn-outline-info"> -->
-											<!-- 									<i class="fa fa-paperclip">링크복사</i> -->
-											<!-- 								</button> -->
+																<c:if test="${searchanonyReplyVO.next}">
+																	<li class="paginate_button page-item next" id="dataTable_next">
+																		<a href="javascript:void(0);" onclick="searchList(${searchanonyReplyVO.endDate + 1}); return false;" aria-controls="dataTable" data-dt-idx="0" tabindex="0" class="page-link">Next</a>
+																	</li>
+																</c:if>
+															</ul>
+														</div>
+													</div>
+												</nav>
+												<%--//////////////////////////페이징 처리구간/////////////////////////////////////////////////--%>
+											</c:if>
+											<div class="button1" >
+												<!-- 								<button type="button" class="btn btn-outline-info"> -->
+												<!-- 									<i class="fa fa-paperclip">링크복사</i> -->
+												<!-- 								</button> -->
+											</div>
 										</div>
 									</div>
 								</div>
@@ -245,10 +250,8 @@ th{
 						</div>
 					</div>
 				</form:form>
-
 			</div>
 		</div>
-
 	</div>
 </section>
 <!-- 푸터 인클루드 -->
