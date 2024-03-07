@@ -299,11 +299,10 @@
             <form:form modelAttribute="meetRoomFormVO" name="listForm2">
               <form:hidden path="searchReservationNoticeVO.isType" id="isReservationNoticeType"/>
               <div style="margin-top: 20px;">
-                  <form:select path="searchMeetRoomReservationVO.searchCondition" class="form-control selectSearch" style="width:130px;float:left;">
-                    <form:option value="tcm">전체</form:option>
-                    <form:option value="t">회의실명</form:option>
+                  <form:select path="searchReservationNoticeVO.searchCondition" class="form-control selectSearch" style="width:130px;float:left;">
+                    <form:option value="tc">전체</form:option>
+                    <form:option value="t">제목</form:option>
                     <form:option value="c">내용</form:option>
-                    <form:option value="m">예약자</form:option>
                   </form:select>
                   <button type="button" class="btn btn-secondary" onclick="resetAndReservation()">
                     <!-- 초기화 아이콘 -->
@@ -311,15 +310,15 @@
                     초기화
                   </button>
                   <div id="navbar-search" class="navbar-form search-form selectSearch" style="float:left;">
-                    <form:input path="searchMeetRoomReservationVO.searchKeyword" class="form-control" placeholder="검색해주세요." type="text" style="width: 200px;padding-right: 40px;" onkeypress="checkEnter(searchMeetRoomList);"/>
+                    <form:input path="searchReservationNoticeVO.searchKeyword" class="form-control" placeholder="검색해주세요." type="text" style="width: 200px;padding-right: 40px;" onkeypress="checkEnter(searchMeetRoomList);"/>
 
                   </div>
                   <div class="form-group" style="float:right;">
                     <div style="display: inline-block;float:left;font-size: 1.2em;margin:6px 20px 0 0">
                       <span>${paginationInfo.currentPageNo} </span>/<span> ${paginationInfo.totalPageCount} 페이지 중</span>
                     </div>
-                    <form:select path="searchMeetRoomReservationVO.pageUnit" class="form-control" style="width:130px;font-size: 1.2em;" onchange="searchMeetRoomList(1);">
-                      <form:options items="${meetRoomFormVO.searchMeetRoomReservationVO.pageUnitSelector}" itemValue="pageUnitValue" itemLabel="pageUnitLabel"/>
+                    <form:select path="searchReservationNoticeVO.pageUnit" class="form-control" style="width:130px;font-size: 1.2em;" onchange="searchMeetRoomList(1);">
+                      <form:options items="${meetRoomFormVO.searchReservationNoticeVO.pageUnitSelector}" itemValue="pageUnitValue" itemLabel="pageUnitLabel"/>
                     </form:select>
                   </div>
               </div>
@@ -391,11 +390,11 @@
             </div>
             <form:form modelAttribute="meetRoomFormVO" name="listForm3">
               <div style="margin-top: 20px;">
-                <form:select path="searchMeetRoomReservationVO.searchCondition" class="form-control selectSearch" style="width:130px;float:left;">
-                  <form:option value="tcm">전체</form:option>
-                  <form:option value="t">회의실명</form:option>
+                <form:select path="searchReservationComplainVO.searchCondition" class="form-control selectSearch" style="width:130px;float:left;">
+                  <form:option value="tcw">전체</form:option>
+                  <form:option value="t">제목</form:option>
                   <form:option value="c">내용</form:option>
-                  <form:option value="m">예약자</form:option>
+                  <form:option value="w">작성자</form:option>
                 </form:select>
                 <button type="button" class="btn btn-secondary" onclick="resetAndReservation()">
                   <!-- 초기화 아이콘 -->
@@ -403,15 +402,15 @@
                   초기화
                 </button>
                 <div id="navbar-search" class="navbar-form search-form selectSearch" style="float:left;">
-                  <form:input path="searchMeetRoomReservationVO.searchKeyword" class="form-control" placeholder="검색해주세요." type="text" style="width: 200px;padding-right: 40px;" onkeypress="checkEnter(searchMeetRoomList);"/>
-
+                  <form:input path="searchReservationComplainVO.searchKeyword" class="form-control" placeholder="검색해주세요" type="text" style="width: 200px;padding-right: 40px;" onkeypress="checkEnter(searchReservationComplainList);"/>
+                  <button type="button" class="btn btn-default" onclick="searchReservationComplainList();"><i class="icon-magnifier"></i></button>
                 </div>
                 <div class="form-group" style="float:right;">
                   <div style="display: inline-block;float:left;font-size: 1.2em;margin:6px 20px 0 0">
                     <span>${paginationInfo.currentPageNo} </span>/<span> ${paginationInfo.totalPageCount} 페이지 중</span>
                   </div>
-                  <form:select path="searchMeetRoomReservationVO.pageUnit" class="form-control" style="width:130px;font-size: 1.2em;" onchange="searchMeetRoomList(1);">
-                    <form:options items="${meetRoomFormVO.searchMeetRoomReservationVO.pageUnitSelector}" itemValue="pageUnitValue" itemLabel="pageUnitLabel"/>
+                  <form:select path="searchReservationComplainVO.pageUnit" class="form-control" style="width:130px;font-size: 1.2em;" onchange="searchMeetRoomList(1);">
+                    <form:options items="${meetRoomFormVO.searchReservationComplainVO.pageUnitSelector}" itemValue="pageUnitValue" itemLabel="pageUnitLabel"/>
                   </form:select>
                 </div>
               </div>
