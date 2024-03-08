@@ -24,6 +24,21 @@
 tr:hover{
 	background-color: white;
 }
+.subTitleText {
+			margin-bottom: 25px;
+		}
+		.subTitleText h2 {
+			display: flex;
+			justify-content: flex-start;
+			align-items: center;
+			font-size: 27px;
+			padding: 10px 0;
+			font-family: "Noto Sans KR", sans-serif;
+		}
+		.subTitleText i {
+			font-size: 24px;
+			margin-right: 5px;
+		}
 </style>
 
 	<div class="contentConteiner">
@@ -31,15 +46,18 @@ tr:hover{
 		<div id="main-content">
 			<div class="container-fluid">
 					<div class="row clearfix">
-						<div class="col-12" style="margin-top: 2%; font-family: 'S-CoreDream-6Bold">
-							<h2><i class="fa-solid fa-signs-post"></i> 마일스톤</h2>
-							<hr>
+						<div class="col-12" style="padding: 0;">
+							<div class="subTitleText">
+								<h2>
+									<i class="fa-solid fa-angles-right"></i>마일스톤
+								</h2>
+							</div>
 						</div>
 					</div>
 
-					<div class="row clearfix" style="font-family: S-CoreDream-7ExtraBold">
-						<div class="col-lg-12 col-md-12">
-							<div class="card">
+					<div class="row clearfix">
+						<div class="col-lg-12 col-md-12" style="padding: 0;">
+							<div>
 								<div class="body project_report">
 									<button type="button" class="btn btn-light" onclick="window.location.href='${pageContext.request.contextPath}/board/issue/list';">이슈</button>
 									<button type="button" class="btn btn-light active" onclick="window.location.href='${pageContext.request.contextPath}/board/milestone/list';">마일스톤</button>

@@ -276,8 +276,8 @@
                 </div>
                 
                 <!-- 우측 사이드바(업무, 마일스톤) -->
-                <div class="col-lg-3" style="padding-left:0px;">
-                    <div class="m-b-10 card">
+                <div class="col-lg-3" style="padding-left:0px; padding-top: 10px;">
+                    <div class="m-b-10 card" style="padding: 5px 15px; font-size: 14px;">
                         <div class="body">
 							<%-- 이슈 작성자만 클릭 시, changeMode 함수 호출 --%>
                         	<div <c:if test="${loginUser.emp_Id == issue.emp_Id }">class="duty" onclick="changeMode('업무번호');"</c:if> >
@@ -299,13 +299,13 @@
 								<form:input path="issueVO.duty_Board_Id" id="dutyBoardIdForIssue" style="width:100%;margin-top:5px;margin-bottom:5px;" readonly="true"/>
 								<a href="#largeModal" id="addDuty" data-toggle="modal" data-target="#dutyModal"> + 업무 선택하기</a><br>
 							<%-- 이슈 저장 함수 필요 --%>
-								<button type="button" class="btn btn-primary" style="width: 49%;font-size: 0.9em;padding: 5px;" onclick="saveIssue('업무번호');">저장</button>
-                        		<button type="button" class="btn btn-secondary" style="width: 49%;font-size: 0.9em;padding: 5px;" onclick="changeMode('업무번호');">취소</button>
+								<button type="button" class="btn btn-primary" style="width: 49%;font-size: 0.9em;padding: 5px; margin-top: 7px;" onclick="saveIssue('업무번호');">저장</button>
+                        		<button type="button" class="btn btn-secondary" style="width: 49%;font-size: 0.9em;padding: 5px; margin-top: 7px;" onclick="changeMode('업무번호');">취소</button>
                         	</div>
                         </div>
                     </div>
                     
-                    <div class="card">
+                    <div class="card" style="padding: 5px 15px; font-size: 14px;">
                         <div class="body">
 							<%-- 이슈 작성자만 클릭 시, changeMode 함수 호출 --%>
                         	<div <c:if test="${loginUser.emp_Id == issue.emp_Id }">class="milestone" onclick="changeMode('마일스톤');"</c:if> >

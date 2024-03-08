@@ -14,6 +14,9 @@
 	<%@ include file="../issueSidebar.jsp"%>
 
 	<style>
+		.nav-link{
+			padding: 0.75rem;
+		}
 		.pagination{
 			text-align: center;
 			justify-content: center;
@@ -28,6 +31,21 @@
 		.issueTitle:hover{
 			color:#2980b9;
 		}
+		.subTitleText {
+			margin-bottom: 25px;
+		}
+		.subTitleText h2 {
+			display: flex;
+			justify-content: flex-start;
+			align-items: center;
+			font-size: 27px;
+			padding: 10px 0;
+			font-family: "Noto Sans KR", sans-serif;
+		}
+		.subTitleText i {
+			font-size: 24px;
+			margin-right: 5px;
+		}
 	</style>
 
 	<!--컨텐츠 영역-->
@@ -37,42 +55,49 @@
 		<div id="main-content">
 			<div class="container-fluid">
 				<div class="row clearfix">
-					<div class="col-12" style="margin-top: 2%; font-family: S-CoreDream-6Bold">
-						<h2><i class="fa fa-tasks"></i>&nbsp;이슈 목록</h2>
-						<hr>
+					<div class="col-12" style="padding: 0;">
+						<div class="subTitleText">
+							<h2>
+								<i class="fa-solid fa-angles-right"></i>이슈목록
+							</h2>
+						</div>
 					</div>
 				</div>
 
-				<div class="row clearfix" style="font-family: S-CoreDream-7ExtraBold">
-					<div class="col-lg-12 col-md-12">
-						<div class="card">
+				<div class="row clearfix">
+					<div class="col-lg-12 col-md-12" style="padding: 0;">
+						<div>
 							<div class="body project_report">
-								<button type="button" class="btn btn-light active" onclick="window.location.href='${pageContext.request.contextPath}/board/issue/list';">이슈</button>
-								<button type="button" class="btn btn-light" onclick="window.location.href='${pageContext.request.contextPath}/board/milestone/list';">마일스톤</button>
-								<button type="button" class="btn btn-light" onclick="window.location.href='${pageContext.request.contextPath}/board/project/list';">프로젝트</button>
+								<div style="display: flex; align-items: center;">
+									<button type="button" class="btn btn-light active" onclick="window.location.href='${pageContext.request.contextPath}/board/issue/list';">이슈</button>
+									<button type="button" class="btn btn-light" style="margin-left: 5px;" onclick="window.location.href='${pageContext.request.contextPath}/board/milestone/list';">마일스톤</button>
+									<button type="button" class="btn btn-light" style="margin-left: 5px;" onclick="window.location.href='${pageContext.request.contextPath}/board/project/list';">프로젝트</button>
 
-								<label class="fancy-checkbox m-l-30">
-									<input type="checkbox" data-parsley-multiple="checkbox" <c:if test="${boardFormVO.searchIssueVO.searchCondition eq 'w' && boardFormVO.searchIssueVO.searchKeyword eq loginUser.emp_Name }">checked</c:if>  onchange="setSearchCondition(this);"/>
-									<span>내 이슈만 보기</span>
-								</label>
+									<label class="fancy-checkbox m-l-30" style="font-size: 15px; margin-bottom: 0; margin-left: 5px;">
+										<input type="checkbox" data-parsley-multiple="checkbox" <c:if test="${boardFormVO.searchIssueVO.searchCondition eq 'w' && boardFormVO.searchIssueVO.searchKeyword eq loginUser.emp_Name }">checked</c:if>  onchange="setSearchCondition(this);"/>
+										<span>내 이슈만 보기</span>
+									</label>
 
-								<div style="display:inline-block;margin:5px 15px;font-size: 1.2em;color:gray;">
-									[총 <fmt:formatNumber value="${paginationInfo.totalRecordCount }" type="number"/>개]
+									<div style="display:inline-block;margin:5px 15px;font-size: 1.2em;color:gray;">
+										[총 <fmt:formatNumber value="${paginationInfo.totalRecordCount }" type="number"/>개]
+									</div>
 								</div>
 
 								<form:form modelAttribute="boardFormVO" name="listForm">
 									<form:hidden path="searchIssueVO.isOpen" />
 									<form:hidden path="searchIssueVO.issue_Open_St" />
-									<div style="margin-top:20px;">
-										<form:select path="searchIssueVO.searchCondition" class="form-control selectSearch" style="width:130px;font-size: 1.2em;float:left;">
-											<form:option value="tcw">전체</form:option>
-											<form:option value="t">제목</form:option>
-											<form:option value="c">내용</form:option>
-											<form:option value="w">작성자</form:option>
-										</form:select>
-										<div id="navbar-search" class="navbar-form search-form selectSearch" style="float:left;">
-											<form:input path="searchIssueVO.searchKeyword" class="form-control" placeholder="검색어 입력" type="text" style="display: inline-block; width: 400px;height:36px;padding-right: 40px;" onkeypress="checkEnter(searchIssueList);"/>
-											<button type="button" class="btn btn-default" onclick="searchIssueList();"><i class="fas fa-search"></i></button>
+									<div style="margin:20px 0; display: flex; justify-content: space-between; align-items: center;">
+										<div>
+											<form:select path="searchIssueVO.searchCondition" class="form-control selectSearch" style="width:130px; float:left;">
+												<form:option value="tcw">전체</form:option>
+												<form:option value="t">제목</form:option>
+												<form:option value="c">내용</form:option>
+												<form:option value="w">작성자</form:option>
+											</form:select>
+											<div id="navbar-search" class="navbar-form search-form selectSearch" style="float:left; display: flex; align-items: center;">
+												<form:input path="searchIssueVO.searchKeyword" class="form-control" placeholder="검색어 입력" type="text" style="display: inline-block; width: 400px;padding-right: 40px;" onkeypress="checkEnter(searchIssueList);"/>
+												<button class="btn btn-secondary" onclick="searchIssueList()" type="button"><i class='fas fa-search'></i>검색</button>
+											</div>
 										</div>
 										<div class="form-group" style="float:right;">
 											<div style="display: inline-block;float:left;font-size: 1.2em;margin:6px 20px 0 0">
@@ -82,7 +107,7 @@
 									</div>
 
 									<div class="table-responsive">
-										<ul class="nav nav-tabs" style="position:absolute;width:97.5%;z-index: 10;">
+										<ul class="nav nav-tabs" style="position:absolute;width:100%;z-index: 10;">
 											<c:choose>
 												<c:when test="${boardFormVO.searchIssueVO.isOpen eq 'open' }">
 													<li class="nav-item" style="cursor:pointer;"><a class="nav-link" id="open" onclick="changeCategory(this);"><i class="fas fa-info-circle"></i> <span style="margin-left:5px;">${paginationInfo.totalRecordCount }</span> Open</a></li>
@@ -109,7 +134,7 @@
 													</thead>
 													<tbody style="border:hidden;">
 													<c:if test="${!empty issueList}">
-														<c:forEach items="${issueList }" var="issue">
+														<c:forEach items="${issueList}" var="issue">
 															<tr role="row">
 																<td class="project-title" style="padding:15px 30px;">
 																	<div>

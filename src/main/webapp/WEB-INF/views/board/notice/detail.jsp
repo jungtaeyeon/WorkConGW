@@ -45,6 +45,18 @@ tbody {
 	text-decoration: underline;
 	cursor: pointer;
 }
+      .subTitleText h2 {
+        display: flex;
+        justify-content: flex-start;
+        align-items: center;
+        font-size: 27px;
+        padding: 10px 0;
+        font-family: "Noto Sans KR", sans-serif;
+      }
+      .subTitleText i {
+        font-size: 24px;
+        margin-right: 5px;
+      }
 
 </style>
 
@@ -59,13 +71,14 @@ tbody {
 
 <%--	<!-- 메인 content -->--%>
 	<div id="main-content">
-		<div class="container-fluid" style="font-family: S-CoreDream-4Regular" >
+		<div class="container-fluid">
 			<div class="row clearfix" >
-				<div class="col-12" style="margin-top: 2%; font-family: S-CoreDream-4Regular" >
-					<h2 style="font-family: S-CoreDream-4Regular">
-						<i class="fas fa-bullhorn"></i>&nbsp;사내공지
+				<div class="col-12" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;" >
+					<div class="subTitleText">
+						<h2><i class="fa-solid fa-angles-right"></i>사내공지</h2>
+					</div>
+					<div>
 						<button type="button" class="btn btn-secondary float-right" onclick="goBackToList();">목록</button>
-
 						<c:if test="${loginUser.auth_Id == 's' }">
 							<button class="btn btn-danger float-right m-r-5"
 								data-type="confirm" onclick="remove_go();">
@@ -75,10 +88,9 @@ tbody {
 								<i class="fa fa-eraser"></i> <span>수정</span>
 							</button>
 						</c:if>
-
-					</h2>
-					<hr>
+					</div>
 				</div>
+				<hr>
 			</div>
 			<div class="div2">
 				<div class="row clearfix">
@@ -153,7 +165,7 @@ tbody {
 							</thead>
 						</table>
 							<!-- 내용 -->
-							<div style="margin-top: 20px; padding-left: 15px; padding-right: 15px;">${notice.notice_content }</div>
+							<div style="margin-top: 20px; padding-left: 15px; padding-right: 15px; font-size: 16px;">${notice.notice_content }</div>
 					</div>
 				</div>
 			</div>

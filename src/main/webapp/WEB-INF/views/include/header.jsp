@@ -221,7 +221,7 @@
 		</ul>
 
 		<div id="navbar-menu">
-			<ul class="nav navbar-nav">
+			<ul class="nav navbar-nav" style="display: none;">
 				<!-- 메인메뉴 알림창 드롭다운 메뉴 -->
 				<li class="dropdown">
 					<div id="dropdownDiv" data-toggle="dropdown"></div>

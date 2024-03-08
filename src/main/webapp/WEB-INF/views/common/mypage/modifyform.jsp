@@ -275,7 +275,12 @@
 
     }
 
-
+    .input-group-prepend{
+      position: absolute;
+      right: 12px;
+      top: 50%;
+      transform: translateY(-64%);
+    }
   </style>
 </head>
 <body>
@@ -314,7 +319,7 @@
             <span id="deleteImage">x</span>
 
             <div class="profile-btn-area">
-              <label for="imageInput" style="margin-top: 7px;">이미지 선택</label>
+              <label for="imageInput" style="margin: 0;">이미지 선택</label>
               <input type="file" name="profileImage" id="imageInput" accept="image/*">
               <button >변경하기</button>
             </div>
@@ -379,10 +384,10 @@
             <div class="input-field">
               <label>*필수 서명 &nbsp&nbsp(png만 가능)</label>
               <div class = "input-group">
-                <input id="myFileName" type="text" class="form-control" name="emp_Sign" style="cursor: pointer;" value="${loginUser.emp_Sign}" onclick="addEmpSign();" required readonly>
+                <input id="myFileName" type="text" class="form-control" name="emp_Sign" style="cursor: pointer; background: none;" value="${loginUser.emp_Sign}" onclick="addEmpSign();" required readonly>
                 <input type="file" id ="myEmpSign" class="myEmpSign" onchange="myAddSignFile(this);" name="myEmpSign" style="display: none;">
-                <div class="input-group-prepend">
-                  <span class="input-group-text" style="margin: 10px;"><i class="fa fa-file-o" ></i> </span>
+                <div class="input-group-prepend" >
+                  <span class="input-group-text" style="padding: 0; border: none;"><i class="fa fa-file-o" ></i> </span>
                 </div>
               </div>
             </div>

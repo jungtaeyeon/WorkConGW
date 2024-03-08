@@ -293,12 +293,11 @@
 
         }
         #admin {
-            float:right;
             font-size: 20px;
             font-weight: bold;
 
         }
-
+        .side-text{text-align: center;}
         #adminpage{
             font-weight: bold;
             font-size: 25px;
@@ -344,7 +343,7 @@
     </br>
     </br>
     </br>
-       <p><i class="fa-solid fa-bars"></i> 관리자 메뉴</p>
+       <!-- <p><i class="fa-solid fa-bars"></i> 관리자 메뉴</p> -->
 
 
     <ul>

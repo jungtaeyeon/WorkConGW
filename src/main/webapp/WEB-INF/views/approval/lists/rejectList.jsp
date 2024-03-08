@@ -3,11 +3,23 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
-<html>
-<head>
-    <title>Title</title>
-</head>
-<body>
+<style>
+    .subTitleText {
+        margin-bottom: 25px;
+    }
+    .subTitleText h2 {
+        display: flex;
+        justify-content: flex-start;
+        align-items: center;
+        font-size: 27px;
+        padding: 10px 0;
+        font-family: "Noto Sans KR", sans-serif;
+    }
+    .subTitleText i {
+        font-size: 24px;
+        margin-right: 5px;
+    }
+</style>
 <!-- 헤더인클루드 -->
 <%@ include file="/WEB-INF/views/include/header.jsp"%>
 <section class="subPageContain">
@@ -19,31 +31,27 @@
             <div class="container-fluid">
                 <!-- 메인 content 넣는 곳 -->
                 <div class="row clearfix">
-                    <div class="col-12" style="margin-top: 2%; font-family: S-CoreDream-6Bold">
-                        <h2>반려 문서함</h2>
-                        <hr>
+                    <div class="col-12" style="padding: 0;">
+                        <div class="subTitleText">
+                            <h2><i class="fa-solid fa-angles-right"></i>반려문서</h2>
+                        </div>
                     </div>
                 </div>
 
-                <div class="row clearfix" style="font-family: S-CoreDream-7ExtraBold">
-                    <div class="col-12">
-
-                        <div class="card">
+                <div class="row clearfix">
+                    <div class="col-12" style="padding: 0;">
+                        <div>
                             <form:form modelAttribute="approvalFormVO" id = "listForm" name = "listForm" method="get">
                                 <div class="body">
                                     <!-- 검색 조건 설정 -->
                                     <h5 style="display:inline-block; font-weight: bold;">검색 조건</h5>
-                                    <div class="alert alert-light" role="alert" style="display:inline-block;padding-top:0;margin-bottom:0;">
-                                        <label class="fancy-checkbox">
+                                    <div class="alert alert-light" role="alert" style="padding: 0; margin: 0;">
+                                        <label class="fancy-checkbox" style="font-size:15px;">
                                             <input type="checkbox" data="selectDt" id="dateCheckBox" data-parsley-multiple="checkbox" onchange="changeForm(this);"/>
                                             <span>기안 날짜</span>
                                         </label>
-                                        <label class="fancy-checkbox">
-                                            <input type="checkbox" id="checkboxState" data="selectState" data-parsley-multiple="checkbox" onchange="changeForm(this);"/>
-                                            <span>결재 상태</span>
-                                        </label>
                                         <button id="resetBtn" type="reset" class="btn btn-default" title="Refresh" style="display: none;"></button>
-                                        <label onclick="conditionReset();"  style="cursor: pointer;">
+                                        <label onclick="conditionReset();"  style="cursor: pointer; font-size:15px; margin-left: 8px;">
                                             <i class="fa fa-refresh"></i>&nbsp&nbsp검색 조건 초기화
                                         </label>
                                         <div style="display:inline-block;margin:5px 15px;font-size: 1.2em;color:gray;">
@@ -53,7 +61,7 @@
                                     </div>
 
                                     <!-- 설정된 검색 조건 입력 폼 표시 -->
-                                    <div>
+                                    <div style="margin-bottom: 20px;">
                                         <div class="input-group date searchCri searchDt selectDt myConditions" data-date-autoclose="true" data-provide="datepicker" style="font-size:1.2em;width:200px;margin-right:15px;float:left;display:none;">
                                             <form:input path="searchApprovalVO.searchDt" id="inputSearchDt" type="text" class="form-control" placeholder="완료날짜 선택" readonly="true"/>
                                             <div class="input-group-append">
@@ -61,17 +69,16 @@
                                             </div>
                                         </div>
 
-                                        <form:select path = "searchApprovalVO.searchCondition" class="form-control selectSearch" style="width:130px;font-size: 1.2em;float:left;">
+                                        <form:select path = "searchApprovalVO.searchCondition" class="form-control selectSearch" style="width:130px;float:left;">
                                             <form:option value="ftd">전체</form:option>
                                             <form:option value="f">양식</form:option>
                                             <form:option value="t">제목</form:option>
                                             <form:option value="d">문서번호</form:option>
                                         </form:select>
-                                        <button type="button" class="btn btn-default" onclick="searchList();" style="margin-left: 5px;"><i class="fas fa-search" aria-hidden="true"></i></button>
-
+                                        <button class="btn btn-secondary" onclick="searchList()" type="button"><i class='fas fa-search'></i>검색</button>
 
                                         <div id="navbar-search" class="navbar-form search-form selectSearch" style="float:left;">
-                                            <form:input path = "searchApprovalVO.searchKeyword" class="form-control" placeholder="Search here..." type="text" style="width: 218px;height:36px;padding-right: 40px;" onkeypress="checkEnter(searchList);"/>
+                                            <form:input path = "searchApprovalVO.searchKeyword" class="form-control" placeholder="검색해주세요." type="text" style="width: 218px;padding-right: 40px;" onkeypress="checkEnter(searchList);"/>
                                         </div>
 
                                         <div class="form-group" style="float:right;">
@@ -85,7 +92,7 @@
                                     <!-- 리스트시작 -->
                                     <div class="table-responsive" style="overflow: inherit;">
                                         <table class="table table-hover m-b-0 c_list">
-                                            <thead>
+                                            <thead class="thead-light">
                                             <tr>
                                                 <th>상신날짜</th>
                                                 <th>사용 양식</th>
@@ -125,31 +132,31 @@
                                             </c:forEach>
                                             </tbody>
                                         </table>
-                                    </div>
-                                </div>
-                                <!-- Pagination -->
-                                <div class="col-sm-12 col-md-7" style="text-align:right">
-                                    <div class="dataTables_paginate paging_simple_numbers" id="dataTable_paginate">
-                                        <ul class="pagination">
+                                        <!-- Pagination -->
+                                        <div class="col-sm-12" style="text-align:right">
+                                            <div class="dataTables_paginate paging_simple_numbers" id="dataTable_paginate" style="display: flex; justify-content: center; align-items: center;">
+                                                <ul class="pagination">
 
-                                            <c:if test="${searchApprovalVO.prev}">
-                                                <li class="paginate_button page-item previous" id="dataTable_previous">
-                                                    <a href="javascript:void(0);" onclick="searchList(${searchApprovalVO.startDate - 1}); return false;" aria-controls="dataTable" data-dt-idx="0" tabindex="0" class="page-link">Previous</a>
-                                                </li>
-                                            </c:if>
+                                                    <c:if test="${searchApprovalVO.prev}">
+                                                        <li class="paginate_button page-item previous" id="dataTable_previous">
+                                                            <a href="javascript:void(0);" onclick="searchList(${searchApprovalVO.startDate - 1}); return false;" aria-controls="dataTable" data-dt-idx="0" tabindex="0" class="page-link">Previous</a>
+                                                        </li>
+                                                    </c:if>
 
-                                            <c:forEach var="num" begin="${searchApprovalVO.startDate}" end="${searchApprovalVO.endDate}">
-                                                <li class="paginate_button page-item">
-                                                    <a href="javascript:void(0);" onclick="searchList(${num}); return false;" aria-controls="dataTable" data-dt-idx="0" tabindex="0" class="page-link">${num}</a>
-                                                </li>
-                                            </c:forEach>
+                                                    <c:forEach var="num" begin="${searchApprovalVO.startDate}" end="${searchApprovalVO.endDate}">
+                                                        <li class="paginate_button page-item">
+                                                            <a href="javascript:void(0);" onclick="searchList(${num}); return false;" aria-controls="dataTable" data-dt-idx="0" tabindex="0" class="page-link">${num}</a>
+                                                        </li>
+                                                    </c:forEach>
 
-                                            <c:if test="${searchApprovalVO.next}">
-                                                <li class="paginate_button page-item next" id="dataTable_next">
-                                                    <a href="javascript:void(0);" onclick="searchList(${searchApprovalVO.endDate + 1}); return false;" aria-controls="dataTable" data-dt-idx="0" tabindex="0" class="page-link">Next</a>
-                                                </li>
-                                            </c:if>
-                                        </ul>
+                                                    <c:if test="${searchApprovalVO.next}">
+                                                        <li class="paginate_button page-item next" id="dataTable_next">
+                                                            <a href="javascript:void(0);" onclick="searchList(${searchApprovalVO.endDate + 1}); return false;" aria-controls="dataTable" data-dt-idx="0" tabindex="0" class="page-link">Next</a>
+                                                        </li>
+                                                    </c:if>
+                                                </ul>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                                 <form:hidden path="searchApprovalVO.pageIndex"/>

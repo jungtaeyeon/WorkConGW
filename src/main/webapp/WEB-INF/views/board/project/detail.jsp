@@ -41,7 +41,21 @@ h5.number {
     vertical-align: middle;
     margin-left:5px;
 }
-
+.subTitleText {
+	margin-bottom: 25px;
+}
+.subTitleText h2 {
+	display: flex;
+	justify-content: flex-start;
+	align-items: center;
+	font-size: 27px;
+	padding: 10px 0;
+	font-family: "Noto Sans KR", sans-serif;
+}
+.subTitleText i {
+	font-size: 24px;
+	margin-right: 5px;
+}
 </style>
 
 	<div class="contentConteiner">
@@ -49,23 +63,24 @@ h5.number {
 <div id="main-content">
 	<div class="container-fluid">
 			<div class="row clearfix">
-                <div class="col-12" style="margin-top: 2%; font-family: 'S-CoreDream-6Bold">
-                    <h2><i class="fa fa-clipboard"></i>&nbsp;${project.project_Title}</h2>
-                    <hr>
+                <div class="col-12" style="padding: 0;">
+					<div class="subTitleText">
+                    	<h2><i class="fa-solid fa-angles-right"></i>${project.project_Title}</h2>
+					</div>
                 </div>
 		 	</div>
 
-            <div class="row clearfix" id="projectAll" style="font-family: S-CoreDream-7ExtraBold">
-                <div class="col-lg-12 col-md-12" style="padding-right:0px;">
-                    <div class="card">
+            <div class="row clearfix" id="projectAll" >
+                <div class="col-lg-12 col-md-12" style="padding: 0;">
+                    <div class="card" style="padding: 10px 20px;">
                         <div class="body project_report">
                         	<button type="button" class="btn btn-light" onclick="window.location.href='${pageContext.request.contextPath}/board/issue/list';">이슈</button>
                         	<button type="button" class="btn btn-light" onclick="window.location.href='${pageContext.request.contextPath}/board/milestone/list';">마일스톤</button>
                         	<button type="button" class="btn btn-light active" onclick="window.location.href='${pageContext.request.contextPath}/board/project/list';">프로젝트</button>
 	                    </div>
 
-	                   	<div style="padding:10px 30px;">
-							<span style="font-size:1.1em;">프로젝트 진행률</span>
+	                   	<div style="padding:18px 0px;">
+							<span style="font-size:15px;">프로젝트 진행률</span>
 							<div class="progress-container m-t-15" style="">
 								<div class="progress progress-xs" style="height:20px;background-color:rgb(0,0,0,0.2);">
 									<div class="progress-bar" role="progressbar" aria-valuenow="86" aria-valuemin="0" aria-valuemax="100" style="width: 0%; height:20px;">
@@ -75,7 +90,7 @@ h5.number {
 							</div>
 						</div>
 
-	                    <div class="row clearfix" style="margin:10px;">
+	                    <div class="row clearfix">
 
 							<%-- 해야할 일 시작 --%>
 	                    	<div class="top_counter col-lg-4 col-md-6">
@@ -114,7 +129,8 @@ h5.number {
 																<span style="margin-top:5%">이슈번호: #${issue.issue_Board_Id}</span>
 																최근 수정일: <fmt:formatDate value="${project.project_Update_Dt }" pattern="yyyy-MM-dd"/>
 															</div>
-
+															<c:choose>
+															<c:when test="${issue.issue_Board_St == 1 || (issue.issue_Board_St == 2 && loginUser.emp_Id == issue.emp_Id)}">
 															<%-- 프로젝트 상태 변경 --%>
 															<i class="fa fa-ellipsis-h" data-toggle="dropdown" aria-expanded="false" style="cursor: pointer;position: absolute;z-index: 10;bottom: 10px;font-size: 1.5em;right: 20px;"></i>
 															<div class="user-account" style="position: absolute;top:0px;">
@@ -126,6 +142,11 @@ h5.number {
 												                </div>
 					                                        </div>
 															<%-- 프로젝트 상태 변경 끝 --%>
+															</c:when>
+																<c:otherwise>
+																	<span class="badge badge-secondary py-1 px-1" style="font-size:0.8em; margin-top: -10px; position: absolute;z-index: 10;bottom: 10px;right: 20px;">비공개 이슈</span>
+																</c:otherwise>
+															</c:choose>
 					                                    </li>
 													<%-- fofEach 끝 --%>
 														</c:forEach>
@@ -176,6 +197,8 @@ h5.number {
 																	최근 수정일: <fmt:formatDate value="${project.project_Update_Dt }" pattern="yyyy-MM-dd"/>
 																</div>
 
+																<c:choose>
+																	<c:when test="${issue.issue_Board_St == 1 || (issue.issue_Board_St == 2 && loginUser.emp_Id == issue.emp_Id)}">
 																	<%-- 프로젝트 상태 변경 --%>
 																<i class="fa fa-ellipsis-h" data-toggle="dropdown" aria-expanded="false" style="cursor: pointer;position: absolute;z-index: 10;bottom: 10px;font-size: 1.5em;right: 20px;"></i>
 																<div class="user-account" style="position: absolute;top:0px;">
@@ -187,6 +210,11 @@ h5.number {
 																	</div>
 																</div>
 																	<%-- 프로젝트 상태 변경 끝 --%>
+																	</c:when>
+																	<c:otherwise>
+																		<span class="badge badge-secondary py-1 px-1" style="font-size:0.8em; margin-top: -10px; position: absolute;z-index: 10;bottom: 10px;right: 20px;">비공개 이슈</span>
+																	</c:otherwise>
+																</c:choose>
 															</li>
 															<%-- fofEach 끝 --%>
 														</c:forEach>
@@ -237,7 +265,8 @@ h5.number {
 																	최근 수정일: <fmt:formatDate value="${project.project_Update_Dt }" pattern="yyyy-MM-dd"/>
 																</div>
 
-
+																<c:choose>
+																<c:when test="${issue.issue_Board_St == 1 || (issue.issue_Board_St == 2 && loginUser.emp_Id == issue.emp_Id)}">
 															<%-- 프로젝트 상태 변경 --%>
 																<i class="fa fa-ellipsis-h" data-toggle="dropdown" aria-expanded="false" style="cursor: pointer;position: absolute;z-index: 10;bottom: 10px;font-size: 1.5em;right: 20px;"></i>
 																<div class="user-account" style="position: absolute;top:0px;">
@@ -249,6 +278,11 @@ h5.number {
 																	</div>
 																</div>
 																	<%-- 프로젝트 상태 변경 끝 --%>
+																</c:when>
+																	<c:otherwise>
+																		<span class="badge badge-secondary py-1 px-1" style="font-size:0.8em; margin-top: -10px; position: absolute;z-index: 10;bottom: 10px;right: 20px;">비공개 이슈</span>
+																	</c:otherwise>
+																</c:choose>
 															</li>
 															<%-- fofEach 끝 --%>
 														</c:forEach>

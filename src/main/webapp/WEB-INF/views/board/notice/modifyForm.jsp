@@ -39,6 +39,19 @@
 	display: none;
 }
 
+.subTitleText h2 {
+        display: flex;
+        justify-content: flex-start;
+        align-items: center;
+        font-size: 27px;
+        padding: 10px 0;
+        font-family: "Noto Sans KR", sans-serif;
+      }
+      .subTitleText i {
+        font-size: 24px;
+        margin-right: 5px;
+      }
+
 </style>
 
 <body>
@@ -52,16 +65,18 @@
 
 	<!-- 메인 content -->
 	<div id="main-content">
-		<div class="container-fluid" style="font-family: S-CoreDream-4Regular" >
+		<div class="container-fluid">
 			<div class="row clearfix">
-				<div class="col-12" style="margin-top: 2%; font-family: S-CoreDream-4Regular" >
-					<h2>
-						<i class="fa fa-bullhorn"></i>&nbsp;사내공지
+				<div class="col-12" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;" >
+					<div class="subTitleText">
+						<h2><i class="fa-solid fa-angles-right"></i>사내공지수정</h2>
+					</div>
+					<div>
 						<button type="button" class="btn btn-secondary float-right" onclick="goBackToList();">목록</button>
 						<button type="button" class="btn btn-primary float-right" data-type="success" onclick="modify_go();" >수정완료</button>
-					</h2>
-					<hr>
+					</div>
 				</div>
+				<hr>
 			</div>
 			<div class="div2">
 				<div class="row clearfix">

@@ -3,12 +3,23 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
-
-<html>
-<head>
-    <title>Title</title>
-</head>
-<body>
+<style>
+    .subTitleText {
+        margin-bottom: 25px;
+    }
+    .subTitleText h2 {
+        display: flex;
+        justify-content: flex-start;
+        align-items: center;
+        font-size: 27px;
+        padding: 10px 0;
+        font-family: "Noto Sans KR", sans-serif;
+    }
+    .subTitleText i {
+        font-size: 24px;
+        margin-right: 5px;
+    }
+</style>
 <!-- 헤더인클루드 -->
 <%@ include file="/WEB-INF/views/include/header.jsp"%>
 <section class="subPageContain">
@@ -17,12 +28,13 @@
     <!--컨텐츠 영역-->
     <div class="contentConteiner">
         <div id="main-content">
-            <div class="container-fluid" style="font-family: S-CoreDream-6Bold"">
+            <div class="container-fluid">
             <!-- 메인 content 넣는 곳 -->
             <div class="row clearfix">
-                <div class="col-12" style="margin-top: 2%; font-family: S-CoreDream-6Bold">
-                    <h2>결재 대기 문서</h2>
-                    <hr>
+                <div class="col-12" style="padding: 0;">
+                    <div class="subTitleText">
+						<h2><i class="fa-solid fa-angles-right"></i>결재대기문서</h2>
+					</div>
                 </div>
                 <c:if test="${empty approvalList}">
                     <div class="col-12" style="font-family:S-CoreDream-6Bold" >
@@ -32,15 +44,15 @@
 
                 <c:forEach items="${approvalList}" var = "doc">
                     <div class="col-lg-3 col-md-12" >
-                        <div class="card myWithCard" style="cursor: pointer;" onclick='window.location="<%=request.getContextPath()%>/approval/awaitDocDetail?docId=${doc.doc_Id}"'>
+                        <div class="card myWithCard" style="cursor: pointer; padding: 10px 15px;" onclick='window.location="<%=request.getContextPath()%>/approval/awaitDocDetail?docId=${doc.doc_Id}"'>
                             <div class="row clearfix">
 
                             <div class="body" style="margin-left: 12px; ">
-                                    <span class="badge badge-primary" style="margin-bottom: 8px; font-family:S-CoreDream-4Regular">결재 대기중</span>
-                                    <span class="differentTime"></span>
+                                    <span class="badge badge-primary" style="margin-bottom: 8px; font-size: 15px; font-weight: 500;">결재 대기중</span>
+                                    <span class="differentTime" style="font-size:13px;"></span>
                                     <div class="pricing-option" style="margin-left: 4px;">
                                         <div class=waitListTitle style="font-family: S-CoreDream-6Bold">
-                                            <h6 style="padding-top: 5px; ">${doc.approval_Title}&nbsp&nbsp
+                                            <h6 style="padding-top: 5px;">${doc.approval_Title}&nbsp&nbsp
                                                     <i class="fa fa-file-o fa-2x text-info" style="font-size: 18px;"></i>
                                                     <span>${doc.attachCnt}</span>
                                             </h6>

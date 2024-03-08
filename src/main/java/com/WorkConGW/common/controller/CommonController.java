@@ -178,7 +178,6 @@ public class CommonController {
         noticeVO.setRecordCountPerPage(5); //5개 지정
         approvalVO.setRecordCountPerPage(3); 
         issueVO.setRecordCountPerPage(3); 
-        dutyVO.setFirstIndex(0);
         dutyVO.setRecordCountPerPage(3); 
         dutyVO.setEmp_Writer_Id(emp_Id);
 
@@ -187,7 +186,6 @@ public class CommonController {
         Map<String,Object> approvalList = approvalService.getWaitList(approvalVO);
         List<IssueVO> issueList = issueService.searchList(issueVO);
         List<ProjectVO> projectList = projectService.getProjectList(projectVO);
-        
         List<DutyVO> dutyList = dutyService.searchList(dutyVO);
         
         logger.info(projectList.toString());
