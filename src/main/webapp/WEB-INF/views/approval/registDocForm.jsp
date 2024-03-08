@@ -27,7 +27,19 @@
 
 <body >
 
-
+<style>
+    .subTitleText h2{
+            display: flex;
+        justify-content: flex-start;
+        align-items: center;
+            font-size: 27px;
+			font-family: "Noto Sans KR", sans-serif;
+        }
+        .subTitleText i{
+            font-size: 24px;
+        margin-right: 5px;
+        }
+</style>
 <!-- 헤더인클루드 -->
 <%@ include file="../include/header.jsp"%>
 <section class="subPageContain">
@@ -39,19 +51,18 @@
         <div class="wrapper">
 
             <!-- 메인 content -->
-            <div id="main-content" style="margin-top: 20px;">
-                <div class="container-fluid" style="font-size: 16px;">
+            <div id="main-content">
+                <div class="container-fluid" style="font-size: 16px; padding-left: 0;">
 
                     <div class="row clearfix" style="margin-bottom: 1%;">
-                        <div class="col-12" style="font-family: S-CoreDream-4Regular">
-                            <div>
-                                <span style="font-size: xx-large; ">결재양식 선택</span>
-                                <hr>
+                        <div class="col-12" style="padding: 0;">
+                            <div class="subTitleText"> <!--컨텐츠 부분 타이틀 클래스(이건 부트스트랩 클래스 아니고 임의로 만든 클래스)--> 
+                                <h2><i class="fa-solid fa-angles-right"></i> <!--왼쪽 아이콘 폰트어썸-->결재양식선택</h2>
                             </div>
                         </div>
                     </div>
 
-                    <div class="inside-wrapper" style="padding:0 3% 3% 3%; background-color: white; border-radius: 2%; box-shadow: 0 1px 2px 0 rgb(0 0 0 / 10%); font-family: S-CoreDream-4Regular">
+                    <div class="inside-wrapper" style="padding:0 3% 3% 0; background-color: white; border-radius: 2%; box-shadow: 0 1px 2px 0 rgb(0 0 0 / 10%); font-family: S-CoreDream-4Regular">
                         <div class="row clearfix">
                             <div class="col-12">
 
@@ -75,13 +86,13 @@
                                 </div>
                             </div>
 
-                            <div class="col-6">
-                                <div class="card">
-                                    <div class="header" height: 70px;">
+                            <div class="col-6" >
+                                <div class="card" style="height: 300px; padding: 5px 15px;">
+                                    <div class="header">
                                         <h5>상세정보</h5>
                                     </div>
-                                    <div class="body" style="height: 300px;">
-                                        <div style="margin-bottom: 20px; " >
+                                    <div class="body">
+                                        <div style="margin-bottom: 20px;" >
                                             <p style="margin-bottom: 0;">양식제목</p>
                                             <span id="formName"></span>
                                         </div>
@@ -210,6 +221,12 @@ function getForm_go()
 
     if(!formId){
         alert('양식을 선택하세요.')
+        return false;
+    }else if(formId =='1'){
+        alert('하위계획서를 클릭해주세요')
+        return false;
+    }else if(formId !=='2'){
+        alert('준비중입니다.')
         return false;
     }
 
