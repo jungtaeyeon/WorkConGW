@@ -46,7 +46,7 @@ public class TreeViewService {
         return forms;
     }
 
-    public List<ProjectWithDuties> getProjectTree() {
+    public List<ProjectWithDuties> getProjectTree(String emp_Id) {
         List<ProjectWithDuties> projectTree = new ArrayList<>();
 
         List<ProjectOrgCommand> projectList = treeViewDAO.selectSearchProjectOrg();
@@ -54,7 +54,8 @@ public class TreeViewService {
             ProjectWithDuties projectWithDuties = new ProjectWithDuties();
             projectWithDuties.setProject(project);
 
-            List<ProjectOrgCommand> duties = treeViewDAO.selectDutiesByProjectId(project.getProject_Id());
+            project.setEmp_Id(emp_Id);
+            List<ProjectOrgCommand> duties = treeViewDAO.selectDutiesByProjectId(project);
             projectWithDuties.setDuties(duties);
 
             projectTree.add(projectWithDuties);

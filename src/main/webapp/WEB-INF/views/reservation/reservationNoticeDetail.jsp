@@ -15,22 +15,40 @@
         color: blue;
         text-decoration: underline;
     }
+    .subTitleText h2 {
+        display: flex;
+        justify-content: flex-start;
+        align-items: center;
+        font-size: 27px;
+        padding: 10px 0;
+        font-family: "Noto Sans KR", sans-serif;
+      }
+      .subTitleText i {
+        font-size: 24px;
+        margin-right: 5px;
+      }
 </style>
 <body>
 
 <jsp:include page="../include/header.jsp"/>
 <!-- 메인 content -->
-<div id="main-content" >
+<section class="subPageContain">
+<%@ include file="./sideBar.jsp"%>
+<div id="main-content" style="width: 100%;">
     <div class="container-fluid" >
         <form:form modelAttribute="reservationNoticeVO" name="detailForm" >
             <form:hidden path="reservation_Notice_Id" value="${noticeVO.reservation_Notice_Id}" />
             <div class="block-header">
                 <div class="row">
                     <div class="col-sm-5">
-                        <h2 style="padding-left:10px;font-size:2em; font-family: S-CoreDream-6Bold"><i class="icon-drawer" style="font-size: 20px; "></i>&nbsp;시설예약 공지</h2>
+                        <div class="subTitleText">
+                            <h2>
+                              <i class="fa-solid fa-angles-right"></i>시설예약 공지
+                            </h2>
+                        </div>
                     </div>
-                    <div class="col-sm-7" style="font-family: S-CoreDream-6Bold">
-                        <div style="float:right;">
+                    <div class="col-sm-7" style="display: flex; justify-content: flex-end; align-items: center;">
+                        <div>
                             <c:if test="${loginUser.auth_Id eq 's'}">
                                 <button type="button" class="btn btn-danger" style="width:80px;" onclick="remove_go();">삭제</button>
                             </c:if>
@@ -91,7 +109,7 @@
 
     </div>
 </div>
-
+</section>
 
 
 

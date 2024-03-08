@@ -14,13 +14,9 @@
     .container-fluid-header, .container-fluid-footer{
         display: flex;
         justify-content: space-between;
-        padding-top: 15px;
     }
     body {
         padding: 0px 30px 30px 30px;
-    }
-    .form-header > div {
-        margin-top: 20px;
     }
     .col-xs-12 {
         padding: 5px;
@@ -30,7 +26,6 @@
         border-radius: 1%;
         background-color: #ffffff;
         padding: 0px 10px 10px;
-        margin-top: 20px;
     }
     body{
         padding: 0px 30px 30px 30px;
@@ -45,15 +40,37 @@
     #modifyBtn{
         display: none;
     }
+      .subTitleText h2 {
+        display: flex;
+        justify-content: flex-start;
+        align-items: center;
+        font-size: 27px;
+        padding: 10px 0;
+        font-family: "Noto Sans KR", sans-serif;
+      }
+      .subTitleText i {
+        font-size: 24px;
+        margin-right: 5px;
+      }
+      .row.reservationDeteailText {
+            font-size: 17px;
+        }
 </style>
 
 <body>
 <!-- 헤더인클루드 -->
 <%@ include file="../include/header.jsp"%>
-<div id="main-content">
-    <div class="container-fluid" style="font-family: S-CoreDream-4Regular	">
+<section class="subPageContain">
+<%@ include file="./sideBar.jsp"%>
+<div id="main-content" style="width: 100%;">
+    
+    <div class="container-fluid">
         <div class="form-header container-fluid-header">
-            <h3 class="form-title">${meetRoomVO.meet_Room_Name } 회의실</h3>
+            <div class="subTitleText">
+                <h2>
+                  <i class="fa-solid fa-angles-right"></i>${meetRoomVO.meet_Room_Name } 회의실
+                </h2>
+            </div>
             <div>
                 <c:if test="${loginUser.emp_Id == meetRoomVO.emp_Id}">
                     <button type="button" class="btn btn-danger" onclick="removeRoom();">취소</button>
@@ -65,12 +82,12 @@
         <hr>
         <div class="row">
             <div class="col-md-4">
-                <form:form modelAttribute="meetRoomVO" id="detailForm" name="detailForm" class="form-horizontal" autocomplete="off">
+                <form:form modelAttribute="meetRoomVO" id="detailForm" name="detailForm" style="margin: 0;" class="form-horizontal" autocomplete="off">
                     <form:hidden path="meet_Room_Id" />
                     <form:hidden path="meet_Room_Reservation_Id"  />
                     <form:hidden path="emp_Id"/>
                 </form:form>
-                <div class="row">
+                <div class="row reservationDeteailText">
                     <div class="col-xs-12">
                         <label class="col-xs-12" for="edit-title">예약자 </label>
                         <div class="col-sm-12 input-group-sm">
@@ -78,7 +95,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="row">
+                <div class="row reservationDeteailText">
                     <div class="col-xs-12">
                         <label class="col-xs-12" for="edit-title">부서명</label>
                         <div class="col-sm-12 input-group-sm">
@@ -86,7 +103,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="row">
+                <div class="row reservationDeteailText">
                     <div class="col-xs-12">
                         <label class="col-xs-12" for="edit-title">예약정보</label>
                         <div class="col-sm-12 input-group-sm">
@@ -95,7 +112,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="row">
+                <div class="row reservationDeteailText">
                     <div class="col-xs-12">
                         <label class="col-xs-12" for="edit-title">예약 날짜</label>
                         <div class="col-sm-12 input-group-sm" style="color: red;">
@@ -103,7 +120,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="row">
+                <div class="row reservationDeteailText" >
                     <div class="col-xs-12">
                         <label class="col-xs-4" for="edit-end">내용</label>
                         <div class="col-sm-10 input-group-sm">
@@ -119,7 +136,7 @@
         </div>
     </div>
 </div>
-
+</section>
 <script>
     function goBack() {
         window.history.back();

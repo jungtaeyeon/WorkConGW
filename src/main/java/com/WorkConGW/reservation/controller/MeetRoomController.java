@@ -181,7 +181,7 @@ public String registRoom(MeetRoomFormVO meetRoomFormVO, Model model, HttpSession
 		paginationInfo = new PaginationInfo();
 
 		setUpPaginationInfo(paginationInfo, searchReservationComplainVO);
-		List<ReservationComplainVO> complainList = meetRoomService.getMyComplainList(searchReservationComplainVO);
+		List<ReservationComplainVO> complainList = meetRoomService.getAllComplainList(searchReservationComplainVO);
 
 		totCnt = meetRoomService.selectreservationComplainListTotalCount(searchReservationComplainVO);
 		paginationInfo.setTotalRecordCount(totCnt);
@@ -280,6 +280,12 @@ public String registRoom(MeetRoomFormVO meetRoomFormVO, Model model, HttpSession
 		return url;
 	}
 
+	@RequestMapping("/roomInsert")
+	public String roomInsert(MeetRoomFormVO meetRoomFormVO)  {
+		String url="reservation/roomInsert";
+		return url;
+	}
+
 	@ResponseBody
 	@PostMapping("/registNotice")
 	public void regist(MeetRoomFormVO meetRoomFormVO) throws Exception {
@@ -364,7 +370,7 @@ public String registRoom(MeetRoomFormVO meetRoomFormVO, Model model, HttpSession
 	@RequestMapping("/getPicture")
 	@ResponseBody
 	public ResponseEntity<byte[]> getPicture(String picture) throws Exception {
-	log.info(picturePath);
+		log.info(picturePath);
 		log.info(picture);
 	ResponseEntity<byte[]> entity = null;
 		if(StringUtils.isNotEmpty(picture)) {
@@ -530,6 +536,7 @@ public String registRoom(MeetRoomFormVO meetRoomFormVO, Model model, HttpSession
 
 		/*민원 리스트 가져오기*/
 		ReservationComplainVO searchReservationComplainVO = meetRoomFormVO.getSearchReservationComplainVO();
+		log.info(searchReservationComplainVO.toString());
 		searchReservationComplainVO.setEmp_Id(empId);
 		paginationInfo = new PaginationInfo();
 

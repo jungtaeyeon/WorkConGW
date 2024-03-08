@@ -24,6 +24,8 @@ java.util.ArrayList, com.WorkConGW.addbook.dto.AddBookVO" %>
         justify-content: flex-start;
         align-items: center;
         font-size: 27px;
+        padding: 10px 0;
+        font-family: "Noto Sans KR", sans-serif;
       }
       .subTitleText i {
         font-size: 24px;

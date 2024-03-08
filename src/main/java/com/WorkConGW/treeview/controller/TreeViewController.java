@@ -2,10 +2,12 @@ package com.WorkConGW.treeview.controller;
 
 import com.WorkConGW.approval.dto.FormVO;
 import com.WorkConGW.board.duty.dto.DutyVO;
+import com.WorkConGW.emp.dto.EmpVO;
 import com.WorkConGW.treeview.command.OrganizationCommand;
 import com.WorkConGW.treeview.command.ProjectOrgCommand;
 import com.WorkConGW.treeview.command.ProjectWithDuties;
 import com.WorkConGW.treeview.service.TreeViewService;
+import jakarta.servlet.http.HttpServletRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -61,8 +63,10 @@ public class TreeViewController {
 
     @ResponseBody
     @RequestMapping(value="/getProjectTreeView")
-    public List<ProjectWithDuties> getProjectTreeView() throws SQLException {
-        List<ProjectWithDuties> projectTree = tvService.getProjectTree();
+    public List<ProjectWithDuties> getProjectTreeView(HttpServletRequest request) throws SQLException {
+        String emp_Id = ((EmpVO)request.getSession().getAttribute("loginUser")).getEmp_Id();
+
+        List<ProjectWithDuties> projectTree = tvService.getProjectTree(emp_Id);
         return projectTree;
     }
 

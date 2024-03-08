@@ -60,23 +60,32 @@
         where PROJECT_ST = 1
     </select>
 
-    <!--   프로젝트 리스트 폼에 들어갈 업무 리스트 -->
-<!--    <select id="selectSearchDuty"  resultType="ProjectOrgCommand">-->
-<!--        SELECT-->
-<!--            PROJECT_ID,-->
-<!--            DUTY_BOARD_ID,-->
-<!--            DUTY_BOARD_TITLE-->
-<!--        FROM-->
-<!--            DUTY-->
+
+<!--    <select id="selectDutiesByProjectId" parameterType="ProjectOrgCommand" resultType="ProjectOrgCommand">-->
+<!--    SELECT-->
+<!--    DUTY_BOARD_ID,-->
+<!--    DUTY_BOARD_TITLE-->
+<!--    FROM-->
+<!--    DUTY-->
+<!--    WHERE-->
+<!--    PROJECT_ID = #{project_Id}-->
 <!--    </select>-->
 
-    <select id="selectDutiesByProjectId" parameterType="int" resultType="ProjectOrgCommand">
-    SELECT
-    DUTY_BOARD_ID,
-    DUTY_BOARD_TITLE
-    FROM
-    DUTY
-    WHERE
-    PROJECT_ID = #{project_Id}
+    <!-- 로그인 한 사원이 작성자, 수신자, 참조자 인 경우의 업무만 셀렉 -->
+    <select id="selectDutiesByProjectId" parameterType="ProjectOrgCommand" resultType="ProjectOrgCommand">
+        SELECT DISTINCT
+            A.DUTY_BOARD_ID,
+            A.DUTY_BOARD_TITLE
+        FROM
+            DUTY A
+        WHERE
+            A.PROJECT_ID = #{project_Id}
+          AND (
+            A.EMP_WRITER_ID = #{emp_Id}
+                OR A.DUTY_BOARD_ID IN (SELECT DUTY_BOARD_ID FROM DUTY_ENFORCER WHERE EMP_ID = #{emp_Id})
+                OR A.DUTY_BOARD_ID IN (SELECT DUTY_BOARD_ID FROM DUTY_RECEPTION WHERE EMP_ID = #{emp_Id})
+            )
     </select>
+
+
 </mapper>
