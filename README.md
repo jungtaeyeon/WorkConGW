@@ -23,9 +23,10 @@
 
 | **오지환** | **정태연** | **강우형** | **이휘재** |
 | :------: |  :------: | :------: | :------: |
-| [ <br/> @Ohsaam](https://github.com/Ohsaam) | [ <br/> @jungtaeyeon](https://github.com/jungtaeyeon) | [ <br/> @woohyungkang](https://github.com/woohyungkang) | [ <br/> @ihwijae](https://github.com/ihwijae) |
+| <img src="https://github.com/Ohsaam.png" height=150 width=150> [<br/> @Ohsaam](https://github.com/Ohsaam)  |   <img src="https://github.com/jungtaeyeon.png" height=150 width=150> [<br/> @jungtaeyeon](https://github.com/jungtaeyeon) | <img src="https://github.com/woohyungkang.png" height=150 width=150> [ <br/> @woohyungkang](https://github.com/woohyungkang) | <img src="https://github.com/ihwijae.png" height=150 width=150> [ <br/> @ihwijae](https://github.com/ihwijae) |
 
 </div>
+
 
 
 ## 주요 문서
