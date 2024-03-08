@@ -343,9 +343,7 @@
 
             </div>
         </form>
-            <div id="docContent">
-                ${approval.approval_Content }
-            </div>
+
     </div>
 </section>
 

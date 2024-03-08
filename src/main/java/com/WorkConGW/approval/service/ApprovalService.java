@@ -480,7 +480,7 @@ public class ApprovalService{
                 approval.setApproval_Content((String)dataMap.get("approvalContent"));
                 approval.setApproval_St(2); // 결재 진행중인 상태
                 approval.setDoc_Id((Integer.parseInt((String) dataMap.get("docId"))));
-
+                attendenceDAO.attendinsertApproval(dataMap);
                 approvalDAO.updateApproval(approval);
 
             }

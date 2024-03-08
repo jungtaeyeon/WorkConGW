@@ -203,19 +203,25 @@
     }
 
 
-function getForm_go()
-{
-    let formId = $("#myFormId").html();
-    console.log(formId)
+    function getForm_go()
+    {
+        let formId = $("#myFormId").html();
+        console.log(formId)
 
-    if(!formId){
-        alert('양식을 선택하세요.')
-        return false;
+        if(!formId){
+            alert('양식을 선택하세요.')
+            return false;
+        }else if(formId =='1'){
+            alert('하위계획서를 클릭해주세요')
+            return false;
+        }else if(formId !=='2'){
+            alert('준비중입니다.')
+            return false;
+        }
+
+        location.href = "<%=request.getContextPath()%>/approval/docDetail?form_Id="+formId;
+
     }
-
-    location.href = "<%=request.getContextPath()%>/approval/docDetail?form_Id="+formId;
-
-}
 
 
 
