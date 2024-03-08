@@ -471,7 +471,6 @@ public class ApprovalService{
                 approval.setApproval_Content((String)dataMap.get("approvalContent"));
                 approval.setApproval_St(1); // 결재 진행중인 상태
                 approval.setDoc_Id((Integer.parseInt((String) dataMap.get("docId"))));
-
                 approvalDAO.updateApproval(approval);
             }
             else{ // 두번째에서 끝내야함
@@ -481,9 +480,7 @@ public class ApprovalService{
                 approval.setApproval_Content((String)dataMap.get("approvalContent"));
                 approval.setApproval_St(2); // 결재 진행중인 상태
                 approval.setDoc_Id((Integer.parseInt((String) dataMap.get("docId"))));
-                if (historyStep == 2 && result == 0) {
-                    attendenceDAO.attendinsertApproval(dataMap);
-                }
+
                 approvalDAO.updateApproval(approval);
 
             }
@@ -518,9 +515,7 @@ public class ApprovalService{
             approval.setApproval_St(2);
             approval.setDoc_Id((Integer.parseInt((String)dataMap.get("docId"))));
             logger.info("approval >>> 여기들어오니? : "+approval.toString());
-            if (historyStep == 3) {
-                attendenceDAO.attendinsertApproval(dataMap);
-            }
+            attendenceDAO.attendinsertApproval(dataMap);
             approvalDAO.updateApproval(approval);
 
 
