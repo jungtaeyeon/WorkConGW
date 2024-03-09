@@ -17,6 +17,7 @@
         justify-content: flex-start;
         align-items: center;
         font-size: 27px;
+        font-family: "Noto Sans KR", sans-serif;
     }
     .subTitleText i{
         font-size: 24px;
@@ -93,7 +94,7 @@
     <!--컨텐츠 영역-->
     <div class="contentConteiner">
         <div class="subTitleText"> <!--컨텐츠 부분 타이틀 클래스(이건 부트스트랩 클래스 아니고 임의로 만든 클래스)-->
-            <h2><i class="fa-solid fa-angles-right"></i> <!--왼쪽 아이콘 폰트어썸-->기안문서</h2>
+            <h2><i class="fa-solid fa-angles-right"></i> <!--왼쪽 아이콘 폰트어썸-->상신문서</h2>
             <div class="btnGroup">
                 &nbsp
                 <button type="button" class="btn btn-dark myBtn" style="width: 100px;" onClick="location.href='<%=request.getContextPath()%>/approval/lists/draftList'">목록</button>

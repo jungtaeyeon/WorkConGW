@@ -316,7 +316,7 @@
                         </div>
                         <div class="input-field">
                             <label>* 비밀번호</label>
-                            <input id = "emp_Pwd" name="emp_Pwd" type="password" value = ${empVO.emp_Pwd} required />
+                            <input id = "emp_Pwd" name="emp_Pwd" type="password" value = "${empVO.emp_Pwd}" readonly="readonly" />
                         </div>
 
                         <div class="input-field">

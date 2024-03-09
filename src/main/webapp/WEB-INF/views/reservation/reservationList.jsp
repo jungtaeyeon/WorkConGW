@@ -214,10 +214,10 @@
                                   </div>
                                 </td>
                                 <td>
-                                  <span>날짜 :${room.reservation_Date }  </span>
+                                  <span>${room.reservation_Date }  </span>
                                 </td>
                                 <td>
-                                  <span>시간 :${room.reservation_Start_Time }시 ~ ${room.reservation_End_Time }시</span>
+                                  <span>${room.reservation_Start_Time }시 ~ ${room.reservation_End_Time }시</span>
                                 </td>
                               </tr>
                             </c:if>

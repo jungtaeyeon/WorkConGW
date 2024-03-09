@@ -53,7 +53,7 @@
         width: 200px; /* 예시로 200px로 설정합니다. */
         /* 기타 필요한 스타일을 추가할 수 있습니다. */
     }
-
+    .card{padding: 5px 15px;}
 
 </style>
 <body>

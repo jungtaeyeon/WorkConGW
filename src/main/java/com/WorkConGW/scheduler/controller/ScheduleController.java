@@ -46,6 +46,7 @@ public class ScheduleController extends BaseController {
     private final DeptService deptService;
 
 
+
     @Autowired
     public ScheduleController(ScheduleService scheduleService, EmpService empService, DeptService deptService) throws SQLException {
         this.scheduleService = scheduleService;

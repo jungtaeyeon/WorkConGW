@@ -8,6 +8,19 @@
 	.formGroup{
 		display:none;
 	}
+	.subTitleText h2 {
+        display: flex;
+        justify-content: flex-start;
+        align-items: center;
+        font-size: 27px;
+        padding: 10px 0;
+        font-family: "Noto Sans KR", sans-serif;
+      }
+      .subTitleText i {
+        font-size: 24px;
+        margin-right: 5px;
+      }
+	  .col-md-3 label{font-size: 16px;}
 </style>
 
 <body>
@@ -22,22 +35,22 @@
 		<div id="main-content">
 			<div class="container-fluid">
 				<div class="block-header">
-					<div class="row">
-						<div class="col-sm-3" >
-							<h2 style="padding-left:10px; font-size:2em ; font-family:paybooc-Bold ; "><i class="far fa-sticky-note"></i>&nbsp;글작성 </h2>
+					<div class="row" style="justify-content: space-between; margin-bottom: 20px;">
+						<div class="subTitleText">
+							<h2><i class="fa-solid fa-angles-right"></i>글작성</h2>
 						</div>
-						<div class="col-sm-9" style="font-family: S-CoreDream-4Regular">
+						<div class="col-sm-9" style="display: flex; align-items: center; justify-content: flex-end;">
 							<div style="float:right;">
-								<button type="button" class="btn btn-primary" style="width:100px;font-size:1.2em;" onclick="submit_go();">등록</button>
-								<button type="button" onclick="goBackToList();" class="btn btn-secondary" style="width:100px;font-size:1.2em;">목록</button>
+								<button type="button" class="btn btn-primary" style="width:100px;" onclick="submit_go();">등록</button>
+								<button type="button" onclick="goBackToList();" class="btn btn-secondary" style="width:100px;">목록</button>
 							</div>
 						</div>
 					</div>
 				</div>
 
-				<div class="row clearfix" style="font-family: S-CoreDream-4Regular">
-					<div class="col-lg-12 col-md-12 col-sm-12">
-						<div class="card">
+				<div class="row clearfix" style="margin-right: 0;">
+					<div style="width: 100%;">
+						<div class="card" style="padding: 10px 15px;">
 							<div class="body">
 								<form:form modelAttribute="boardFormVO" name="boardRegistForm">
 									<form:hidden path="noticeVO.emp_writer_id" value="${loginUser.emp_Id }"/>
@@ -79,14 +92,14 @@
 										</div>
 										<div class="col-sm-12 formGroup noticeForm anonyForm">
 											<div class="form-group">
-												<label class="boardTitle">제목</label>
+												<label class="boardTitle" style="font-size: 16px;">제목</label>
 												<input type="text" name="noticeVO.notice_title" id="boardTitle" class="form-control" placeholder="">
 											</div>
 										</div>
 									</div>
 
 
-									<div class="row clearfix">
+									<div class="row clearfix" style="margin-right: 0;">
 										<!-- 파일 입력 -->
 										<div class="col-12 formGroup noticeForm">
 											<input type="file" id="fileInput" style="display: none;" />

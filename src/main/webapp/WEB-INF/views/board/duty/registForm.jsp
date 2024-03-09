@@ -12,6 +12,18 @@
 	display: none;
 }
 .hiddenFillBtn:hover{background-color: #f4f7f6;}
+.subTitleText h2 {
+	display: flex;
+	justify-content: flex-start;
+	align-items: center;
+	font-size: 27px;
+	padding: 10px 0;
+	font-family: "Noto Sans KR", sans-serif;
+}
+.subTitleText i {
+	font-size: 24px;
+	margin-right: 5px;
+}
 </style>
 
 <body>
@@ -24,12 +36,13 @@
 	<div id="main-content">
 		<div class="container-fluid">
 			<div class="block-header">
-				<div class="row">
+				<div class="row" style="align-items: center; margin-bottom: 20px;">
 					<div class="col-sm-3">
-						<h2
-							style="padding-left: 10px; font-size: 2em; font-family: paybooc-Bold;">
-							<i class="far fa-sticky-note"></i>&nbsp;업무 작성
-						</h2>
+						<div class="subTitleText">
+							<h2>
+								<i class="fa-solid fa-angles-right"></i>업무 작성
+							</h2>
+						</div>
 					</div>
 					<div class="col-sm-9" style="font-family: S-CoreDream-4Regular">
 						<div style="float: right;">

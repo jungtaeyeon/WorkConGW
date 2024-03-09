@@ -32,7 +32,6 @@
 
 .pagination{
 	text-align: center;
-	margin-left: 350px;
 }
 
 #tr1{
@@ -41,9 +40,6 @@
 
 }
 
-tbody{
-	text-align: center;
-}
 
 .td2{
 /* 	text-align: left;  */
@@ -53,8 +49,21 @@ tbody{
 .num{
 	width:80px;
 }
-
-
+.subTitleText {
+        margin-bottom: 25px;
+      }
+.subTitleText h2 {
+        display: flex;
+        justify-content: flex-start;
+        align-items: center;
+        font-size: 27px;
+        padding: 10px 0;
+        font-family: "Noto Sans KR", sans-serif;
+      }
+      .subTitleText i {
+        font-size: 24px;
+        margin-right: 5px;
+      }
 </style>
 
 <body>
@@ -65,98 +74,89 @@ tbody{
 	<!-- 사이드바 -->
 	<%@ include file="../boardSidebar.jsp"%>
 	<!--컨텐츠 영역-->
-	<div class="contentConteiner">
-		<div class="container-fluid">
-			<div class="row clearfix" style="font-family: S-CoreDream-7ExtraBold;">
-
-
-				<div class="col-md-8">
-					<div class="row">
-						<div class="col">
-							<h2 style="font-family: S-CoreDream-6Bold"><i class="fa fa-comments-o"></i>&nbsp;익명 게시판</h2>
-							<hr>
-						</div>
+	<div class="contentConteiner" style="width: 100%;">
+		<div >
+			<div class=" clearfix">
+				<div>
+					<div class="subTitleText">
+						<h2><i class="fa-solid fa-angles-right"></i>익명게시판</h2>
 					</div>
-
 					<!-- 나머지 익명 게시판 내용은 여기에 들어갑니다 -->
 					<div id="main-content">
-
-						<div class="container-fluid">
-
-
-							<div class="row clearfix" style="font-family: S-CoreDream-7ExtraBold;">
-								<div class="col-lg-12 col-md-12">
-									<div class="card">
+						<div>
+							<div>
+								<div>
+									<div>
 										<div class="body project_report">
 											<form:form modelAttribute="boardFormVO" id="listForm"  action = "${root}/board/anony/list" method ="get">
-												<!-- 리셋버튼 -->
-												<button id="resetBtn" type="reset" class="btn btn-default" title="Refresh" style="display: none;"></button>
-												<label onclick="conditionReset();"  style="cursor: pointer;">
-													<i class="fa fa-refresh"></i>&nbsp&nbsp검색 조건 초기화
-												</label>
-												<div style="display:inline-block;margin:5px 15px;font-size: 1.2em;color:gray;">
-													<div class="tab-content p-l-0 p-r-0 text-align" style="font-size: 20px;text-align: center;">
-
-
+												<h5 style="display:inline-block; font-weight: bold;">검색 조건</h5>
+												<div class="alert alert-light" role="alert" style="padding:0;margin-bottom:0;">
+													<!-- 리셋버튼 -->
+													<button id="resetBtn" type="reset" class="btn btn-default" title="Refresh" style="display: none;"></button>
+													<label onclick="conditionReset();"  style="cursor: pointer; font-size:15px;">
+														<i class="fa fa-refresh"></i>검색 조건 초기화
+													</label>
+													<div style="display:inline-block;margin:5px 15px;font-size: 1.2em;color:gray;">
+														<div class="tab-content p-l-0 p-r-0 text-align" style="font-size: 20px;text-align: center;">
+	
+	
+														</div>
+														
 													</div>
-													<span>총 게시물 ${totCnt} / 페이지(${searchAnonyVO.pageIndex} / ${totalPageCnt})</span>
 												</div>
-												<div>
-													<form:select path="searchAnonyVO.searchCondition" class="form-control selectSearch" style="width:130px;font-size: 1.2em;float:left;">
+												<div style="margin-bottom: 20px;">
+													<form:select path="searchAnonyVO.searchCondition" class="form-control selectSearch" style="width:130px;float:left;">
 														<form:option value="tc">전체</form:option>
 														<form:option value="t">제목</form:option>
 														<form:option value="c">내용</form:option>
 													</form:select>
-													<button type="button" class="btn btn-default" onclick="searchList();"><i class='fas fa-search'></i></button>
-
+													<button class="btn btn-secondary" onclick="searchList()" type="button"><i class='fas fa-search'></i>검색</button>
 													<div id="navbar-search" class="navbar-form search-form selectSearch" style="float:left;">
-														<form:input path="searchAnonyVO.searchKeyword" class="form-control" placeholder="검색어를 입력하세요" type="text" style="width: 218px;height:36px;padding-right: 40px;" onkeypress="checkEnter(searchList);"/>
+														<form:input path="searchAnonyVO.searchKeyword" class="form-control" placeholder="검색어를 입력하세요" type="text" style="width: 218px;padding-right: 40px;" onkeypress="checkEnter(searchList);"/>
 
 													</div>
 
 													<div class="form-group" style="float:right;">
 														<div style="display: inline-block;float:left;font-size: 1.2em;margin:6px 20px 0 0">
 
-															<span>${paginationInfo.currentPageNo} </span>/<span> ${paginationInfo.totalRecordCount} 페이지 중</span>-
+															<span>총 게시물 ${totCnt} / 페이지(${searchAnonyVO.pageIndex} / ${totalPageCnt})</span>
 														</div>
 
 													</div>
 												</div>
 												<!-- 게시판 목록 -->
-												<div class="body">
+												<div class="body card" style="padding: 20px 25px;">
 													<div class="table-responsive">
-														<table class="table table-bordered" width="100%" cellspacing="0" style="text-align:center;">
-															<thead class="shadow-none p-3 mb-5 bg-light rounded">
-															<tr id="tr1">
-																<th class="num" style="width: 105px; text-align: center;">번호</th>
-																<th class="title" style="width: 300px;">제목</th>
+														<table class="table table-hover" width="100%" cellspacing="0" >
+															<thead class="thead-light">
+															<tr>
+																<th class="title">제목</th>
 																<th>작성일자</th>
 																<th>조회수</th>
+																<th>댓글</th>
 															</tr>
 															</thead>
 															<tbody style="cursor: pointer;">
 															<c:if test="${!empty anonyList }">
 																<c:forEach items="${anonyList}" var="anony">
 																	<tr role="row" onclick="window.location='<%=request.getContextPath()%>/board/anony/detail?anonyVO.anony_Board_Id=${anony.anony_Board_Id }'">
-																	<td id="anony_Board_Id" style="text-align:center;">${anony.anony_Board_Id}</td>
-																		<td id="anony_Board_Title" style="width: 60%;text-align: left; padding-left: 100px;">
-																			<span style="width: 300px;"><c:out value = "${anony.anony_Board_Title}"/></span>
-
+																		<td id="anony_Board_Title" style="text-align: left;">
+																			<span><c:out value = "${anony.anony_Board_Title}"/></span>
 																			<c:if test="${anony.anony_Hangle_Dt<= (1000*60*5) }">
 																				&nbsp<span class="badge badge-danger" >방금전</span>
-																			</c:if>
-																			<c:if test="${anony.anonyReplyList.size() > 0 }">
-																				<i class="icon-bubble text-info" style="margin-left:5px; font-size: 1.2em; font-weight: bold">
-																		<span class="m-l-5" style="vertical-align: text-top; margin-left: 3px;">
-																			<fmt:formatNumber value="${anony.anonyReplyList.size() }" type="number"/>
-																		</span>
-																				</i>
 																			</c:if>
 																		</td>
 																		<td>
 																			<fmt:formatDate value="${anony.anony_Board_Create_Dt }" pattern="yyyy.MM.dd"/>
 																		</td>
-																		<td style="text-align:center;">${anony.anony_Board_ReadCnt }</td>
+																		<td>${anony.anony_Board_ReadCnt }</td>
+																		<td>
+																			<c:if test="${anony.anonyReplyList.size() > 0 }">
+																				<span>
+																					<fmt:formatNumber value="${anony.anonyReplyList.size() }" type="number"/>
+																				</span>
+																			</c:if>
+																		</td>
 																	</tr>
 																</c:forEach>
 															</c:if>
@@ -167,34 +167,35 @@ tbody{
 															</tbody>
 														</table>
 													</div>
-												</div>
+													<!-- Pagination -->
+													<div style="text-align:right">
+														<div class="dataTables_paginate paging_simple_numbers" id="dataTable_paginate" style="display: flex; justify-content: center;">
+															<ul class="pagination">
 
+																<c:if test="${searchAnonyVO.prev}">
+																	<li class="paginate_button page-item previous" id="dataTable_previous">
+																		<a href="javascript:void(0);" onclick="searchList(${searchAnonyVO.startDate - 1}); return false;" aria-controls="dataTable" data-dt-idx="0" tabindex="0" class="page-link">Previous</a>
+																	</li>
+																</c:if>
 
-												<!-- Pagination -->
-												<div class="col-sm-12 col-md-7" style="text-align:right">
-													<div class="dataTables_paginate paging_simple_numbers" id="dataTable_paginate">
-														<ul class="pagination">
+																<c:forEach var="num" begin="${searchAnonyVO.startDate}" end="${searchAnonyVO.endDate}">
+																	<li class="paginate_button page-item">
+																		<a href="javascript:void(0);" onclick="searchList(${num}); return false;" aria-controls="dataTable" data-dt-idx="0" tabindex="0" class="page-link">${num}</a>
+																	</li>
+																</c:forEach>
 
-															<c:if test="${searchAnonyVO.prev}">
-																<li class="paginate_button page-item previous" id="dataTable_previous">
-																	<a href="javascript:void(0);" onclick="searchList(${searchAnonyVO.startDate - 1}); return false;" aria-controls="dataTable" data-dt-idx="0" tabindex="0" class="page-link">Previous</a>
-																</li>
-															</c:if>
-
-															<c:forEach var="num" begin="${searchAnonyVO.startDate}" end="${searchAnonyVO.endDate}">
-																<li class="paginate_button page-item">
-																	<a href="javascript:void(0);" onclick="searchList(${num}); return false;" aria-controls="dataTable" data-dt-idx="0" tabindex="0" class="page-link">${num}</a>
-																</li>
-															</c:forEach>
-
-															<c:if test="${searchAnonyVO.next}">
-																<li class="paginate_button page-item next" id="dataTable_next">
-																	<a href="javascript:void(0);" onclick="searchList(${searchAnonyVO.endDate + 1}); return false;" aria-controls="dataTable" data-dt-idx="0" tabindex="0" class="page-link">Next</a>
-																</li>
-															</c:if>
-														</ul>
+																<c:if test="${searchAnonyVO.next}">
+																	<li class="paginate_button page-item next" id="dataTable_next">
+																		<a href="javascript:void(0);" onclick="searchList(${searchAnonyVO.endDate + 1}); return false;" aria-controls="dataTable" data-dt-idx="0" tabindex="0" class="page-link">Next</a>
+																	</li>
+																</c:if>
+															</ul>
+														</div>
 													</div>
 												</div>
+
+
+												
 
 												<!-- Pagination -->
 												<form:hidden path="searchAnonyVO.pageIndex" />
@@ -279,11 +280,18 @@ tbody{
 
 	// 검색조건 초기화
 	function conditionReset() {
-		$("#resetBtn").click();
-		$('.myConditions').css("display","none");
-		$('input#searchAnonyVO.searchKeyword').val("");
-		$("input:checkbox:checked").click();
-		$("#inputSearchDt").val("");
+		$("#resetBtn").click(); // 버튼을 클릭하여 폼을 리셋
+      $('.myConditions').css("display", "none"); // 특정 클래스를 가진 요소를 숨김
+
+      // 검색어 입력란을 초기화
+      $('input[name="searchAnonyVO.searchKeyword"]').val("");
+
+      // 검색 조건을 초기화
+      $('select[name="searchAnonyVO.searchKeyword"]').val("tcm");
+
+      // 이하 추가적인 초기화 작업들
+      $("input:checkbox:checked").click();
+      $("#inputSearchDt").val("");
 	}
 
 

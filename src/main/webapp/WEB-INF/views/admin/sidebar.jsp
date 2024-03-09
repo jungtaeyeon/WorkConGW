@@ -7,7 +7,7 @@
 <html>
 <head>
     <meta charset="UTF-8">
-    <meta http-equiv="refresh" content="20">
+   <%-- <meta http-equiv="refresh" content="120">--%>
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <link rel="stylesheet" href="<%=request.getContextPath() %>/js/treeview/jquery.treeview.css" />
@@ -293,12 +293,11 @@
 
         }
         #admin {
-            float:right;
             font-size: 20px;
             font-weight: bold;
 
         }
-
+        .side-text{text-align: center;}
         #adminpage{
             font-weight: bold;
             font-size: 25px;
@@ -344,7 +343,7 @@
     </br>
     </br>
     </br>
-       <p><i class="fa-solid fa-bars"></i> 관리자 메뉴</p>
+       <!-- <p><i class="fa-solid fa-bars"></i> 관리자 메뉴</p> -->
 
 
     <ul>
@@ -459,24 +458,24 @@
 
 
 
-    function checkSession() {
-        let session = <%=session.getMaxInactiveInterval()%> ;
-        if(session > 300){
-            alert('시간이 만료되었습니다. 로그인해주세요')
-            location.href = "<%=request.getContextPath()%>/common/loginForm"
+<%--    function checkSession() {--%>
+<%--        let session = <%=session.getMaxInactiveInterval()%> ;--%>
+<%--        if(session > 300){--%>
+<%--            alert('시간이 만료되었습니다. 로그인해주세요')--%>
+<%--            location.href = "<%=request.getContextPath()%>/common/loginForm"--%>
 
-        }
-        else{
-            document.write(session);
-            clearTimeout(orange);
-        }
-    }
-//300000
-    function checkStart() {
-        orange = setInterval(checkSession, 300000);
-        console.log(orange)
-    }
-    checkStart();
+<%--        }--%>
+<%--        else{--%>
+<%--            document.write(session);--%>
+<%--            clearTimeout(orange);--%>
+<%--        }--%>
+<%--    }--%>
+<%--//300000--%>
+<%--    function checkStart() {--%>
+<%--        orange = setInterval(checkSession, 300000);--%>
+<%--        console.log(orange)--%>
+<%--    }--%>
+<%--    checkStart();--%>
 
 
 

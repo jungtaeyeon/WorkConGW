@@ -2,7 +2,7 @@
     pageEncoding="UTF-8"%>
   <style>
     
-  a{text-decoration: none;}
+    a{text-decoration: none;}
   .sidebar{
     border-right:2px solid rgb(0,0,0,0.1);
     margin-right: 10px;
@@ -19,21 +19,22 @@
     padding:0 10px;
   }
   .tab-content{
-    font-size: 25px; 
-    margin-left: 3%; 
+    font-size: 23px;  
     padding-bottom: 0; 
-    font-family: S-CoreDream-4Regular
   }
-  .pagination{
-      text-align: center;
-      justify-content: center;
-      margin-left : 500px
-  }
-
-  .subsubmenu{margin-bottom: 20px;}
+  .subsubmenu{margin-bottom: 10px;}
   .tab-content a{color: #000;}
+  .metismenuLI{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 3px;
+  }
+  
   .metismenu:last-child{margin-bottom:0 !important;}
-  .metismenu i{color:#2980b9;}
+  .metismenu .fa-square{color:#2980b9; margin-right: 5px;}
+  .addBookGroupLi:hover .fa-ellipsis{opacity: 1;}
+  .fa-ellipsis{cursor: pointer; opacity: 0; transition: opacity 0.5s;}
   .metismenu, .metismenu span{
     list-style: none;
     color: #5a5a5a;
@@ -44,32 +45,39 @@
     align-items: center;
     background-color: #2980b9; 
     color: white; 
-    width: 14rem; 
-    height: 3.8rem; 
-    border-radius: 5%; 
-    font-family: InfinitySans-RegularA1;
+    height: 3rem; 
+    border-radius: 10px; 
+    margin: 0 auto;
+    border: none;
+    font-size: 20px;
+    width: 100%;
   }
   .metismenuLI a{
-    font-family: S-CoreDream-4Regular; 
     font-size: 20px;
   }
+  .metismenuLI .dropdown-item{font-size: 16px; transition: 0.3s; margin-bottom: 0; cursor: pointer;}
   .go_btn{margin-bottom: 15px;}
-  .attendTimeTitle{
-    font-size: 26px;
-    text-align: center;
-    margin-bottom: 0;
+  .modal.show{background-color: rgba(0, 0, 0, 0.7);}
+  .modalBtnGroup{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
   }
-  .attendTimeContent{
-    font-size: 33px;
-    text-align: center;
-    font-weight: bold;
-    color: #0069d9;
-    margin-bottom: 0;
+  .modalBtnGroup:hover .modalBtn{opacity: 1;}
+  .modalBtn{cursor: pointer; color:#000 ; opacity: 0; transition: opacity 0.5s;}
+  .addBookGroupInput{
+    display: flex;
+    align-items: center;
   }
-  .attendTextGroup{
-    padding-bottom: 15px;
-    margin-bottom: 15px;
-    border-bottom: 1px solid #d2d2d2;
+  .addBookGroupInput p{
+    margin-bottom: 0;
+    margin-right: 5%;
+  }
+  .addBookGroupInput input{width: auto;}
+  .dropdown-item.active, .dropdown-item:active, .dropdown-item:focus, .dropdown-item:hover{
+    color: #000;
+    text-decoration: none;
+    background-color: #eff4fc;
   }
   .subsubmenu .btn{width: 48%;}
   </style>

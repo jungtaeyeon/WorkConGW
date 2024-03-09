@@ -2,8 +2,20 @@
     pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
-
-<body>
+<style>
+	.subTitleText h2 {
+		display: flex;
+		justify-content: flex-start;
+		align-items: center;
+		font-size: 27px;
+		padding: 10px 0;
+		font-family: "Noto Sans KR", sans-serif;
+	}
+	.subTitleText i {
+		font-size: 24px;
+		margin-right: 5px;
+	}
+</style>
 <!-- 헤더인클루드 -->
 <%@ include file="../../include/header.jsp"%>
 <section class="subPageContain">
@@ -14,17 +26,19 @@
     <div id="main-content">
         <div class="container-fluid">
             <div class="block-header">
-                <div class="row" >
+                <div class="row" style="align-items: center; margin-bottom: 20px;">
                 	<div class="col-sm-3" >
-                    	<h2 style="padding-left:10px; font-size:2em ; font-family:paybooc-Bold ; "><i class="far fa-sticky-note"></i>&nbsp;마일스톤
-						<%-- milestone_Id값이 0이면 생성 / 0이 아니면 수정 --%>
-							<c:if test="${milestoneVO.milestone_Id eq 0 }">
-								생성
-							</c:if>
-							<c:if test="${milestoneVO.milestone_Id ne 0 }">
-								수정
-							</c:if>
-                    	</h2>
+						<div class="subTitleText">
+							<h2><i class="fa-solid fa-angles-right"></i>마일스톤
+							<%-- milestone_Id값이 0이면 생성 / 0이 아니면 수정 --%>
+								<c:if test="${milestoneVO.milestone_Id eq 0 }">
+									생성
+								</c:if>
+								<c:if test="${milestoneVO.milestone_Id ne 0 }">
+									수정
+								</c:if>
+							</h2>
+						</div>
                     </div>
                     <div class="col-sm-9" >
                    		<div style="float:right;">
@@ -45,7 +59,7 @@
 				<form:hidden path="milestone_Id" />
 	            <div class="row clearfix">
 	                <div class="col-lg-12 col-md-12 col-sm-12">
-	                    <div class="card">
+	                    <div class="card" style="padding: 5px 15px;">
 	                        <div class="body">
 	                            <div class="row clearfix">
 		                             <!-- 본문 -->

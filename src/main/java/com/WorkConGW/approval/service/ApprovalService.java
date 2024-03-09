@@ -7,6 +7,7 @@ import com.WorkConGW.common.command.FileUploadCommand;
 import com.WorkConGW.emp.dao.EmpDAO;
 import com.WorkConGW.attend.dao.AttendenceDAO;
 import com.WorkConGW.emp.dto.EmpVO;
+import com.WorkConGW.scheduler.dao.ScheduleDAO;
 import com.beust.ah.A;
 import com.google.api.Http;
 import jakarta.servlet.http.HttpSession;
@@ -36,6 +37,9 @@ public class ApprovalService{
     
     @Autowired
     private AttendenceDAO attendenceDAO = null;
+
+    @Autowired
+    private ScheduleDAO scheduleDAO = null;
 
     @Autowired
     private EmpDAO empDAO = null;
@@ -440,9 +444,9 @@ public class ApprovalService{
 
         history = approvalDAO.selectStepByEmpIdAndDocId(history); // 문서 번호에 맞는 사원에 대해 step를 가져온다.
         /*
-        * 1. 문서 번호에 맞는 사원에 대해 step를 가져온다.
-        * 2. history에는 setDoc_Id/setEmp_Id/set_History_St가 박혀있다. 즉, 결재자에 대한 정보가 꽂혀있음.
-        * */
+         * 1. 문서 번호에 맞는 사원에 대해 step를 가져온다.
+         * 2. history에는 setDoc_Id/setEmp_Id/set_History_St가 박혀있다. 즉, 결재자에 대한 정보가 꽂혀있음.
+         * */
 
         int historyStep = (Integer.parseInt(history.getHistory_Step())+1);
         // 결재가 완료되면, Step를  하나 증가시킨다.
@@ -481,9 +485,8 @@ public class ApprovalService{
                 approval.setApproval_Content((String)dataMap.get("approvalContent"));
                 approval.setApproval_St(2); // 결재 진행중인 상태
                 approval.setDoc_Id((Integer.parseInt((String) dataMap.get("docId"))));
-                if (historyStep == 2 && result == 0) {
                     attendenceDAO.attendinsertApproval(dataMap);
-                }
+                    scheduleDAO.insertApprovalSchedule(dataMap);
                 approvalDAO.updateApproval(approval);
 
             }
@@ -493,7 +496,7 @@ public class ApprovalService{
 
         }
 
-
+        else{
             List<String> refers = (List<String>)dataMap.get("referArr"); // 사번을 가져옴
             logger.info("refers :" + refers);
             for(String refer : refers)
@@ -518,17 +521,21 @@ public class ApprovalService{
             approval.setApproval_St(2);
             approval.setDoc_Id((Integer.parseInt((String)dataMap.get("docId"))));
             logger.info("approval >>> 여기들어오니? : "+approval.toString());
-            if (historyStep == 3) {
                 attendenceDAO.attendinsertApproval(dataMap);
-            }
+                scheduleDAO.insertApprovalSchedule(dataMap);
             approvalDAO.updateApproval(approval);
+
+
+        }
+
+
+
 
 
 
         return returnApproval;
-        
-    }
 
+    }
 
     public void approvalReturn(Map<String, Object> dataMap) {
         ApprovalHistoryVO approvalHistoryVO = new ApprovalHistoryVO();
