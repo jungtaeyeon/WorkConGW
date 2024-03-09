@@ -297,7 +297,7 @@
                             </c:if>
                         </div>
 
-                        <span id="deleteImage">x</span>
+
 
 
                     </form>

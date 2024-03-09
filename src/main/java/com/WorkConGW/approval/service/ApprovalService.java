@@ -475,7 +475,6 @@ public class ApprovalService{
                 approval.setApproval_Content((String)dataMap.get("approvalContent"));
                 approval.setApproval_St(1); // 결재 진행중인 상태
                 approval.setDoc_Id((Integer.parseInt((String) dataMap.get("docId"))));
-
                 approvalDAO.updateApproval(approval);
             }
             else{ // 두번째에서 끝내야함

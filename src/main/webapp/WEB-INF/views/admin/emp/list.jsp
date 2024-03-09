@@ -148,12 +148,6 @@
 								<table class="table table-hover js-basic-example dataTable table-custom table-striped m-b-0 c_list">
 									<thead class="thead-dark">
 									<tr >
-										<th style="text-align: left;">
-											<label class="fancy-checkbox">
-												<input class="select-all" type="checkbox" name="checkbox" id="empId_0">
-												<span></span>
-											</label>
-										</th>
 										<th>이름</th>
 										<th>사원번호</th>
 										<th>부서명</th>
@@ -166,14 +160,7 @@
 									<tbody>
 									<c:forEach items="${empVOList}" var ="emp">
 										<tr onclick = "getDetail('${emp.emp_Id}');">
-											<td class="width45" onclick="event.cancelBubble=true">
-												<%--계층 구조상 다음 이벤트 핸들러가 이벤트를 받는 것을 막는다.--%>
-												<label class="fancy-checkbox">
-													<input class="checkbox-tick" type="checkbox" name="checkbox">
-													<span></span>
-												</label>
-											</td>
-											<td>
+											<td style="width: 100px;">
 												<h6 class="mb-0">${emp.emp_Name}</h6>
 											</td>
 											<td><span>${emp.emp_Id }</span></td>
