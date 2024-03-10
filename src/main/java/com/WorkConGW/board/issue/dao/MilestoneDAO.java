@@ -35,7 +35,7 @@ public class MilestoneDAO {
     }
 
     public void deleteMilestone(MilestoneVO milestoneVO) throws SQLException {
-
+        sqlSessionTemplate.delete("deleteMilestone", milestoneVO);
     }
 
     public List<MilestoneVO> selectMilestoneList(MilestoneVO milestoneVO) throws SQLException {

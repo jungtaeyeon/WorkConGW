@@ -232,6 +232,7 @@
                             제목
                         </td>
                         <td id="title" contenteditable="true" style="background: rgb(255, 255, 255); padding: 5px; border: 1px solid black; text-align: left; color: rgb(0, 0, 0); font-size: 14px; font-weight: normal; vertical-align: middle;" colspan="3">
+                            [휴가] 연차 사용 신청합니다.
                         </td>
                     </tr>
                     </tbody>
@@ -273,6 +274,10 @@
                     </tr>
                     <tr>
                         <td id = "contents" contenteditable="true" style="box-sizing: inherit; text-align: left; background-color: rgb(255, 255, 255); padding: 0.09%; border: 1px solid black; height: 100px; color: rgb(0, 0, 0); font-size: 14px; font-weight: normal; vertical-align: middle; background-position: initial initial; background-repeat: initial initial; border-top:none;" colspan="2" class="dext_table_border_t">
+                            기간: 2024.03.14 ~ 2024.03.14 (연차1일) <br>
+                            연락처: 010-0000-0000 <br>
+                            대직자: 강우형 차장 <br>
+                            사유:
                         </td>
                     </tr>
                     </tbody>
@@ -459,7 +464,7 @@
         jsonData.approval = approvalArray;
         jsonData.docId = $("#docId").text();
         jsonData.title = $("#title").text();
-        jsonData.content = $("#contents").text()
+        jsonData.content = $("#contents").html();
         jsonData.startDt =$(".startDt").val();
         jsonData.endDt = $(".endDt").val();
 
