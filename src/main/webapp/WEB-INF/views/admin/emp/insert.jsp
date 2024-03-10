@@ -187,7 +187,6 @@
 
         .input-btn {
             border: 1.5px solid ;
-            background-color: #fff;
             color: #0f0f0f;
             height: 35px;
             width: 90px;
