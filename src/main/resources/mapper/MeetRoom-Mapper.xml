@@ -61,7 +61,7 @@
     <sql id="noticeSearch">
         <if test="searchKeyword != null and searchKeyword != ''">
             <choose>
-                <when test='searchCondition == "tc"'>
+                <when test='searchCondition == "tcw"'>
                     and (RESERVATION_NOTICE_TITLE LIKE '%' || #{searchKeyword} || '%' OR  RESERVATION_NOTICE_CONTENT LIKE '%' || #{searchKeyword} || '%')
                 </when>
                 <when test='searchCondition == "t"'>
@@ -69,6 +69,25 @@
                 </when>
                 <when test='searchCondition == "c"'>
                     AND	RESERVATION_NOTICE_CONTENT LIKE '%' || #{searchKeyword} || '%'
+                </when>
+            </choose>
+        </if>
+    </sql>
+
+    <sql id="complainSearch">
+        <if test="searchKeyword != null and searchKeyword != ''">
+            <choose>
+                <when test='searchCondition == "tcw"'>
+                    and (COMPLAIN_TITLE LIKE '%' || #{searchKeyword} || '%' OR  COMPLAIN_CONTENT LIKE '%' || #{searchKeyword} || '%')
+                </when>
+                <when test='searchCondition == "t"'>
+                    AND COMPLAIN_TITLE LIKE '%' || #{searchKeyword} || '%'
+                </when>
+                <when test='searchCondition == "c"'>
+                    AND	COMPLAIN_CONTENT LIKE '%' || #{searchKeyword} || '%'
+                </when>
+                <when test='searchCondition == "w"'>
+                    AND	emp_id LIKE '%' || #{searchKeyword} || '%'
                 </when>
             </choose>
         </if>
@@ -132,7 +151,8 @@
 
 
     <select id="getReservationNoticeList" parameterType="ReservationNoticeVO" resultType="ReservationNoticeVO">
-        select D3.*
+        select
+            D3.*
         from(
         select D2.*
         from(
@@ -599,6 +619,7 @@
         reservation_complain
         where
         complain_st = 1
+
         <choose>
             <when test="emp_Id != null ">
                 and emp_id = #{emp_Id}
@@ -607,8 +628,7 @@
                 and emp_id = #{emp_Id}
             </when>
         </choose>
-
-
+        <include refid="complainSearch" />
         ) D1
         ) D2
         where seq <![CDATA[ >= ]]> #{firstIndex}

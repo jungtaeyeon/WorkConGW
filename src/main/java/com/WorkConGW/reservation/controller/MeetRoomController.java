@@ -536,6 +536,7 @@ public String registRoom(MeetRoomFormVO meetRoomFormVO, Model model, HttpSession
 
 		/*민원 리스트 가져오기*/
 		ReservationComplainVO searchReservationComplainVO = meetRoomFormVO.getSearchReservationComplainVO();
+		log.info(searchReservationComplainVO.toString());
 		searchReservationComplainVO.setEmp_Id(empId);
 		paginationInfo = new PaginationInfo();
 

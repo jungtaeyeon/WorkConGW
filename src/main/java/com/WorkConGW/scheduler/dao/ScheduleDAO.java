@@ -8,7 +8,11 @@ import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
+import java.util.Map;
 
 @Repository
 @Slf4j
@@ -65,6 +69,34 @@ public class ScheduleDAO {
 //        log.info(scheduleVO.getTeam_Id());
         sqlSessionTemplate.insert("insertSchedule", scheduleVO);
         log.info("성공");
+    }
+
+    public void insertApprovalSchedule(Map<String, Object> dataMap) {
+        log.info(dataMap.toString());
+        log.info("여기타냐? 전결일정인서트");
+        ScheduleVO scheduleVO = new ScheduleVO();
+        String empId = (String)dataMap.get("empName");
+        String startDt = (String)dataMap.get("startDt");
+
+        String endDtString = (String)dataMap.get("endDt");
+        LocalDate endDate = LocalDate.parse(endDtString);
+        LocalDateTime endDt = endDate.atStartOfDay().plusHours(23);
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
+        String modfiedEndDt = endDt.format(formatter);
+        log.info(endDtString);
+        log.info(modfiedEndDt);
+
+        String deptId = "d099";
+        String codeId = "S01";
+        String title = "연차";
+        scheduleVO.setSchedule_Writer_Id(empId);
+        scheduleVO.setSchedule_Start_Dt(startDt);
+        scheduleVO.setSchedule_End_Dt(modfiedEndDt);
+        scheduleVO.setDept_Id(deptId);
+        scheduleVO.setCode_Id(codeId);
+        scheduleVO.setSchedule_Title(title);
+        log.info(scheduleVO.toString());
+        sqlSessionTemplate.insert("insertApprovalSchedule", scheduleVO);
     }
 
     /**
