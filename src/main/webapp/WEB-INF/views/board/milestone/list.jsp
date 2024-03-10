@@ -211,8 +211,8 @@ tr:hover{
 			return;
 		}
 
-		$('input[name="milestone_Id"]').val(milestone_Id);
-
+		$('input[name="milestone_Id"]').val(milestoneId);
+		console.log(milestoneId)
 		document.modifyForm.action = '<c:url value="/board/milestone/remove"/>';
 		document.modifyForm.submit();
 	}

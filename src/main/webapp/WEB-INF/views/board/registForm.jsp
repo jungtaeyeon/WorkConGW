@@ -93,7 +93,7 @@
 										<div class="col-sm-12 formGroup noticeForm anonyForm">
 											<div class="form-group">
 												<label class="boardTitle" style="font-size: 16px;">제목</label>
-												<input type="text" name="noticeVO.notice_title" id="boardTitle" class="form-control" placeholder="">
+												<input type="text" name="noticeVO.notice_title" id="boardTitle" class="form-control" placeholder="" value="시연용 공지">
 											</div>
 										</div>
 									</div>
@@ -150,7 +150,7 @@
 
 										<!-- 내용 입력 -->
 										<div class="col-sm-12 formGroup noticeForm anonyForm">
-											<div class="summernote"style="height: 200px;"></div>
+											<div class="summernote"style="height: 200px;" ></div>
 										</div>
 									</div>
 								</form:form>
