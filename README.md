@@ -43,9 +43,14 @@
 
 🎯 개발표준 정의서: [링크](https://drive.google.com/file/d/1RwOCXNiztO3RVaGKxmyQvaHM2BfOfq_k/view?usp=drive_link)
 
-🎯 ERD: [링크](https://drive.google.com/file/d/1tmVxgWeTPdpik4eZoBsmNUPutNNP-KlE/view?usp=drive_link)
+
+
 
 🎯 시나리오 테스트: [링크](https://docs.google.com/spreadsheets/d/1PHrXVvg8TP9mZmxk2nB1vjP4XR8Di0oMY5H7lgmpUBo/edit#gid=2087633204)
+
+🎯 ERD:![KakaoTalk_20240309_090123821](https://github.com/jungtaeyeon/WorkConGW/assets/96507825/8a131ade-0f8e-4bfb-ab59-2262634a886f)
+
+
 
 
 ## 논 외 </br>
