@@ -392,9 +392,7 @@
               <div style="margin-top: 20px;">
                 <form:select path="searchReservationComplainVO.searchCondition" class="form-control selectSearch" style="width:130px;float:left;">
                   <form:option value="tcw">전체</form:option>
-                  <form:option value="t">제목</form:option>
                   <form:option value="c">내용</form:option>
-                  <form:option value="w">작성자</form:option>
                 </form:select>
                 <button type="button" class="btn btn-secondary" onclick="resetAndReservation()">
                   <!-- 초기화 아이콘 -->
@@ -422,7 +420,7 @@
                     <table class="table table-hover">
                       <thead class="thead-light">
                       <tr>
-                        <th style="width:40%;">제목</th>
+                        <th style="width:40%;">내용</th>
                         <th style="width:20%;">작성 날짜</th>
                         <th style="width:20%;">삭제</th>
                       </tr>

@@ -36,7 +36,7 @@
 
 <div class="card o-hidden border-0 shadow-lg my-5">
     <div class = "jumbotron">
-        <h2>아이디는 : </h2> <br/>
+        <h2>사번은 : </h2> <br/>
         <ul>
             <c:forEach items = "${empVO}" var = "emp">
                 <li>${emp.emp_Id}</li><br/>

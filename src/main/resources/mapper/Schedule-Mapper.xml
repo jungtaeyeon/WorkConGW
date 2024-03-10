@@ -66,6 +66,39 @@
         )
     </insert>
 
+    <insert id="insertApprovalSchedule" parameterType="ScheduleVO">
+        <selectKey resultType="int" keyProperty="schedule_Id" order="BEFORE">
+            SELECT SCHEDULE_ID_SEQ.NEXTVAL FROM DUAL
+        </selectKey>
+        insert into SCHEDULE (
+        SCHEDULE_ID
+        ,SCHEDULE_TITLE
+        ,SCHEDULE_CONTENT
+        ,SCHEDULE_CREATE_DT
+        ,SCHEDULE_START_DT
+        ,SCHEDULE_END_DT
+        ,SCHEDULE_IMP
+        ,SCHEDULE_ST
+        ,SCHEDULE_LOCATION
+        ,SCHEDULE_WRITER_ID
+        ,CODE_ID
+        ,DEPT_ID
+        ) VALUES (
+        #{schedule_Id}
+        ,#{schedule_Title}
+        ,'연차'
+        ,SYSDATE
+        ,to_date(#{schedule_Start_Dt},'yyyy-MM-dd')
+        ,to_date(#{schedule_End_Dt},'yyyy-MM-ddHH24:mi')
+        ,#{schedule_Imp}
+        ,1
+        ,'연차'
+        ,#{schedule_Writer_Id}
+        ,#{code_Id}
+        ,#{dept_Id}
+        )
+    </insert>
+
     <select id="selectScheduleListByDate" resultType="ScheduleVO" parameterType="ScheduleVO">
         SELECT
             SCHEDULE_ID
