@@ -4,6 +4,7 @@ import com.WorkConGW.reservation.dto.MeetRoomReservationVO;
 import com.WorkConGW.reservation.dto.MeetRoomVO;
 import com.WorkConGW.reservation.dto.ReservationComplainVO;
 import com.WorkConGW.reservation.dto.ReservationNoticeVO;
+import com.mchange.v2.log.MLogInitializationException;
 import lombok.extern.slf4j.Slf4j;
 import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -123,7 +124,9 @@ public class MeetRoomDAO {
     }
 
     public List<ReservationComplainVO> getComplainList(ReservationComplainVO searchReservationComplainVO)throws SQLException {
+        log.info(searchReservationComplainVO.toString());
         List<ReservationComplainVO> reservationComplainVOList = sqlSessionTemplate.selectList("getComplainList", searchReservationComplainVO);
+        log.info(reservationComplainVOList.toString());
         return reservationComplainVOList;
     }
 

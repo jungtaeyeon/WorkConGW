@@ -178,133 +178,116 @@ uri="http://java.sun.com/jsp/jstl/core" %>
   <!-- 푸터 인클루드 -->
   <%@ include file="../include/footer.jsp"%>
 
+
   <!-- 공통모듈 -->
   <script>
-        function deptTrees() {
-            $.ajax({
-                type: "GET",
-                url: "<%=request.getContextPath()%>/getFormTreeView",
-                contentType: "application/json",
-                processData: true,
-                success: function(data) {
-                    console.log(data);
-                    data.forEach(function(e, i) {
-                        let formId = e.form_Id;
-                        let formName = e.form_Name;
-                        let formSupId = e.form_sup_id;
-                        let level = 5;
-                        let li = "";
-
-                        console.log(formId);
-                        console.log(formName);
-                        console.log(formSupId);
-
-                        if(e.level){
-                            level = e.level;
-                        }
-                        if(formSupId != 0){
-                            li = '<li onclick="formDetail(this);" id="' + formId + '" data-type="supervisor" lvl="' + level + '"><img src="<%=request.getContextPath() %>/js/treeview/images/file.gif"><a class="file code myHover" id="t1">' + " " + formName +'</a></li>';}
-                        else{
-                        }
-                        if (level === 1) {
-                            $("#lvl0").append(li);
-                        } else {
-                            var parentLi = $("li[id='" + formSupId + "']");
-                            console.log('여기를 타니?')
-
-                            parentLi.addClass("expandable lastExpandable");
-                            var bUl = parentLi.children("ul");
-
-                            // 하위 그룹이 없으면 li로 추가
-                            // 하위 그룹이 있으면 ul로 추가
-                            if (bUl.length === 0) {
-                                var div = "<div onclick='plusFromMinus(this);' class='hitarea expandable-hitarea lastExpandable-hitarea'></div>"
-                                li = "<ul class='' style='display: none;'>" + li + "</ul>";
-                                parentLi.append(div);
-                                parentLi.append(li);
-                            } else {
-                                bUl.append(li);
-                            }
-                        }
-                    });
-                }
-            });
+    function deptTrees() {
+      $.ajax({
+        type: "GET",
+        url: "<%=request.getContextPath()%>/getFormTreeView",
+        contentType: "application/json",
+        processData: true,
+        success: function(data) {
+          console.log(data);
+          data.forEach(function(e, i) {
+            let formId = e.form_Id;
+            let formName = e.form_Name;
+            let formSupId = e.form_sup_id;
+            let level = 5;
+            let li = "";
+            console.log(formId);
+            console.log(formName);
+            console.log(formSupId);
+            if(e.level){
+              level = e.level;
+            }
+            if(formSupId != 0){
+              li = '<li onclick="formDetail(this);" id="' + formId + '" data-type="supervisor" lvl="' + level + '"><img src="<%=request.getContextPath() %>/js/treeview/images/file.gif"><a class="file code myHover" id="t1">' + " " + formName +'</a></li>';}
+            else{
+            }
+            if (level === 1) {
+              $("#lvl0").append(li);
+            } else {
+              var parentLi = $("li[id='" + formSupId + "']");
+              console.log('여기를 타니?')
+              parentLi.addClass("expandable lastExpandable");
+              var bUl = parentLi.children("ul");
+              // 하위 그룹이 없으면 li로 추가
+              // 하위 그룹이 있으면 ul로 추가
+              if (bUl.length === 0) {
+                var div = "<div onclick='plusFromMinus(this);' class='hitarea expandable-hitarea lastExpandable-hitarea'></div>"
+                li = "<ul class='' style='display: none;'>" + li + "</ul>";
+                parentLi.append(div);
+                parentLi.append(li);
+              } else {
+                bUl.append(li);
+              }
+            }
+          });
         }
-
-
-        function formDetail(obj)
+      });
+    }
+    function formDetail(obj)
+    {
+      let formId = $(obj).attr("id"); // id값을 가져옴
+      $.ajax({
+        type:"post",
+        url : "<c:url value="getForm"/>",
+        contentType: "application/json",
+        data : formId,
+        success : function (data)
         {
-            let formId = $(obj).attr("id"); // id값을 가져옴
-
-            $.ajax({
-                 type:"post",
-                 url : "<c:url value="getForm"/>",
-                 contentType: "application/json",
-                 data : formId,
-                 success : function (data)
-                 {
-                     console.log(data)
-                     let empName = data.emp.emp_Name+" "+data.emp.code_Name;
-                     let deptName = data.emp.dept_Name;
-                     let formName = data.form.form_Name;
-                     let formId = data.form.form_Id;
-                     console.log(formId)
-
-                     $("#empName").html(empName);
-                     $("#deptName").html(deptName);
-                     $("#formName").html(formName);
-                     $("#myFormId").html(formId);
-                 }
-            })
+          console.log(data)
+          let empName = data.emp.emp_Name+" "+data.emp.code_Name;
+          let deptName = data.emp.dept_Name;
+          let formName = data.form.form_Name;
+          let formId = data.form.form_Id;
+          console.log(formId)
+          $("#empName").html(empName);
+          $("#deptName").html(deptName);
+          $("#formName").html(formName);
+          $("#myFormId").html(formId);
         }
-
-
+      })
+    }
     function getForm_go()
     {
-        let formId = $("#myFormId").html();
-        console.log(formId)
-
-        if(!formId){
-            alert('양식을 선택하세요.')
-            return false;
-        }else if(formId =='1'){
-            alert('하위계획서를 클릭해주세요')
-            return false;
-        }else if(formId !=='2'){
-            alert('준비중입니다.')
-            return false;
-        }
-
-        location.href = "<%=request.getContextPath()%>/approval/docDetail?form_Id="+formId;
-
+      let formId = $("#myFormId").html();
+      console.log(formId)
+      if(!formId){
+        alert('양식을 선택하세요.')
+        return false;
+      }else if(formId =='1'){
+        alert('하위계획서를 클릭해주세요')
+        return false;
+      }else if(formId !=='2'){
+        alert('준비중입니다.')
+        return false;
+      }
+      location.href = "<%=request.getContextPath()%>/approval/docDetail?form_Id="+formId;
     }
-
-
-
-        function plusFromMinus(obj){
-            let parentLi = $(obj).parent("li");
-            let deptId = parentLi.attr("id");
-            if($(obj).hasClass("expandable-hitarea")){
-                $(obj).parent("li").removeClass("expandable lastExpandable");
-                $(obj).parent("li").addClass("collapsable lastCollapsable");
-                $(obj).removeClass("hitarea expandable-hitarea lastExpandable-hitarea");
-                $(obj).addClass("hitarea collapsable-hitarea lastCollapsable-hitarea"); // (-)
-                $(obj).parent("li").children("ul").css("display","block");
-            }else{
-                $(obj).parent("li").removeClass("collapsable lastCollapsable");
-                $(obj).parent("li").addClass("expandable lastExpandable"); // 총무1팀
-                $(obj).removeClass("hitarea collapsable-hitarea lastCollapsable-hitarea");
-                $(obj).addClass("hitarea expandable-hitarea lastExpandable-hitarea"); //(+) 총무부
-                $(obj).parent("li").children("ul").css("display","none");
-            }
-        }
-
-        window.onload = function(){
-            deptTrees();
-    // 	getOrgChart();
-            //부서클릭시 부서에 속한 직원 상세조회
-        }
-
-        $("#codeList").treeview({collapsed: false});
+    function plusFromMinus(obj){
+      let parentLi = $(obj).parent("li");
+      let deptId = parentLi.attr("id");
+      if($(obj).hasClass("expandable-hitarea")){
+        $(obj).parent("li").removeClass("expandable lastExpandable");
+        $(obj).parent("li").addClass("collapsable lastCollapsable");
+        $(obj).removeClass("hitarea expandable-hitarea lastExpandable-hitarea");
+        $(obj).addClass("hitarea collapsable-hitarea lastCollapsable-hitarea"); // (-)
+        $(obj).parent("li").children("ul").css("display","block");
+      }else{
+        $(obj).parent("li").removeClass("collapsable lastCollapsable");
+        $(obj).parent("li").addClass("expandable lastExpandable"); // 총무1팀
+        $(obj).removeClass("hitarea collapsable-hitarea lastCollapsable-hitarea");
+        $(obj).addClass("hitarea expandable-hitarea lastExpandable-hitarea"); //(+) 총무부
+        $(obj).parent("li").children("ul").css("display","none");
+      }
+    }
+    window.onload = function(){
+      deptTrees();
+// 	getOrgChart();
+      //부서클릭시 부서에 속한 직원 상세조회
+    }
+    $("#codeList").treeview({collapsed: false});
   </script>
 </body>

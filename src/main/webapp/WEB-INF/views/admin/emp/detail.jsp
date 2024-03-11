@@ -149,7 +149,6 @@
         }
 
         .input-field input[type=button]:hover {
-            background-color: #d9d2ff3d
         }
 
         .input-field select {
@@ -183,13 +182,11 @@
         }
 
         .btn:hover {
-            background-color: #0f0f0f;
             color: #fff;
         }
 
         .input-btn {
             border: 1.5px solid #0f0f0f;
-            background-color: #fff;
             color: #0f0f0f;
             height: 35px;
             width: 90px;
@@ -199,7 +196,7 @@
         }
 
         .input-btn:hover {
-            background-color: #0f0f0f;
+            background-color: #d9d2ff3d
         }
         /* form태그 */
         form[name='myPageFrm']{

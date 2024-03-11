@@ -310,16 +310,16 @@ p.approvalForm, p.approvalName, p.approvalDay {
 					<label for="dashboardWeather">오늘의날씨</label>
 				</p>
 				<p class="checkbox">
+					<input type="checkbox" id="dashboardProject" name="dashboardProject" <c:if test="${dashbodeList[0].dashboard_project eq 1}">checked</c:if> />
+					<label for="dashboardProject">프로젝트</label>
+				</p>
+				<p class="checkbox">
 					<input type="checkbox" id="dashboardDuty" name="dashboardDuty" <c:if test="${dashbodeList[0].dashboard_duty eq 1}">checked</c:if> />
 					<label for="dashboardDuty">업무관리</label>
 				</p>
 				<p class="checkbox">
 					<input type="checkbox" id="dashboardIssue" name="dashboardIssue" <c:if test="${dashbodeList[0].dashboard_issue eq 1}">checked</c:if> />
 					<label for="dashboardIssue">이슈관리</label>
-				</p>
-				<p class="checkbox">
-					<input type="checkbox" id="dashboardProject" name="dashboardProject" <c:if test="${dashbodeList[0].dashboard_project eq 1}">checked</c:if> />
-					<label for="dashboardProject">프로젝트</label>
 				</p>
 			  </form>
 			</div>
@@ -475,6 +475,50 @@ p.approvalForm, p.approvalName, p.approvalDay {
 		</div>
 	</div>
   </div>
+	<div class="gridContent <c:if test='${dashbodeList[0].dashboard_project eq 0}'>none</c:if>">
+		<div class="girdContentTitGroup">
+			<p class="gridContentTit">프로젝트</p>
+			<i class="fa fa-sign-in" aria-hidden="true" onclick="location.href='<%=request.getContextPath()%>/board/project/list'"></i>
+		</div>
+		<c:if test="${!empty projectList}">
+			<c:forEach items="${projectList}" var = "project" begin="0" end="2">
+				<div class="approvalContentGroup" onclick="window.location.href='${pageContext.request.contextPath }/board/project/detail?project_Id=${project.project_Id}'">
+					<div class="approvalGroup">
+						<p class="approvalTit"><span class="approvalNum">[#${project.project_Id }]</span>${project.project_Title }</p>
+						<p class="approvalForm">
+							<fmt:formatDate value="${project.project_Update_Dt }" pattern="yyyy-MM-dd"/>
+						</p>
+					</div>
+					<div class="approvalGroup">
+						<c:if test="${project.todoIssueCount + project.inprogressIssueCount + project.doneIssueCount eq 0 }">
+							<c:set var="percentage" value="0"></c:set>
+						</c:if>
+						<c:if test="${project.todoIssueCount + project.inprogressIssueCount + project.doneIssueCount ne 0 }">
+							<c:set var="totalWeight" value="${project.todoIssueCount * 0 + project.inprogressIssueCount * 0.5 + project.doneIssueCount * 1 }" />
+							<c:set var="totalIssueCount" value="${project.todoIssueCount + project.inprogressIssueCount + project.doneIssueCount }" />
+							<c:set var="percentage" value="${(totalWeight / totalIssueCount) * 100 }" />
+							<fmt:parseNumber var="percentage" value="${percentage}" integerOnly="true" />
+						</c:if>
+						<div class="progress progress-xs" style="width: 50%; height:10px;margin-top:5px;background-color:rgb(0,0,0,0.2);">
+							<div class="progress-bar" role="progressbar" aria-valuenow="${percentage}" aria-valuemin="0" aria-valuemax="100" style="width: ${percentage}%; height:10px;">
+						</div>
+						</div>
+						<div style="margin-top: 5px;font-size:1.1em;">
+							<span><strong style="font-size:1.1em;">${percentage }%</strong> 진행됨</span>
+							<!-- <span style="margin-left:10px;"><strong style="font-size:1.1em;">${project.todoIssueCount }</strong> Todo</span>
+							<span style="margin-left:10px;"><strong style="font-size:1.1em;">${project.inprogressIssueCount }</strong> Inprogress</span>
+							<span style="margin-left:10px;"><strong style="font-size:1.1em;">${project.doneIssueCount }</strong> Done</span> -->
+						</div>
+					</div>
+				</div>
+			</c:forEach>	
+		</c:if>
+		<c:if test="${empty projectList}">
+			<div class="approvalGroup">
+				<p class="approvalForm" style="text-align: center; width: 100%;">프로젝트가 존재하지 않습니다.</p>
+			</div>
+		</c:if>
+		</div>
   <div class="gridContent <c:if test='${dashbodeList[0].dashboard_duty eq 0}'>none</c:if>">
 	<div class="girdContentTitGroup">
 		<p class="gridContentTit">업무관리</p>
@@ -533,50 +577,6 @@ p.approvalForm, p.approvalName, p.approvalDay {
 	<c:if test="${empty issueList}">
 		<div class="approvalGroup">
 			<p class="approvalForm" style="text-align: center; width: 100%;">이슈가 존재하지 않습니다.</p>
-		</div>
-	</c:if>
-  </div>
-  <div class="gridContent <c:if test='${dashbodeList[0].dashboard_project eq 0}'>none</c:if>">
-	<div class="girdContentTitGroup">
-		<p class="gridContentTit">프로젝트</p>
-		<i class="fa fa-sign-in" aria-hidden="true" onclick="location.href='<%=request.getContextPath()%>/board/project/list'"></i>
-	</div>
-	<c:if test="${!empty projectList}">
-		<c:forEach items="${projectList}" var = "project" begin="0" end="2">
-			<div class="approvalContentGroup" onclick="window.location.href='${pageContext.request.contextPath }/board/project/detail?project_Id=${project.project_Id}'">
-				<div class="approvalGroup">
-					<p class="approvalTit"><span class="approvalNum">[#${project.project_Id }]</span>${project.project_Title }</p>
-					<p class="approvalForm">
-						<fmt:formatDate value="${project.project_Update_Dt }" pattern="yyyy-MM-dd"/>
-					</p>
-				</div>
-				<div class="approvalGroup">
-					<c:if test="${project.todoIssueCount + project.inprogressIssueCount + project.doneIssueCount eq 0 }">
-						<c:set var="percentage" value="0"></c:set>
-					</c:if>
-					<c:if test="${project.todoIssueCount + project.inprogressIssueCount + project.doneIssueCount ne 0 }">
-						<c:set var="totalWeight" value="${project.todoIssueCount * 0 + project.inprogressIssueCount * 0.5 + project.doneIssueCount * 1 }" />
-						<c:set var="totalIssueCount" value="${project.todoIssueCount + project.inprogressIssueCount + project.doneIssueCount }" />
-						<c:set var="percentage" value="${(totalWeight / totalIssueCount) * 100 }" />
-						<fmt:parseNumber var="percentage" value="${percentage}" integerOnly="true" />
-					</c:if>
-					<div class="progress progress-xs" style="width: 50%; height:10px;margin-top:5px;background-color:rgb(0,0,0,0.2);">
-						<div class="progress-bar" role="progressbar" aria-valuenow="${percentage}" aria-valuemin="0" aria-valuemax="100" style="width: ${percentage}%; height:10px;">
-					</div>
-					</div>
-					<div style="margin-top: 5px;font-size:1.1em;">
-						<span><strong style="font-size:1.1em;">${percentage }%</strong> 진행됨</span>
-						<!-- <span style="margin-left:10px;"><strong style="font-size:1.1em;">${project.todoIssueCount }</strong> Todo</span>
-						<span style="margin-left:10px;"><strong style="font-size:1.1em;">${project.inprogressIssueCount }</strong> Inprogress</span>
-						<span style="margin-left:10px;"><strong style="font-size:1.1em;">${project.doneIssueCount }</strong> Done</span> -->
-					</div>
-				</div>
-			</div>
-		</c:forEach>	
-	</c:if>
-	<c:if test="${empty projectList}">
-		<div class="approvalGroup">
-			<p class="approvalForm" style="text-align: center; width: 100%;">프로젝트가 존재하지 않습니다.</p>
 		</div>
 	</c:if>
   </div>

@@ -57,7 +57,7 @@ public class MilestoneService {
 
 	public void remove(MilestoneVO milestoneVO, HttpSession session) throws SQLException{
 		// 이슈 마일스톤 업데이트
-		issueDAO.updateIssueByDeleteMilestone(milestoneVO);
+//		issueDAO.updateIssueByDeleteMilestone(milestoneVO);
 
 		// 마일스톤 삭제
 		milestoneDAO.deleteMilestone(milestoneVO);

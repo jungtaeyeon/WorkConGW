@@ -66,6 +66,7 @@
 		AND B.code_id = C.CODE_ID
 		<!--  notice에 첨부파일이 없는 컬럼도 조회하기 위해 아우터조인 사용-->
 		AND A.notice_id = D.notice_id(+)
+		AND a.NOTICE_IMPORTANT_ST = 0
 		<include refid="search" />
 		ORDER BY A.notice_create_dt DESC
 		) D1
@@ -248,7 +249,7 @@
 		FROM notice A
 		JOIN emp B
 		ON A.emp_writer_id=B.emp_Id
--- 		WHERE A.NOTICE_IMPORTANT_ST = 0
+		WHERE A.NOTICE_IMPORTANT_ST = 0
 		<include refid="search" />
 	</select>
 

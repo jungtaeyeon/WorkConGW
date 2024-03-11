@@ -537,6 +537,8 @@
                         b.emp_id = c.emp_id
                 WHERE a.emp_id=#{empId}
                 and message_delete = 0
+                ORDER BY 
+                        message_start_dt DESC
         </select>
         <select id="messageDetail" resultType="AddBookVO" parameterType="map">
                 SELECT 
@@ -606,6 +608,8 @@
                 WHERE b.emp_id=#{empId}
                 and message_delete = 0
                 and receiver_delete = 0
+                ORDER BY 
+                        message_start_dt DESC
         </select>
 
         <select id="receiverDetail" resultType="AddBookVO" parameterType="map">

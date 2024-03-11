@@ -187,7 +187,6 @@
 
         .input-btn {
             border: 1.5px solid ;
-            background-color: #fff;
             color: #0f0f0f;
             height: 35px;
             width: 90px;
@@ -216,30 +215,30 @@
             </div>
             <div class="input-field id-field">
                 <label>* 이메일</label>
-                <input id = "emp_Email" name="emp_Email" type="text" placeholder="이메일를 입력해주세요" required />
+                <input id = "emp_Email" name="emp_Email" type="text" placeholder="이메일를 입력해주세요" required value="njtest777@gmail.com"/>
                 <input type="hidden" value="N" id="isDup" />
             </div>
             <div class="input-field">
                 <label>* 비밀번호</label>
-                <input id = "emp_Pwd" name="emp_Pwd" type="password" placeholder="비밀번호를 입력해주세요" required />
+                <input id = "emp_Pwd" name="emp_Pwd" type="password" placeholder="비밀번호를 입력해주세요" required value="1234"/>
             </div>
             <div class="input-field">
                 <label>* 비밀번호 확인</label>
-                <input id = "emp_Pwd2"  type="password" placeholder="비밀번호를 한 번 더 입력해주세요" required />
+                <input id = "emp_Pwd2"  type="password" placeholder="비밀번호를 한 번 더 입력해주세요" required value="1234"/>
             </div>
             <div class="input-field">
                 <label>* 성명</label>
-                <input id = "emp_Name" name="emp_Name" type="text" placeholder="성함을 입력해주세요" maxlength="6" required />
+                <input id = "emp_Name" name="emp_Name" type="text" placeholder="성함을 입력해주세요" maxlength="6" required value="김시연"/>
             </div>
             <div class="input-field usernum-field">
                 <label>* 주민번호</label>
-                <input id = "emp_Regno" name="emp_Regno" type="text" size="6" placeholder="주민번호 앞자리" maxlength="6" required />
+                <input id = "emp_Regno" name="emp_Regno" type="text" size="6" placeholder="주민번호 앞자리" maxlength="6" required value="111111"/>
                 <span>-</span>
-                <input id = "emp_Regno2" name="emp_Regno2" type="password" size="7" placeholder="주민번호 뒷자리" maxlength="7" required />
+                <input id = "emp_Regno2" name="emp_Regno2" type="password" size="7" placeholder="주민번호 뒷자리" maxlength="7" required value="111111"/>
             </div>
             <div class="input-field">
                 <label>* 휴대전화</label>
-                <input id = "emp_Hp" name="emp_Hp" type="text" placeholder="'-' 를 제외한 휴대전화 번호를 입력해주세요" required maxlength="11" />
+                <input id = "emp_Hp" name="emp_Hp" type="text" placeholder="'-' 를 제외한 휴대전화 번호를 입력해주세요" required maxlength="11" value="010-1234-1234"/>
             </div>
 
             <div class="input-field">
@@ -255,7 +254,7 @@
             </div>
             <div class="input-field">
                 <label>* 상세주소</label>
-                <input id = "myAdd2" name="emp_Add2" type="text"  placeholder="상세주소" required /><br />
+                <input id = "myAdd2" name="emp_Add2" type="text"  placeholder="상세주소" required value="1호" /><br />
             </div>
 
 
