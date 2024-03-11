@@ -51,7 +51,8 @@
 🎯 ERD: [링크](https://drive.google.com/file/d/1F9ejhVSKxGMEjze_PAxq0eRFpRHVzGfT/view?usp=drive_link)
 
 
-![KakaoTalk_20240309_090123821](https://github.com/jungtaeyeon/WorkConGW/assets/96507825/8a131ade-0f8e-4bfb-ab59-2262634a886f)
+
+
 
 
 
@@ -60,6 +61,8 @@
 🎆 ERD 설명서: [링크](https://docs.google.com/document/d/1I6B-KR6E1cbvvs06qihpd0k8c3JOK3uv6tsXh5Z9KSs/edit) </br>
 
 🎆 상관 모델링 [링크](https://docs.google.com/spreadsheets/d/1t9sCLtStfEMNKuizDF3dDLgz1X0qXi81/edit#gid=1407741134) 
+
+🎆 발표ppt: [링크](https://docs.google.com/presentation/d/1ciRaEeT5yMoAPDZOGimFv_wGwzw3qEn27fElPa5FCFw/edit?usp=sharing)
 
 ## 시작 가이드
 
@@ -70,7 +73,6 @@ $ cd WorkConGW
 ```
 ## Group
 - ![SLACK](https://img.shields.io/badge/Slack-4A154B?style=for-the-badge&logo=slack&logoColor=white)
-- ![DISCODE](https://img.shields.io/badge/Discord-7289DA?style=for-the-badge&logo=discord&logoColor=white)
 - ![GOOGLE](https://img.shields.io/badge/Google-4285F4?logo=google&logoColor=fff&style=for-the-badge)
 
 
