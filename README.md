@@ -237,10 +237,10 @@ $ cd WorkConGW
 
 
 
-## 페이지별 핵심 기능
+## 🎊페이지별 핵심 기능
 
 
-#### 로그인
+#### ✨로그인
 
 <img src="https://github.com/jungtaeyeon/WorkConGW/assets/96507825/d346ffef-ff65-4e9c-b904-3dea474e72d1" alt="로그인 처리(깃)" width="500"/>
 
@@ -251,7 +251,7 @@ $ cd WorkConGW
 
 
  
-#### 관리자 
+#### ✨관리자 
 
 <img src="https://github.com/jungtaeyeon/WorkConGW/assets/96507825/5bbb4962-a87c-48ff-9e56-34a1322d7d4a" alt="관리자 처리(깃)" width="500"/>
 
@@ -261,7 +261,7 @@ $ cd WorkConGW
 - 민원함 리스트 : 시설 예약 관련된 민원 확인 가능
 
 
-#### 사원 등록 및 이메일 인증
+#### ✨사원 등록 및 이메일 인증
 
 클라이언트로부터 “회원가입 기능이 따로 존재하지 않고, 관리자가 회원등록을 하는 요구사항를” 받았다는 컨셉으로 진행
 
@@ -279,7 +279,7 @@ $ cd WorkConGW
 - 인증 시 로그인 페이지로 이동
 
 
-#### 부서등록
+#### ✨부서등록
 <img src="https://github.com/jungtaeyeon/WorkConGW/assets/96507825/d16dc47f-7a6e-44b1-a21d-70841e06355f" alt="관리자 처리(깃)" width="500"/>
 
 - 부서 및 팀명칭을 입력,중복확인을 진행
@@ -288,7 +288,7 @@ $ cd WorkConGW
 - 사원 수정 팀 반영
 
 
-#### 로그인 기록 & 업무시간설정
+#### ✨로그인 기록 & 업무시간설정
 만약에 워크샵을 간다고 가정하면, 출/퇴근 시간이 변경 + 그 때 업무시간 설정을 해야 되기 때문에 해당 기능 추가
 
 
@@ -301,7 +301,7 @@ $ cd WorkConGW
 
 ---
 
-#### 홈화면(대시보드/출,퇴근 버튼)
+#### ✨홈화면(대시보드/출,퇴근 버튼)
 <img src="https://github.com/jungtaeyeon/WorkConGW/assets/96507825/f8be8a94-33dd-46c5-8746-7f9dfd858548" alt="관리자 처리(깃)" width="500"/>
 
 - 사원에 맞는 사진 / 부서 노출
@@ -315,7 +315,7 @@ $ cd WorkConGW
 - 대시보드는 on/off로 원하는 기능 노출
 
 
-#### 일정관리
+#### ✨일정관리
 
 <img src="https://github.com/jungtaeyeon/WorkConGW/assets/96507825/ee61d679-603d-418e-b0c5-e255ee3637d7" alt="관리자 처리(깃)" width="500"/>
 
@@ -327,7 +327,7 @@ $ cd WorkConGW
 
 
 
-#### 시설예약
+#### ✨시설예약
 <img src="https://github.com/jungtaeyeon/WorkConGW/assets/96507825/f8e15256-0bde-412c-bfc2-211a8d607bd6" alt="관리자 처리(깃)" width="500"/>
 
 - 예약하고 싶은 일정 선택 시작시간/종료시간을 정하고  회의실 조회 + 조건에 맞는 회의실 조회
@@ -338,7 +338,7 @@ $ cd WorkConGW
 - 공지사항 / 예약리스트 / 회의실 민원 조회 가능
 
 
-#### 게시판
+#### ✨게시판
 
 사내공지 게시판
 </br>
@@ -365,7 +365,7 @@ $ cd WorkConGW
 - 댓글 등록 가능 
 
 
-#### 전자결재
+#### ✨전자결재
 
 <img src="https://github.com/jungtaeyeon/WorkConGW/assets/96507825/8f9ee78b-0bc3-42f7-aca2-cbcaa9d524b6" alt="관리자 처리(깃)" width="500"/>
 
@@ -381,7 +381,7 @@ $ cd WorkConGW
 - 근태관리 및 캘린더에 연차 반영 가능
 
 
-#### 근태관리
+#### ✨근태관리
 
 <img src="https://github.com/jungtaeyeon/WorkConGW/assets/96507825/3e5fa461-d929-493a-99eb-ce6fe26b35a1" alt="관리자 처리(깃)" width="500"/>
 
@@ -389,7 +389,7 @@ $ cd WorkConGW
 - 부서 근태관리 조회 + 이 달의 통계 조회 가능 + 근태사유 작성 가능
 
 
-#### 업무관리
+#### ✨업무관리
 <img src="https://github.com/jungtaeyeon/WorkConGW/assets/96507825/6898c230-85af-4ef1-8cf4-7c1b78fce53a1" alt="관리자 처리(깃)" width="500"/>
 
 - 프로젝트는 관리자만 생성 가능
@@ -408,7 +408,7 @@ $ cd WorkConGW
 
 
 
-#### 주소록
+#### ✨주소록
 
 <img src="https://github.com/jungtaeyeon/WorkConGW/assets/96507825/c78bea40-b389-405a-8483-ec2046d79695" alt="관리자 처리(깃)" width="500"/>
 </br>
