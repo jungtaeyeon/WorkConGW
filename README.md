@@ -43,7 +43,7 @@
 🎯 개발표준 정의서: [링크](https://drive.google.com/file/d/1RwOCXNiztO3RVaGKxmyQvaHM2BfOfq_k/view?usp=drive_link)
 
 
-
+🎯 WBS: [링크](https://docs.google.com/spreadsheets/d/1hIRNB3uaCl1NE2P-RYqi8aWZjjxjmY26/edit#gid=625705847)
 
 🎯 시나리오 테스트: [링크](https://docs.google.com/spreadsheets/d/1PHrXVvg8TP9mZmxk2nB1vjP4XR8Di0oMY5H7lgmpUBo/edit#gid=2087633204)
 
