@@ -28,6 +28,42 @@
 - 주간회의를 진행하며 작업 순서와 방향성에 대한 고민을 나누고 슬랙를 통해 회의 내용을 기록 했습니다.
 
 
+## 주요 문서
+
+🎯 요구사항 정의서 [링크](https://docs.google.com/spreadsheets/d/1t9sCLtStfEMNKuizDF3dDLgz1X0qXi81/edit#gid=1407741134) 
+
+🎯 기능 정의서: [링크](https://docs.google.com/spreadsheets/d/1t9sCLtStfEMNKuizDF3dDLgz1X0qXi81/edit?rtpof=true&sd=true#gid=1407741134)
+
+🎯 테이블 정의서: [링크](https://docs.google.com/spreadsheets/d/1pY1IP5v8_gybodaf7DKnVunPz3uuKo3y/edit?rtpof=true&sd=true#gid=1005822265)
+
+🎯 화면정의서: [링크](https://drive.google.com/file/d/1cKeWUpvTD8EjLoB5c0bL1biyGofqAQZ1/view?usp=drive_link)
+
+🎯 깃가이드: [링크](https://drive.google.com/file/d/1rGDMJYlF2u-pF5uoDLwvY60jcaqz_HLm/view?usp=drive_link)
+
+🎯 개발표준 정의서: [링크](https://drive.google.com/file/d/1RwOCXNiztO3RVaGKxmyQvaHM2BfOfq_k/view?usp=drive_link)
+
+
+
+
+🎯 시나리오 테스트: [링크](https://docs.google.com/spreadsheets/d/1PHrXVvg8TP9mZmxk2nB1vjP4XR8Di0oMY5H7lgmpUBo/edit#gid=2087633204)
+
+🎯 ERD: [링크](https://drive.google.com/file/d/1F9ejhVSKxGMEjze_PAxq0eRFpRHVzGfT/view?usp=drive_link)
+
+
+
+
+
+
+
+
+## 논 외 </br>
+🎆 ERD 설명서: [링크](https://docs.google.com/document/d/1I6B-KR6E1cbvvs06qihpd0k8c3JOK3uv6tsXh5Z9KSs/edit) </br>
+
+🎆 상관 모델링 [링크](https://docs.google.com/spreadsheets/d/1t9sCLtStfEMNKuizDF3dDLgz1X0qXi81/edit#gid=1407741134) 
+
+🎆 발표ppt: [링크](https://docs.google.com/presentation/d/1ciRaEeT5yMoAPDZOGimFv_wGwzw3qEn27fElPa5FCFw/edit?usp=sharing)
+
+
 
 
 ---
@@ -48,7 +84,7 @@
 </div>
 
 
-## 4. 역할 분담
+## 역할 분담
 
 ### 🍊오지환(팀장)
 
@@ -156,40 +192,6 @@
 
 
 
-## 주요 문서
-
-🎯 요구사항 정의서 [링크](https://docs.google.com/spreadsheets/d/1t9sCLtStfEMNKuizDF3dDLgz1X0qXi81/edit#gid=1407741134) 
-
-🎯 기능 정의서: [링크](https://docs.google.com/spreadsheets/d/1t9sCLtStfEMNKuizDF3dDLgz1X0qXi81/edit?rtpof=true&sd=true#gid=1407741134)
-
-🎯 테이블 정의서: [링크](https://docs.google.com/spreadsheets/d/1pY1IP5v8_gybodaf7DKnVunPz3uuKo3y/edit?rtpof=true&sd=true#gid=1005822265)
-
-🎯 화면정의서: [링크](https://drive.google.com/file/d/1cKeWUpvTD8EjLoB5c0bL1biyGofqAQZ1/view?usp=drive_link)
-
-🎯 깃가이드: [링크](https://drive.google.com/file/d/1rGDMJYlF2u-pF5uoDLwvY60jcaqz_HLm/view?usp=drive_link)
-
-🎯 개발표준 정의서: [링크](https://drive.google.com/file/d/1RwOCXNiztO3RVaGKxmyQvaHM2BfOfq_k/view?usp=drive_link)
-
-
-
-
-🎯 시나리오 테스트: [링크](https://docs.google.com/spreadsheets/d/1PHrXVvg8TP9mZmxk2nB1vjP4XR8Di0oMY5H7lgmpUBo/edit#gid=2087633204)
-
-🎯 ERD: [링크](https://drive.google.com/file/d/1F9ejhVSKxGMEjze_PAxq0eRFpRHVzGfT/view?usp=drive_link)
-
-
-
-
-
-
-
-
-## 논 외 </br>
-🎆 ERD 설명서: [링크](https://docs.google.com/document/d/1I6B-KR6E1cbvvs06qihpd0k8c3JOK3uv6tsXh5Z9KSs/edit) </br>
-
-🎆 상관 모델링 [링크](https://docs.google.com/spreadsheets/d/1t9sCLtStfEMNKuizDF3dDLgz1X0qXi81/edit#gid=1407741134) 
-
-🎆 발표ppt: [링크](https://docs.google.com/presentation/d/1ciRaEeT5yMoAPDZOGimFv_wGwzw3qEn27fElPa5FCFw/edit?usp=sharing)
 
 ## 시작 가이드
 
